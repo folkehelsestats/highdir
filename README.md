@@ -1,9 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# torr <img src='man/img/highdir-logo.png' align="right" width="110" height="138" />
+# torr <img src='man/img/highdir-logo.png' align="right" width="120" height="138" />
 
-## Tools for Tall om Rapporter in R
+## Intro
 
 Highchart figure for Hdir
 
