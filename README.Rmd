@@ -1,0 +1,34 @@
+---
+output:
+  github_document:
+    html_preview: false
+knitr:
+  opts_chunk:
+    eval: false
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/img/README-",
+  out.width = "100%"
+)
+```
+
+# torr <img src='man/img/highdir-logo.png' align="right" width="110" height="138" />
+ 
+## Tools for Tall om Rapporter in R
+
+Highchart figure for Hdir
+
+## Installation
+
+You can install *highdir* package directly from Github:
+
+```{r, eval = FALSE}
+if(!require(pak)) install.packages("pak")
+pak::pkg_install("folkehelsestats/highdir")
+```
