@@ -5,7 +5,7 @@
 
 ## Intro
 
-Highchart figure for Hdir
+Highchart figure for Hdir. This is still an **experimental version!**
 
 ## Installation
 
