@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# highdir <img src='man/img/highdir-logo.png' align="right" width="120" height="138" />
+# highdir <img src='man/figures/logo.png' align="right" width="120" height="138" />
 
 ## Intro
 

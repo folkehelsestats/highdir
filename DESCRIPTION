@@ -2,7 +2,13 @@ Package: highdir
 Title: Highchart for Hdir
 Version: 0.0.0.9000
 Authors@R: 
-    person("Yusman", "Kamaleri", , "ybkamaleri@gmail.com", role = c("aut", "cre"))
+  person(
+    given = "Yusman",
+    family = "Kamaleri",
+    email = "ybkamaleri@gmail.com",
+    role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0001-5014-3665")
+  )
 Description: Create highchart figures meeting the requirement for Hdir.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -13,3 +19,4 @@ Imports:
     htmlwidgets,
     rlang,
     viridis
+URL: https://github.com/folkehelsestats/highdir
