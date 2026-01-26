@@ -1,0 +1,24 @@
+# highdir
+
+## Intro
+
+Highchart figure for Hdir. This is still an **experimental version!**
+
+## Installation
+
+You can install *highdir* package directly from Github:
+
+``` r
+if(!require(pak)) install.packages("pak")
+pak::pkg_install("folkehelsestats/highdir")
+```
+
+# Package index
+
+## All functions
+
+- [`create_ci_graph()`](https://github.com/folkehelsestats/highdir/reference/create_ci_graph.md)
+  : Create a Highchart with Confidence Intervals
+- [`make_hist()`](https://github.com/folkehelsestats/highdir/reference/make_hist.md)
+  : Create Interactive Highchart Graph with Categories and Groups
+
