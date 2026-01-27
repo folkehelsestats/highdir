@@ -2,5 +2,6 @@
 
 export(create_ci_graph)
 export(make_hist)
+export(run_app)
 import(highcharter)
 importFrom(viridis,viridis)
