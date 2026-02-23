@@ -26,11 +26,11 @@ app_server <- function(input, output, session, ...) {
         )
       } else {
         shiny::tagList(
-          shiny::selectInput("ci_x", "X / category", cols),
-          shiny::selectInput("ci_est", "Estimate", nums),
-          shiny::selectInput("ci_low", "Lower CI", nums),
-          shiny::selectInput("ci_high", "Upper CI", nums),
-          shiny::selectInput("ci_group", "Group (optional)", c("<none>", cols)),
+          shiny::selectInput("x_col", "X-akse", cols),
+          shiny::selectInput("y_col", "Y-akse", nums),
+          shiny::selectInput("lower_ci", "Lower CI", nums),
+          shiny::selectInput("upper_ci", "Upper CI", nums),
+          shiny::numericInput("ylim", "Y-akse maks", 40, min = 0, step = 1),
           shiny::textInput("ci_title", "Title", "CI graph")
         )
       }
@@ -39,7 +39,12 @@ app_server <- function(input, output, session, ...) {
 
   make_plot <- shiny::eventReactive(input$run, {
     req(dt())
+
     d <- data.table::copy(dt())
+
+    if (!inherits(d, "data.table")) {
+      data.table::setDT(d)  # modifies d by reference
+    }
 
     if (identical(input$fn, "make_hist")) {
       req(input$hist_var)
@@ -69,39 +74,52 @@ app_server <- function(input, output, session, ...) {
     }
 
     # create_ci_graph branch
-    req(input$ci_x, input$ci_est, input$ci_low, input$ci_high)
-    grp <- if (!is.null(input$ci_group) && input$ci_group != "<none>") input$ci_group else NULL
+    req(input$x_col, input$y_col, input$lower_ci, input$upper_ci)
+    grp <- if (!is.null(input$ylim) && input$ylim != "<none>") input$ylim else NULL
 
     tryCatch({
       if (!highdir_available) stop("highdir not available")
       highdir::create_ci_graph(
         data = d,
-        x = input$ci_x,
-        estimate = input$ci_est,
-        lower = input$ci_low,
-        upper = input$ci_high,
-        group = grp,
+        x_col = input$x_col,
+        y_col = input$y_col,
+        lower_col = input$lower_ci,
+        upper_col = input$upper_ci,
+        ylim = input$ylim,
         title = input$ci_title
       )
     }, error = function(e) {
       # Fallback: CI with highcharter
-      x <- d[[input$ci_x]]; est <- d[[input$ci_est]]; low <- d[[input$ci_low]]; high <- d[[input$ci_high]]
-      df <- data.table::data.table(x = as.character(x), est = est, low = low, high = high)
-      if (!is.null(grp)) df[, group := as.character(d[[grp]])]
+      x <- d[[input$x_col]]; est <- d[[input$y_col]]; low <- d[[input$lower_ci]]; high <- d[[input$upper_ci]]
+
+      # FIX: Create data.frame instead of data.table to avoid := scoping issues
+      df <- data.frame(
+        x = as.character(x),
+        est = est,
+        low = low,
+        high = high,
+        stringsAsFactors = FALSE
+      )
+
+      # FIX: Add group column using standard data.frame assignment
+      if (!is.null(grp)) {
+        df$group <- as.character(d[[grp]])
+      }
 
       hc <- highcharter::highchart() |> highcharter::hc_title(text = input$ci_title)
       if (!is.null(grp)) {
         for (g in unique(df$group)) {
-          sub <- df[group == g]
+          # FIX: Use standard subsetting instead of data.table syntax
+          sub <- df[df$group == g, ]
           hc <- hc |>
-            highcharter::hc_xAxis(categories = sub$x, title = list(text = input$ci_x)) |>
+            highcharter::hc_xAxis(categories = sub$x, title = list(text = input$x_col)) |>
             highcharter::hc_add_series(name = paste0(g, " est"), type = "column", data = as.numeric(sub$est)) |>
             highcharter::hc_add_series(name = paste0(g, " CI"), type = "errorbar",
               data = lapply(seq_len(nrow(sub)), function(i) c(sub$low[i], sub$high[i])))
         }
       } else {
         hc <- hc |>
-          highcharter::hc_xAxis(categories = df$x, title = list(text = input$ci_x)) |>
+          highcharter::hc_xAxis(categories = df$x, title = list(text = input$x_col)) |>
           highcharter::hc_add_series(name = "Estimate", type = "column", data = as.numeric(df$est)) |>
           highcharter::hc_add_series(name = "CI", type = "errorbar",
             data = lapply(seq_len(nrow(df)), function(i) c(df$low[i], df$high[i])))
