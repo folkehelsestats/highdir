@@ -17,3 +17,5 @@ You can install *highdir* package directly from Github:
 if(!require(pak)) install.packages("pak")
 pak::pkg_install("folkehelsestats/highdir")
 ```
+
+## How to use

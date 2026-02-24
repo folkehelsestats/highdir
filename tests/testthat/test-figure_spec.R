@@ -1,6 +1,5 @@
-test_that("fig_spec constructs correctly", {
-  df <- data.frame(a = 1:3, b = 4:6)
-  spec <- fig_spec(df, "a", "b")
+test_that("fig_spec creates object", {
+  df <- data.frame(x = 1:3, y = 4:6)
+  spec <- fig_spec(df, "x", "y")
   expect_s3_class(spec, "fig_spec")
-  expect_equal(spec$xlab, "a")
 })

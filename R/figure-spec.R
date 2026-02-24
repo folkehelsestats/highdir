@@ -1,6 +1,6 @@
-#' Create Plot Specification
+#' Create Figure Specification
 #'
-#' Constructor for plot specification object.
+#' Defines a backend-agnostic figure specification.
 #'
 #' @param data A data.frame.
 #' @param x Column name for x-axis.
@@ -8,13 +8,11 @@
 #' @param xlab Optional x-axis label.
 #' @param ylab Optional y-axis label.
 #'
-#' @return Object of class "fig_spec".
+#' @return An object of class `fig_spec`.
 #' @export
-fig_spec <- function(data, x, y, xlab = NULL, ylab = NULL) {
-
-  stopifnot(is.data.frame(data))
-  stopifnot(x %in% names(data))
-  stopifnot(y %in% names(data))
+fig_spec <- function(data, x, y,
+                     xlab = NULL,
+                     ylab = NULL) {
 
   structure(
     list(
