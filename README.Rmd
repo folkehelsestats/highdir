@@ -47,7 +47,7 @@ remotes::install_github("folkehelsestats/highdir", ref = "dev")
 
 The easiest way to get started is by launching the built‑in graphical interface (GUI):
 
-```{r, out.width="60%"}
+```{r, out.width="70%"}
 library("highdir")
 run_app()
 ```
