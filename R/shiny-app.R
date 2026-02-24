@@ -33,7 +33,7 @@ run_app <- function() {
   # UI
   # ---------------------------------------------------------------------------
   ui <- shiny::fluidPage(
-    shiny::titlePanel("Highdir Figure Builder"),
+    shiny::titlePanel("Highdir GUI"),
     shiny::sidebarLayout(
       shiny::sidebarPanel(
 

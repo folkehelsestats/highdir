@@ -41,10 +41,10 @@ interface (GUI):
 library("highdir")
 run_app()
 #> 
-#> Listening on http://127.0.0.1:4522
+#> Listening on http://127.0.0.1:4744
 ```
 
-<img src="man/img/README-unnamed-chunk-4-1.png" alt="" width="100%" />
+<img src="man/img/README-unnamed-chunk-4-1.png" alt="" width="60%" />
 
 This opens an interactive tool for generating and exporting figures
 using prefered templates.
