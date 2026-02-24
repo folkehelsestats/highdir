@@ -2,7 +2,7 @@
 gg_arearange <- function(spec, ymin, ymax, ...) {
 
   ggplot2::geom_ribbon(
-    ggplot2::aes_string(ymin = ymin, ymax = ymax),
+    ggplot2::aes_(ymin = ymin, ymax = ymax),
     alpha = 0.3
   )
 }

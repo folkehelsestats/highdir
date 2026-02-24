@@ -7,5 +7,5 @@
 #' @return One of the inputs
 #' @export
 `%||%` <- function(a, b) {
-  if (!is.null(a)) a else b
+  if (is.null(a)) b else a
 }

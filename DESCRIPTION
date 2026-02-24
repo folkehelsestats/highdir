@@ -21,7 +21,9 @@ Imports:
     highcharter,
     ggplot2,
     shiny,
-    rio
+    jsonlite,
+    rio,
+    utils
 URL: https://github.com/folkehelsestats/highdir
 Suggests: 
     testthat (>= 3.0.0)
