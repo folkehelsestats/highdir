@@ -5,7 +5,7 @@
 #'
 #' The app allows users to:
 #' \itemize{
-#'   \item Upload a CSV file and preview its contents.
+#'   \item Upload a dataset in almost any format and preview its contents.
 #'   \item Select a geometry, axis variables, and rendering backend.
 #'   \item Render the figure on demand via a \strong{Draw} button.
 #'   \item Download the figure as JSON or self-contained HTML (highcharter)
@@ -37,7 +37,7 @@ run_app <- function() {
     shiny::sidebarLayout(
       shiny::sidebarPanel(
 
-        shiny::fileInput("file", "Upload CSV file"),
+        shiny::fileInput("file", "Upload dataset"),
 
         shiny::selectInput(
           "geom",
