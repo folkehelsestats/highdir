@@ -23,6 +23,10 @@ get_geom <- function(name) {
   .geom_registry[[name]]
 }
 
+#' List Geometries
+#'
+#' Lists all registered geometries.
+#' @export
 list_geoms <- function() {
   ls(.geom_registry)
 }

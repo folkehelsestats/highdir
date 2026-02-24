@@ -15,6 +15,10 @@ get_backend <- function(name) {
   .backend_registry[[name]]
 }
 
+#' List Backends
+#'
+#' Lists all registered backends.
+#' @export
 list_backends <- function() {
   ls(.backend_registry)
 }

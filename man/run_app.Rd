@@ -2,11 +2,27 @@
 % Please edit documentation in R/shiny-app.R
 \name{run_app}
 \alias{run_app}
-\title{Run Highdir Shiny Application}
+\title{Draw Highdir Shiny Application}
 \usage{
 run_app()
 }
+\value{
+Launches a Shiny app; does not return a value.
+}
 \description{
-Launches an interactive GUI for building figures without
-writing R commands manually.
+Launches an interactive Shiny GUI for building figures using either the
+\pkg{highcharter} or \pkg{ggplot2} backend, without writing R commands manually.
+}
+\details{
+The app allows users to:
+\itemize{
+\item Upload a CSV file and preview its contents.
+\item Select a geometry, axis variables, and rendering backend.
+\item Render the figure on demand via a \strong{Draw} button.
+\item Download the figure as JSON or self-contained HTML (highcharter)
+or PNG (ggplot2).
+}
+}
+\seealso{
+\code{\link[=make_fig]{make_fig()}}, \code{\link[=fig_spec]{fig_spec()}}, \code{\link[=list_geoms]{list_geoms()}}, \code{\link[=list_backends]{list_backends()}}
 }
