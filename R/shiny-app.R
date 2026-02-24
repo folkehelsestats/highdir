@@ -142,12 +142,12 @@ run_app <- function() {
       shiny::req(input$backend)
       if (input$backend == "highcharter") {
         shiny::tagList(
-          shiny::downloadButton("download_json", "Download JSON"),
-          shiny::downloadButton("download_html", "Download HTML")
+          shiny::downloadButton("download_json", "JSON"),
+          shiny::downloadButton("download_html", "HTML")
         )
       } else {
         # ggplot2 supports raster export via ggsave.
-        shiny::downloadButton("download_png", "Download PNG")
+        shiny::downloadButton("download_png", "PNG")
       }
     })
 
