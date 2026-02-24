@@ -37,13 +37,6 @@ remotes::install_github("folkehelsestats/highdir", ref = "dev")
 The easiest way to get started is by launching the built‑in graphical
 interface (GUI):
 
-``` r
-library("highdir")
-run_app()
-#> 
-#> Listening on http://127.0.0.1:4796
-```
-
 <img src="man/img/README-unnamed-chunk-4-1.png" alt="" width="70%" />
 
 This opens an interactive tool for generating and exporting figures
