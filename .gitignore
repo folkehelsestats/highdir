@@ -48,3 +48,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 # docs
+
+# dev folder to testing
+dev/
