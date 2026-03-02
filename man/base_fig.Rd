@@ -2,15 +2,23 @@
 % Please edit documentation in R/base-figure.R
 \name{base_fig}
 \alias{base_fig}
-\title{Base Figure}
+\title{Base Figure Canvas}
 \usage{
 base_fig(spec, backend)
 }
 \arguments{
-\item{spec}{A fig_spec object.}
+\item{spec}{A \link{fig_spec} object.}
 
-\item{backend}{Backend name.}
+\item{backend}{Character. Backend name, e.g. \code{"ggplot2"} or
+\code{"highcharter"}.}
+}
+\value{
+A \code{ggplot} or \code{highchart} object.
 }
 \description{
-Constructs backend base object.
+Constructs the blank backend-specific canvas (a bare \code{ggplot} or
+\code{highchart}) with axes, labels, and chart-level options applied from
+\code{spec}. Called internally by the backend engines; you rarely need this
+directly.
 }
+\keyword{internal}

@@ -2,24 +2,90 @@
 % Please edit documentation in R/figure-spec.R
 \name{fig_spec}
 \alias{fig_spec}
-\title{Create Figure Specification}
+\title{Create a Figure Specification}
 \usage{
-fig_spec(data, x, y, xlab = NULL, ylab = NULL)
+fig_spec(
+  data,
+  x,
+  y,
+  group = NULL,
+  n = NULL,
+  colour = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  title = NULL,
+  subtitle = NULL,
+  caption = NULL,
+  ylim = NULL,
+  yint = 10,
+  flip = FALSE
+)
 }
 \arguments{
-\item{data}{A data.frame.}
+\item{data}{A \code{data.frame} (or \code{data.table}) containing all referenced
+columns.}
 
-\item{x}{Column name for x-axis.}
+\item{x}{Character. Column name for the x-axis variable.}
 
-\item{y}{Column name for y-axis.}
+\item{y}{Character. Column name for the y-axis variable (typically a
+percentage or count).}
 
-\item{xlab}{Optional x-axis label.}
+\item{group}{Character or \code{NULL}. Column name used to split the data into
+multiple series / groups.}
 
-\item{ylab}{Optional y-axis label.}
+\item{n}{Character or \code{NULL}. Column name of a raw count variable shown
+in highcharter tooltips alongside the y value. Ignored for ggplot2.}
+
+\item{colour}{Character or \code{NULL}. Column name mapped to the colour
+aesthetic (ggplot2 only; highcharter uses \code{group} for colouring).}
+
+\item{xlab}{Character or \code{NULL}. X-axis label. Defaults to \code{x} when
+\code{NULL}.}
+
+\item{ylab}{Character or \code{NULL}. Y-axis label. Defaults to \code{y} when
+\code{NULL}.}
+
+\item{title}{Character or \code{NULL}. Chart title.}
+
+\item{subtitle}{Character or \code{NULL}. Chart subtitle. Defaults to
+\code{"Kilde: Navn av kilder"} in the highcharter engine when \code{NULL}.}
+
+\item{caption}{Character or \code{NULL}. Caption text shown below the chart
+(highcharter only).}
+
+\item{ylim}{Numeric vector of length 2 or \code{NULL}. Fixed y-axis limits,
+e.g. \code{c(0, 100)}. \code{NULL} lets the backend determine limits
+automatically.}
+
+\item{yint}{Numeric. Y-axis tick interval. Default \code{10}.}
+
+\item{flip}{Logical. Invert axes (horizontal bars). Default \code{FALSE}.}
 }
 \value{
-An object of class \code{fig_spec}.
+An object of S3 class \code{fig_spec}.
 }
 \description{
-Defines a backend-agnostic figure specification.
+Defines a backend-agnostic description of a figure. Pass the returned
+object to \code{\link[=make_fig]{make_fig()}} to render it with either \code{"highcharter"} or
+\code{"ggplot2"}.
+}
+\examples{
+df <- data.frame(
+  age   = rep(c("18-24", "25-34", "35-44"), each = 2),
+  sex   = rep(c("Male", "Female"), 3),
+  pct   = c(42, 38, 55, 61, 48, 52),
+  n     = c(120, 115, 200, 210, 180, 175)
+)
+
+spec <- fig_spec(
+  data     = df,
+  x        = "age",
+  y        = "pct",
+  group    = "sex",
+  n        = "n",
+  title    = "Health survey results",
+  subtitle = "Source: Example data"
+)
+spec
+
 }

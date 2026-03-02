@@ -2,10 +2,16 @@
 % Please edit documentation in R/registry.R
 \name{list_backends}
 \alias{list_backends}
-\title{List Backends}
+\title{List Registered Backends}
 \usage{
 list_backends()
 }
+\value{
+Character vector of registered backend names.
+}
 \description{
-Lists all registered backends.
+List Registered Backends
+}
+\examples{
+list_backends()
 }

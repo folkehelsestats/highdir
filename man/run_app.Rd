@@ -2,27 +2,30 @@
 % Please edit documentation in R/shiny-app.R
 \name{run_app}
 \alias{run_app}
-\title{Draw Highdir Shiny Application}
+\title{Launch the highdir Shiny GUI}
 \usage{
 run_app()
 }
 \value{
-Launches a Shiny app; does not return a value.
+Does not return a value; launches a Shiny app in the browser.
 }
 \description{
-Launches an interactive Shiny GUI for building figures using either the
-\pkg{highcharter} or \pkg{ggplot2} backend, without writing R commands manually.
+Opens an interactive browser-based application for building figures with
+either the \code{highcharter} or \code{ggplot2} backend, without writing R code.
 }
 \details{
 The app allows users to:
 \itemize{
-\item Upload a dataset in almost any format and preview its contents.
-\item Select a geometry, axis variables, and rendering backend.
-\item Render the figure on demand via a \strong{Draw} button.
-\item Download the figure as JSON or self-contained HTML (highcharter)
-or PNG (ggplot2).
+\item Upload a dataset in any format supported by the \strong{rio} package.
+\item Choose a geometry, axis variables, and rendering backend.
+\item Configure chart title, subtitle, caption, and colour theme.
+\item Toggle JavaScript hover effects and the accessibility module.
+\item Render the figure on demand with the \strong{Draw} button.
+\item Download as JSON or self-contained HTML (highcharter), PNG
+(highcharter, requires \strong{webshot2}), or PNG / SVG (ggplot2).
+\item Copy the equivalent \code{make_fig()} call from the \strong{R code} tab.
 }
 }
 \seealso{
-\code{\link[=make_fig]{make_fig()}}, \code{\link[=fig_spec]{fig_spec()}}, \code{\link[=list_geoms]{list_geoms()}}, \code{\link[=list_backends]{list_backends()}}
+\code{\link[=make_fig]{make_fig()}}, \code{\link[=fig_spec]{fig_spec()}}, \code{\link[=hd_save]{hd_save()}}, \code{\link[=hd_set_theme]{hd_set_theme()}}
 }

@@ -2,19 +2,111 @@
 % Please edit documentation in R/make-figure.R
 \name{make_fig}
 \alias{make_fig}
-\title{Make Figure}
+\title{Build a Figure from a Specification}
 \usage{
-make_fig(spec, type, backend = "highcharter", ...)
+make_fig(
+  spec,
+  type = "column",
+  backend = "highcharter",
+  use_js = TRUE,
+  filename = NULL,
+  smooth = TRUE,
+  dot_size = 4,
+  line_symbols = NULL,
+  colors = NULL,
+  ...
+)
 }
 \arguments{
-\item{spec}{fig_spec object.}
+\item{spec}{A \link{fig_spec} object created by \code{\link[=fig_spec]{fig_spec()}}.}
 
-\item{type}{Geometry type.}
+\item{type}{Character. Geometry to use. One of the values returned by
+\code{\link[=list_geoms]{list_geoms()}}: \code{"column"}, \code{"line"}, \code{"scatter"}, \code{"arearange"}, or
+any custom geometry registered with \code{\link[=register_geom]{register_geom()}}.}
 
-\item{backend}{Backend name.}
+\item{backend}{Character. Rendering backend. One of \code{"highcharter"}
+(default, interactive) or \code{"ggplot2"} (static), or any backend
+registered with \code{\link[=register_backend]{register_backend()}}.}
 
-\item{...}{Additional arguments.}
+\item{use_js}{Logical. Whether to include manually-injected JavaScript
+enhancements in the highcharter output. Tooltips, hover states, the
+accessibility module, and all other declarative Highcharts features are
+\strong{always} included regardless of this setting. When \code{TRUE} (default), a
+\code{htmlwidgets::JS()} hover band is added behind the active category
+column/point via \code{point.events.mouseOver} / \code{mouseOut}. Set to \code{FALSE}
+to omit that custom callback, e.g. when you want a clean widget with no
+hand-written JS. Has no effect for the ggplot2 backend.}
+
+\item{filename}{Character or \code{NULL}. Base filename used by the Highcharts
+built-in export menu (no extension). Defaults to \code{"highdir-figure"}.
+Ignored for the ggplot2 backend.}
+
+\item{smooth}{Logical. For \code{type = "line"} only. Use spline interpolation
+for smooth curves (\code{TRUE}, default) or straight line segments (\code{FALSE}).}
+
+\item{dot_size}{Numeric. For \code{type = "line"} only. Radius of line markers
+in pixels. Default \code{4}.}
+
+\item{line_symbols}{Character vector or \code{NULL}. For \code{type = "line"} only.
+Marker symbol for each group. Valid values: \code{"circle"}, \code{"square"},
+\code{"diamond"}, \code{"triangle"}, \code{"triangle-down"}. When \code{NULL} symbols are
+assigned automatically.}
+
+\item{colors}{Character vector or \code{NULL}. Colour overrides for this figure
+only. When \code{NULL} the palette from \code{\link[=hd_set_theme]{hd_set_theme()}} (or the hdir
+default palette) is used.}
+
+\item{...}{Additional arguments forwarded to the geometry's render
+function. Required arguments for a geometry (e.g. \code{ymin} / \code{ymax} for
+\code{"arearange"}) must be supplied here.}
+}
+\value{
+A \code{highchart} widget (when \code{backend = "highcharter"}) or a
+\code{ggplot} object (when \code{backend = "ggplot2"}).
 }
 \description{
-Builds figure using selected backend.
+Renders a \link{fig_spec} object using the selected backend. This is the primary
+function users call after constructing a specification with \code{\link[=fig_spec]{fig_spec()}}.
+}
+\examples{
+df <- data.frame(
+  age  = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
+  sex  = rep(c("Male", "Female"), 4),
+  pct  = c(42, 38, 55, 61, 48, 52, 60, 57),
+  n    = c(120, 115, 200, 210, 180, 175, 160, 155)
+)
+
+spec <- fig_spec(
+  data     = df,
+  x        = "age",
+  y        = "pct",
+  group    = "sex",
+  n        = "n",
+  title    = "Health survey results",
+  subtitle = "Source: Example data",
+  caption  = "Tall om helse"
+)
+
+\dontrun{
+# Interactive highcharter column chart (default)
+make_fig(spec, "column")
+
+# Same data as a smooth line chart — with JS hover effects
+make_fig(spec, "line", smooth = TRUE)
+
+# Disable JS (e.g. for self-contained HTML export)
+make_fig(spec, "column", use_js = FALSE)
+
+# Static ggplot2 version
+make_fig(spec, "column", backend = "ggplot2")
+
+# Arearange needs extra required args
+spec2 <- fig_spec(df, x = "age", y = "pct", group = "sex")
+make_fig(spec2, "arearange", ymin = "pct_lo", ymax = "pct_hi")
+}
+
+}
+\seealso{
+\code{\link[=fig_spec]{fig_spec()}}, \code{\link[=hd_save]{hd_save()}}, \code{\link[=hd_set_theme]{hd_set_theme()}}, \code{\link[=list_geoms]{list_geoms()}},
+\code{\link[=list_backends]{list_backends()}}, \code{\link[=run_app]{run_app()}}
 }

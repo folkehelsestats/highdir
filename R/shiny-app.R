@@ -1,96 +1,182 @@
-#' Draw Highdir Shiny Application
+# shiny-app.R — Interactive Shiny GUI for highdir
+#
+# Launches a full GUI that wraps make_fig() without the user needing to write
+# any R code. Designed as a teaching / exploration tool.
+#
+# New over v1:
+#   * Style panel: HC theme selector, colour palette, title/subtitle/caption
+#   * use_js toggle (checkbox)
+#   * smooth / dot_size controls for line charts
+#   * SVG download for ggplot2
+#   * PNG download for highcharter (shown only when webshot2 is installed)
+#   * "R code" tab: shows equivalent make_fig() call
+#   * Uses bslib when available for a modern look
+#   * All downloads route through hd_save() — single export code path
+
+#' Launch the highdir Shiny GUI
 #'
-#' Launches an interactive Shiny GUI for building figures using either the
-#' \pkg{highcharter} or \pkg{ggplot2} backend, without writing R commands manually.
+#' Opens an interactive browser-based application for building figures with
+#' either the `highcharter` or `ggplot2` backend, without writing R code.
 #'
+#' @details
 #' The app allows users to:
 #' \itemize{
-#'   \item Upload a dataset in almost any format and preview its contents.
-#'   \item Select a geometry, axis variables, and rendering backend.
-#'   \item Render the figure on demand via a \strong{Draw} button.
-#'   \item Download the figure as JSON or self-contained HTML (highcharter)
-#'     or PNG (ggplot2).
+#'   \item Upload a dataset in any format supported by the **rio** package.
+#'   \item Choose a geometry, axis variables, and rendering backend.
+#'   \item Configure chart title, subtitle, caption, and colour theme.
+#'   \item Toggle JavaScript hover effects and the accessibility module.
+#'   \item Render the figure on demand with the **Draw** button.
+#'   \item Download as JSON or self-contained HTML (highcharter), PNG
+#'     (highcharter, requires **webshot2**), or PNG / SVG (ggplot2).
+#'   \item Copy the equivalent `make_fig()` call from the **R code** tab.
 #' }
 #'
-#' @return Launches a Shiny app; does not return a value.
+#' @return Does not return a value; launches a Shiny app in the browser.
 #'
-#' @seealso [make_fig()], [fig_spec()], [list_geoms()], [list_backends()]
+#' @seealso [make_fig()], [fig_spec()], [hd_save()], [hd_set_theme()]
 #'
-#' @importFrom shiny fluidPage titlePanel sidebarLayout sidebarPanel mainPanel
-#'   fileInput selectInput uiOutput actionButton downloadButton conditionalPanel
-#'   plotOutput tableOutput reactive renderUI renderPlot renderTable
-#'   downloadHandler req tags shinyApp
+#' @importFrom shiny shinyApp fluidPage titlePanel sidebarLayout sidebarPanel
+#'   mainPanel fileInput selectInput textInput checkboxInput numericInput
+#'   uiOutput actionButton downloadButton conditionalPanel plotOutput
+#'   tableOutput verbatimTextOutput reactive eventReactive renderUI
+#'   renderPlot renderTable renderText downloadHandler req tags icon br hr
+#'   tabsetPanel tabPanel
 #' @importFrom highcharter highchartOutput renderHighchart
 #' @importFrom htmlwidgets saveWidget
 #' @importFrom jsonlite write_json
-#' @importFrom rio import
-#' @importFrom ggplot2 ggsave
+#' @importFrom ggplot2 ggsave labs
 #'
 #' @export
 run_app <- function() {
 
+  has_bslib    <- requireNamespace("bslib",    quietly = TRUE)
+  has_webshot2 <- requireNamespace("webshot2", quietly = TRUE)
+  has_rio      <- requireNamespace("rio",      quietly = TRUE)
+
+  if (!has_rio)
+    stop("The 'rio' package is required to run the highdir Shiny app.\n",
+         "Install it with: install.packages('rio')", call. = FALSE)
+
   # ---------------------------------------------------------------------------
-  # UI
+  # Sidebar controls
   # ---------------------------------------------------------------------------
-  ui <- shiny::fluidPage(
-    shiny::titlePanel("highdir GUI"),
-    shiny::sidebarLayout(
-      shiny::sidebarPanel(
+  sidebar_controls <- shiny::tagList(
 
-        shiny::fileInput("file", "Upload dataset"),
+    # Data upload
+    shiny::fileInput("file", "Upload dataset",
+                     accept = c(".csv", ".xlsx", ".xls", ".rds",
+                                ".sav", ".dta", ".json")),
 
-        shiny::selectInput(
-          "geom",
-          "Geometry",
-          choices = list_geoms(),
-          selected = "column"
-        ),
+    # Chart type
+    shiny::selectInput("geom",    "Geometry",
+                       choices  = list_geoms(),
+                       selected = "column"),
+    shiny::selectInput("backend", "Backend",
+                       choices  = list_backends(),
+                       selected = "highcharter"),
 
-        shiny::selectInput(
-          "backend",
-          "Backend",
-          choices  = list_backends(),
-          selected = "highcharter" #default
-        ),
+    # Axis mapping (populated once data are loaded)
+    shiny::uiOutput("ui_mapping"),
 
-        # Axis variable selectors — populated once data are loaded.
-        shiny::uiOutput("dynamic_mapping"),
+    # Geom-specific required args
+    shiny::uiOutput("ui_required"),
 
-        # Geometry-specific extra arguments — populated based on geom choice.
-        shiny::uiOutput("dynamic_required"),
+    shiny::tags$hr(),
 
-        # Render is triggered explicitly so the user controls when computation runs.
-        shiny::actionButton("run", "Draw", icon = shiny::icon("palette"),
-                            class = "btn-primary"),
+    # Labels
+    shiny::textInput("title",    "Title",    placeholder = "Optional"),
+    shiny::textInput("subtitle", "Subtitle", placeholder = "Optional"),
+    shiny::textInput("caption",  "Caption",  placeholder = "Optional"),
 
-        shiny::tags$hr(),
+    shiny::tags$hr(),
 
-        # Download button label and file options depend on the active backend.
-        # Rendered dynamically in the server so it can react to input$backend.
-        shiny::uiOutput("download_ui")
-      ),
-
-      shiny::mainPanel(
-
-        # Highcharter output — shown only when highcharter backend is active.
-        shiny::conditionalPanel(
-          condition = "input.backend == 'highcharter'",
-          highcharter::highchartOutput("hc_out")
-        ),
-
-        # ggplot2 output — shown only when ggplot2 backend is active.
-        shiny::conditionalPanel(
-          condition = "input.backend == 'ggplot2'",
-          shiny::plotOutput("ggplot_out")
-        ),
-
-        shiny::tags$hr(),
-
-        # First ten rows of the uploaded dataset for quick inspection.
-        shiny::tableOutput("head")
+    # Style — HC theme (highcharter only)
+    shiny::conditionalPanel(
+      condition = "input.backend == 'highcharter'",
+      shiny::selectInput(
+        "hc_theme", "Highcharts theme",
+        choices  = c("default", "smpl", "economist", "darkunica",
+                     "gridlight", "bloom", "flat", "flatdark", "ggplot2"),
+        selected = getOption("highdir.hc_theme", "default")
       )
+    ),
+
+    # Colours (both backends)
+    shiny::textInput("colors", "Colours (comma-sep hex)",
+                     placeholder = "#025169, #7C145C, ..."),
+
+    shiny::tags$hr(),
+
+    # Line chart options (shown only when geom = line)
+    shiny::conditionalPanel(
+      condition = "input.geom == 'line'",
+      shiny::checkboxInput("smooth",   "Smooth spline",   value = TRUE),
+      shiny::numericInput("dot_size",  "Dot size (px)", value = 4, min = 1, max = 20)
+    ),
+
+    # JS toggle (highcharter only)
+    shiny::conditionalPanel(
+      condition = "input.backend == 'highcharter'",
+      shiny::checkboxInput("use_js", "Enable JS hover band", value = TRUE)
+    ),
+
+    shiny::tags$hr(),
+
+    # Draw + downloads
+    shiny::actionButton("run", "Draw", icon = shiny::icon("palette"),
+                         class = "btn-primary"),
+    shiny::br(), shiny::br(),
+    shiny::textInput("dl_filename", "Download filename (no extension)",
+                     placeholder = paste0("highdir-figure_", Sys.Date())),
+    shiny::uiOutput("ui_downloads")
+  )
+
+  # ---------------------------------------------------------------------------
+  # Main panel tabs
+  # ---------------------------------------------------------------------------
+  main_tabs <- shiny::tabsetPanel(
+    shiny::tabPanel(
+      "Figure",
+      shiny::br(),
+      shiny::conditionalPanel(
+        condition = "input.backend == 'highcharter'",
+        highcharter::highchartOutput("hc_out", height = "460px")
+      ),
+      shiny::conditionalPanel(
+        condition = "input.backend == 'ggplot2'",
+        shiny::plotOutput("gg_out", height = "460px")
+      )
+    ),
+    shiny::tabPanel(
+      "Data preview",
+      shiny::br(),
+      shiny::tableOutput("tbl_head")
+    ),
+    shiny::tabPanel(
+      "R code",
+      shiny::br(),
+      shiny::verbatimTextOutput("code_preview")
     )
   )
+
+  # ---------------------------------------------------------------------------
+  # Assemble UI
+  # ---------------------------------------------------------------------------
+  ui <- if (has_bslib) {
+    bslib::page_sidebar(
+      title   = "highdir \u2014 Figure Builder",
+      sidebar = bslib::sidebar(sidebar_controls, width = 310),
+      main_tabs
+    )
+  } else {
+    shiny::fluidPage(
+      shiny::titlePanel("highdir \u2014 Figure Builder"),
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(sidebar_controls, width = 3),
+        shiny::mainPanel(main_tabs)
+      )
+    )
+  }
 
   # ---------------------------------------------------------------------------
   # Server
@@ -98,141 +184,214 @@ run_app <- function() {
   server <- function(input, output, session) {
 
     # -- Data ------------------------------------------------------------------
-
-    # Load and cache the uploaded file reactively.
     dataset <- shiny::reactive({
       shiny::req(input$file)
       rio::import(input$file$datapath)
     })
 
-    # Preview the first 10 rows whenever data change.
-    output$head <- shiny::renderTable({
+    output$tbl_head <- shiny::renderTable({
       shiny::req(dataset())
       utils::head(dataset(), 10)
     })
 
-    # -- Dynamic UI ------------------------------------------------------------
-
-    # Populate X / Y selectors from the column names of the loaded dataset.
-    output$dynamic_mapping <- shiny::renderUI({
+    # -- Dynamic axis UI -------------------------------------------------------
+    output$ui_mapping <- shiny::renderUI({
       shiny::req(dataset())
       cols <- names(dataset())
       shiny::tagList(
-        shiny::selectInput("x", "X variable", choices = cols),
-        shiny::selectInput("y", "Y variable", choices = cols)
+        shiny::selectInput("x",     "X variable",     choices = cols),
+        shiny::selectInput("y",     "Y variable",     choices = cols),
+        shiny::selectInput("group", "Group variable",
+                           choices = c("(none)" = "", cols)),
+        shiny::selectInput("n_col", "Count column (tooltip)",
+                           choices = c("(none)" = "", cols))
       )
     })
 
-    # Populate geometry-specific required argument selectors.
-    output$dynamic_required <- shiny::renderUI({
-      shiny::req(input$geom)
-      geom     <- get_geom(input$geom)
-      req_args <- geom$required_args
+    # Geom-specific required arg inputs
+    output$ui_required <- shiny::renderUI({
+      shiny::req(input$geom, dataset())
+      req_args <- get_geom(input$geom)$required_args
       if (length(req_args) == 0) return(NULL)
       cols <- names(dataset())
       shiny::tagList(
-        lapply(req_args, function(arg) {
-          shiny::selectInput(arg, paste("Select", arg), choices = cols)
-        })
+        lapply(req_args, function(a)
+          shiny::selectInput(a, paste("Select:", a), choices = cols))
       )
     })
 
-    # Render the download button with format choices appropriate for the backend.
-    output$download_ui <- shiny::renderUI({
+    # -- Download UI -----------------------------------------------------------
+    output$ui_downloads <- shiny::renderUI({
       shiny::req(input$backend)
       if (input$backend == "highcharter") {
-        shiny::tagList(
-          shiny::downloadButton("download_json", "JSON"),
-          shiny::downloadButton("download_html", "HTML")
+        btns <- list(
+          shiny::downloadButton("dl_json", "JSON"),
+          shiny::downloadButton("dl_html", "HTML")
         )
+        if (has_webshot2)
+          btns <- c(btns, list(shiny::downloadButton("dl_hc_png", "PNG")))
+        do.call(shiny::tagList, btns)
       } else {
-        # ggplot2 supports raster export via ggsave.
-        shiny::downloadButton("download_png", "PNG")
+        shiny::tagList(
+          shiny::downloadButton("dl_gg_png", "PNG"),
+          shiny::downloadButton("dl_gg_svg", "SVG")
+        )
       }
     })
 
-    # -- Figure specification --------------------------------------------------
+    # -- Helpers ---------------------------------------------------------------
 
-    # Build the figure spec; only recomputes when upstream inputs change,
-    # not on every button click — the render outputs handle the Draw button.
-    spec <- shiny::reactive({
-      shiny::req(dataset(), input$x, input$y)
-      fig_spec(data = dataset(), x = input$x, y = input$y)
+    # Parse colour text field into a vector or NULL
+    parsed_colors <- shiny::reactive({
+      raw <- trimws(input$colors %||% "")
+      if (!nzchar(raw)) return(NULL)
+      strsplit(raw, "\\s*,\\s*")[[1]]
     })
 
-    # Helper: collect optional geometry arguments from dynamic UI inputs.
+    # Collect required-arg values from dynamic UI
     geom_args <- shiny::reactive({
       shiny::req(input$geom)
-      req_args <- get_geom(input$geom)$required_args
-      args      <- lapply(req_args, function(a) input[[a]])
-      names(args) <- req_args
+      ra <- get_geom(input$geom)$required_args
+      if (length(ra) == 0) return(list())
+      args        <- lapply(ra, function(a) input[[a]])
+      names(args) <- ra
       args
     })
 
-    # -- Rendering (gated on the Draw button) -----------------------------------
+    # -- Build fig_spec --------------------------------------------------------
+    spec <- shiny::reactive({
+      shiny::req(dataset(), input$x, input$y)
+      fig_spec(
+        data     = dataset(),
+        x        = input$x,
+        y        = input$y,
+        group    = if (nzchar(input$group  %||% "")) input$group   else NULL,
+        n        = if (nzchar(input$n_col  %||% "")) input$n_col   else NULL,
+        title    = if (nzchar(input$title   %||% "")) input$title   else NULL,
+        subtitle = if (nzchar(input$subtitle %||% "")) input$subtitle else NULL,
+        caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL
+      )
+    })
 
-    # eventReactive ties rendering to the Draw button; isolate() prevents
-    # re-rendering whenever individual inputs change mid-session.
-    hc_figure <- shiny::eventReactive(input$run, {
+    # Apply UI theme settings before each render
+    apply_theme <- function() {
+      if (!is.null(input$hc_theme))   options(highdir.hc_theme = input$hc_theme)
+      if (!is.null(parsed_colors()))  options(highdir.colors   = parsed_colors())
+    }
+
+    # -- Render ----------------------------------------------------------------
+    hc_fig <- shiny::eventReactive(input$run, {
       shiny::req(input$backend == "highcharter", spec())
-      do.call(
-        make_fig,
-        c(list(spec = spec(), type = input$geom, backend = "highcharter"),
-          geom_args())
-      )
+      apply_theme()
+      do.call(make_fig, c(
+        list(
+          spec         = spec(),
+          type         = input$geom,
+          backend      = "highcharter",
+          use_js       = isTRUE(input$use_js),
+          smooth       = isTRUE(input$smooth),
+          dot_size     = input$dot_size %||% 4L,
+          line_symbols = NULL,
+          colors       = parsed_colors()
+        ),
+        geom_args()
+      ))
     })
 
-    gg_figure <- shiny::eventReactive(input$run, {
+    gg_fig <- shiny::eventReactive(input$run, {
       shiny::req(input$backend == "ggplot2", spec())
-      do.call(
-        make_fig,
-        c(list(spec = spec(), type = input$geom, backend = "ggplot2"),
-          geom_args())
+      apply_theme()
+      do.call(make_fig, c(
+        list(
+          spec         = spec(),
+          type         = input$geom,
+          backend      = "ggplot2",
+          smooth       = isTRUE(input$smooth),
+          dot_size     = input$dot_size %||% 4L,
+          line_symbols = NULL,
+          colors       = parsed_colors()
+        ),
+        geom_args()
+      ))
+    })
+
+    output$hc_out <- highcharter::renderHighchart(hc_fig())
+    output$gg_out <- shiny::renderPlot(gg_fig())
+
+    # -- R code preview --------------------------------------------------------
+    output$code_preview <- shiny::renderText({
+      shiny::req(input$x, input$y, input$geom, input$backend)
+
+      group_line <- if (nzchar(input$group %||% ""))
+        paste0('  group    = "', input$group, '",\n') else ""
+      n_line <- if (nzchar(input$n_col %||% ""))
+        paste0('  n        = "', input$n_col, '",\n') else ""
+      title_line <- if (nzchar(input$title %||% ""))
+        paste0('  title    = "', input$title, '",\n') else ""
+      sub_line <- if (nzchar(input$subtitle %||% ""))
+        paste0('  subtitle = "', input$subtitle, '",\n') else ""
+      cap_line <- if (nzchar(input$caption %||% ""))
+        paste0('  caption  = "', input$caption, '",\n') else ""
+
+      extra <- geom_args()
+      extra_str <- if (length(extra) > 0) {
+        paste0(
+          ",\n  ",
+          paste(names(extra), paste0('"', unlist(extra), '"'),
+                sep = " = ", collapse = ",\n  ")
+        )
+      } else ""
+
+      js_line    <- if (input$backend == "highcharter")
+        paste0(',\n  use_js   = ', isTRUE(input$use_js)) else ""
+      smooth_line <- if (input$geom == "line")
+        paste0(',\n  smooth   = ', isTRUE(input$smooth)) else ""
+
+      paste0(
+        "spec <- fig_spec(\n",
+        "  data     = your_data,\n",
+        '  x        = "', input$x, '",\n',
+        '  y        = "', input$y, '",\n',
+        group_line, n_line, title_line, sub_line, cap_line,
+        ")\n\n",
+        "make_fig(\n",
+        "  spec    = spec,\n",
+        '  type    = "', input$geom, '",\n',
+        '  backend = "', input$backend, '"',
+        js_line, smooth_line, extra_str,
+        "\n)"
       )
     })
 
-    output$hc_out <- highcharter::renderHighchart({
-      hc_figure()
+    # -- Downloads (all via hd_save()) -----------------------------------------
+
+    # Resolve the base filename from user input:
+    #   * strip any trailing extension the user may have typed
+    #   * fall back to a dated default when the field is blank
+    dl_basename <- shiny::reactive({
+      raw <- trimws(input$dl_filename %||% "")
+      if (!nzchar(raw)) {
+        return(paste0("highdir-figure_", Sys.Date()))
+      }
+      # Remove extension if present (e.g. "chart.html" → "chart")
+      tools::file_path_sans_ext(raw)
     })
 
-    output$ggplot_out <- shiny::renderPlot({
-      gg_figure()
-    })
+    dl_handler <- function(ext, fig_reactive) {
+      shiny::downloadHandler(
+        filename = function() paste0(dl_basename(), ".", ext),
+        content  = function(file) {
+          shiny::req(fig_reactive())
+          hd_save(fig_reactive(), file, type = ext)
+        }
+      )
+    }
 
-    # -- Downloads -------------------------------------------------------------
-
-    # JSON: serialise the figure specification (data + mapping + options).
-    output$download_json <- shiny::downloadHandler(
-      filename = function() paste0("fig_", Sys.Date(), ".json"),
-      content  = function(file) {
-        shiny::req(input$backend == "highcharter")
-        jsonlite::write_json(hc_figure()$x$hc_opts,
-                             path = file,
-                             pretty = TRUE,
-                             auto_unbox = TRUE)
-      }
-    )
-
-    # HTML: save the highcharter widget as a self-contained HTML file so that
-    # the interactive chart can be shared without a running R session.
-    output$download_html <- shiny::downloadHandler(
-      filename = function() paste0("fig_", Sys.Date(), ".html"),
-      content  = function(file) {
-        shiny::req(input$backend == "highcharter", hc_figure())
-        # selfcontained = TRUE embeds all JS/CSS so the file is portable.
-        htmlwidgets::saveWidget(hc_figure(), file = file, selfcontained = TRUE)
-      }
-    )
-
-    # PNG: render the ggplot2 figure to a temporary file and stream it.
-    output$download_png <- shiny::downloadHandler(
-      filename = function() paste0("fig_", Sys.Date(), ".png"),
-      content  = function(file) {
-        shiny::req(input$backend == "ggplot2", gg_figure())
-        ggplot2::ggsave(file, plot = gg_figure(), device = "png",
-                        width = 8, height = 6, dpi = 300)
-      }
-    )
+    output$dl_json   <- dl_handler("json", hc_fig)
+    output$dl_html   <- dl_handler("html", hc_fig)
+    output$dl_hc_png <- dl_handler("png",  hc_fig)
+    output$dl_gg_png <- dl_handler("png",  gg_fig)
+    output$dl_gg_svg <- dl_handler("svg",  gg_fig)
   }
 
   shiny::shinyApp(ui, server)

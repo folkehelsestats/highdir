@@ -2,4 +2,13 @@ url: https://github.com/folkehelsestats/highdir
 
 template:
   bootstrap: 5
+  bootwatch: lumen
 
+navbar:
+  left:
+    - icon: fa-home fa-lg
+      href: index.html
+    - text: Reference
+      href: reference/index.html
+    - text: News
+      href: news/index.html

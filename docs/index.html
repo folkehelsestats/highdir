@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Highchart for Hdir • highdir</title>
+<title>Backend-Agnostic Figure Builder for Highcharter and ggplot2 • highdir</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -15,9 +15,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Highchart for Hdir">
-<meta name="description" content="Create highchart figures meeting the requirement for Hdir.">
-<meta property="og:description" content="Create highchart figures meeting the requirement for Hdir.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Backend-Agnostic Figure Builder for Highcharter and ggplot2">
+<meta name="description" content="Provides a unified, backend-agnostic API for building interactive figures with highcharter or static figures with ggplot2. A figure is described once via a spec object and rendered to either backend without changing the calling code. Includes a Norwegian health-survey colour palette, flexible theme/style configuration, optional JavaScript injection for hover effects and accessibility, and both standalone save helpers and a Shiny GUI.">
+<meta property="og:description" content="Provides a unified, backend-agnostic API for building interactive figures with highcharter or static figures with ggplot2. A figure is described once via a spec object and rendered to either backend without changing the calling code. Includes a Norwegian health-survey colour palette, flexible theme/style configuration, optional JavaScript injection for hover effects and accessibility, and both standalone save helpers and a Shiny GUI.">
 <meta property="og:image" content="https://github.com/folkehelsestats/highdir/logo.png">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,9 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="active nav-item"><a class="nav-link" href="index.html"><span class="fa fa-home fa-lg"></span></a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">News</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -56,40 +58,152 @@
 <img src="logo.png" class="logo" alt=""><h1 id="highdir-">highdir <a class="anchor" aria-label="anchor" href="#highdir-"></a>
 </h1>
 </div>
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h2>
-<p><strong>highdir</strong> provides pre‑configured Highcharts figure templates tailored for the Norwegian Directorate of Health (Helsedirektoratet). The package is based on <a href="https://jkunst.com/highcharter/" title="highcharter" class="external-link">highcharter</a> package and <a href="https://ggplot2.tidyverse.org/" title="ggplot2" class="external-link">ggplot2</a> package.</p>
-<p>The package is still in <strong>experimental version</strong>, and both the API and visual design may change in future releases.</p>
-<p>Documentation can be found here <a href="https://folkehelsestats.github.io/highdir/" class="external-link uri">https://folkehelsestats.github.io/highdir/</a></p>
-</div>
+<p><strong>highdir</strong> is an R package that provides a unified, backend-agnostic API for building figures with either <a href="https://jkunst.com/highcharter/" class="external-link"><strong>highcharter</strong></a> (interactive) or <a href="https://ggplot2.tidyverse.org/" class="external-link"><strong>ggplot2</strong></a> (static).</p>
+<p>A figure is described once as a <code>fig_spec</code> object and rendered to either backend without changing the calling code. The package ships with the default to use Helsedirektoratet colour palette, styling and theme. A Shiny GUI is introduce to make it user friendly.</p>
+<hr>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <em>highdir</em> package directly from Github:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir"</span><span class="op">)</span></span></code></pre></div>
-<p>or installing the development version.</p>
+<code class="sourceCode R"><span><span class="co"># Install from GitHub</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir"</span><span class="op">)</span></span>
+<span><span class="co"># Install from development version (dev branch)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir@dev"</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir"</span>, ref <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://folkehelsestats.github.io/highdir" class="external-link">highdir</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  age  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"18-24"</span>, <span class="st">"25-34"</span>, <span class="st">"35-44"</span>, <span class="st">"45-54"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  sex  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Male"</span>, <span class="st">"Female"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>,</span>
+<span>  pct  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">38</span>, <span class="fl">55</span>, <span class="fl">61</span>, <span class="fl">48</span>, <span class="fl">52</span>, <span class="fl">60</span>, <span class="fl">57</span><span class="op">)</span>,</span>
+<span>  n    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">115</span>, <span class="fl">200</span>, <span class="fl">210</span>, <span class="fl">180</span>, <span class="fl">175</span>, <span class="fl">160</span>, <span class="fl">155</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 1. Describe the figure once</span></span>
+<span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fig_spec.html">fig_spec</a></span><span class="op">(</span></span>
+<span>  data     <span class="op">=</span> <span class="va">df</span>,</span>
+<span>  x        <span class="op">=</span> <span class="st">"age"</span>,</span>
+<span>  y        <span class="op">=</span> <span class="st">"pct"</span>,</span>
+<span>  group    <span class="op">=</span> <span class="st">"sex"</span>,</span>
+<span>  n        <span class="op">=</span> <span class="st">"n"</span>,            <span class="co"># shown in highcharter tooltips</span></span>
+<span>  title    <span class="op">=</span> <span class="st">"Health survey results"</span>,</span>
+<span>  subtitle <span class="op">=</span> <span class="st">"Source: Example data"</span>,</span>
+<span>  caption  <span class="op">=</span> <span class="st">"Tall om helse"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 2. Render to highcharter (interactive, default)</span></span>
+<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 3. Same spec → ggplot2 (static)</span></span>
+<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 4. Line chart with smooth spline and hover band</span></span>
+<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"line"</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 5. Disable JavaScript (for static HTML export)</span></span>
+<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, use_js <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 6. Save</span></span>
+<span><span class="fu"><a href="reference/hd_save.html">hd_save</a></span><span class="op">(</span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span>, <span class="st">"chart.html"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/hd_save.html">hd_save</a></span><span class="op">(</span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span>, <span class="st">"chart.png"</span><span class="op">)</span></span></code></pre></div>
+<hr>
 </div>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="theming">Theming<a class="anchor" aria-label="anchor" href="#theming"></a>
 </h2>
-<p>The easiest way to get started is by launching the built‑in graphical interface (GUI):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://folkehelsestats.github.io/highdir" class="external-link">"highdir"</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="man/img/README-unnamed-chunk-4-1.png" alt="" width="70%"></p>
-<p>This opens an interactive tool for generating and exporting figures using prefered templates.</p>
+<code class="sourceCode R"><span><span class="co"># Set package-wide defaults for the session</span></span>
+<span><span class="fu"><a href="reference/hd_set_theme.html">hd_set_theme</a></span><span class="op">(</span></span>
+<span>  hc_theme <span class="op">=</span> <span class="st">"helsedirektoratet"</span>,</span>
+<span>  colors   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#025169"</span>, <span class="st">"#7C145C"</span>, <span class="st">"#C68803"</span><span class="op">)</span>,</span>
+<span>  font     <span class="op">=</span> <span class="st">"Source Sans Pro"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># All subsequent make_fig() calls use these settings automatically</span></span>
+<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span></code></pre></div>
+<hr>
 </div>
 <div class="section level2">
-<h2 id="feedback--contributions">Feedback &amp; Contributions<a class="anchor" aria-label="anchor" href="#feedback--contributions"></a>
+<h2 id="javascript-injection">JavaScript injection<a class="anchor" aria-label="anchor" href="#javascript-injection"></a>
 </h2>
-<p>Because highdir is experimental, feedback, issue reports, and suggestions are very welcome.</p>
-<p>Please open an issue or pull request on GitHub if you would like to contribute.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Inline JS</span></span>
+<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, code <span class="op">=</span> <span class="st">"console.log('chart loaded');"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># From a .js file</span></span>
+<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, file <span class="op">=</span> <span class="st">"path/to/my-plugin.js"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># From a bundled plugin (inst/js/&lt;name&gt;.js)</span></span>
+<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, plugin <span class="op">=</span> <span class="st">"my-plugin"</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="shiny-gui">Shiny GUI<a class="anchor" aria-label="anchor" href="#shiny-gui"></a>
+</h2>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="supported-geometries">Supported geometries<a class="anchor" aria-label="anchor" href="#supported-geometries"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr>
+<th align="left">Name</th>
+<th align="left">highcharter type</th>
+<th align="left">ggplot2 equivalent</th>
+<th align="left">Extra args</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="left"><code>column</code></td>
+<td align="left">column</td>
+<td align="left"><code>geom_col()</code></td>
+<td align="left">—</td>
+</tr>
+<tr>
+<td align="left"><code>line</code></td>
+<td align="left">line / spline</td>
+<td align="left"><code>geom_line()</code></td>
+<td align="left">
+<code>smooth</code>, <code>dot_size</code>, <code>line_symbols</code>
+</td>
+</tr>
+<tr>
+<td align="left"><code>scatter</code></td>
+<td align="left">scatter</td>
+<td align="left"><code>geom_point()</code></td>
+<td align="left">—</td>
+</tr>
+<tr>
+<td align="left"><code>arearange</code></td>
+<td align="left">arearange</td>
+<td align="left"><code>geom_ribbon()</code></td>
+<td align="left">
+<code>ymin</code>, <code>ymax</code>
+</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>MIT © Kamaleri</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

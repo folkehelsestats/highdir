@@ -2,21 +2,29 @@
 
 ## All functions
 
-- [`base_fig()`](https://github.com/folkehelsestats/highdir/reference/base_fig.md)
-  : Base Figure
+- [`as.list(`*`<fig_spec>`*`)`](https://github.com/folkehelsestats/highdir/reference/as.list.fig_spec.md)
+  : Convert fig_spec to a List
 - [`fig_spec()`](https://github.com/folkehelsestats/highdir/reference/fig_spec.md)
-  : Create Figure Specification
-- [`` `%||%` ``](https://github.com/folkehelsestats/highdir/reference/grapes-or-or-grapes.md)
-  : NULL Coalescing Operator
+  : Create a Figure Specification
+- [`hd_add_js()`](https://github.com/folkehelsestats/highdir/reference/hd_add_js.md)
+  : Inject JavaScript into a Highcharts Widget
+- [`hd_save()`](https://github.com/folkehelsestats/highdir/reference/hd_save.md)
+  : Save a Figure to Disk
+- [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md)
+  : Set Package-Wide Style Defaults
+- [`hd_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_theme.md)
+  : Build a Highcharts Theme Object
 - [`list_backends()`](https://github.com/folkehelsestats/highdir/reference/list_backends.md)
-  : List Backends
+  : List Registered Backends
 - [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md)
-  : List Geometries
+  : List Registered Geometries
 - [`make_fig()`](https://github.com/folkehelsestats/highdir/reference/make_fig.md)
-  : Make Figure
+  : Build a Figure from a Specification
+- [`print(`*`<fig_spec>`*`)`](https://github.com/folkehelsestats/highdir/reference/print.fig_spec.md)
+  : Print a fig_spec Object
 - [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
-  : Register Backend
+  : Register a Rendering Backend
 - [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)
-  : Register Geometry
+  : Register a Geometry
 - [`run_app()`](https://github.com/folkehelsestats/highdir/reference/run_app.md)
-  : Draw Highdir Shiny Application
+  : Launch the highdir Shiny GUI
