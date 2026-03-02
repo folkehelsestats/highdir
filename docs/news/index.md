@@ -1,6 +1,6 @@
 # Changelog
 
-## highdir 0.1.0
+## highdir 0.2.0
 
 - Initial release with `column`, `line`, `scatter`, `arearange`
   geometries.
@@ -11,7 +11,7 @@
 - Shiny GUI via
   [`run_app()`](https://github.com/folkehelsestats/highdir/reference/run_app.md).
 
-## highdir 0.0.1
+## highdir 0.1.0
 
 - Implement registry to control geoms
 - Just a skeleton for highdir structure with very basic functions

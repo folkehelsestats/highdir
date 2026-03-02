@@ -18,7 +18,9 @@ Shiny GUI is introduce to make it user friendly.
 ## Installation
 
 ``` r
-# Install from GitHub (dev branch)
+# Install from GitHub
+remotes::install_github("folkehelsestats/highdir")
+# Install from development version (dev branch)
 remotes::install_github("folkehelsestats/highdir@dev")
 ```
 
@@ -72,7 +74,7 @@ hd_save(make_fig(spec, "column", backend = "ggplot2"), "chart.png")
 ``` r
 # Set package-wide defaults for the session
 hd_set_theme(
-  hc_theme = "economist",
+  hc_theme = "helsedirektoratet",
   colors   = c("#025169", "#7C145C", "#C68803"),
   font     = "Source Sans Pro"
 )

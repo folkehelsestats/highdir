@@ -1,6 +1,6 @@
 Package: highdir
 Title: Backend-Agnostic Figure Builder for Highcharter and ggplot2
-Version: 0.1.0
+Version: 0.2.0
 Authors@R:
   person(
     given = "Yusman",
@@ -15,7 +15,7 @@ Description: Provides a unified, backend-agnostic API for building interactive
     changing the calling code. Includes a Norwegian health-survey colour palette,
     flexible theme/style configuration, optional JavaScript injection for hover
     effects and accessibility, and both standalone save helpers and a Shiny GUI.
-URL: https://folkehelsestats.github.io/highdir
+URL: https://folkehelsestats.github.io/highdir/, https://github.com/folkehelsestats/highdir
 BugReports: https://github.com/folkehelsestats/highdir/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
