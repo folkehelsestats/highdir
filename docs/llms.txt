@@ -1,24 +1,77 @@
 # highdir
 
-## Intro
+## Overview
 
-Highchart figure for Hdir. This is still an **experimental version!**
+**highdir** provides pre‑configured Highcharts figure templates tailored
+for the Norwegian Directorate of Health (Helsedirektoratet). The package
+is based on [highcharter](https://jkunst.com/highcharter/ "highcharter")
+package and [ggplot2](https://ggplot2.tidyverse.org/ "ggplot2") package.
+
+The package is still in **experimental version**, and both the API and
+visual design may change in future releases.
+
+Documentation can be found here
+<https://folkehelsestats.github.io/highdir/>
 
 ## Installation
 
 You can install *highdir* package directly from Github:
 
 ``` r
-if(!require(pak)) install.packages("pak")
-pak::pkg_install("folkehelsestats/highdir")
+if(!require(remotes)) install.packages("remotes")
+remotes::install_github("folkehelsestats/highdir")
 ```
+
+or installing the development version.
+
+``` r
+if(!require(remotes)) install.packages("remotes")
+remotes::install_github("folkehelsestats/highdir", ref = "dev")
+```
+
+## Usage
+
+The easiest way to get started is by launching the built‑in graphical
+interface (GUI):
+
+``` r
+library("highdir")
+run_app()
+```
+
+![](man/img/README-unnamed-chunk-4-1.png)
+
+This opens an interactive tool for generating and exporting figures
+using prefered templates.
+
+## Feedback & Contributions
+
+Because highdir is experimental, feedback, issue reports, and
+suggestions are very welcome.
+
+Please open an issue or pull request on GitHub if you would like to
+contribute.
 
 # Package index
 
 ## All functions
 
-- [`create_ci_graph()`](https://github.com/folkehelsestats/highdir/reference/create_ci_graph.md)
-  : Create a Highchart with Confidence Intervals
-- [`make_hist()`](https://github.com/folkehelsestats/highdir/reference/make_hist.md)
-  : Create Interactive Highchart Graph with Categories and Groups
+- [`base_fig()`](https://github.com/folkehelsestats/highdir/reference/base_fig.md)
+  : Base Figure
+- [`fig_spec()`](https://github.com/folkehelsestats/highdir/reference/fig_spec.md)
+  : Create Figure Specification
+- [`` `%||%` ``](https://github.com/folkehelsestats/highdir/reference/grapes-or-or-grapes.md)
+  : NULL Coalescing Operator
+- [`list_backends()`](https://github.com/folkehelsestats/highdir/reference/list_backends.md)
+  : List Backends
+- [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md)
+  : List Geometries
+- [`make_fig()`](https://github.com/folkehelsestats/highdir/reference/make_fig.md)
+  : Make Figure
+- [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
+  : Register Backend
+- [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)
+  : Register Geometry
+- [`run_app()`](https://github.com/folkehelsestats/highdir/reference/run_app.md)
+  : Draw Highdir Shiny Application
 

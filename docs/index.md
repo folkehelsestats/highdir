@@ -1,14 +1,53 @@
 # highdir
 
-## Intro
+## Overview
 
-Highchart figure for Hdir. This is still an **experimental version!**
+**highdir** provides pre‑configured Highcharts figure templates tailored
+for the Norwegian Directorate of Health (Helsedirektoratet). The package
+is based on [highcharter](https://jkunst.com/highcharter/ "highcharter")
+package and [ggplot2](https://ggplot2.tidyverse.org/ "ggplot2") package.
+
+The package is still in **experimental version**, and both the API and
+visual design may change in future releases.
+
+Documentation can be found here
+<https://folkehelsestats.github.io/highdir/>
 
 ## Installation
 
 You can install *highdir* package directly from Github:
 
 ``` r
-if(!require(pak)) install.packages("pak")
-pak::pkg_install("folkehelsestats/highdir")
+if(!require(remotes)) install.packages("remotes")
+remotes::install_github("folkehelsestats/highdir")
 ```
+
+or installing the development version.
+
+``` r
+if(!require(remotes)) install.packages("remotes")
+remotes::install_github("folkehelsestats/highdir", ref = "dev")
+```
+
+## Usage
+
+The easiest way to get started is by launching the built‑in graphical
+interface (GUI):
+
+``` r
+library("highdir")
+run_app()
+```
+
+![](man/img/README-unnamed-chunk-4-1.png)
+
+This opens an interactive tool for generating and exporting figures
+using prefered templates.
+
+## Feedback & Contributions
+
+Because highdir is experimental, feedback, issue reports, and
+suggestions are very welcome.
+
+Please open an issue or pull request on GitHub if you would like to
+contribute.
