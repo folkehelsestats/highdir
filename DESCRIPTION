@@ -1,6 +1,6 @@
 Package: highdir
 Title: Highchart for Hdir
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
   person(
     given = "Yusman",
@@ -14,19 +14,21 @@ URL: https://folkehelsestats.github.io/highdir
 BugReports: https://github.com/folkehelsestats/highdir/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-LazyData: true
 Depends:
     R (>= 4.1.0)
 Imports: 
     data.table,
     highcharter,
-    htmlwidgets,
+    ggplot2,
     shiny,
-    viridis
-Suggests:
-    rlang,
     jsonlite,
+    htmlwidgets,
+    rio,
+    utils
+URL: https://github.com/folkehelsestats/highdir
+Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

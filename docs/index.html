@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,17 +57,39 @@
 </h1>
 </div>
 <div class="section level2">
-<h2 id="intro">Intro<a class="anchor" aria-label="anchor" href="#intro"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Highchart figure for Hdir. This is still an <strong>experimental version!</strong> Documentation can be found here <a href="https://folkehelsestats.github.io/highdir/" class="external-link uri">https://folkehelsestats.github.io/highdir/</a></p>
+<p><strong>highdir</strong> provides pre‑configured Highcharts figure templates tailored for the Norwegian Directorate of Health (Helsedirektoratet). The package is based on <a href="https://jkunst.com/highcharter/" title="highcharter" class="external-link">highcharter</a> package and <a href="https://ggplot2.tidyverse.org/" title="ggplot2" class="external-link">ggplot2</a> package.</p>
+<p>The package is still in <strong>experimental version</strong>, and both the API and visual design may change in future releases.</p>
+<p>Documentation can be found here <a href="https://folkehelsestats.github.io/highdir/" class="external-link uri">https://folkehelsestats.github.io/highdir/</a></p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install <em>highdir</em> package directly from Github:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://pak.r-lib.org/" class="external-link">pak</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir"</span><span class="op">)</span></span></code></pre></div>
+<p>or installing the development version.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir"</span>, ref <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>The easiest way to get started is by launching the built‑in graphical interface (GUI):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://folkehelsestats.github.io/highdir" class="external-link">"highdir"</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="man/img/README-unnamed-chunk-4-1.png" alt="" width="70%"></p>
+<p>This opens an interactive tool for generating and exporting figures using prefered templates.</p>
+</div>
+<div class="section level2">
+<h2 id="feedback--contributions">Feedback &amp; Contributions<a class="anchor" aria-label="anchor" href="#feedback--contributions"></a>
+</h2>
+<p>Because highdir is experimental, feedback, issue reports, and suggestions are very welcome.</p>
+<p>Please open an issue or pull request on GitHub if you would like to contribute.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

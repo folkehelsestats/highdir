@@ -2,13 +2,21 @@
 
 ## All functions
 
-- [`create_ci_graph()`](https://github.com/folkehelsestats/highdir/reference/create_ci_graph.md)
-  : Create a Highchart with Confidence Intervals
-- [`dtalko1`](https://github.com/folkehelsestats/highdir/reference/dtalko1.md)
-  : Example dataset general
-- [`dtalko2`](https://github.com/folkehelsestats/highdir/reference/dtalko2.md)
-  : Example dataset general with group
-- [`make_hist()`](https://github.com/folkehelsestats/highdir/reference/make_hist.md)
-  : Create Interactive Highchart Graph with Categories and Groups
+- [`base_fig()`](https://github.com/folkehelsestats/highdir/reference/base_fig.md)
+  : Base Figure
+- [`fig_spec()`](https://github.com/folkehelsestats/highdir/reference/fig_spec.md)
+  : Create Figure Specification
+- [`` `%||%` ``](https://github.com/folkehelsestats/highdir/reference/grapes-or-or-grapes.md)
+  : NULL Coalescing Operator
+- [`list_backends()`](https://github.com/folkehelsestats/highdir/reference/list_backends.md)
+  : List Backends
+- [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md)
+  : List Geometries
+- [`make_fig()`](https://github.com/folkehelsestats/highdir/reference/make_fig.md)
+  : Make Figure
+- [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
+  : Register Backend
+- [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)
+  : Register Geometry
 - [`run_app()`](https://github.com/folkehelsestats/highdir/reference/run_app.md)
-  : Run the highdir Shiny app
+  : Draw Highdir Shiny Application
