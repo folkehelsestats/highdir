@@ -84,7 +84,7 @@
 #' backend engines; you rarely need this directly.
 #'
 #' @param spec    A [hd_spec] object.
-#' @param opts    A [fig_opts] object.
+#' @param opts    A [hd_opts] object.
 #' @param backend Character. Backend name.
 #' @return A `ggplot` or `highchart` object.
 #' @keywords internal

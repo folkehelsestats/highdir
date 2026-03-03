@@ -1,5 +1,5 @@
 spec <- hd_spec(survey_df, "age", "pct")
-opts <- fig_opts()
+opts <- hd_opts()
 
 test_that("validate_fig_inputs: passes for all valid inputs", {
   expect_invisible(
@@ -12,10 +12,10 @@ test_that("validate_fig_inputs: rejects non-hd_spec", {
     "hd_spec")
 })
 
-test_that("validate_fig_inputs: rejects non-fig_opts", {
+test_that("validate_fig_inputs: rejects non-hd_opts", {
   expect_error(
     validate_fig_inputs(spec, list(), "column", "highcharter", list()),
-    "fig_opts")
+    "hd_opts")
 })
 
 test_that("validate_fig_inputs: rejects unknown geometry", {

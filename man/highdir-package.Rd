@@ -4,59 +4,96 @@
 \name{highdir-package}
 \alias{highdir}
 \alias{highdir-package}
-\title{highdir: Backend-Agnostic Figure Builder}
+\title{highdir: Backend-Agnostic Figure Builder for Helsedirektoratet}
 \description{
-\code{highdir} provides a unified API for building interactive figures with
-\strong{highcharter} or static figures with \strong{ggplot2}. A figure is described
-once as a \link{fig_spec} object and rendered to either backend without
-changing the calling code.
-\subsection{Quick start}{
+\strong{highdir} provides a unified API for building interactive figures with
+\strong{highcharter} or static figures with \strong{ggplot2}.  A figure is described
+once as a data-mapping object (\link{hd_spec}) and an optional presentation
+object (\link{hd_opts}), then rendered to either backend without changing the
+calling code.
+\subsection{Core workflow}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(highdir)
 
+# ── 1. Sample data ────────────────────────────────────────────────────────
 df <- data.frame(
-  age  = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
-  sex  = rep(c("Male", "Female"), 4),
-  pct  = c(42, 38, 55, 61, 48, 52, 60, 57),
-  n    = c(120, 115, 200, 210, 180, 175, 160, 155)
+  age = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
+  sex = rep(c("Male", "Female"), 4),
+  pct = c(42, 38, 55, 61, 48, 52, 60, 57),
+  n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-spec <- fig_spec(
-  data     = df,
-  x        = "age",
-  y        = "pct",
-  group    = "sex",
-  n        = "n",
-  title    = "Health survey results",
-  subtitle = "Source: Example data",
-  caption  = "Tall om helse"
-)
+# ── 2. Describe the data mapping (once) ──────────────────────────────────
+spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
+                 ylab = "Percentage (\%)")
 
-# Interactive highcharter chart (default)
-make_fig(spec, "column")
+# ── 3. Describe the presentation (reusable across specs) ─────────────────
+opts <- hd_opts(title    = "Health survey results",
+                 subtitle = "Source: FHI 2024",
+                 caption  = "Tall om helse",
+                 ylim     = c(0, 80))
 
-# Same spec, static ggplot2 version
-make_fig(spec, "column", backend = "ggplot2")
+# ── 4. Render — swap backend without touching spec or opts ────────────────
+hd_make(spec, "column", opts)                        # interactive HC
+hd_make(spec, "column", opts, backend = "ggplot2")   # static ggplot2
+hd_make(spec, "line",   opts, smooth = TRUE)         # HC spline
+hd_make(spec, "line",   opts, backend = "ggplot2")   # gg line
+hd_make(spec, "scatter")                             # HC scatter
 
-# Smooth line chart without JS hover effects
-make_fig(spec, "line", smooth = TRUE, use_js = FALSE)
+# ── 5. Choropleth maps — Norway counties and municipalities ──────────────
+# County map (fylker)
+county_df <- no_counties()
+county_df$value <- round(runif(15, 10, 80))
+map_spec <- hd_spec(county_df, x = "fylkesnummer", y = "value")
+map_opts <- hd_opts(title = "Helse per fylke", subtitle = "Kilde: FHI 2024")
+hd_make(map_spec, "map", map_opts)                          # interactive HC
+hd_make(map_spec, "map", map_opts, backend = "ggplot2")     # static ggplot2
 
-# Save to disk
-hd_save(make_fig(spec, "column"), "chart.html")
+# Municipality map (kommuner)
+muni_df <- no_municipalities()
+muni_df$value <- round(runif(nrow(muni_df), 5, 100))
+m_spec <- hd_spec(muni_df, x = "kommunenummer", y = "value")
+hd_make(m_spec, "map", map_opts, level = "municipality")
+
+# Donut chart
+hd_make(pie_spec, "pie", pie_opts, inner_size = "50\%")
+
+# ── 6. Arearange (confidence intervals) ──────────────────────────────────
+df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
+spec2 <- hd_spec(df2, "age", "pct", group = "sex")
+hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
+
+# ── 7. Save to disk ───────────────────────────────────────────────────────
+hd_save(hd_make(spec, "column", opts),               "chart.html")
+hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "chart.png")
+
+# ── 8. Session-wide styling ───────────────────────────────────────────────
+hd_set_theme(hc_theme = "economist",
+             colors   = c("#025169","#7C145C","#C68803"))
+
+# ── 9. Launch the Shiny GUI ───────────────────────────────────────────────
+hd_app()
 }\if{html}{\out{</div>}}
 }
 
 \subsection{Key functions}{\tabular{ll}{
    Function \tab Purpose \cr
-   \code{\link[=fig_spec]{fig_spec()}} \tab Create a backend-agnostic figure specification \cr
-   \code{\link[=make_fig]{make_fig()}} \tab Render a spec to highcharter or ggplot2 \cr
-   \code{\link[=hd_save]{hd_save()}} \tab Export a figure to HTML / JSON / PNG / SVG / PDF \cr
-   \code{\link[=hd_set_theme]{hd_set_theme()}} \tab Set package-wide colour, font, and theme defaults \cr
-   \code{\link[=hd_theme]{hd_theme()}} \tab Build a highcharter theme object \cr
-   \code{\link[=hd_add_js]{hd_add_js()}} \tab Inject custom JavaScript into a highchart widget \cr
-   \code{\link[=run_app]{run_app()}} \tab Launch the interactive Shiny GUI \cr
+   \code{\link[=hd_spec]{hd_spec()}} \tab Describe data mapping (x, y, group, n, labels) \cr
+   \code{\link[=hd_opts]{hd_opts()}} \tab Describe presentation (title, ylim, colours, theme) \cr
+   \code{\link[=hd_make]{hd_make()}} \tab Render spec + opts → highchart or ggplot \cr
+   \code{\link[=hd_save]{hd_save()}} \tab Export to HTML / JSON / PNG / SVG / PDF \cr
+   \code{\link[=hd_set_theme]{hd_set_theme()}} \tab Session-wide colour / font / theme defaults \cr
+   \code{\link[=hd_theme]{hd_theme()}} \tab Build a highcharter theme object directly \cr
+   \code{\link[=hd_add_js]{hd_add_js()}} \tab Inject custom JS into a highchart \cr
+   \code{\link[=no_counties]{no_counties()}} \tab Norway 2024 county reference table (codes + hc-keys) \cr
+   \code{\link[=no_municipalities]{no_municipalities()}} \tab Norway municipality reference table \cr
    \code{\link[=register_geom]{register_geom()}} \tab Add a custom geometry \cr
    \code{\link[=register_backend]{register_backend()}} \tab Add a custom rendering backend \cr
+   \code{\link[=register_palette]{register_palette()}} \tab Add a named colour palette \cr
+   \code{\link[=list_geoms]{list_geoms()}} \tab Show available geometries \cr
+   \code{\link[=list_backends]{list_backends()}} \tab Show available backends \cr
+   \code{\link[=list_palettes]{list_palettes()}} \tab Show available palettes \cr
+   \code{\link[=hd_app]{hd_app()}} \tab Launch the Shiny GUI \cr
 }
 
 }
@@ -64,7 +101,8 @@ hd_save(make_fig(spec, "column"), "chart.html")
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://folkehelsestats.github.io/highdir}
+  \item \url{https://folkehelsestats.github.io/highdir/}
+  \item \url{https://github.com/folkehelsestats/highdir}
   \item Report bugs at \url{https://github.com/folkehelsestats/highdir/issues}
 }
 

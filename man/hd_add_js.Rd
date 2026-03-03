@@ -13,38 +13,32 @@ hd_add_js(
 )
 }
 \arguments{
-\item{hc}{A \code{highchart} object (output of \code{\link[=make_fig]{make_fig()}} with
-\code{backend = "highcharter"}, or any object returned by
-\code{\link[highcharter:highchart]{highcharter::highchart()}}).}
+\item{hc}{A \code{highchart} object.}
 
 \item{code}{Character or \code{NULL}. Raw JavaScript string.}
 
-\item{file}{Character or \code{NULL}. Path to a \code{.js} file whose contents are
-read and injected.}
+\item{file}{Character or \code{NULL}. Path to a \code{.js} file to read and inject.}
 
-\item{plugin}{Character or \code{NULL}. Name of a JS plugin bundled with
-highdir (a file at \verb{inst/js/<plugin>.js}). Convenient shorthand for
-\code{file = system.file(...)}.}
+\item{plugin}{Character or \code{NULL}. Name of a plugin bundled in \verb{inst/js/}.}
 
-\item{where}{Character. One of \code{"load"} (default) — runs when the chart
-finishes loading — or \code{"render"} — runs after every render cycle.}
+\item{where}{\code{"load"} (default) or \code{"render"}.}
 }
 \value{
-The \code{highchart} object with the JS injected via
-\verb{chart.events.<where>}.
+The \code{highchart} object with JS injected.
 }
 \description{
-Appends custom JavaScript to a \code{highchart} object. Useful for Highcharts
-plugins, custom \code{load} / \code{render} callbacks, or any other JS that must run
-in the chart's context.
+Appends custom JavaScript to a \code{highchart} object via
+\verb{chart.events.<where>}.  Use this for hand-written callbacks and plugins.
+For Highcharts built-in modules (accessibility, exporting, etc.) use
+\code{\link[highcharter:hc_add_dependency]{highcharter::hc_add_dependency()}} instead.
 }
 \details{
 Exactly one of \code{code}, \code{file}, or \code{plugin} must be supplied.
 }
 \examples{
 \dontrun{
-spec <- fig_spec(mtcars, "wt", "mpg")
-fig  <- make_fig(spec, "scatter", backend = "highcharter")
+spec <- hd_spec(mtcars, "wt", "mpg")
+fig  <- hd_make(spec, "scatter")
 fig  <- hd_add_js(fig, code = "console.log('chart loaded');")
 }
 

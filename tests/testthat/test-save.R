@@ -1,5 +1,5 @@
 spec <- hd_spec(survey_df[survey_df$sex == "Male", ], "age", "pct")
-opts <- fig_opts(title = "Save test")
+opts <- hd_opts(title = "Save test")
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 new_tmp <- function(ext) {
@@ -86,7 +86,7 @@ test_that("hd_save: errors when file has no extension and type = 'auto'", {
 
 test_that("hd_save: pie ggplot2 to PNG", {
   s2  <- hd_spec(pie_df, "category", "value")
-  fig <- hd_make(s2, "pie", fig_opts(title = "Pie"), backend = "ggplot2")
+  fig <- hd_make(s2, "pie", hd_opts(title = "Pie"), backend = "ggplot2")
   f   <- new_tmp("png")
   hd_save(fig, f)
   expect_true(file.exists(f))
@@ -94,7 +94,7 @@ test_that("hd_save: pie ggplot2 to PNG", {
 
 test_that("hd_save: pie highcharter to HTML", {
   s2  <- hd_spec(pie_df, "category", "value")
-  fig <- hd_make(s2, "pie", fig_opts(title = "Pie"))
+  fig <- hd_make(s2, "pie", hd_opts(title = "Pie"))
   f   <- new_tmp("html")
   hd_save(fig, f)
   expect_true(file.exists(f))

@@ -9,7 +9,7 @@
 #' Stops with an informative message if anything is wrong.
 #'
 #' @param spec        A `hd_spec` object.
-#' @param opts        A `fig_opts` object.
+#' @param opts        A `hd_opts` object.
 #' @param type        Character. Geometry name.
 #' @param backend     Character. Backend name.
 #' @param extra_args  Named list of additional arguments (for required-arg
@@ -23,8 +23,8 @@ validate_fig_inputs <- function(spec, opts, type, backend, extra_args) {
     stop("`spec` must be a hd_spec object created by hd_spec().",
          call. = FALSE)
 
-  if (!inherits(opts, "fig_opts"))
-    stop("`opts` must be a fig_opts object created by fig_opts().",
+  if (!inherits(opts, "hd_opts"))
+    stop("`opts` must be a hd_opts object created by hd_opts().",
          call. = FALSE)
 
   geom <- get_geom(type)

@@ -131,7 +131,7 @@ county_df <- data.frame(
 
 test_that("hd_make: HC county map returns highchart", {
   spec <- hd_spec(county_df, x = "fylke", y = "rate")
-  opts <- fig_opts(title = "Helse per fylke")
+  opts <- hd_opts(title = "Helse per fylke")
   fig  <- hd_make(spec, "map", opts, level = "county")
   expect_true(is_highchart(fig))
 })
@@ -152,7 +152,7 @@ test_that("hd_make: HC county map from no_counties() data", {
   set.seed(42)
   df$rate <- round(runif(nrow(df), 10, 80))
   spec <- hd_spec(df, x = "fylkesnummer", y = "rate")
-  opts <- fig_opts(title = "Helseindikator per fylke",
+  opts <- hd_opts(title = "Helseindikator per fylke",
                    subtitle = "Kilde: FHI 2024")
   fig  <- hd_make(spec, "map", opts, level = "county",
                   value_lab = "Rate per 100 000",
@@ -163,7 +163,7 @@ test_that("hd_make: HC county map from no_counties() data", {
 
 test_that("hd_make: HC map with custom colours", {
   spec <- hd_spec(county_df, x = "fylke", y = "rate")
-  fig  <- hd_make(spec, "map", fig_opts(),
+  fig  <- hd_make(spec, "map", hd_opts(),
                   level    = "county",
                   low_col  = "#FFFFFF",
                   high_col = "#7C145C",
@@ -178,7 +178,7 @@ test_that("hd_make: HC municipality map returns highchart", {
   set.seed(7)
   df$rate <- round(runif(nrow(df), 20, 95))
   spec <- hd_spec(df, x = "kommunenummer", y = "rate")
-  opts <- fig_opts(title = "Helse per kommune")
+  opts <- hd_opts(title = "Helse per kommune")
   fig  <- hd_make(spec, "map", opts, level = "municipality")
   expect_true(is_highchart(fig))
 })
@@ -189,7 +189,7 @@ test_that("hd_make: HC municipality map from integer knr", {
     rate = c(42.5, 38.1, 55.2, 48.7, 60.1)
   )
   spec <- hd_spec(muni_df, x = "knr", y = "rate")
-  fig  <- hd_make(spec, "map", fig_opts(title = "Kommunekart"),
+  fig  <- hd_make(spec, "map", hd_opts(title = "Kommunekart"),
                   level = "municipality")
   expect_true(is_highchart(fig))
 })
@@ -198,7 +198,7 @@ test_that("hd_make: HC municipality map from integer knr", {
 
 test_that("hd_save: HC map to HTML", {
   spec <- hd_spec(county_df, x = "fylke", y = "rate")
-  fig  <- hd_make(spec, "map", fig_opts(title = "Lagre test"))
+  fig  <- hd_make(spec, "map", hd_opts(title = "Lagre test"))
   f    <- tempfile(fileext = ".html")
   withr::defer(unlink(f))
   hd_save(fig, f)
@@ -222,7 +222,7 @@ test_that("hd_make: gg county map returns ggplot (skip if no sf or offline)", {
   skip_if_not_installed("sf")
   skip_if_offline()
   spec <- hd_spec(county_df, x = "fylke", y = "rate")
-  opts <- fig_opts(title = "Helse per fylke (ggplot2)")
+  opts <- hd_opts(title = "Helse per fylke (ggplot2)")
   fig  <- hd_make(spec, "map", opts, backend = "ggplot2", level = "county")
   expect_true(is_ggplot(fig))
 })
@@ -231,7 +231,7 @@ test_that("gg_map errors informatively without sf", {
   skip_if(requireNamespace("sf", quietly = TRUE), "sf installed")
   spec <- hd_spec(county_df, x = "fylke", y = "rate")
   expect_error(
-    hd_make(spec, "map", fig_opts(), backend = "ggplot2"),
+    hd_make(spec, "map", hd_opts(), backend = "ggplot2"),
     "sf"
   )
 })

@@ -3,12 +3,12 @@
 # Two complementary constructors are provided:
 #
 #   hd_spec()  — *what* the data means  (x, y, group, n, axis labels)
-#   fig_opts()  — *how* it should look   (title, ylim, flip, colours, theme)
+#   hd_opts()  — *how* it should look   (title, ylim, flip, colours, theme)
 #
 # Keeping them separate means:
 #   * The same hd_spec can be rendered with different opts (e.g. EN vs NO
 #     titles) without repeating data-mapping code.
-#   * fig_opts objects are reusable across multiple specs.
+#   * hd_opts objects are reusable across multiple specs.
 #   * Validation errors are localised to the object they belong to.
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -19,7 +19,7 @@
 #'
 #' Defines the **data mapping** for a figure — which columns map to x, y,
 #' group, and count — independently of any visual presentation choices.
-#' Pass the result to [hd_make()] together with an optional [fig_opts()]
+#' Pass the result to [hd_make()] together with an optional [hd_opts()]
 #' object.
 #'
 #' @param data   A `data.frame` containing all referenced columns.
@@ -37,7 +37,7 @@
 #'
 #' @return An S3 object of class `"hd_spec"`.
 #'
-#' @seealso [fig_opts()], [hd_make()]
+#' @seealso [hd_opts()], [hd_make()]
 #'
 #' @examples
 #' df <- data.frame(
@@ -105,7 +105,7 @@ as.list.hd_spec <- function(x, ...) {
 }
 
 # ════════════════════════════════════════════════════════════════════════════
-# fig_opts ── presentation options
+# hd_opts ── presentation options
 # ════════════════════════════════════════════════════════════════════════════
 
 #' Create Figure Presentation Options
@@ -119,7 +119,7 @@ as.list.hd_spec <- function(x, ...) {
 #'
 #' ```r
 #' spec    <- hd_spec(df, "age", "pct", group = "sex")
-#' opts_en <- fig_opts(title = "Health survey",    subtitle = "All ages")
+#' opts_en <- hd_opts(title = "Health survey",    subtitle = "All ages")
 #' opts_no <- fig_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
 #'
 #' hd_make(spec, "column", opts_en)
@@ -139,12 +139,12 @@ as.list.hd_spec <- function(x, ...) {
 #' @param hc_theme Character or `NULL`. Per-figure highcharter theme name;
 #'   takes precedence over [hd_set_theme()].
 #'
-#' @return An S3 object of class `"fig_opts"`.
+#' @return An S3 object of class `"hd_opts"`.
 #'
 #' @seealso [hd_spec()], [hd_make()], [hd_set_theme()]
 #'
 #' @examples
-#' opts <- fig_opts(
+#' opts <- hd_opts(
 #'   title    = "Health survey results",
 #'   subtitle = "Source: FHI 2024",
 #'   caption  = "Tall om helse",
@@ -155,7 +155,7 @@ as.list.hd_spec <- function(x, ...) {
 #' opts
 #'
 #' @export
-fig_opts <- function(title    = NULL,
+hd_opts <- function(title    = NULL,
                      subtitle = NULL,
                      caption  = NULL,
                      ylim     = NULL,
@@ -177,15 +177,15 @@ fig_opts <- function(title    = NULL,
          flip     = flip,
          colors   = colors,
          hc_theme = hc_theme),
-    class = "fig_opts"
+    class = "hd_opts"
   )
 }
 
 # ── S3 methods ───────────────────────────────────────────────────────────────
 
 #' @export
-print.fig_opts <- function(x, ...) {
-  cat("<fig_opts>\n")
+print.hd_opts <- function(x, ...) {
+  cat("<hd_opts>\n")
   if (!is.null(x$title))    cat("  title    :", x$title,    "\n")
   if (!is.null(x$subtitle)) cat("  subtitle :", x$subtitle, "\n")
   if (!is.null(x$caption))  cat("  caption  :", x$caption,  "\n")
@@ -199,9 +199,9 @@ print.fig_opts <- function(x, ...) {
 }
 
 #' @export
-as.list.fig_opts <- function(x, ...) unclass(x)
+as.list.hd_opts <- function(x, ...) unclass(x)
 
 # ── Internal default ─────────────────────────────────────────────────────────
 
 #' @keywords internal
-default_opts <- function() fig_opts()
+default_opts <- function() hd_opts()

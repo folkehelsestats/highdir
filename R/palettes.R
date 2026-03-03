@@ -18,7 +18,7 @@
 #'
 #' Adds a named palette to the highdir palette registry so it can be
 #' referenced by name wherever colours are accepted
-#' (e.g. `fig_opts(colors = "my_palette")`).
+#' (e.g. `hd_opts(colors = "my_palette")`).
 #'
 #' Built-in palettes registered at package load time:
 #'

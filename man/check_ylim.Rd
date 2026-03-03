@@ -2,11 +2,11 @@
 % Please edit documentation in R/utils.R
 \name{check_ylim}
 \alias{check_ylim}
-\title{Validate ylim argument}
+\title{Validate the ylim argument}
 \usage{
 check_ylim(ylim)
 }
 \description{
-Validate ylim argument
+Validate the ylim argument
 }
 \keyword{internal}

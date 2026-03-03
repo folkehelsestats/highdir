@@ -2,11 +2,11 @@
 % Please edit documentation in R/utils.R
 \name{check_columns}
 \alias{check_columns}
-\title{Stop with a tidy message if columns are missing from a data frame}
+\title{Stop with a tidy message when columns are absent from a data frame}
 \usage{
 check_columns(data, cols, arg_name = "data")
 }
 \description{
-Stop with a tidy message if columns are missing from a data frame
+Stop with a tidy message when columns are absent from a data frame
 }
 \keyword{internal}

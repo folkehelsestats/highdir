@@ -6,7 +6,7 @@
 #' **highdir** provides a unified API for building interactive figures with
 #' **highcharter** or static figures with **ggplot2**.  A figure is described
 #' once as a data-mapping object ([hd_spec]) and an optional presentation
-#' object ([fig_opts]), then rendered to either backend without changing the
+#' object ([hd_opts]), then rendered to either backend without changing the
 #' calling code.
 #'
 #' ## Core workflow
@@ -27,7 +27,7 @@
 #'                  ylab = "Percentage (%)")
 #'
 #' # ── 3. Describe the presentation (reusable across specs) ─────────────────
-#' opts <- fig_opts(title    = "Health survey results",
+#' opts <- hd_opts(title    = "Health survey results",
 #'                  subtitle = "Source: FHI 2024",
 #'                  caption  = "Tall om helse",
 #'                  ylim     = c(0, 80))
@@ -44,7 +44,7 @@
 #' county_df <- no_counties()
 #' county_df$value <- round(runif(15, 10, 80))
 #' map_spec <- hd_spec(county_df, x = "fylkesnummer", y = "value")
-#' map_opts <- fig_opts(title = "Helse per fylke", subtitle = "Kilde: FHI 2024")
+#' map_opts <- hd_opts(title = "Helse per fylke", subtitle = "Kilde: FHI 2024")
 #' hd_make(map_spec, "map", map_opts)                          # interactive HC
 #' hd_make(map_spec, "map", map_opts, backend = "ggplot2")     # static ggplot2
 #'
@@ -79,7 +79,7 @@
 #' | Function | Purpose |
 #' |:--|:--|
 #' | [hd_spec()] | Describe data mapping (x, y, group, n, labels) |
-#' | [fig_opts()] | Describe presentation (title, ylim, colours, theme) |
+#' | [hd_opts()] | Describe presentation (title, ylim, colours, theme) |
 #' | [hd_make()] | Render spec + opts → highchart or ggplot |
 #' | [hd_save()] | Export to HTML / JSON / PNG / SVG / PDF |
 #' | [hd_set_theme()] | Session-wide colour / font / theme defaults |

@@ -4,28 +4,28 @@
 \alias{hd_theme}
 \title{Build a Highcharts Theme Object}
 \usage{
-hd_theme(name = NULL, ...)
+hd_theme(name = NULL, colors = NULL, ...)
 }
 \arguments{
-\item{name}{Character or \code{NULL}. Theme name. \code{NULL} reads from
+\item{name}{Character or \code{NULL}. Theme name; \code{NULL} reads from
 \code{getOption("highdir.hc_theme")}.}
 
+\item{colors}{Character vector or \code{NULL}. Colour override for this call.}
+
 \item{...}{Named arguments forwarded to \code{\link[highcharter:hc_theme]{highcharter::hc_theme()}} as
-overrides on top of the base theme. See the Highcharts API for the
-expected structure.}
+extra overrides on top of the base theme.}
 }
 \value{
-A highcharter theme object (a named list of class \code{"hc_theme"}).
+A highcharter theme object (\code{hc_theme}).
 }
 \description{
 Constructs a highcharter theme by merging a named base theme with colour
-and font overrides from the current \code{\link[=hd_set_theme]{hd_set_theme()}} settings and any
-extra named arguments passed via \code{...}.
+and font overrides from the current \code{\link[=hd_set_theme]{hd_set_theme()}} session defaults and
+any per-figure \code{opts}.
 }
 \details{
-You normally do not need to call this directly — \code{\link[=make_fig]{make_fig()}} applies it
-automatically for \code{backend = "highcharter"}. Use it when you want to
-preview or apply a theme to a highchart object built outside highdir.
+Called automatically inside the highcharter engine; useful when you want to
+apply a theme to a highchart built outside highdir.
 }
 \examples{
 \dontrun{

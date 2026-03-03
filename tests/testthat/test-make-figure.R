@@ -1,5 +1,5 @@
 spec <- hd_spec(survey_df, "age", "pct", group = "sex", n = "n")
-opts <- fig_opts(title = "Test chart", ylim = c(0, 80))
+opts <- hd_opts(title = "Test chart", ylim = c(0, 80))
 
 # ── Input validation ──────────────────────────────────────────────────────────
 
@@ -56,13 +56,13 @@ test_that("hd_make: HC arearange returns highchart", {
 
 test_that("hd_make: HC pie (solid) returns highchart", {
   s2  <- hd_spec(pie_df, "category", "value")
-  fig <- hd_make(s2, "pie", fig_opts(title = "Pie"))
+  fig <- hd_make(s2, "pie", hd_opts(title = "Pie"))
   expect_true(is_highchart(fig))
 })
 
 test_that("hd_make: HC pie (donut) returns highchart", {
   s2  <- hd_spec(pie_df, "category", "value")
-  fig <- hd_make(s2, "pie", fig_opts(title = "Donut"),
+  fig <- hd_make(s2, "pie", hd_opts(title = "Donut"),
                   inner_size = "50%")
   expect_true(is_highchart(fig))
 })
@@ -79,7 +79,7 @@ test_that("hd_make: use_js = FALSE does not break line", {
 
 test_that("hd_make: use_js = FALSE does not break pie", {
   s2  <- hd_spec(pie_df, "category", "value")
-  fig <- hd_make(s2, "pie", fig_opts(), use_js = FALSE)
+  fig <- hd_make(s2, "pie", hd_opts(), use_js = FALSE)
   expect_true(is_highchart(fig))
 })
 
@@ -110,7 +110,7 @@ test_that("hd_make: gg arearange returns ggplot", {
 
 test_that("hd_make: gg pie returns ggplot", {
   s2  <- hd_spec(pie_df, "category", "value")
-  fig <- hd_make(s2, "pie", fig_opts(title = "Pie"),
+  fig <- hd_make(s2, "pie", hd_opts(title = "Pie"),
                   backend = "ggplot2")
   expect_true(is_ggplot(fig))
 })
@@ -118,8 +118,8 @@ test_that("hd_make: gg pie returns ggplot", {
 # ── fig_opts reuse ────────────────────────────────────────────────────────────
 
 test_that("same spec renders with two different opts", {
-  opts_a <- fig_opts(title = "A", ylim = c(0, 60))
-  opts_b <- fig_opts(title = "B", flip = TRUE)
+  opts_a <- hd_opts(title = "A", ylim = c(0, 60))
+  opts_b <- hd_opts(title = "B", flip = TRUE)
   expect_true(is_highchart(hd_make(spec, "column", opts_a)))
   expect_true(is_highchart(hd_make(spec, "column", opts_b)))
 })
@@ -127,7 +127,7 @@ test_that("same spec renders with two different opts", {
 # ── Per-figure colour override ────────────────────────────────────────────────
 
 test_that("hd_make: per-figure colors in opts work for both backends", {
-  o <- fig_opts(colors = c("#FF0000", "#0000FF"))
+  o <- hd_opts(colors = c("#FF0000", "#0000FF"))
   expect_true(is_highchart(hd_make(spec, "column", o)))
   expect_true(is_ggplot(hd_make(spec, "column", o, backend = "ggplot2")))
 })

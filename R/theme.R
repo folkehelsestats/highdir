@@ -18,7 +18,7 @@
 #' plugins for all figures produced with [hd_make()] in the current R session.
 #' Call once at the top of a script or in `.Rprofile`.
 #'
-#' Per-figure overrides are provided via [fig_opts()], which always take
+#' Per-figure overrides are provided via [hd_opts()], which always take
 #' precedence over these session defaults.
 #'
 #' @param hc_theme   Character or `NULL`. Built-in highcharter theme name: one
@@ -41,7 +41,7 @@
 #' # Reset
 #' hd_set_theme(hc_theme = "default", colors = NULL)
 #'
-#' @seealso [fig_opts()] for per-figure overrides
+#' @seealso [hd_opts()] for per-figure overrides
 #' @export
 hd_set_theme <- function(hc_theme   = NULL,
                           colors     = NULL,

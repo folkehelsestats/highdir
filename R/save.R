@@ -39,7 +39,7 @@
 #' @examples
 #' \dontrun{
 #' spec <- hd_spec(mtcars, "wt", "mpg")
-#' opts <- fig_opts(title = "Weight vs MPG")
+#' opts <- hd_opts(title = "Weight vs MPG")
 #'
 #' hc_fig <- hd_make(spec, "scatter")
 #' hd_save(hc_fig, "chart.html")

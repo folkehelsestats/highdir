@@ -23,7 +23,7 @@
 #' }
 #'
 #' @return Launches a Shiny app; does not return a value.
-#' @seealso [hd_make()], [hd_spec()], [fig_opts()], [hd_save()]
+#' @seealso [hd_make()], [hd_spec()], [hd_opts()], [hd_save()]
 #' @export
 hd_app <- function() {
   app_dir <- system.file("app", package = "highdir")

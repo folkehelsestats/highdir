@@ -96,7 +96,7 @@ server <- function(input, output, session) {
   })
 
   the_opts <- shiny::reactive({
-    fig_opts(
+    hd_opts(
       title    = if (nzchar(input$title    %||% "")) input$title    else NULL,
       subtitle = if (nzchar(input$subtitle %||% "")) input$subtitle else NULL,
       caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
@@ -190,7 +190,7 @@ server <- function(input, output, session) {
       '  y     = "', input$y, '",\n',
       grp_l, n_l,
       ")\n\n",
-      "opts <- fig_opts(\n",
+      "opts <- hd_opts(\n",
       ttl_l, sub_l, cap_l,
       ")\n\n",
       "hd_make(\n",

@@ -2,14 +2,14 @@
 
 #' Build a Figure from a Specification
 #'
-#' Renders a [hd_spec] and [fig_opts] pair using the selected backend and
+#' Renders a [hd_spec] and [hd_opts] pair using the selected backend and
 #' geometry.  This is the central function of the package — everything else
 #' feeds into or flows out of `hd_make()`.
 #'
 #' @section Workflow:
 #' ```r
 #' spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
-#' opts <- fig_opts(title = "Health survey", ylim = c(0, 80))
+#' opts <- hd_opts(title = "Health survey", ylim = c(0, 80))
 #'
 #' hd_make(spec, "column", opts)                       # highcharter (default)
 #' hd_make(spec, "column", opts, backend = "ggplot2")  # static ggplot2
@@ -21,7 +21,7 @@
 #' @param type      Character.  Geometry name — one of [list_geoms()]:
 #'   `"column"`, `"line"`, `"scatter"`, `"arearange"`, `"pie"`, or any
 #'   custom geometry added with [register_geom()].
-#' @param opts      A [fig_opts] object or `NULL` (uses all defaults).
+#' @param opts      A [hd_opts] object or `NULL` (uses all defaults).
 #'   Controls title, subtitle, caption, ylim, yint, flip, per-figure
 #'   colours, and highcharter theme.
 #' @param backend   Character.  Rendering engine — `"highcharter"` (default,
@@ -62,7 +62,7 @@
 #'   (ggplot2 backend), invisibly wrapped so knitr/Shiny render it
 #'   automatically.
 #'
-#' @seealso [hd_spec()], [fig_opts()], [hd_save()], [hd_set_theme()],
+#' @seealso [hd_spec()], [hd_opts()], [hd_save()], [hd_set_theme()],
 #'   [list_geoms()], [list_backends()], [hd_app()]
 #'
 #' @examples
@@ -75,7 +75,7 @@
 #'
 #' spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
 #'                  ylab = "Percentage (%)")
-#' opts <- fig_opts(title    = "Health survey results",
+#' opts <- hd_opts(title    = "Health survey results",
 #'                  subtitle = "Source: FHI 2024",
 #'                  ylim     = c(0, 80))
 #'
@@ -90,7 +90,7 @@
 #' pie_df   <- data.frame(category = c("A","B","C","D"),
 #'                         value    = c(35, 25, 20, 20))
 #' pie_spec <- hd_spec(pie_df, x = "category", y = "value")
-#' pie_opts <- fig_opts(title = "Share by category")
+#' pie_opts <- hd_opts(title = "Share by category")
 #' hd_make(pie_spec, "pie", pie_opts)
 #' hd_make(pie_spec, "pie", pie_opts, inner_size = "50%")  # donut
 #'
@@ -109,7 +109,7 @@
 #' hd_make(pie_spec, "pie", pie_opts, backend = "ggplot2")
 #'
 #' # ── Reuse spec with different presentation ────────────────────────────────
-#' opts_no <- fig_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
+#' opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
 #' hd_make(spec, "column", opts_no)
 #'
 #' # ── Save outputs ──────────────────────────────────────────────────────────
