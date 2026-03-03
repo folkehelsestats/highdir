@@ -47,7 +47,7 @@ point_events_or_null <- function(use_js,
 #' @keywords internal
 .hc_x_map <- function(spec) {
   if (!is.numeric(spec$data[[spec$x]])) {
-    lvls          <- unique(spec$data[[spec$x]]) #keep position as it's
+    lvls          <- unique(spec$data[[spec$x]]) # Get unique group values in order of appearance i.e keep position as it's
     spec$data$x_index <- match(spec$data[[spec$x]], lvls) - 1L #provide base position to 0
     list(data    = spec$data,
          mapping = highcharter::hcaes(x = x_index,
@@ -77,7 +77,7 @@ point_events_or_null <- function(use_js,
 #' @keywords internal
 .group_split <- function(spec) {
   if (!is.null(spec$group)) {
-    lvls <- unique(spec$data[[spec$group]])
+    lvls <- unique(spec$data[[spec$group]]) # Get unique group values in order of appearance
     lapply(lvls, function(l)
       list(name = as.character(l),
            rows = spec$data[[spec$group]] == l))
