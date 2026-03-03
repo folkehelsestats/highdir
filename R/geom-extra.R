@@ -30,23 +30,49 @@ point_events_or_null <- function(use_js,
 }
 
 # ── Shared x-mapping (category index vs numeric) ────────────────────────────
+## Highcharts draws axes in two fundamentally different ways:
+## Categorical axis (e.g. "18-24", "Oslo", "Male") — Highcharts expects 0-based integer positions: 0, 1, 2, 3… and a separate categories array for the labels
+## Numeric axis (e.g. 1990, 1995, 2000) — Highcharts reads the raw numbers directly as x-positions
+##
+## rlang::sym() converts it to a symbol and !! unquotes it so hcaes() sees y = pct rather than y = "pct"
+##
+## Example:
+## xmap <- .hc_x_map(spec)
+##
+## hc_add_series(
+##   data    = xmap$data[grp$rows, ],   # the (possibly modified) data frame
+##   mapping = xmap$mapping             # the hcaes() with correct x reference
+## )
 
 #' @keywords internal
 .hc_x_map <- function(spec) {
   if (!is.numeric(spec$data[[spec$x]])) {
-    lvls          <- unique(spec$data[[spec$x]])
-    spec$data$x_index <- match(spec$data[[spec$x]], lvls) - 1L
+    lvls          <- unique(spec$data[[spec$x]]) #keep position as it's
+    spec$data$x_index <- match(spec$data[[spec$x]], lvls) - 1L #provide base position to 0
     list(data    = spec$data,
          mapping = highcharter::hcaes(x = x_index,
-                                       y = !!rlang::sym(spec$y)))
+                                      y = !!rlang::sym(spec$y)))
   } else {
     list(data    = spec$data,
          mapping = highcharter::hcaes(x = !!rlang::sym(spec$x),
-                                       y = !!rlang::sym(spec$y)))
+                                      y = !!rlang::sym(spec$y)))
   }
 }
 
 # ── Group-splitting helper ───────────────────────────────────────────────────
+## Draws each group when exists as a separate series
+## Example:
+## groups  <- .group_split(spec)
+## palette <- resolve_colors(length(groups), opts$colors)
+##
+## for (i in seq_along(groups)) {
+##   grp   <- groups[[i]]          # one descriptor
+##   chart <- hc_add_series(
+##     data  = data[grp$rows, ],   # only this group's rows
+##     name  = grp$name,           # legend / tooltip label
+##     color = palette[i]          # consistent colour per group
+##   )
+## }
 
 #' @keywords internal
 .group_split <- function(spec) {
@@ -56,7 +82,7 @@ point_events_or_null <- function(use_js,
       list(name = as.character(l),
            rows = spec$data[[spec$group]] == l))
   } else {
-    list(list(name = spec$y, rows = rep(TRUE, nrow(spec$data))))
+    list(list(name = spec$y, rows = rep(TRUE, nrow(spec$data)))) #Loop don't iterate with inner list
   }
 }
 
