@@ -41,7 +41,8 @@
       highcharter::hc_chart(inverted = isTRUE(opts$flip)) |>
       highcharter::hc_yAxis(
         title        = list(text = spec$ylab %||% " "),
-        labels       = list(format = "{value}%"),
+        ## labels       = list(format = "{value}%"),
+        labels       = list(format = "{value}"), #TODO: optional with %
         tickInterval = opts$yint,
         min          = if (!is.null(opts$ylim)) opts$ylim[1] else 0,
         max          = if (!is.null(opts$ylim)) opts$ylim[2] else NULL
