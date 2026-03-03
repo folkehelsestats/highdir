@@ -1,131 +1,169 @@
-# make-figure.R — The main user-facing entry point
+# R/make-figure.R ── Primary user-facing entry point
 
 #' Build a Figure from a Specification
 #'
-#' Renders a [fig_spec] object using the selected backend. This is the primary
-#' function users call after constructing a specification with [fig_spec()].
+#' Renders a [hd_spec] and [fig_opts] pair using the selected backend and
+#' geometry.  This is the central function of the package — everything else
+#' feeds into or flows out of `hd_make()`.
 #'
-#' @param spec A [fig_spec] object created by [fig_spec()].
-#' @param type Character. Geometry to use. One of the values returned by
-#'   [list_geoms()]: `"column"`, `"line"`, `"scatter"`, `"arearange"`, or
-#'   any custom geometry registered with [register_geom()].
-#' @param backend Character. Rendering backend. One of `"highcharter"`
-#'   (default, interactive) or `"ggplot2"` (static), or any backend
-#'   registered with [register_backend()].
-#' @param use_js Logical. Whether to include manually-injected JavaScript
-#'   enhancements in the highcharter output. Tooltips, hover states, the
-#'   accessibility module, and all other declarative Highcharts features are
-#'   **always** included regardless of this setting. When `TRUE` (default), a
-#'   `htmlwidgets::JS()` hover band is added behind the active category
-#'   column/point via `point.events.mouseOver` / `mouseOut`. Set to `FALSE`
-#'   to omit that custom callback, e.g. when you want a clean widget with no
-#'   hand-written JS. Has no effect for the ggplot2 backend.
-#' @param filename Character or `NULL`. Base filename used by the Highcharts
-#'   built-in export menu (no extension). Defaults to `"highdir-figure"`.
-#'   Ignored for the ggplot2 backend.
-#' @param smooth Logical. For `type = "line"` only. Use spline interpolation
-#'   for smooth curves (`TRUE`, default) or straight line segments (`FALSE`).
-#' @param dot_size Numeric. For `type = "line"` only. Radius of line markers
-#'   in pixels. Default `4`.
-#' @param line_symbols Character vector or `NULL`. For `type = "line"` only.
-#'   Marker symbol for each group. Valid values: `"circle"`, `"square"`,
-#'   `"diamond"`, `"triangle"`, `"triangle-down"`. When `NULL` symbols are
-#'   assigned automatically.
-#' @param colors Character vector or `NULL`. Colour overrides for this figure
-#'   only. When `NULL` the palette from [hd_set_theme()] (or the hdir
-#'   default palette) is used.
-#' @param ... Additional arguments forwarded to the geometry's render
-#'   function. Required arguments for a geometry (e.g. `ymin` / `ymax` for
-#'   `"arearange"`) must be supplied here.
+#' @section Workflow:
+#' ```r
+#' spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
+#' opts <- fig_opts(title = "Health survey", ylim = c(0, 80))
 #'
-#' @return A `highchart` widget (when `backend = "highcharter"`) or a
-#'   `ggplot` object (when `backend = "ggplot2"`).
+#' hd_make(spec, "column", opts)                       # highcharter (default)
+#' hd_make(spec, "column", opts, backend = "ggplot2")  # static ggplot2
+#' hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
+#' hd_make(spec, "pie",    opts)                       # pie / donut
+#' ```
+#'
+#' @param spec      A [hd_spec] object from [hd_spec()].
+#' @param type      Character.  Geometry name — one of [list_geoms()]:
+#'   `"column"`, `"line"`, `"scatter"`, `"arearange"`, `"pie"`, or any
+#'   custom geometry added with [register_geom()].
+#' @param opts      A [fig_opts] object or `NULL` (uses all defaults).
+#'   Controls title, subtitle, caption, ylim, yint, flip, per-figure
+#'   colours, and highcharter theme.
+#' @param backend   Character.  Rendering engine — `"highcharter"` (default,
+#'   interactive) or `"ggplot2"` (static), or any engine added with
+#'   [register_backend()].
+#' @param use_js    Logical.  When `TRUE` (default) injects a hover-band
+#'   `htmlwidgets::JS()` callback via `point.events.mouseOver/Out`.
+#'   Tooltips, accessibility module, and all other Highcharts declarative
+#'   features are **always** present.  Set `FALSE` for clean, no-custom-JS
+#'   widgets.  Ignored by the ggplot2 backend.
+#' @param filename  Character or `NULL`.  Base filename for the Highcharts
+#'   export menu (no extension).  Default: `"highdir-figure"`.
+#' @param smooth    Logical.  `type = "line"` only — spline curves (`TRUE`,
+#'   default) or straight segments (`FALSE`).
+#' @param dot_size  Numeric.  `type = "line"` / `"scatter"` — marker radius
+#'   in pixels.  Default `4`.
+#' @param line_symbols Character vector or `NULL`.  `type = "line"` only —
+#'   per-group Highcharts marker symbols.  Valid: `"circle"`, `"square"`,
+#'   `"diamond"`, `"triangle"`, `"triangle-down"`.
+#' @param inner_size Character or `NULL`.  `type = "pie"` only — inner
+#'   radius as a CSS percentage string, e.g. `"50%"` for a donut chart.
+#'   Default `"0%"` (solid pie).
+#' @param level     Character.  `type = "map"` only — `"county"` (default)
+#'   for fylker or `"municipality"` for kommuner.
+#' @param value_lab Character or `NULL`.  `type = "map"` only — label shown
+#'   on the colour-scale legend.  Defaults to `spec$ylab`.
+#' @param na_fill   Character.  `type = "map"` only — fill colour for regions
+#'   with no data.  Default `"#D3D3D3"`.
+#' @param low_col   Character.  `type = "map"`, ggplot2 backend — low end of
+#'   the continuous gradient.  Default `"#C6DBEF"`.
+#' @param high_col  Character.  `type = "map"`, ggplot2 backend — high end of
+#'   the continuous gradient.  Default `"#025169"`.
+#' @param ...       Extra arguments forwarded to the geometry function.
+#'   Required arguments (e.g. `ymin`, `ymax` for `"arearange"`) **must**
+#'   be supplied here.
+#'
+#' @return A `highchart` widget (highcharter backend) or `ggplot` object
+#'   (ggplot2 backend), invisibly wrapped so knitr/Shiny render it
+#'   automatically.
+#'
+#' @seealso [hd_spec()], [fig_opts()], [hd_save()], [hd_set_theme()],
+#'   [list_geoms()], [list_backends()], [hd_app()]
 #'
 #' @examples
 #' df <- data.frame(
-#'   age  = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
-#'   sex  = rep(c("Male", "Female"), 4),
-#'   pct  = c(42, 38, 55, 61, 48, 52, 60, 57),
-#'   n    = c(120, 115, 200, 210, 180, 175, 160, 155)
+#'   age = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
+#'   sex = rep(c("Male", "Female"), 4),
+#'   pct = c(42, 38, 55, 61, 48, 52, 60, 57),
+#'   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 #' )
 #'
-#' spec <- fig_spec(
-#'   data     = df,
-#'   x        = "age",
-#'   y        = "pct",
-#'   group    = "sex",
-#'   n        = "n",
-#'   title    = "Health survey results",
-#'   subtitle = "Source: Example data",
-#'   caption  = "Tall om helse"
-#' )
+#' spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
+#'                  ylab = "Percentage (%)")
+#' opts <- fig_opts(title    = "Health survey results",
+#'                  subtitle = "Source: FHI 2024",
+#'                  ylim     = c(0, 80))
 #'
 #' \dontrun{
-#' # Interactive highcharter column chart (default)
-#' make_fig(spec, "column")
+#' # ── Interactive charts (highcharter) ──────────────────────────────────────
+#' hd_make(spec, "column", opts)
+#' hd_make(spec, "line",   opts, smooth = TRUE)
+#' hd_make(spec, "line",   opts, smooth = FALSE, dot_size = 6)
+#' hd_make(spec, "scatter")
 #'
-#' # Same data as a smooth line chart — with JS hover effects
-#' make_fig(spec, "line", smooth = TRUE)
+#' # Pie chart — group is ignored; x = label, y = value
+#' pie_df   <- data.frame(category = c("A","B","C","D"),
+#'                         value    = c(35, 25, 20, 20))
+#' pie_spec <- hd_spec(pie_df, x = "category", y = "value")
+#' pie_opts <- fig_opts(title = "Share by category")
+#' hd_make(pie_spec, "pie", pie_opts)
+#' hd_make(pie_spec, "pie", pie_opts, inner_size = "50%")  # donut
 #'
-#' # Disable JS (e.g. for self-contained HTML export)
-#' make_fig(spec, "column", use_js = FALSE)
+#' # Arearange — requires ymin + ymax in ...
+#' df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
+#' spec2 <- hd_spec(df2, "age", "pct", group = "sex")
+#' hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 #'
-#' # Static ggplot2 version
-#' make_fig(spec, "column", backend = "ggplot2")
+#' # ── Disable JS hover band ─────────────────────────────────────────────────
+#' hd_make(spec, "column", opts, use_js = FALSE)
 #'
-#' # Arearange needs extra required args
-#' spec2 <- fig_spec(df, x = "age", y = "pct", group = "sex")
-#' make_fig(spec2, "arearange", ymin = "pct_lo", ymax = "pct_hi")
+#' # ── Static ggplot2 versions ───────────────────────────────────────────────
+#' hd_make(spec, "column",  opts, backend = "ggplot2")
+#' hd_make(spec, "line",    opts, backend = "ggplot2")
+#' hd_make(spec, "scatter", opts, backend = "ggplot2")
+#' hd_make(pie_spec, "pie", pie_opts, backend = "ggplot2")
+#'
+#' # ── Reuse spec with different presentation ────────────────────────────────
+#' opts_no <- fig_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
+#' hd_make(spec, "column", opts_no)
+#'
+#' # ── Save outputs ──────────────────────────────────────────────────────────
+#' hd_save(hd_make(spec, "column", opts),               "column.html")
+#' hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "column.png")
 #' }
 #'
-#' @seealso [fig_spec()], [hd_save()], [hd_set_theme()], [list_geoms()],
-#'   [list_backends()], [run_app()]
-#'
 #' @export
-make_fig <- function(spec,
-                     type         = "column",
-                     backend      = "highcharter",
-                     use_js       = TRUE,
-                     filename     = NULL,
-                     smooth       = TRUE,
-                     dot_size     = 4,
+hd_make <- function(spec,
+                     type        = "column",
+                     opts        = NULL,
+                     backend     = "highcharter",
+                     use_js      = TRUE,
+                     filename    = NULL,
+                     smooth      = TRUE,
+                     dot_size    = 4,
                      line_symbols = NULL,
-                     colors       = NULL,
+                     inner_size  = "0%",
+                     level       = "county",
+                     value_lab   = NULL,
+                     na_fill     = "#D3D3D3",
+                     low_col     = "#C6DBEF",
+                     high_col    = "#025169",
                      ...) {
 
-  # ---- Input validation ------------------------------------------------------
-  if (!inherits(spec, "fig_spec"))
-    stop("`spec` must be a fig_spec object created by fig_spec().", call. = FALSE)
+  opts <- opts %||% default_opts()
 
-  geom <- get_geom(type)
-  if (is.null(geom))
-    stop("Unknown geometry '", type, "'. ",
-         "Available: ", paste(list_geoms(), collapse = ", "), call. = FALSE)
+  # Collect all geom-specific args into one list so the engine signature
+  # stays stable as new geoms are added.
+  extra_args  <- list(...)
+  geom_params <- c(
+    list(smooth       = smooth,
+         dot_size     = dot_size,
+         line_symbols = line_symbols,
+         inner_size   = inner_size,
+         level        = level,
+         value_lab    = value_lab,
+         na_fill      = na_fill,
+         low_col      = low_col,
+         high_col     = high_col),
+    extra_args
+  )
 
+  validate_fig_inputs(spec, opts, type, backend, extra_args)
+
+  geom   <- get_geom(type)
   engine <- get_backend(backend)
-  if (is.null(engine))
-    stop("Unknown backend '", backend, "'. ",
-         "Available: ", paste(list_backends(), collapse = ", "), call. = FALSE)
 
-  # Check required args for this geom
-  extra_args <- list(...)
-  validate_geom_args(geom, extra_args)
-
-  # ---- Dispatch --------------------------------------------------------------
-  # Engine-level args (use_js, filename, colors) and line-specific args
-  # (smooth, dot_size, line_symbols) are passed as explicit named arguments
-  # so they are consumed by the engine / geom and never leak into
-  # hc_add_series() via ... (which would cause tibble to reject NULL columns).
   engine(
-    spec     = spec,
-    geom     = geom,
-    use_js   = use_js,
-    filename = filename,
-    colors   = colors,
-    # line-specific — consumed by hc_line / gg_line, ignored by others
-    smooth       = smooth,
-    dot_size     = dot_size,
-    line_symbols = line_symbols,
-    ...
+    spec        = spec,
+    geom        = geom,
+    opts        = opts,
+    geom_params = geom_params,
+    use_js      = use_js,
+    filename    = filename
   )
 }

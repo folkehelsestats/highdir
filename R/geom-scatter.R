@@ -1,14 +1,45 @@
+
+# ════════════════════════════════════════════════════════════════════════════
+# SCATTER
+# ════════════════════════════════════════════════════════════════════════════
+# Each geometry is a pair:
+#   gg_<name>  → returns a ggplot2 layer (or list of layers)
+#   hc_<name>  → adds series to a highchart object, returns the updated chart
+#
+# Calling convention (enforced by the registry):
+#   gg_*:  function(spec, opts, geom_params, ...)
+#   hc_*:  function(chart, spec, opts, geom_params, use_js, ...)
+#
+# geom_params is a named list carrying all geom-specific args so that the
+# engine signature stays stable as new geoms are added.  Nothing leaks into
+# hc_add_series() via bare `...`.
+
 #' @keywords internal
-gg_scatter <- function(spec, ...) {
-  ggplot2::geom_point(...)
+gg_scatter <- function(spec, opts, geom_params, ...) {
+  dot_size <- geom_params$dot_size %||% 2
+  list(ggplot2::geom_point(size = dot_size))
 }
 
-hc_scatter <- function(chart, spec, ...) {
-  highcharter::hc_add_series(
-    chart,
-    data = spec$data,
-    type = "scatter",
-    highcharter::hcaes_string(x = spec$x, y = spec$y),
-    ...
-  )
+#' @keywords internal
+hc_scatter <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
+  groups   <- .group_split(spec)
+  palette  <- resolve_colors(length(groups), opts$colors)
+  point_ev <- point_events_or_null(use_js)
+  mapping  <- highcharter::hcaes(x = !!rlang::sym(spec$x),
+                                   y = !!rlang::sym(spec$y))
+
+  for (i in seq_along(groups)) {
+    grp  <- groups[[i]]
+    args <- list(
+      chart,
+      data  = spec$data[grp$rows, ],
+      type  = "scatter",
+      name  = grp$name,
+      mapping,
+      color = palette[i]
+    )
+    if (!is.null(point_ev)) args$point <- point_ev
+    chart <- do.call(highcharter::hc_add_series, args)
+  }
+  chart
 }

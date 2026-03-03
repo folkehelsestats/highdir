@@ -1,15 +1,6 @@
-# theme.R — Style, theme, and JavaScript configuration layer
-#
-# Design:
-#  * Package-level defaults live in R options() so users can call
-#    hd_set_theme() once and have it apply everywhere.
-#  * hd_theme() resolves the current options into a highcharter theme object.
-#  * apply_gg_colors() maps the current colour palette onto a ggplot object.
-#  * hd_add_js() injects JavaScript into an existing highchart widget.
+# R/theme.R ── Style, theme and JavaScript configuration
 
-# ---------------------------------------------------------------------------
-# Package-level defaults (applied in zzz.R / .onLoad)
-# ---------------------------------------------------------------------------
+# ── Package-level option defaults (applied in zzz.R) ────────────────────────
 
 #' @keywords internal
 .hd_defaults <- list(
@@ -19,39 +10,38 @@
   highdir.js_plugins = character(0)
 )
 
-# ---------------------------------------------------------------------------
-# User-facing theme setter
-# ---------------------------------------------------------------------------
+# ── Session-wide style setter ────────────────────────────────────────────────
 
 #' Set Package-Wide Style Defaults
 #'
-#' Configures default theme, colour palette, font, and JavaScript plugins for
-#' all figures produced with [make_fig()] in the current R session. Call once
-#' at the top of a script or in `.Rprofile` for consistent styling.
+#' Configures the default theme, colour palette, font, and optional JavaScript
+#' plugins for all figures produced with [hd_make()] in the current R session.
+#' Call once at the top of a script or in `.Rprofile`.
 #'
-#' @param hc_theme Character or `NULL`. Name of a built-in highcharter theme.
-#'   One of `"default"`, `"smpl"`, `"economist"`, `"darkunica"`,
-#'   `"gridlight"`, `"bloom"`, `"flat"`, `"flatdark"`, `"ggplot2"`.
-#' @param colors Character vector or `NULL`. Hex colour codes applied to
-#'   every figure (both backends). When `NULL` the hdir default palette or
-#'   the theme colours are used.
-#' @param font Character or `NULL`. Font family string, e.g.
-#'   `"Source Sans Pro"`. `NULL` uses the theme/system font.
+#' Per-figure overrides are provided via [fig_opts()], which always take
+#' precedence over these session defaults.
+#'
+#' @param hc_theme   Character or `NULL`. Built-in highcharter theme name: one
+#'   of `"default"`, `"smpl"`, `"economist"`, `"darkunica"`, `"gridlight"`,
+#'   `"bloom"`, `"flat"`, `"flatdark"`, `"ggplot2"`.
+#' @param colors     Character vector, palette name, or `NULL`. Applied to all
+#'   figures in the session. See [register_palette()].
+#' @param font       Character or `NULL`. Font family name, e.g.
+#'   `"Source Sans Pro"`.
 #' @param js_plugins Character vector or `NULL`. Names of bundled JS plugins
-#'   (files in `inst/js/`) to inject into every highcharter figure. Supply
-#'   `character(0)` to clear.
+#'   (files in `inst/js/`) injected into every highcharter figure. Use
+#'   `character(0)` to clear all plugins.
 #'
-#' @return The previous option values, invisibly, so you can restore them
-#'   with `options(hd_set_theme(...))` if needed.
+#' @return The previous option values invisibly; pass to `options()` to
+#'   restore.
 #'
 #' @examples
-#' # Use the economist theme with custom colours
 #' hd_set_theme(hc_theme = "economist",
 #'              colors   = c("#025169", "#7C145C", "#C68803"))
-#'
-#' # Reset to defaults
+#' # Reset
 #' hd_set_theme(hc_theme = "default", colors = NULL)
 #'
+#' @seealso [fig_opts()] for per-figure overrides
 #' @export
 hd_set_theme <- function(hc_theme   = NULL,
                           colors     = NULL,
@@ -77,27 +67,24 @@ hd_set_theme <- function(hc_theme   = NULL,
   invisible(prev)
 }
 
-# ---------------------------------------------------------------------------
-# Highcharter theme builder
-# ---------------------------------------------------------------------------
+# ── Highcharter theme builder ────────────────────────────────────────────────
 
 #' Build a Highcharts Theme Object
 #'
 #' Constructs a highcharter theme by merging a named base theme with colour
-#' and font overrides from the current [hd_set_theme()] settings and any
-#' extra named arguments passed via `...`.
+#' and font overrides from the current [hd_set_theme()] session defaults and
+#' any per-figure `opts`.
 #'
-#' You normally do not need to call this directly — [make_fig()] applies it
-#' automatically for `backend = "highcharter"`. Use it when you want to
-#' preview or apply a theme to a highchart object built outside highdir.
+#' Called automatically inside the highcharter engine; useful when you want to
+#' apply a theme to a highchart built outside highdir.
 #'
-#' @param name Character or `NULL`. Theme name. `NULL` reads from
+#' @param name   Character or `NULL`. Theme name; `NULL` reads from
 #'   `getOption("highdir.hc_theme")`.
-#' @param ... Named arguments forwarded to [highcharter::hc_theme()] as
-#'   overrides on top of the base theme. See the Highcharts API for the
-#'   expected structure.
+#' @param colors Character vector or `NULL`. Colour override for this call.
+#' @param ...    Named arguments forwarded to [highcharter::hc_theme()] as
+#'   extra overrides on top of the base theme.
 #'
-#' @return A highcharter theme object (a named list of class `"hc_theme"`).
+#' @return A highcharter theme object (`hc_theme`).
 #'
 #' @examples
 #' \dontrun{
@@ -106,13 +93,13 @@ hd_set_theme <- function(hc_theme   = NULL,
 #' }
 #'
 #' @export
-hd_theme <- function(name = NULL, ...) {
+hd_theme <- function(name = NULL, colors = NULL, ...) {
   name   <- name   %||% getOption("highdir.hc_theme", default = "default")
-  colors <- getOption("highdir.colors", default = NULL)
-  font   <- getOption("highdir.font",   default = NULL)
+  colors <- colors %||% getOption("highdir.colors",   default = NULL)
+  font   <- getOption("highdir.font", default = NULL)
 
   base <- switch(name,
-    "default"   = , "smpl" = highcharter::hc_theme_smpl(),
+    "default" = , "smpl" = highcharter::hc_theme_smpl(),
     "economist"  = highcharter::hc_theme_economist(),
     "darkunica"  = highcharter::hc_theme_darkunica(),
     "gridlight"  = highcharter::hc_theme_gridlight(),
@@ -120,8 +107,8 @@ hd_theme <- function(name = NULL, ...) {
     "flat"       = highcharter::hc_theme_flat(),
     "flatdark"   = highcharter::hc_theme_flatdark(),
     "ggplot2"    = highcharter::hc_theme_ggplot2(),
-    stop("Unknown theme '", name, "'. Choose one of: default, smpl, ",
-         "economist, darkunica, gridlight, bloom, flat, flatdark, ggplot2",
+    stop("Unknown theme '", name, "'. Choose from: default, smpl, economist, ",
+         "darkunica, gridlight, bloom, flat, flatdark, ggplot2",
          call. = FALSE)
   )
 
@@ -134,17 +121,14 @@ hd_theme <- function(name = NULL, ...) {
     )
   }
 
-  if (length(overrides) > 0) {
-    overlay <- do.call(highcharter::hc_theme, overrides)
-    highcharter::hc_theme_merge(base, overlay)
-  } else {
+  if (length(overrides) > 0)
+    highcharter::hc_theme_merge(base,
+                                do.call(highcharter::hc_theme, overrides))
+  else
     base
-  }
 }
 
-# ---------------------------------------------------------------------------
-# ggplot2 colour application
-# ---------------------------------------------------------------------------
+# ── ggplot2 colour helper ────────────────────────────────────────────────────
 
 #' @keywords internal
 apply_gg_colors <- function(p, colors = NULL) {
@@ -155,37 +139,29 @@ apply_gg_colors <- function(p, colors = NULL) {
     ggplot2::scale_fill_manual(values  = pal)
 }
 
-# ---------------------------------------------------------------------------
-# JavaScript injection
-# ---------------------------------------------------------------------------
+# ── JavaScript injection ─────────────────────────────────────────────────────
 
 #' Inject JavaScript into a Highcharts Widget
 #'
-#' Appends custom JavaScript to a `highchart` object. Useful for Highcharts
-#' plugins, custom `load` / `render` callbacks, or any other JS that must run
-#' in the chart's context.
+#' Appends custom JavaScript to a `highchart` object via
+#' `chart.events.<where>`.  Use this for hand-written callbacks and plugins.
+#' For Highcharts built-in modules (accessibility, exporting, etc.) use
+#' [highcharter::hc_add_dependency()] instead.
 #'
-#' @param hc A `highchart` object (output of [make_fig()] with
-#'   `backend = "highcharter"`, or any object returned by
-#'   [highcharter::highchart()]).
-#' @param code Character or `NULL`. Raw JavaScript string.
-#' @param file Character or `NULL`. Path to a `.js` file whose contents are
-#'   read and injected.
-#' @param plugin Character or `NULL`. Name of a JS plugin bundled with
-#'   highdir (a file at `inst/js/<plugin>.js`). Convenient shorthand for
-#'   `file = system.file(...)`.
-#' @param where Character. One of `"load"` (default) — runs when the chart
-#'   finishes loading — or `"render"` — runs after every render cycle.
+#' Exactly one of `code`, `file`, or `plugin` must be supplied.
 #'
-#' @details Exactly one of `code`, `file`, or `plugin` must be supplied.
+#' @param hc     A `highchart` object.
+#' @param code   Character or `NULL`. Raw JavaScript string.
+#' @param file   Character or `NULL`. Path to a `.js` file to read and inject.
+#' @param plugin Character or `NULL`. Name of a plugin bundled in `inst/js/`.
+#' @param where  `"load"` (default) or `"render"`.
 #'
-#' @return The `highchart` object with the JS injected via
-#'   `chart.events.<where>`.
+#' @return The `highchart` object with JS injected.
 #'
 #' @examples
 #' \dontrun{
-#' spec <- fig_spec(mtcars, "wt", "mpg")
-#' fig  <- make_fig(spec, "scatter", backend = "highcharter")
+#' spec <- hd_spec(mtcars, "wt", "mpg")
+#' fig  <- hd_make(spec, "scatter")
 #' fig  <- hd_add_js(fig, code = "console.log('chart loaded');")
 #' }
 #'
@@ -201,10 +177,11 @@ hd_add_js <- function(hc,
     file <- system.file("js", paste0(plugin, ".js"), package = "highdir")
     if (!nzchar(file)) {
       avail <- tools::file_path_sans_ext(
-        list.files(system.file("js", package = "highdir", mustWork = FALSE))
-      )
+        list.files(system.file("js", package = "highdir",
+                               mustWork = FALSE)))
       stop("Plugin '", plugin, "' not found in inst/js/.",
-           if (length(avail)) paste0(" Available: ", paste(avail, collapse = ", ")),
+           if (length(avail))
+             paste0(" Available: ", paste(avail, collapse = ", ")),
            call. = FALSE)
     }
   }
@@ -216,8 +193,9 @@ hd_add_js <- function(hc,
   }
 
   if (is.null(code))
-    stop("Supply exactly one of `code`, `file`, or `plugin`.", call. = FALSE)
+    stop("Supply one of `code`, `file`, or `plugin`.", call. = FALSE)
 
-  events_update <- stats::setNames(list(htmlwidgets::JS(code)), where)
-  hc |> highcharter::hc_chart(events = events_update)
+  hc |> highcharter::hc_chart(
+    events = stats::setNames(list(htmlwidgets::JS(code)), where)
+  )
 }

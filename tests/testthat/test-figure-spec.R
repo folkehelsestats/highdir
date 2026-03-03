@@ -1,0 +1,105 @@
+# ── hd_spec ──────────────────────────────────────────────────────────────────
+
+test_that("hd_spec: constructs with correct class and fields", {
+  spec <- hd_spec(survey_df, x = "age", y = "pct")
+  expect_s3_class(spec, "hd_spec")
+  expect_equal(spec$x,    "age")
+  expect_equal(spec$y,    "pct")
+  expect_null(spec$group)
+  expect_null(spec$n)
+  expect_equal(spec$xlab, "age")  # defaults to x
+  expect_equal(spec$ylab, "pct")  # defaults to y
+  expect_equal(nrow(spec$data), nrow(survey_df))
+})
+
+test_that("hd_spec: custom xlab/ylab stored", {
+  spec <- hd_spec(survey_df, "age", "pct",
+                   xlab = "Age group", ylab = "Percent (%)")
+  expect_equal(spec$xlab, "Age group")
+  expect_equal(spec$ylab, "Percent (%)")
+})
+
+test_that("hd_spec: rejects non-data.frame", {
+  expect_error(hd_spec(list(x = 1), "x", "x"), "data.frame")
+})
+
+test_that("hd_spec: stops on missing columns", {
+  expect_error(hd_spec(survey_df, "age", "missing"),       "missing")
+  expect_error(hd_spec(survey_df, "age", "pct", group = "nope"), "nope")
+  expect_error(hd_spec(survey_df, "age", "pct", n = "nope"),     "nope")
+})
+
+test_that("hd_spec: strips tibble subclass (stores plain data.frame)", {
+  skip_if_not_installed("tibble")
+  tbl  <- tibble::as_tibble(survey_df)
+  spec <- hd_spec(tbl, "age", "pct")
+  expect_true(is.data.frame(spec$data))
+  expect_false(inherits(spec$data, "tbl_df"))
+})
+
+test_that("hd_spec: print output contains key fields", {
+  spec <- hd_spec(survey_df, "age", "pct", group = "sex", n = "n")
+  expect_output(print(spec), "hd_spec")
+  expect_output(print(spec), "group")
+  expect_output(print(spec), "rows")
+})
+
+test_that("hd_spec: as.list replaces data with descriptive string", {
+  spec <- hd_spec(survey_df, "age", "pct")
+  lst  <- as.list(spec)
+  expect_true(is.character(lst$data))
+  expect_match(lst$data, "data.frame")
+})
+
+# ── fig_opts ──────────────────────────────────────────────────────────────────
+
+test_that("fig_opts: constructs with correct defaults", {
+  opts <- fig_opts()
+  expect_s3_class(opts, "fig_opts")
+  expect_null(opts$title)
+  expect_equal(opts$yint, 10)
+  expect_false(opts$flip)
+})
+
+test_that("fig_opts: stores all fields", {
+  opts <- fig_opts(title = "T", subtitle = "S", caption = "C",
+                   ylim = c(0, 100), yint = 20, flip = TRUE,
+                   colors = "#FF0000", hc_theme = "bloom")
+  expect_equal(opts$title,    "T")
+  expect_equal(opts$ylim,     c(0, 100))
+  expect_equal(opts$yint,     20)
+  expect_true(opts$flip)
+  expect_equal(opts$hc_theme, "bloom")
+})
+
+test_that("fig_opts: validates ylim", {
+  expect_error(fig_opts(ylim = c(100, 0)),  "ylim\\[1\\]")
+  expect_error(fig_opts(ylim = c(0)),        "length 2")
+  expect_silent(fig_opts(ylim = c(0, 100)))
+})
+
+test_that("fig_opts: validates yint", {
+  expect_error(fig_opts(yint = 0),  "positive")
+  expect_error(fig_opts(yint = -5), "positive")
+  expect_silent(fig_opts(yint = 1))
+})
+
+test_that("fig_opts: print works", {
+  opts <- fig_opts(title = "Test", ylim = c(0, 80))
+  expect_output(print(opts), "fig_opts")
+  expect_output(print(opts), "title")
+  expect_output(print(opts), "ylim")
+})
+
+test_that("fig_opts: as.list returns plain list", {
+  opts <- fig_opts(title = "T", yint = 5)
+  lst  <- as.list(opts)
+  expect_type(lst, "list")
+  expect_equal(lst$title, "T")
+  expect_equal(lst$yint,  5)
+})
+
+test_that("default_opts returns fig_opts with defaults", {
+  expect_s3_class(default_opts(), "fig_opts")
+  expect_equal(default_opts()$yint, 10)
+})
