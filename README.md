@@ -1,56 +1,120 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# highdir <img src='man/figures/logo.png' align="right" width="120" height="138" />
+# highdir <img src='man/figures/logo.png' alt="Package logo" align="right" width="120" height="138" />
 
-## Overview
+**highdir** is an R package that provides a unified, backend-agnostic
+API for building figures with either
+[**highcharter**](https://jkunst.com/highcharter/) (interactive) or
+[**ggplot2**](https://ggplot2.tidyverse.org/) (static).
 
-**highdir** provides pre‑configured Highcharts figure templates tailored
-for the Norwegian Directorate of Health (Helsedirektoratet). The package
-is based on [highcharter](https://jkunst.com/highcharter/ "highcharter")
-package and [ggplot2](https://ggplot2.tidyverse.org/ "ggplot2") package.
+A figure is described once as a `hd_spec` and `hd_opts` object and
+rendered to either backend without changing the calling code. The
+package ships with the default to use Helsedirektoratet colour palette,
+styling and theme. A Shiny GUI is introduced to make it user friendly.
 
-The package is still in **experimental version**, and both the API and
-visual design may change in future releases.
-
-Documentation can be found here
-<https://folkehelsestats.github.io/highdir/>
+------------------------------------------------------------------------
 
 ## Installation
 
-You can install *highdir* package directly from Github:
-
 ``` r
-if(!require(remotes)) install.packages("remotes")
+# Install from GitHub
 remotes::install_github("folkehelsestats/highdir")
+# Install from development version (dev branch)
+remotes::install_github("folkehelsestats/highdir@dev")
 ```
 
-or installing the development version.
+------------------------------------------------------------------------
+
+## Quick start
 
 ``` r
-if(!require(remotes)) install.packages("remotes")
-remotes::install_github("folkehelsestats/highdir", ref = "dev")
+library(highdir)
+
+df <- data.frame(
+  age  = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
+  sex  = rep(c("Male", "Female"), 4),
+  pct  = c(42, 38, 55, 61, 48, 52, 60, 57),
+  n    = c(120, 115, 200, 210, 180, 175, 160, 155)
+)
+
+# Describe the figure once
+spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
+
+# How the figure should look like
+opts <- hd_opts(title = "Health survey",
+                subtitle = "Source: Example data",
+                caption  = "Tall om helse"
+                ylim = c(0, 80))
+
+hd_make(spec, "column", opts)                       # highcharter (default)
+hd_make(spec, "column", opts, backend = "ggplot2")  # static ggplot2
+hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
+hd_make(spec, "pie",    opts)                       # pie / donut
+
+# Disable JavaScript (for static HTML export)
+hd_make(spec, "column", opts, use_js = FALSE)
+
+# Save
+hd_save(hd_make(spec, "column"), "chart.html")
+hd_save(hd_make(spec, "column", backend = "ggplot2"), "chart.png")
 ```
 
-## Usage
+------------------------------------------------------------------------
 
-The easiest way to get started is by launching the built‑in graphical
-interface (GUI):
+## Theming
 
 ``` r
-library("highdir")
-run_app()
+# Set package-wide defaults for the session
+hd_set_theme(
+  hc_theme = "helsedirektoratet",
+  colors   = c("#025169", "#7C145C", "#C68803"),
+  font     = "Source Sans Pro"
+)
+
+# All subsequent hd_make() calls use these settings automatically
+hd_make(spec, "column")
 ```
 
-<img src="man/img/README-unnamed-chunk-4-1.png" alt="" width="70%" />
+------------------------------------------------------------------------
 
-This opens an interactive tool for generating and exporting figures
-using prefered templates.
+## JavaScript injection
 
-## Feedback & Contributions
+``` r
+fig <- hd_make(spec, "column")
 
-Because highdir is experimental, feedback, issue reports, and
-suggestions are very welcome.
+# Inline JS
+fig <- hd_add_js(fig, code = "console.log('chart loaded');")
 
-Please open an issue or pull request on GitHub if you would like to
-contribute.
+# From a .js file
+fig <- hd_add_js(fig, file = "path/to/my-plugin.js")
+
+# From a bundled plugin (inst/js/<name>.js)
+fig <- hd_add_js(fig, plugin = "my-plugin")
+```
+
+------------------------------------------------------------------------
+
+## Shiny GUI
+
+``` r
+hd_app()
+```
+
+------------------------------------------------------------------------
+
+## Supported geometries
+
+| Name | highcharter type | ggplot2 equivalent | Extra args |
+|:---|:---|:---|:---|
+| `column` | column | `geom_col()` | — |
+| `line` | line / spline | `geom_line()` | `smooth`, `dot_size`, `line_symbols` |
+| `scatter` | scatter | `geom_point()` | — |
+| `arearange` | arearange | `geom_ribbon()` | `ymin`, `ymax` |
+| `pie` | pie | `geom_bar()`, `coord_polar()` | — |
+
+------------------------------------------------------------------------
+
+## License
+
+MIT © Kamaleri

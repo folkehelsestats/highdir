@@ -2,15 +2,23 @@
 % Please edit documentation in R/base-figure.R
 \name{base_fig}
 \alias{base_fig}
-\title{Base Figure}
+\title{Build a Blank Backend Canvas}
 \usage{
-base_fig(spec, backend)
+base_fig(spec, opts, backend)
 }
 \arguments{
-\item{spec}{A fig_spec object.}
+\item{spec}{A \link{hd_spec} object.}
 
-\item{backend}{Backend name.}
+\item{opts}{A \link{hd_opts} object.}
+
+\item{backend}{Character. Backend name.}
+}
+\value{
+A \code{ggplot} or \code{highchart} object.
 }
 \description{
-Constructs backend base object.
+Constructs the empty backend object (ggplot or highchart) with all
+chart-level options applied from \code{spec} and \code{opts}. Called by the
+backend engines; you rarely need this directly.
 }
+\keyword{internal}
