@@ -28,28 +28,33 @@
     ggplot_fun      = gg_column,
     highcharter_fun = hc_column
   )
+
   register_geom("line",
     ggplot_fun      = gg_line,
     highcharter_fun = hc_line
   )
+
   register_geom("scatter",
     ggplot_fun      = gg_scatter,
     highcharter_fun = hc_scatter
   )
+
   register_geom("arearange",
     ggplot_fun      = gg_arearange,
     highcharter_fun = hc_arearange,
     required_args   = c("ymin", "ymax")
   )
+
   register_geom("pie",
     ggplot_fun      = gg_pie,
     highcharter_fun = hc_pie
   )
-  register_geom("map",
-    ggplot_fun      = gg_map,
-    highcharter_fun = hc_map,
-    is_map_geom     = TRUE
-  )
+
+  ## register_geom("map",
+  ##   ggplot_fun      = gg_map,
+  ##   highcharter_fun = hc_map,
+  ##   is_map_geom     = TRUE
+  ## )
 
   # ── Option defaults (skip any pre-set in .Rprofile) ───────────────────────
   op     <- options()
