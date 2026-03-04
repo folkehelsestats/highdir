@@ -16,7 +16,7 @@ resolve_symbols(n, symbols = NULL)
 
 - symbols:
 
-  Character vector or NULL supplied by the user.
+  Character vector or `NULL` supplied by the user.
 
 ## Value
 

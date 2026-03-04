@@ -18,7 +18,6 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Backend-Agnostic Figure Builder for Highcharter and ggplot2">
 <meta name="description" content="Provides a unified, backend-agnostic API for building interactive figures with highcharter or static figures with ggplot2. A figure is described once via a spec object and rendered to either backend without changing the calling code. Includes a Norwegian health-survey colour palette, flexible theme/style configuration, optional JavaScript injection for hover effects and accessibility, and both standalone save helpers and a Shiny GUI.">
 <meta property="og:description" content="Provides a unified, backend-agnostic API for building interactive figures with highcharter or static figures with ggplot2. A figure is described once via a spec object and rendered to either backend without changing the calling code. Includes a Norwegian health-survey colour palette, flexible theme/style configuration, optional JavaScript injection for hover effects and accessibility, and both standalone save helpers and a Shiny GUI.">
-<meta property="og:image" content="https://github.com/folkehelsestats/highdir/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -28,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +36,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="index.html"><span class="fa fa-home fa-lg"></span></a></li>
+<li class="active nav-item"><a class="nav-link" href="index.html" aria-label="Home"><span class="fa fa-home fa-lg"></span></a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">News</a></li>
       </ul>
@@ -54,12 +53,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="highdir-">highdir <a class="anchor" aria-label="anchor" href="#highdir-"></a>
-</h1>
-</div>
+<div class="page-header"><h1 id="highdir-">highdir <img src="reference/figures/logo.png" alt="Package logo" align="right" width="120" height="138"><a class="anchor" aria-label="anchor" href="#highdir-"></a>
+</h1></div>
 <p><strong>highdir</strong> is an R package that provides a unified, backend-agnostic API for building figures with either <a href="https://jkunst.com/highcharter/" class="external-link"><strong>highcharter</strong></a> (interactive) or <a href="https://ggplot2.tidyverse.org/" class="external-link"><strong>ggplot2</strong></a> (static).</p>
-<p>A figure is described once as a <code>fig_spec</code> object and rendered to either backend without changing the calling code. The package ships with the default to use Helsedirektoratet colour palette, styling and theme. A Shiny GUI is introduce to make it user friendly.</p>
+<p>A figure is described once as a <code>hd_spec</code> and <code>hd_opts</code> object and rendered to either backend without changing the calling code. The package ships with the default to use Helsedirektoratet colour palette, styling and theme. A Shiny GUI is introduced to make it user friendly.</p>
 <hr>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -74,43 +71,35 @@
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://folkehelsestats.github.io/highdir" class="external-link">highdir</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  age  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"18-24"</span>, <span class="st">"25-34"</span>, <span class="st">"35-44"</span>, <span class="st">"45-54"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span>  sex  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Male"</span>, <span class="st">"Female"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>,</span>
-<span>  pct  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">38</span>, <span class="fl">55</span>, <span class="fl">61</span>, <span class="fl">48</span>, <span class="fl">52</span>, <span class="fl">60</span>, <span class="fl">57</span><span class="op">)</span>,</span>
-<span>  n    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">115</span>, <span class="fl">200</span>, <span class="fl">210</span>, <span class="fl">180</span>, <span class="fl">175</span>, <span class="fl">160</span>, <span class="fl">155</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 1. Describe the figure once</span></span>
-<span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fig_spec.html">fig_spec</a></span><span class="op">(</span></span>
-<span>  data     <span class="op">=</span> <span class="va">df</span>,</span>
-<span>  x        <span class="op">=</span> <span class="st">"age"</span>,</span>
-<span>  y        <span class="op">=</span> <span class="st">"pct"</span>,</span>
-<span>  group    <span class="op">=</span> <span class="st">"sex"</span>,</span>
-<span>  n        <span class="op">=</span> <span class="st">"n"</span>,            <span class="co"># shown in highcharter tooltips</span></span>
-<span>  title    <span class="op">=</span> <span class="st">"Health survey results"</span>,</span>
-<span>  subtitle <span class="op">=</span> <span class="st">"Source: Example data"</span>,</span>
-<span>  caption  <span class="op">=</span> <span class="st">"Tall om helse"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 2. Render to highcharter (interactive, default)</span></span>
-<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 3. Same spec → ggplot2 (static)</span></span>
-<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 4. Line chart with smooth spline and hover band</span></span>
-<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"line"</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 5. Disable JavaScript (for static HTML export)</span></span>
-<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, use_js <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 6. Save</span></span>
-<span><span class="fu"><a href="reference/hd_save.html">hd_save</a></span><span class="op">(</span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span>, <span class="st">"chart.html"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/hd_save.html">hd_save</a></span><span class="op">(</span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span>, <span class="st">"chart.png"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(highdir)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">age  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"18-24"</span>, <span class="st">"25-34"</span>, <span class="st">"35-44"</span>, <span class="st">"45-54"</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="at">sex  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>), <span class="dv">4</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">pct  =</span> <span class="fu">c</span>(<span class="dv">42</span>, <span class="dv">38</span>, <span class="dv">55</span>, <span class="dv">61</span>, <span class="dv">48</span>, <span class="dv">52</span>, <span class="dv">60</span>, <span class="dv">57</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">n    =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">115</span>, <span class="dv">200</span>, <span class="dv">210</span>, <span class="dv">180</span>, <span class="dv">175</span>, <span class="dv">160</span>, <span class="dv">155</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># Describe the figure once</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>spec <span class="ot">&lt;-</span> <span class="fu">hd_spec</span>(df, <span class="at">x =</span> <span class="st">"age"</span>, <span class="at">y =</span> <span class="st">"pct"</span>, <span class="at">group =</span> <span class="st">"sex"</span>, <span class="at">n =</span> <span class="st">"n"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># How the figure should look like</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>opts <span class="ot">&lt;-</span> <span class="fu">hd_opts</span>(<span class="at">title =</span> <span class="st">"Health survey"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>                <span class="at">subtitle =</span> <span class="st">"Source: Example data"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>                <span class="at">caption  =</span> <span class="st">"Tall om helse"</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>                <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, opts)                       <span class="co"># highcharter (default)</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, opts, <span class="at">backend =</span> <span class="st">"ggplot2"</span>)  <span class="co"># static ggplot2</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"line"</span>,   opts, <span class="at">smooth =</span> <span class="cn">TRUE</span>)        <span class="co"># smooth spline</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"pie"</span>,    opts)                       <span class="co"># pie / donut</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co"># Disable JavaScript (for static HTML export)</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, opts, <span class="at">use_js =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co"># Save</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="fu">hd_save</span>(<span class="fu">hd_make</span>(spec, <span class="st">"column"</span>), <span class="st">"chart.html"</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="fu">hd_save</span>(<span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, <span class="at">backend =</span> <span class="st">"ggplot2"</span>), <span class="st">"chart.png"</span>)</span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -124,15 +113,15 @@
 <span>  font     <span class="op">=</span> <span class="st">"Source Sans Pro"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># All subsequent make_fig() calls use these settings automatically</span></span>
-<span><span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># All subsequent hd_make() calls use these settings automatically</span></span>
+<span><span class="fu"><a href="reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="javascript-injection">JavaScript injection<a class="anchor" aria-label="anchor" href="#javascript-injection"></a>
 </h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/make_fig.html">make_fig</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Inline JS</span></span>
 <span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, code <span class="op">=</span> <span class="st">"console.log('chart loaded');"</span><span class="op">)</span></span>
@@ -148,7 +137,7 @@
 <h2 id="shiny-gui">Shiny GUI<a class="anchor" aria-label="anchor" href="#shiny-gui"></a>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/hd_app.html">hd_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -195,6 +184,14 @@
 <td align="left">
 <code>ymin</code>, <code>ymax</code>
 </td>
+</tr>
+<tr>
+<td align="left"><code>pie</code></td>
+<td align="left">pie</td>
+<td align="left">
+<code>geom_bar()</code>, <code>coord_polar()</code>
+</td>
+<td align="left">—</td>
 </tr>
 </tbody>
 </table>

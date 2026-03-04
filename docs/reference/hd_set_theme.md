@@ -1,10 +1,10 @@
 # Set Package-Wide Style Defaults
 
-Configures default theme, colour palette, font, and JavaScript plugins
-for all figures produced with
-[`make_fig()`](https://github.com/folkehelsestats/highdir/reference/make_fig.md)
+Configures the default theme, colour palette, font, and optional
+JavaScript plugins for all figures produced with
+[`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md)
 in the current R session. Call once at the top of a script or in
-`.Rprofile` for consistent styling.
+`.Rprofile`.
 
 ## Usage
 
@@ -16,41 +16,47 @@ hd_set_theme(hc_theme = NULL, colors = NULL, font = NULL, js_plugins = NULL)
 
 - hc_theme:
 
-  Character or `NULL`. Name of a built-in highcharter theme. One of
+  Character or `NULL`. Built-in highcharter theme name: one of
   `"default"`, `"smpl"`, `"economist"`, `"darkunica"`, `"gridlight"`,
   `"bloom"`, `"flat"`, `"flatdark"`, `"ggplot2"`.
 
 - colors:
 
-  Character vector or `NULL`. Hex colour codes applied to every figure
-  (both backends). When `NULL` the hdir default palette or the theme
-  colours are used.
+  Character vector, palette name, or `NULL`. Applied to all figures in
+  the session. See
+  [`register_palette()`](https://github.com/folkehelsestats/highdir/reference/register_palette.md).
 
 - font:
 
-  Character or `NULL`. Font family string, e.g. `"Source Sans Pro"`.
-  `NULL` uses the theme/system font.
+  Character or `NULL`. Font family name, e.g. `"Source Sans Pro"`.
 
 - js_plugins:
 
   Character vector or `NULL`. Names of bundled JS plugins (files in
-  `inst/js/`) to inject into every highcharter figure. Supply
-  `character(0)` to clear.
+  `inst/js/`) injected into every highcharter figure. Use `character(0)`
+  to clear all plugins.
 
 ## Value
 
-The previous option values, invisibly, so you can restore them with
-`options(hd_set_theme(...))` if needed.
+The previous option values invisibly; pass to
+[`options()`](https://rdrr.io/r/base/options.html) to restore.
+
+## Details
+
+Per-figure overrides are provided via
+[`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md),
+which always take precedence over these session defaults.
+
+## See also
+
+[`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md)
+for per-figure overrides
 
 ## Examples
 
 ``` r
-# Use the economist theme with custom colours
 hd_set_theme(hc_theme = "economist",
              colors   = c("#025169", "#7C145C", "#C68803"))
-#> Error in hd_set_theme(hc_theme = "economist", colors = c("#025169", "#7C145C",     "#C68803")): could not find function "hd_set_theme"
-
-# Reset to defaults
+# Reset
 hd_set_theme(hc_theme = "default", colors = NULL)
-#> Error in hd_set_theme(hc_theme = "default", colors = NULL): could not find function "hd_set_theme"
 ```

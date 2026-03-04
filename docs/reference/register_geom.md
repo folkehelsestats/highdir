@@ -1,8 +1,7 @@
 # Register a Geometry
 
-Adds a named geometry to the registry. A geometry pairs a ggplot2 layer
-function with a highcharter series function, along with any required
-arguments beyond x/y.
+Adds a named geometry to the geom registry. A geometry pairs a ggplot2
+layer function with a highcharter series function.
 
 ## Usage
 
@@ -11,7 +10,8 @@ register_geom(
   name,
   ggplot_fun = NULL,
   highcharter_fun = NULL,
-  required_args = character()
+  required_args = character(),
+  is_map_geom = FALSE
 )
 ```
 
@@ -19,34 +19,41 @@ register_geom(
 
 - name:
 
-  Character. Unique geometry identifier (e.g. `"line"`).
+  Character. Unique geometry identifier.
 
 - ggplot_fun:
 
-  Function. Called as `ggplot_fun(spec, ...)` inside the ggplot2 engine;
-  must return a ggplot2 layer.
+  Function or `NULL`. ggplot2 layer builder.
 
 - highcharter_fun:
 
-  Function. Called as `highcharter_fun(chart, spec, ...)` inside the
-  highcharter engine; must return a `highchart` object.
+  Function or `NULL`. highcharter series builder.
 
 - required_args:
 
-  Character vector. Names of arguments (beyond x/y) that the geometry
-  requires (e.g. `c("ymin", "ymax")` for `arearange`).
+  Character vector. Names of required `geom_params` entries beyond x/y
+  (e.g. `c("ymin", "ymax")` for `"arearange"`).
 
 ## Value
 
 `name`, invisibly.
 
+## Details
+
+The geom functions receive `(spec, opts, geom_params, ...)` for ggplot2
+and `(chart, spec, opts, geom_params, use_js, ...)` for highcharter.
+`geom_params` is a named list containing all geom-specific arguments
+(e.g. `smooth`, `dot_size`, `ymin`, `ymax`).
+
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-register_geom("violin",
-  ggplot_fun      = function(spec, ...) ggplot2::geom_violin(...),
-  highcharter_fun = function(chart, spec, ...) { ... }
+register_geom(
+  "violin",
+  ggplot_fun      = function(spec, opts, geom_params, ...) ggplot2::geom_violin(),
+  highcharter_fun = NULL,   # highcharter has no violin
+  required_args   = character()
 )
 } # }
 ```

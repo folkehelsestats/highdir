@@ -1,6 +1,6 @@
-# Available Highcharts marker symbols
+# Valid Highcharts marker symbol names
 
-Available Highcharts marker symbols
+Valid Highcharts marker symbol names
 
 ## Usage
 

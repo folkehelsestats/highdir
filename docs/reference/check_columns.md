@@ -1,6 +1,6 @@
-# Stop with a tidy message if columns are missing from a data frame
+# Stop with a tidy message when columns are absent from a data frame
 
-Stop with a tidy message if columns are missing from a data frame
+Stop with a tidy message when columns are absent from a data frame
 
 ## Usage
 

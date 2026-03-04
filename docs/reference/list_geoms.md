@@ -16,5 +16,5 @@ Character vector of registered geometry names.
 
 ``` r
 list_geoms()
-#> Error in list_geoms(): could not find function "list_geoms"
+#> [1] "arearange" "column"    "line"      "pie"       "scatter"  
 ```

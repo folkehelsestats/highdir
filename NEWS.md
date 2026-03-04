@@ -1,35 +1,10 @@
 # highdir 0.3.0
 
-### New features
-
-* Added **`"map"` geometry** — Norway choropleth maps at county (`level = "county"`)
-  and municipality (`level = "municipality"`) resolution.
-  - `gg_map`: static sf/ggplot2 choropleth.  Geometry downloaded from the
-    Highcharts CDN on first use and cached in the session.  Requires **{sf}**.
-  - `hc_map`: interactive Highcharter/Highmaps choropleth.  Uses
-    `highcharter::hcmap()` with Highcharts-hosted TopoJSON loaded at render time.
-  - New args in `hd_make()`: `level`, `value_lab`, `low_col`, `high_col`, `na_fill`.
-  - Accepts SSB region codes as integers (`301`), zero-padded strings (`"0301"`),
-    or full Highcharts hc-keys (`"no-03-0301"`).
-
-* `no_counties()` — returns the 15 Norwegian counties (2024) with SSB
-  `fylkesnummer`, names, and `hc_key` values.
-
-* `no_municipalities()` — returns representative Norwegian municipalities with
-  `kommunenummer`, names, `hc_key`, and `fylkesnummer`.
-
-* `.norm_code()` and `.to_hc_key()` — internal helpers for converting SSB
-  codes to Highcharts hc-key format.
-
-* `.norway_sf_cache` — session-level environment caching downloaded sf geometry
-  so maps after the first are instantaneous.
-
-### Package changes
-
 * `DESCRIPTION` version bumped to 0.3.0.
-* `maps` added to `Suggests` (fallback for offline gg_map).
-* Shiny app UI / server updated with map-specific controls (level, scale
-  colours, NA fill, legend label).
+* Fix `hd_save()` #3
+* Renaming some functions to be consistence
+* Rename function `run_app()` to `hd_app()`
+* Rename function `fig_opts()` to `hd_opts()`
 
 # highdir 0.2.0
 

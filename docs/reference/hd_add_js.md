@@ -1,8 +1,10 @@
 # Inject JavaScript into a Highcharts Widget
 
-Appends custom JavaScript to a `highchart` object. Useful for Highcharts
-plugins, custom `load` / `render` callbacks, or any other JS that must
-run in the chart's context.
+Appends custom JavaScript to a `highchart` object via
+`chart.events.<where>`. Use this for hand-written callbacks and plugins.
+For Highcharts built-in modules (accessibility, exporting, etc.) use
+[`highcharter::hc_add_dependency()`](https://jkunst.com/highcharter/reference/hc_add_dependency.html)
+instead.
 
 ## Usage
 
@@ -20,10 +22,7 @@ hd_add_js(
 
 - hc:
 
-  A `highchart` object (output of
-  [`make_fig()`](https://github.com/folkehelsestats/highdir/reference/make_fig.md)
-  with `backend = "highcharter"`, or any object returned by
-  [`highcharter::highchart()`](https://jkunst.com/highcharter/reference/highchart.html)).
+  A `highchart` object.
 
 - code:
 
@@ -31,23 +30,19 @@ hd_add_js(
 
 - file:
 
-  Character or `NULL`. Path to a `.js` file whose contents are read and
-  injected.
+  Character or `NULL`. Path to a `.js` file to read and inject.
 
 - plugin:
 
-  Character or `NULL`. Name of a JS plugin bundled with highdir (a file
-  at `inst/js/<plugin>.js`). Convenient shorthand for
-  `file = system.file(...)`.
+  Character or `NULL`. Name of a plugin bundled in `inst/js/`.
 
 - where:
 
-  Character. One of `"load"` (default) — runs when the chart finishes
-  loading — or `"render"` — runs after every render cycle.
+  `"load"` (default) or `"render"`.
 
 ## Value
 
-The `highchart` object with the JS injected via `chart.events.<where>`.
+The `highchart` object with JS injected.
 
 ## Details
 
@@ -57,8 +52,8 @@ Exactly one of `code`, `file`, or `plugin` must be supplied.
 
 ``` r
 if (FALSE) { # \dontrun{
-spec <- fig_spec(mtcars, "wt", "mpg")
-fig  <- make_fig(spec, "scatter", backend = "highcharter")
+spec <- hd_spec(mtcars, "wt", "mpg")
+fig  <- hd_make(spec, "scatter")
 fig  <- hd_add_js(fig, code = "console.log('chart loaded');")
 } # }
 ```

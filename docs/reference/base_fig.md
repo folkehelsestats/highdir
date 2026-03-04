@@ -1,14 +1,13 @@
-# Base Figure Canvas
+# Build a Blank Backend Canvas
 
-Constructs the blank backend-specific canvas (a bare `ggplot` or
-`highchart`) with axes, labels, and chart-level options applied from
-`spec`. Called internally by the backend engines; you rarely need this
-directly.
+Constructs the empty backend object (ggplot or highchart) with all
+chart-level options applied from `spec` and `opts`. Called by the
+backend engines; you rarely need this directly.
 
 ## Usage
 
 ``` r
-base_fig(spec, backend)
+base_fig(spec, opts, backend)
 ```
 
 ## Arguments
@@ -16,12 +15,18 @@ base_fig(spec, backend)
 - spec:
 
   A
-  [fig_spec](https://github.com/folkehelsestats/highdir/reference/fig_spec.md)
+  [hd_spec](https://github.com/folkehelsestats/highdir/reference/hd_spec.md)
+  object.
+
+- opts:
+
+  A
+  [hd_opts](https://github.com/folkehelsestats/highdir/reference/hd_opts.md)
   object.
 
 - backend:
 
-  Character. Backend name, e.g. `"ggplot2"` or `"highcharter"`.
+  Character. Backend name.
 
 ## Value
 

@@ -1,8 +1,8 @@
 # Register a Rendering Backend
 
-Adds a named backend engine to the registry. An engine is a function
-with the signature `function(spec, geom, ...)` that returns a rendered
-figure object (a `ggplot` or `highchart`).
+Adds a named engine function to the backend registry. The engine
+receives `(spec, geom, opts, geom_params, use_js, filename)` and must
+return a rendered figure object (`ggplot` or `highchart`).
 
 ## Usage
 
@@ -18,7 +18,8 @@ register_backend(name, engine)
 
 - engine:
 
-  A function with signature `function(spec, geom, ...)`.
+  Function with signature
+  `function(spec, geom, opts, geom_params, use_js, filename, ...)`.
 
 ## Value
 
@@ -26,14 +27,17 @@ register_backend(name, engine)
 
 ## Details
 
-Third-party packages can call `register_backend()` to add their own
-backends (e.g. `"plotly"`).
+Third-party packages call this in their own `.onLoad()` to add backends
+such as `"plotly"` or `"echarts4r"`.
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-my_engine <- function(spec, geom, ...) { ... }
+my_engine <- function(spec, geom, opts, geom_params, use_js, filename, ...) {
+  # return a rendered figure
+}
 register_backend("my_backend", my_engine)
+list_backends()
 } # }
 ```

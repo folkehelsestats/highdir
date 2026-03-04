@@ -1,14 +1,14 @@
-# highdir
+# highdir ![Package logo](reference/figures/logo.png)
 
 **highdir** is an R package that provides a unified, backend-agnostic
 API for building figures with either
 [**highcharter**](https://jkunst.com/highcharter/) (interactive) or
 [**ggplot2**](https://ggplot2.tidyverse.org/) (static).
 
-A figure is described once as a `fig_spec` object and rendered to either
-backend without changing the calling code. The package ships with the
-default to use Helsedirektoratet colour palette, styling and theme. A
-Shiny GUI is introduce to make it user friendly.
+A figure is described once as a `hd_spec` and `hd_opts` object and
+rendered to either backend without changing the calling code. The
+package ships with the default to use Helsedirektoratet colour palette,
+styling and theme. A Shiny GUI is introduced to make it user friendly.
 
 ------------------------------------------------------------------------
 
@@ -35,33 +35,26 @@ df <- data.frame(
   n    = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-# 1. Describe the figure once
-spec <- fig_spec(
-  data     = df,
-  x        = "age",
-  y        = "pct",
-  group    = "sex",
-  n        = "n",            # shown in highcharter tooltips
-  title    = "Health survey results",
-  subtitle = "Source: Example data",
-  caption  = "Tall om helse"
-)
+# Describe the figure once
+spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
 
-# 2. Render to highcharter (interactive, default)
-make_fig(spec, "column")
+# How the figure should look like
+opts <- hd_opts(title = "Health survey",
+                subtitle = "Source: Example data",
+                caption  = "Tall om helse"
+                ylim = c(0, 80))
 
-# 3. Same spec → ggplot2 (static)
-make_fig(spec, "column", backend = "ggplot2")
+hd_make(spec, "column", opts)                       # highcharter (default)
+hd_make(spec, "column", opts, backend = "ggplot2")  # static ggplot2
+hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
+hd_make(spec, "pie",    opts)                       # pie / donut
 
-# 4. Line chart with smooth spline and hover band
-make_fig(spec, "line", smooth = TRUE)
+# Disable JavaScript (for static HTML export)
+hd_make(spec, "column", opts, use_js = FALSE)
 
-# 5. Disable JavaScript (for static HTML export)
-make_fig(spec, "column", use_js = FALSE)
-
-# 6. Save
-hd_save(make_fig(spec, "column"), "chart.html")
-hd_save(make_fig(spec, "column", backend = "ggplot2"), "chart.png")
+# Save
+hd_save(hd_make(spec, "column"), "chart.html")
+hd_save(hd_make(spec, "column", backend = "ggplot2"), "chart.png")
 ```
 
 ------------------------------------------------------------------------
@@ -76,8 +69,8 @@ hd_set_theme(
   font     = "Source Sans Pro"
 )
 
-# All subsequent make_fig() calls use these settings automatically
-make_fig(spec, "column")
+# All subsequent hd_make() calls use these settings automatically
+hd_make(spec, "column")
 ```
 
 ------------------------------------------------------------------------
@@ -85,7 +78,7 @@ make_fig(spec, "column")
 ## JavaScript injection
 
 ``` r
-fig <- make_fig(spec, "column")
+fig <- hd_make(spec, "column")
 
 # Inline JS
 fig <- hd_add_js(fig, code = "console.log('chart loaded');")
@@ -102,7 +95,7 @@ fig <- hd_add_js(fig, plugin = "my-plugin")
 ## Shiny GUI
 
 ``` r
-run_app()
+hd_app()
 ```
 
 ------------------------------------------------------------------------
@@ -115,6 +108,7 @@ run_app()
 | `line` | line / spline | `geom_line()` | `smooth`, `dot_size`, `line_symbols` |
 | `scatter` | scatter | `geom_point()` | — |
 | `arearange` | arearange | `geom_ribbon()` | `ymin`, `ymax` |
+| `pie` | pie | `geom_bar()`, `coord_polar()` | — |
 
 ------------------------------------------------------------------------
 

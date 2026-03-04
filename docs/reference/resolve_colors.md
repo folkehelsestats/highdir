@@ -1,8 +1,6 @@
-# Resolve colour vector for n groups
+# Resolve a Colour Vector for n Groups
 
-Returns a character vector of `n` colours using the hdir palette for 1–7
-groups, a two-colour teal/purple pair for exactly 2 groups, and viridis
-for 8+ groups.
+Returns exactly `n` colours. Priority order:
 
 ## Usage
 
@@ -14,14 +12,27 @@ resolve_colors(n, colors = NULL)
 
 - n:
 
-  Integer. Number of groups / series.
+  Integer. Number of colours required.
 
 - colors:
 
-  Optional override vector supplied by the user or from
-  `getOption("highdir.colors")`. If non-NULL and long enough, it is used
-  directly.
+  Character vector, palette name, or `NULL`.
 
 ## Value
 
-Character vector of length `n`.
+Character vector of exactly length `n`.
+
+## Details
+
+1.  Explicit `colors` argument — vector or palette name string.
+
+2.  `getOption("highdir.colors")` — set via
+    [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md).
+
+3.  Built-in hdir rules:
+
+    - n == 2 → `"hdir2"` two-colour teal/purple pair
+
+    - n \<= 10 → `"hdir"` 10-colour brand palette
+
+    - n \> 10 → viridis continuous scale

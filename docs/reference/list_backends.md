@@ -16,5 +16,5 @@ Character vector of registered backend names.
 
 ``` r
 list_backends()
-#> Error in list_backends(): could not find function "list_backends"
+#> [1] "ggplot2"     "highcharter"
 ```

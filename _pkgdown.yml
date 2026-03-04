@@ -8,6 +8,7 @@ navbar:
   left:
     - icon: fa-home fa-lg
       href: index.html
+      aria-label: "Home"
     - text: Reference
       href: reference/index.html
     - text: News
