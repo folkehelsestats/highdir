@@ -12,10 +12,10 @@ resolve_colors(n, colors = NULL)
 \item{colors}{Character vector, palette name, or \code{NULL}.}
 }
 \value{
-Character vector of length \code{n}.
+Character vector of exactly length \code{n}.
 }
 \description{
-Returns exactly \code{n} colours.  Priority order:
+Returns exactly \code{n} colours. Priority order:
 }
 \details{
 \enumerate{
