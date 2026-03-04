@@ -100,7 +100,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
       accessibility = list(enabled = TRUE)
     ) |>
     # Accessibility module always loaded — not controlled by use_js
-    highcharter::hc_add_dependency(name = "modules/accessibility.js")
+    highcharter::hc_add_dependency(name = "plugins/accessibility.js")
 
   # ── Series (geom renders here) ────────────────────────────────────────────
   chart <- geom$highcharter_fun(chart, spec, opts, geom_params,
