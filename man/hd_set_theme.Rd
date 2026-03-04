@@ -7,36 +7,40 @@
 hd_set_theme(hc_theme = NULL, colors = NULL, font = NULL, js_plugins = NULL)
 }
 \arguments{
-\item{hc_theme}{Character or \code{NULL}. Name of a built-in highcharter theme.
-One of \code{"default"}, \code{"smpl"}, \code{"economist"}, \code{"darkunica"},
-\code{"gridlight"}, \code{"bloom"}, \code{"flat"}, \code{"flatdark"}, \code{"ggplot2"}.}
+\item{hc_theme}{Character or \code{NULL}. Built-in highcharter theme name: one
+of \code{"default"}, \code{"smpl"}, \code{"economist"}, \code{"darkunica"}, \code{"gridlight"},
+\code{"bloom"}, \code{"flat"}, \code{"flatdark"}, \code{"ggplot2"}.}
 
-\item{colors}{Character vector or \code{NULL}. Hex colour codes applied to
-every figure (both backends). When \code{NULL} the hdir default palette or
-the theme colours are used.}
+\item{colors}{Character vector, palette name, or \code{NULL}. Applied to all
+figures in the session. See \code{\link[=register_palette]{register_palette()}}.}
 
-\item{font}{Character or \code{NULL}. Font family string, e.g.
-\code{"Source Sans Pro"}. \code{NULL} uses the theme/system font.}
+\item{font}{Character or \code{NULL}. Font family name, e.g.
+\code{"Source Sans Pro"}.}
 
 \item{js_plugins}{Character vector or \code{NULL}. Names of bundled JS plugins
-(files in \verb{inst/js/}) to inject into every highcharter figure. Supply
-\code{character(0)} to clear.}
+(files in \verb{inst/js/}) injected into every highcharter figure. Use
+\code{character(0)} to clear all plugins.}
 }
 \value{
-The previous option values, invisibly, so you can restore them
-with \code{options(hd_set_theme(...))} if needed.
+The previous option values invisibly; pass to \code{options()} to
+restore.
 }
 \description{
-Configures default theme, colour palette, font, and JavaScript plugins for
-all figures produced with \code{\link[=make_fig]{make_fig()}} in the current R session. Call once
-at the top of a script or in \code{.Rprofile} for consistent styling.
+Configures the default theme, colour palette, font, and optional JavaScript
+plugins for all figures produced with \code{\link[=hd_make]{hd_make()}} in the current R session.
+Call once at the top of a script or in \code{.Rprofile}.
+}
+\details{
+Per-figure overrides are provided via \code{\link[=hd_opts]{hd_opts()}}, which always take
+precedence over these session defaults.
 }
 \examples{
-# Use the economist theme with custom colours
 hd_set_theme(hc_theme = "economist",
              colors   = c("#025169", "#7C145C", "#C68803"))
-
-# Reset to defaults
+# Reset
 hd_set_theme(hc_theme = "default", colors = NULL)
 
+}
+\seealso{
+\code{\link[=hd_opts]{hd_opts()}} for per-figure overrides
 }

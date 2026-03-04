@@ -1,149 +1,207 @@
-# figure-spec.R — Backend-agnostic figure specification object
+# R/figure-spec.R ── Figure specification objects
 #
-# A fig_spec carries everything needed to render a figure: the data, the
-# aesthetic mapping (x, y, group, colour), axis labels, title, subtitle,
-# caption, and chart-level options such as ylim, yint, flip, etc.
+# Two complementary constructors are provided:
 #
-# By putting all configuration into the spec rather than scattering it across
-# make_fig() arguments, we make it easy to serialise, inspect, and pass
-# specifications around without touching the rendering layer.
+#   hd_spec()  — *what* the data means  (x, y, group, n, axis labels)
+#   hd_opts()  — *how* it should look   (title, ylim, flip, colours, theme)
+#
+# Keeping them separate means:
+#   * The same hd_spec can be rendered with different opts (e.g. EN vs NO
+#     titles) without repeating data-mapping code.
+#   * hd_opts objects are reusable across multiple specs.
+#   * Validation errors are localised to the object they belong to.
 
-#' Create a Figure Specification
+# ════════════════════════════════════════════════════════════════════════════
+# hd_spec ── data mapping
+# ════════════════════════════════════════════════════════════════════════════
+
+#' Create a Figure Data Specification
 #'
-#' Defines a backend-agnostic description of a figure. Pass the returned
-#' object to [make_fig()] to render it with either `"highcharter"` or
-#' `"ggplot2"`.
+#' Defines the **data mapping** for a figure — which columns map to x, y,
+#' group, and count — independently of any visual presentation choices.
+#' Pass the result to [hd_make()] together with an optional [hd_opts()]
+#' object.
 #'
-#' @param data A `data.frame` (or `data.table`) containing all referenced
-#'   columns.
-#' @param x Character. Column name for the x-axis variable.
-#' @param y Character. Column name for the y-axis variable (typically a
-#'   percentage or count).
-#' @param group Character or `NULL`. Column name used to split the data into
-#'   multiple series / groups.
-#' @param n Character or `NULL`. Column name of a raw count variable shown
-#'   in highcharter tooltips alongside the y value. Ignored for ggplot2.
-#' @param colour Character or `NULL`. Column name mapped to the colour
-#'   aesthetic (ggplot2 only; highcharter uses `group` for colouring).
-#' @param xlab Character or `NULL`. X-axis label. Defaults to `x` when
-#'   `NULL`.
-#' @param ylab Character or `NULL`. Y-axis label. Defaults to `y` when
-#'   `NULL`.
-#' @param title Character or `NULL`. Chart title.
-#' @param subtitle Character or `NULL`. Chart subtitle. Defaults to
-#'   `"Kilde: Navn av kilder"` in the highcharter engine when `NULL`.
-#' @param caption Character or `NULL`. Caption text shown below the chart
-#'   (highcharter only).
-#' @param ylim Numeric vector of length 2 or `NULL`. Fixed y-axis limits,
-#'   e.g. `c(0, 100)`. `NULL` lets the backend determine limits
-#'   automatically.
-#' @param yint Numeric. Y-axis tick interval. Default `10`.
-#' @param flip Logical. Invert axes (horizontal bars). Default `FALSE`.
+#' @param data   A `data.frame` containing all referenced columns.
+#' @param x      Character. Column name for the x-axis variable.
+#' @param y      Character. Column name for the y-axis variable (typically
+#'   a percentage or count).
+#' @param group  Character or `NULL`. Column used to split data into multiple
+#'   series.
+#' @param n      Character or `NULL`. Column of raw counts shown in
+#'   highcharter tooltips alongside the y value.  Ignored by ggplot2.
+#' @param colour Character or `NULL`. ggplot2 colour aesthetic column.
+#'   Defaults to `group` when `NULL` and `group` is set.
+#' @param xlab   Character or `NULL`. X-axis label.  Defaults to `x`.
+#' @param ylab   Character or `NULL`. Y-axis label.  Defaults to `y`.
 #'
-#' @return An object of S3 class `fig_spec`.
+#' @return An S3 object of class `"hd_spec"`.
+#'
+#' @seealso [hd_opts()], [hd_make()]
 #'
 #' @examples
 #' df <- data.frame(
-#'   age   = rep(c("18-24", "25-34", "35-44"), each = 2),
-#'   sex   = rep(c("Male", "Female"), 3),
-#'   pct   = c(42, 38, 55, 61, 48, 52),
-#'   n     = c(120, 115, 200, 210, 180, 175)
+#'   age = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
+#'   sex = rep(c("Male", "Female"), 4),
+#'   pct = c(42, 38, 55, 61, 48, 52, 60, 57),
+#'   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 #' )
 #'
-#' spec <- fig_spec(
-#'   data     = df,
-#'   x        = "age",
-#'   y        = "pct",
-#'   group    = "sex",
-#'   n        = "n",
-#'   title    = "Health survey results",
-#'   subtitle = "Source: Example data"
-#' )
+#' spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
+#'                  ylab = "Percentage (%)")
 #' spec
 #'
 #' @export
-fig_spec <- function(data,
+hd_spec <- function(data,
                      x,
                      y,
-                     group    = NULL,
-                     n        = NULL,
-                     colour   = NULL,
-                     xlab     = NULL,
-                     ylab     = NULL,
-                     title    = NULL,
+                     group  = NULL,
+                     n      = NULL,
+                     colour = NULL,
+                     xlab   = NULL,
+                     ylab   = NULL) {
+
+  if (!is.data.frame(data))
+    stop("`data` must be a data.frame.", call. = FALSE)
+
+  check_columns(data, c(x, y, group, n, colour))
+
+  structure(
+    list(
+      data   = as.data.frame(data),   # strip tibble/data.table subclasses
+      x      = x,
+      y      = y,
+      group  = group,
+      n      = n,
+      colour = colour,
+      xlab   = xlab %||% x,
+      ylab   = ylab %||% y
+    ),
+    class = "hd_spec"
+  )
+}
+
+# ── S3 methods ───────────────────────────────────────────────────────────────
+
+#' @export
+print.hd_spec <- function(x, ...) {
+  cat("<hd_spec>\n")
+  cat("  x      :", x$x,    "\n")
+  cat("  y      :", x$y,    "\n")
+  cat("  xlab   :", x$xlab, "\n")
+  cat("  ylab   :", x$ylab, "\n")
+  if (!is.null(x$group))  cat("  group  :", x$group,  "\n")
+  if (!is.null(x$n))      cat("  n      :", x$n,      "\n")
+  if (!is.null(x$colour)) cat("  colour :", x$colour, "\n")
+  cat("  rows   :", nrow(x$data), "\n")
+  invisible(x)
+}
+
+#' @export
+as.list.hd_spec <- function(x, ...) {
+  out      <- unclass(x)
+  out$data <- sprintf("<data.frame [%d x %d]>", nrow(x$data), ncol(x$data))
+  out
+}
+
+# ════════════════════════════════════════════════════════════════════════════
+# hd_opts ── presentation options
+# ════════════════════════════════════════════════════════════════════════════
+
+#' Create Figure Presentation Options
+#'
+#' Defines the **visual presentation** of a figure independently from the data
+#' mapping.  Pass the result as the `opts` argument of [hd_make()], or omit
+#' it to accept all defaults.
+#'
+#' Because opts are separate from [hd_spec()], the same data mapping can
+#' be rendered with multiple styles without repetition:
+#'
+#' ```r
+#' spec    <- hd_spec(df, "age", "pct", group = "sex")
+#' opts_en <- hd_opts(title = "Health survey",    subtitle = "All ages")
+#' opts_no <- fig_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
+#'
+#' hd_make(spec, "column", opts_en)
+#' hd_make(spec, "column", opts_no)
+#' ```
+#'
+#' @param title    Character or `NULL`. Chart title.
+#' @param subtitle Character or `NULL`. Subtitle.  Highcharter default:
+#'   `"Kilde: Navn av kilder"`.
+#' @param caption  Character or `NULL`. Caption text (highcharter only).
+#' @param ylim     Numeric vector of length 2 or `NULL`. Fixed y-axis limits,
+#'   e.g. `c(0, 100)`.
+#' @param yint     Positive numeric. Y-axis tick interval.  Default `10`.
+#' @param flip     Logical. Invert axes (horizontal bars).  Default `FALSE`.
+#' @param colors   Character vector, palette name string, or `NULL`.
+#'   Per-figure colour override; takes precedence over [hd_set_theme()].
+#' @param hc_theme Character or `NULL`. Per-figure highcharter theme name;
+#'   takes precedence over [hd_set_theme()].
+#'
+#' @return An S3 object of class `"hd_opts"`.
+#'
+#' @seealso [hd_spec()], [hd_make()], [hd_set_theme()]
+#'
+#' @examples
+#' opts <- hd_opts(
+#'   title    = "Health survey results",
+#'   subtitle = "Source: FHI 2024",
+#'   caption  = "Tall om helse",
+#'   ylim     = c(0, 100),
+#'   yint     = 20,
+#'   colors   = c("#025169", "#7C145C")
+#' )
+#' opts
+#'
+#' @export
+hd_opts <- function(title    = NULL,
                      subtitle = NULL,
                      caption  = NULL,
                      ylim     = NULL,
                      yint     = 10,
-                     flip     = FALSE) {
+                     flip     = FALSE,
+                     colors   = NULL,
+                     hc_theme = NULL) {
 
-  # ---- Validate inputs -------------------------------------------------------
-  if (!is.data.frame(data))
-    stop("`data` must be a data.frame", call. = FALSE)
-
-  check_columns(data, c(x, y, group, n, colour))
   check_ylim(ylim)
-
   if (!is.numeric(yint) || length(yint) != 1 || yint <= 0)
-    stop("`yint` must be a single positive number", call. = FALSE)
+    stop("`yint` must be a single positive number.", call. = FALSE)
 
-  # ---- Build spec object -----------------------------------------------------
   structure(
-    list(
-      data     = data,
-      x        = x,
-      y        = y,
-      group    = group,
-      n        = n,
-      colour   = colour,
-      xlab     = xlab     %||% x,
-      ylab     = ylab     %||% y,
-      title    = title,
-      subtitle = subtitle,
-      caption  = caption,
-      ylim     = ylim,
-      yint     = yint,
-      flip     = flip
-    ),
-    class = "fig_spec"
+    list(title    = title,
+         subtitle = subtitle,
+         caption  = caption,
+         ylim     = ylim,
+         yint     = yint,
+         flip     = flip,
+         colors   = colors,
+         hc_theme = hc_theme),
+    class = "hd_opts"
   )
 }
 
-# ---------------------------------------------------------------------------
-# S3 methods for fig_spec
-# ---------------------------------------------------------------------------
+# ── S3 methods ───────────────────────────────────────────────────────────────
 
-#' Print a fig_spec Object
-#'
-#' @param x A `fig_spec` object.
-#' @param ... Ignored.
-#' @return `x`, invisibly.
 #' @export
-print.fig_spec <- function(x, ...) {
-  cat("<fig_spec>\n")
-  cat("  x        :", x$x,     "\n")
-  cat("  y        :", x$y,     "\n")
-  if (!is.null(x$group))    cat("  group    :", x$group,    "\n")
-  if (!is.null(x$n))        cat("  n        :", x$n,        "\n")
-  if (!is.null(x$colour))   cat("  colour   :", x$colour,   "\n")
+print.hd_opts <- function(x, ...) {
+  cat("<hd_opts>\n")
   if (!is.null(x$title))    cat("  title    :", x$title,    "\n")
   if (!is.null(x$subtitle)) cat("  subtitle :", x$subtitle, "\n")
   if (!is.null(x$caption))  cat("  caption  :", x$caption,  "\n")
   if (!is.null(x$ylim))     cat("  ylim     :", x$ylim,     "\n")
-  cat("  yint     :", x$yint,  "\n")
-  cat("  flip     :", x$flip,  "\n")
-  cat("  rows     :", nrow(x$data), "\n")
+  cat("  yint     :", x$yint, "\n")
+  cat("  flip     :", x$flip, "\n")
+  if (!is.null(x$colors))
+    cat("  colors   :", paste(x$colors, collapse = ", "), "\n")
+  if (!is.null(x$hc_theme)) cat("  hc_theme :", x$hc_theme, "\n")
   invisible(x)
 }
 
-#' Convert fig_spec to a List
-#'
-#' @param x A `fig_spec` object.
-#' @param ... Ignored.
-#' @return A plain list (without the `data` slot, to keep output readable).
 #' @export
-as.list.fig_spec <- function(x, ...) {
-  out <- unclass(x)
-  out$data <- paste0("<data.frame [", nrow(x$data), " x ", ncol(x$data), "]>")
-  out
-}
+as.list.hd_opts <- function(x, ...) unclass(x)
+
+# ── Internal default ─────────────────────────────────────────────────────────
+
+#' @keywords internal
+default_opts <- function() hd_opts()

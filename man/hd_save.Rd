@@ -17,66 +17,62 @@ hd_save(
 )
 }
 \arguments{
-\item{fig}{A \code{highchart} or \code{ggplot} object.}
+\item{fig}{A \code{highchart} or \code{ggplot} object (output of
+\code{\link[=hd_make]{hd_make()}}).}
 
-\item{file}{Character. Output file path including extension, e.g.
-\code{"output/chart.html"} or \code{"output/chart.png"}.}
+\item{file}{Character.  Output path including extension, e.g.
+\code{"output/chart.html"}.}
 
-\item{type}{Character. Explicit format override. One of \code{"auto"} (infer
-from extension), \code{"html"}, \code{"json"}, \code{"png"}, \code{"svg"}, \code{"pdf"},
-\code{"jpeg"}, \code{"tiff"}. Default: \code{"auto"}.}
+\item{type}{\code{"auto"} (infer from extension) or an explicit format
+string such as \code{"html"}, \code{"png"}, \code{"svg"}.  Default: \code{"auto"}.}
 
-\item{width}{Numeric. Output width. Inches for ggplot2; pixels for
-highcharter PNG. Default: \code{8}.}
+\item{width}{Numeric.  Width — inches for ggplot2; pixels for HC
+PNG.  Default: \code{8}.}
 
-\item{height}{Numeric. Output height. Inches for ggplot2; pixels for
-highcharter PNG. Default: \code{5}.}
+\item{height}{Numeric.  Height.  Default: \code{5}.}
 
-\item{dpi}{Numeric. Resolution for raster ggplot2 exports. Default: \code{300}.}
+\item{dpi}{Numeric.  Raster resolution for ggplot2.
+Default: \code{300}.}
 
-\item{selfcontained}{Logical. For HTML export, embed all JS/CSS so the
-file is self-contained and portable. Default: \code{TRUE}.}
+\item{selfcontained}{Logical.  Embed all JS/CSS in the HTML file.
+Default: \code{TRUE}.}
 
-\item{delay}{Numeric. Seconds to wait for JavaScript to finish rendering
-before taking a PNG screenshot of a highcharter widget. Default: \code{0.8}.}
+\item{delay}{Numeric.  Seconds to wait before screenshotting a
+highcharter widget to PNG.  Default: \code{0.8}.}
 
-\item{...}{Additional arguments forwarded to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} (ggplot2
-figures only).}
+\item{...}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} for ggplot2 figures.}
 }
 \value{
-\code{file}, invisibly. Called primarily for its side-effect.
+\code{file}, invisibly.
 }
 \description{
-Exports a figure produced by \code{\link[=make_fig]{make_fig()}} (or any \code{ggplot} / \code{highchart}
-object) to a file. The output format is inferred from the file extension
-unless \code{type} is specified explicitly.
+Exports a \code{highchart} or \code{ggplot} figure produced by \code{\link[=hd_make]{hd_make()}} to a
+file.  The output format is inferred from the file extension unless \code{type}
+is supplied explicitly.
 }
 \details{
 \tabular{ll}{
    Backend \tab Supported formats \cr
-   highcharter \tab \code{html}, \code{json}, \code{png}* \cr
+   highcharter \tab \code{html}, \code{json}, \code{png}\* \cr
    ggplot2 \tab \code{png}, \code{svg}, \code{pdf}, \code{jpeg}, \code{tiff} \cr
 }
 
 
-*PNG for highcharter requires the \strong{webshot2} package and a Chromium
-browser. Install with \code{install.packages("webshot2")}.
+\* PNG for highcharter requires the \strong{webshot2} package and a Chromium
+browser (\code{install.packages("webshot2")}).
 }
 \examples{
 \dontrun{
-spec <- fig_spec(mtcars, "wt", "mpg", title = "Weight vs MPG")
+spec <- hd_spec(mtcars, "wt", "mpg")
+opts <- hd_opts(title = "Weight vs MPG")
 
-# Highcharter
-hc_fig <- make_fig(spec, "scatter", backend = "highcharter")
+hc_fig <- hd_make(spec, "scatter")
 hd_save(hc_fig, "chart.html")
 hd_save(hc_fig, "chart.json")
-hd_save(hc_fig, "chart.png")   # requires webshot2
 
-# ggplot2
-gg_fig <- make_fig(spec, "scatter", backend = "ggplot2")
+gg_fig <- hd_make(spec, "scatter", backend = "ggplot2")
 hd_save(gg_fig, "chart.png")
 hd_save(gg_fig, "chart.svg")
-hd_save(gg_fig, "chart.pdf")
 }
 
 }

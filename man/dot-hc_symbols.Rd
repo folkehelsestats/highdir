@@ -3,7 +3,7 @@
 \docType{data}
 \name{.hc_symbols}
 \alias{.hc_symbols}
-\title{Available Highcharts marker symbols}
+\title{Valid Highcharts marker symbol names}
 \format{
 An object of class \code{character} of length 5.
 }
@@ -11,6 +11,6 @@ An object of class \code{character} of length 5.
 .hc_symbols
 }
 \description{
-Available Highcharts marker symbols
+Valid Highcharts marker symbol names
 }
 \keyword{internal}

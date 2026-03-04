@@ -9,7 +9,7 @@ resolve_symbols(n, symbols = NULL)
 \arguments{
 \item{n}{Integer. Number of groups.}
 
-\item{symbols}{Character vector or NULL supplied by the user.}
+\item{symbols}{Character vector or \code{NULL} supplied by the user.}
 }
 \value{
 Character vector of length \code{n}.

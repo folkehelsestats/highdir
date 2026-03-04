@@ -8,34 +8,40 @@ register_geom(
   name,
   ggplot_fun = NULL,
   highcharter_fun = NULL,
-  required_args = character()
+  required_args = character(),
+  is_map_geom = FALSE
 )
 }
 \arguments{
-\item{name}{Character. Unique geometry identifier (e.g. \code{"line"}).}
+\item{name}{Character. Unique geometry identifier.}
 
-\item{ggplot_fun}{Function. Called as \code{ggplot_fun(spec, ...)} inside the
-ggplot2 engine; must return a ggplot2 layer.}
+\item{ggplot_fun}{Function or \code{NULL}.  ggplot2 layer builder.}
 
-\item{highcharter_fun}{Function. Called as \code{highcharter_fun(chart, spec, ...)}
-inside the highcharter engine; must return a \code{highchart} object.}
+\item{highcharter_fun}{Function or \code{NULL}.  highcharter series builder.}
 
-\item{required_args}{Character vector. Names of arguments (beyond x/y) that
-the geometry requires (e.g. \code{c("ymin", "ymax")} for \code{arearange}).}
+\item{required_args}{Character vector.  Names of required \code{geom_params}
+entries beyond x/y (e.g. \code{c("ymin", "ymax")} for \code{"arearange"}).}
 }
 \value{
 \code{name}, invisibly.
 }
 \description{
-Adds a named geometry to the registry. A geometry pairs a ggplot2 layer
-function with a highcharter series function, along with any required
-arguments beyond x/y.
+Adds a named geometry to the geom registry.  A geometry pairs a ggplot2
+layer function with a highcharter series function.
+}
+\details{
+The geom functions receive \verb{(spec, opts, geom_params, ...)} for ggplot2 and
+\verb{(chart, spec, opts, geom_params, use_js, ...)} for highcharter.
+\code{geom_params} is a named list containing all geom-specific arguments
+(e.g. \code{smooth}, \code{dot_size}, \code{ymin}, \code{ymax}).
 }
 \examples{
 \dontrun{
-register_geom("violin",
-  ggplot_fun      = function(spec, ...) ggplot2::geom_violin(...),
-  highcharter_fun = function(chart, spec, ...) { ... }
+register_geom(
+  "violin",
+  ggplot_fun      = function(spec, opts, geom_params, ...) ggplot2::geom_violin(),
+  highcharter_fun = NULL,   # highcharter has no violin
+  required_args   = character()
 )
 }
 }

@@ -1,89 +1,98 @@
-# base-figure.R — Backend-specific blank canvas constructors
+# R/base-figure.R ── Blank canvas constructors
 #
-# Uses a named list for dispatch so that adding a backend means adding one
-# entry here, not editing if/else chains.
+# .base_constructors is a dispatch table (named list) keyed by backend name.
+# Each entry is a function(spec, opts) that returns an empty backend object
+# with axes, labels, and chart-level options already applied.
 #
-# Deprecated aes_() / hcaes_string() have been replaced with:
-#   ggplot2   → .data[[]] pronoun (tidy eval)
-#   highcharter → hcaes() with !!rlang::sym()
+# Adding a new backend = adding one entry here.  No if/else chains.
 
 #' @keywords internal
 .base_constructors <- list(
 
-  ggplot2 = function(spec) {
-    mapping <- ggplot2::aes(
-      x = .data[[spec$x]],
-      y = .data[[spec$y]]
-    )
-    if (!is.null(spec$group) && is.null(spec$colour)) {
-      mapping <- utils::modifyList(
-        mapping,
-        ggplot2::aes(colour = .data[[spec$group]], group = .data[[spec$group]])
-      )
-    } else if (!is.null(spec$colour)) {
-      mapping <- utils::modifyList(
-        mapping,
-        ggplot2::aes(colour = .data[[spec$colour]])
-      )
+  # ── ggplot2 ─────────────────────────────────────────────────────────────
+  ggplot2 = function(spec, opts) {
+    mapping <- ggplot2::aes(x = .data[[spec$x]], y = .data[[spec$y]])
+
+    grp_col <- spec$colour %||% spec$group
+    if (!is.null(grp_col)) {
+      mapping <- utils::modifyList(mapping, ggplot2::aes(
+        colour = .data[[grp_col]],
+        group  = .data[[grp_col]],
+        fill   = .data[[grp_col]]
+      ))
     }
 
     p <- ggplot2::ggplot(spec$data, mapping) +
       ggplot2::labs(
         x        = spec$xlab,
         y        = spec$ylab,
-        title    = spec$title,
-        subtitle = spec$subtitle,
-        caption  = spec$caption
+        title    = opts$title,
+        subtitle = opts$subtitle,
+        caption  = opts$caption
       )
 
-    # Flip axes if requested
-    if (isTRUE(spec$flip)) p <- p + ggplot2::coord_flip()
-
+    if (isTRUE(opts$flip)) p <- p + ggplot2::coord_flip()
     p
   },
 
-  highcharter = function(spec) {
+  # ── highcharter ──────────────────────────────────────────────────────────
+  highcharter = function(spec, opts) {
     chart <- highcharter::highchart() |>
-      highcharter::hc_chart(inverted = isTRUE(spec$flip)) |>
-      highcharter::hc_xAxis(title = list(text = spec$xlab %||% " ")) |>
+      highcharter::hc_chart(inverted = isTRUE(opts$flip)) |>
       highcharter::hc_yAxis(
-        title       = list(text = spec$ylab %||% " "),
-        labels      = list(format = "{value}%"),
-        tickInterval = spec$yint,
-        min          = if (!is.null(spec$ylim)) spec$ylim[1] else 0,
-        max          = if (!is.null(spec$ylim)) spec$ylim[2] else NULL
+        title        = list(text = spec$ylab %||% " "),
+        ## labels       = list(format = "{value}%"),
+        labels       = list(format = "{value}"), #TODO: optional with %
+        tickInterval = opts$yint,
+        min          = if (!is.null(opts$ylim)) opts$ylim[1] else 0,
+        max          = if (!is.null(opts$ylim)) opts$ylim[2] else NULL
       )
 
-    # Title, subtitle, caption
-    if (!is.null(spec$title))
-      chart <- chart |> highcharter::hc_title(text = spec$title)
+    # x-axis: categories for character, numeric labels otherwise
+    if (!is.numeric(spec$data[[spec$x]])) {
+      chart <- chart |> highcharter::hc_xAxis(
+        title        = list(text = spec$xlab %||% " "),
+        categories   = unique(spec$data[[spec$x]]),
+        tickInterval = 1,
+        labels       = list(step = 1)
+      )
+    } else {
+      chart <- chart |> highcharter::hc_xAxis(
+        title  = list(text = spec$xlab %||% " "),
+        labels = list(step = 1)
+      )
+    }
 
-    sub_text <- spec$subtitle %||% "Kilde: Navn av kilder"
-    chart <- chart |> highcharter::hc_subtitle(text = sub_text)
+    if (!is.null(opts$title))
+      chart <- chart |> highcharter::hc_title(text = opts$title)
 
-    if (!is.null(spec$caption))
-      chart <- chart |> highcharter::hc_caption(text = spec$caption)
+    chart <- chart |>
+      highcharter::hc_subtitle(
+        text = opts$subtitle %||% "Kilde: Navn av kilder"
+      )
+
+    if (!is.null(opts$caption))
+      chart <- chart |> highcharter::hc_caption(text = opts$caption)
 
     chart
   }
 )
 
-#' Base Figure Canvas
+#' Build a Blank Backend Canvas
 #'
-#' Constructs the blank backend-specific canvas (a bare `ggplot` or
-#' `highchart`) with axes, labels, and chart-level options applied from
-#' `spec`. Called internally by the backend engines; you rarely need this
-#' directly.
+#' Constructs the empty backend object (ggplot or highchart) with all
+#' chart-level options applied from `spec` and `opts`. Called by the
+#' backend engines; you rarely need this directly.
 #'
-#' @param spec A [fig_spec] object.
-#' @param backend Character. Backend name, e.g. `"ggplot2"` or
-#'   `"highcharter"`.
+#' @param spec    A [hd_spec] object.
+#' @param opts    A [hd_opts] object.
+#' @param backend Character. Backend name.
 #' @return A `ggplot` or `highchart` object.
 #' @keywords internal
-base_fig <- function(spec, backend) {
+base_fig <- function(spec, opts, backend) {
   ctor <- .base_constructors[[backend]]
   if (is.null(ctor))
     stop("No base constructor registered for backend '", backend, "'.",
          call. = FALSE)
-  ctor(spec)
+  ctor(spec, opts)
 }

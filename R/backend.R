@@ -1,36 +1,41 @@
-# backend.R — Backend engine functions
+# R/backend.R ── Backend engine functions
 #
-# Each engine receives (spec, geom, ...) and returns a finished figure.
-# Engines are responsible for:
-#   1. Building the blank canvas via base_fig()
-#   2. Calling the geom's render function
-#   3. Applying the theme / colour / font layer
-#   4. Adding the accessibility module and export for highcharter
+# Engine contract:
+#   function(spec, geom, opts, geom_params, use_js, filename, ...)
 #
-# IMPORTANT: Every argument that make_fig() forwards explicitly (use_js,
-# filename, colors, smooth, dot_size, line_symbols) must be listed as a
-# named parameter in BOTH the engine signature AND the geom call so they are
-# never included in the bare ... that reaches hc_add_series(). Passing NULL
-# values via ... into hc_add_series() causes tibble to throw
-# "column is NULL" errors.
+# `geom_params` is a named list built by hd_make() that carries *all*
+# geom-specific arguments (smooth, dot_size, line_symbols, ymin, ymax, …).
+# Passing them as an explicit list instead of bare `...` means:
+#   1. The engine signature is stable regardless of how many geoms exist.
+#   2. Nothing unexpected leaks into hc_add_series() causing tibble errors.
 
-# ---------------------------------------------------------------------------
-# ggplot2 engine
-# ---------------------------------------------------------------------------
+# ── ggplot2 engine ───────────────────────────────────────────────────────────
 
 #' @keywords internal
-ggplot_engine <- function(spec, geom,
-                           use_js       = TRUE,   # accepted but ignored
-                           filename     = NULL,   # accepted but ignored
-                           colors       = NULL,
-                           smooth       = FALSE,
-                           dot_size     = 4,
-                           line_symbols = NULL,   # accepted but ignored for gg
-                           ...) {
-  p <- base_fig(spec, "ggplot2")
-  # Only pass smooth / dot_size; the gg_* functions consume what they need
-  p <- p + geom$ggplot_fun(spec, smooth = smooth, dot_size = dot_size, ...)
-  p <- apply_gg_colors(p, colors)
+ggplot_engine <- function(spec, geom, opts, geom_params,
+                          use_js = TRUE, filename = NULL, ...) {
+
+  # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
+  if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
+    layers <- geom$ggplot_fun(spec, opts, geom_params)
+    p <- ggplot2::ggplot() +
+      ggplot2::labs(
+        title    = opts$title,
+        subtitle = opts$subtitle,
+        caption  = opts$caption
+      )
+    for (layer in layers) p <- p + layer
+    return(p)
+  }
+
+  p <- base_fig(spec, opts, "ggplot2")
+
+  layers <- geom$ggplot_fun(spec, opts, geom_params)
+
+  # geom functions return a list of layers; + works element-wise on ggplots
+  for (layer in layers) p <- p + layer
+
+  p <- apply_gg_colors(p, opts$colors)
 
   font <- getOption("highdir.font", default = NULL)
   if (!is.null(font))
@@ -39,34 +44,23 @@ ggplot_engine <- function(spec, geom,
   p
 }
 
-# ---------------------------------------------------------------------------
-# highcharter engine
-# ---------------------------------------------------------------------------
+# ── highcharter engine ───────────────────────────────────────────────────────
 
 #' @keywords internal
-highcharter_engine <- function(spec, geom,
-                                use_js       = TRUE,
-                                filename     = NULL,
-                                colors       = NULL,
-                                smooth       = FALSE,
-                                dot_size     = 4,
-                                line_symbols = NULL,
-                                ...) {
-  chart <- base_fig(spec, "highcharter")
+highcharter_engine <- function(spec, geom, opts, geom_params,
+                               use_js = TRUE, filename = NULL, ...) {
 
-  # Add categories to x-axis for character x variables (shared by all geoms)
-  if (!is.numeric(spec$data[[spec$x]])) {
-    x_cats <- unique(spec$data[[spec$x]])
-    chart <- chart |>
-      highcharter::hc_xAxis(
-        title        = list(text = spec$xlab %||% " "),
-        categories   = x_cats,
-        tickInterval = 1,
-        labels       = list(step = 1)
-      )
+  # ── Map geom builds its own fresh highchart(type="map") ──────────────────
+  # The standard base_fig() canvas (x/y axes, yAxis etc.) is meaningless for
+  # a choropleth — hc_map() returns a fully-formed map widget instead.
+  if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
+    return(geom$highcharter_fun(NULL, spec, opts, geom_params,
+                                use_js = use_js, ...))
   }
 
-  # Build tooltip (show count alongside percentage when spec$n is provided)
+  chart <- base_fig(spec, opts, "highcharter")
+
+  # ── Tooltip ──────────────────────────────────────────────────────────────
   point_fmt <- if (is.null(spec$n)) {
     paste0(
       '<span style="color:{series.color}">\u25CF</span> ',
@@ -85,7 +79,8 @@ highcharter_engine <- function(spec, geom,
     highcharter::hc_tooltip(
       useHTML      = TRUE,
       shared       = TRUE,
-      headerFormat = '<span style="font-size:14px;font-weight:bold;">{point.key}</span><br/>',
+      headerFormat =
+        '<span style="font-size:14px;font-weight:bold;">{point.key}</span><br/>',
       pointFormat  = point_fmt
     ) |>
     highcharter::hc_credits(
@@ -97,42 +92,30 @@ highcharter_engine <- function(spec, geom,
       align         = "left",
       verticalAlign = "bottom",
       layout        = "horizontal",
-      x             = 50,
-      y             = 0
+      x             = 50, y = 0
     ) |>
     highcharter::hc_exporting(
       enabled       = TRUE,
       filename      = filename %||% "highdir-figure",
       accessibility = list(enabled = TRUE)
+    ) |>
+    # Accessibility module always loaded — not controlled by use_js
+    highcharter::hc_add_dependency(name = "plugins/accessibility.js")
+
+  # ── Series (geom renders here) ────────────────────────────────────────────
+  chart <- geom$highcharter_fun(chart, spec, opts, geom_params,
+                                use_js = use_js, ...)
+
+  # ── Theme (per-figure opts$hc_theme overrides session default) ───────────
+  chart <- chart |>
+    highcharter::hc_add_theme(
+      hd_theme(name   = opts$hc_theme,
+               colors = opts$colors)
     )
 
-  # Accessibility module — always loaded regardless of use_js.
-  # use_js only controls manually-injected htmlwidgets::JS() callbacks.
-  chart <- chart |>
-    highcharter::hc_add_dependency(name = "modules/accessibility.js")
-
-  # Add series via the geom.
-  # Pass only the args each geom signature declares; keep ... clean of
-  # engine-level args so nothing unexpected reaches hc_add_series().
-  chart <- geom$highcharter_fun(
-    chart,
-    spec,
-    use_js       = use_js,
-    colors       = colors,
-    smooth       = smooth,
-    dot_size     = dot_size,
-    line_symbols = line_symbols,
-    ...
-  )
-
-  # Apply highcharter theme (reads hd_set_theme() options)
-  chart <- chart |> highcharter::hc_add_theme(hd_theme())
-
-  # Inject any session-level JS plugins
-  plugins <- getOption("highdir.js_plugins", default = character(0))
-  for (plugin in plugins) {
+  # ── Session-level JS plugins ──────────────────────────────────────────────
+  for (plugin in getOption("highdir.js_plugins", default = character(0)))
     chart <- hd_add_js(chart, plugin = plugin)
-  }
 
   chart
 }

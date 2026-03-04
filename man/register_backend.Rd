@@ -9,23 +9,27 @@ register_backend(name, engine)
 \arguments{
 \item{name}{Character. Unique backend identifier (e.g. \code{"ggplot2"}).}
 
-\item{engine}{A function with signature \verb{function(spec, geom, ...)}.}
+\item{engine}{Function with signature
+\verb{function(spec, geom, opts, geom_params, use_js, filename, ...)}.}
 }
 \value{
 \code{name}, invisibly.
 }
 \description{
-Adds a named backend engine to the registry. An engine is a function with
-the signature \verb{function(spec, geom, ...)} that returns a rendered figure
-object (a \code{ggplot} or \code{highchart}).
+Adds a named engine function to the backend registry.  The engine receives
+\verb{(spec, geom, opts, geom_params, use_js, filename)} and must return a
+rendered figure object (\code{ggplot} or \code{highchart}).
 }
 \details{
-Third-party packages can call \code{register_backend()} to add their own
-backends (e.g. \code{"plotly"}).
+Third-party packages call this in their own \code{.onLoad()} to add backends
+such as \code{"plotly"} or \code{"echarts4r"}.
 }
 \examples{
 \dontrun{
-my_engine <- function(spec, geom, ...) { ... }
+my_engine <- function(spec, geom, opts, geom_params, use_js, filename, ...) {
+  # return a rendered figure
+}
 register_backend("my_backend", my_engine)
+list_backends()
 }
 }
