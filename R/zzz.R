@@ -4,14 +4,20 @@
 .onLoad <- function(libname, pkgname) {
 
   # ── Built-in colour palettes ───────────────────────────────────────────────
-  register_palette("hdir", c(
-    "#025169", "#0069E8",
-    "#7C145C", "#047FA4",
-    "#C68803", "#38A389",
-    "#6996CE", "#366558",
-    "#BF78DE", "#767676"
-  ))
-  register_palette("hdir2", c("rgba(49,101,117,1)", "rgba(138,41,77,1)"))
+  register_palette("hdir",
+                   c(
+                     "#025169", "#0069E8",
+                     "#7C145C", "#047FA4",
+                     "#C68803", "#38A389",
+                     "#6996CE", "#366558",
+                     "#BF78DE", "#767676"
+                   ))
+
+  register_palette("hdir2",
+                   c(
+                     "rgba(49,101,117,1)",
+                     "rgba(138,41,77,1)"
+                     ))
 
   # ── Backends ──────────────────────────────────────────────────────────────
   register_backend("ggplot2",     ggplot_engine)

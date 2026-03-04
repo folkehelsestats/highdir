@@ -85,10 +85,10 @@ list_backends <- function() sort(ls(.backend_registry))
 #' )
 #' }
 register_geom <- function(name,
-                           ggplot_fun      = NULL,
-                           highcharter_fun = NULL,
-                           required_args   = character(),
-                           is_map_geom     = FALSE) {
+                          ggplot_fun      = NULL,
+                          highcharter_fun = NULL,
+                          required_args   = character(),
+                          is_map_geom     = FALSE) {
   .geom_registry[[name]] <- list(
     ggplot_fun      = ggplot_fun,
     highcharter_fun = highcharter_fun,

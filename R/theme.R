@@ -44,9 +44,9 @@
 #' @seealso [hd_opts()] for per-figure overrides
 #' @export
 hd_set_theme <- function(hc_theme   = NULL,
-                          colors     = NULL,
-                          font       = NULL,
-                          js_plugins = NULL) {
+                         colors     = NULL,
+                         font       = NULL,
+                         js_plugins = NULL) {
   prev <- list()
   if (!is.null(hc_theme)) {
     prev$highdir.hc_theme <- getOption("highdir.hc_theme")
@@ -167,10 +167,10 @@ apply_gg_colors <- function(p, colors = NULL) {
 #'
 #' @export
 hd_add_js <- function(hc,
-                       code   = NULL,
-                       file   = NULL,
-                       plugin = NULL,
-                       where  = c("load", "render")) {
+                      code   = NULL,
+                      file   = NULL,
+                      plugin = NULL,
+                      where  = c("load", "render")) {
   where <- match.arg(where)
 
   if (!is.null(plugin)) {

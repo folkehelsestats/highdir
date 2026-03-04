@@ -13,7 +13,7 @@
 
 #' @keywords internal
 ggplot_engine <- function(spec, geom, opts, geom_params,
-                           use_js = TRUE, filename = NULL, ...) {
+                          use_js = TRUE, filename = NULL, ...) {
 
   # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
   if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
@@ -48,7 +48,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
 
 #' @keywords internal
 highcharter_engine <- function(spec, geom, opts, geom_params,
-                                use_js = TRUE, filename = NULL, ...) {
+                               use_js = TRUE, filename = NULL, ...) {
 
   # ── Map geom builds its own fresh highchart(type="map") ──────────────────
   # The standard base_fig() canvas (x/y axes, yAxis etc.) is meaningless for
@@ -104,7 +104,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
 
   # ── Series (geom renders here) ────────────────────────────────────────────
   chart <- geom$highcharter_fun(chart, spec, opts, geom_params,
-                                 use_js = use_js, ...)
+                                use_js = use_js, ...)
 
   # ── Theme (per-figure opts$hc_theme overrides session default) ───────────
   chart <- chart |>

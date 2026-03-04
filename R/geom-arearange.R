@@ -15,8 +15,11 @@
 
 #' @keywords internal
 gg_arearange <- function(spec, opts, geom_params, ...) {
+  ## required args
   ymin      <- geom_params$ymin
   ymax      <- geom_params$ymax
+
+  ## show main line
   show_line <- isTRUE(geom_params$show_line %||% TRUE)
 
   layers <- list(
@@ -40,6 +43,7 @@ gg_arearange <- function(spec, opts, geom_params, ...) {
 
 #' @keywords internal
 hc_arearange <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
+  ## required args
   ymin     <- geom_params$ymin
   ymax     <- geom_params$ymax
 

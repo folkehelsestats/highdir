@@ -13,8 +13,8 @@
 #' @param half_width Half-width of the band in category units.
 #' @keywords internal
 point_events_or_null <- function(use_js,
-                                  band_color = "rgba(204, 211, 255, 0.25)",
-                                  half_width = 0.4) {
+                                 band_color = "rgba(204, 211, 255, 0.25)",
+                                 half_width = 0.4) {
   if (!isTRUE(use_js)) return(NULL)
   list(events = list(
     mouseOver = htmlwidgets::JS(sprintf(
