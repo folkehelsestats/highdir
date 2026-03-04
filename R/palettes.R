@@ -62,10 +62,11 @@ list_palettes <- function() sort(ls(.palette_registry))
 get_palette <- function(name) .palette_registry[[name]]
 
 # ── Colour resolution (internal) ─────────────────────────────────────────────
+# R/palettes.R
 
 #' Resolve a Colour Vector for n Groups
 #'
-#' Returns exactly `n` colours.  Priority order:
+#' Returns exactly `n` colours. Priority order:
 #'
 #' 1. Explicit `colors` argument — vector or palette name string.
 #' 2. `getOption("highdir.colors")` — set via [hd_set_theme()].
@@ -76,30 +77,49 @@ get_palette <- function(name) .palette_registry[[name]]
 #'
 #' @param n      Integer. Number of colours required.
 #' @param colors Character vector, palette name, or `NULL`.
-#' @return Character vector of length `n`.
+#' @return Character vector of exactly length `n`.
 #' @keywords internal
 resolve_colors <- function(n, colors = NULL) {
-  # 1 — explicit or session-level override
+
+  # ── Priority 1 + 2: explicit or session-level override ───────────────────
   candidate <- colors %||% getOption("highdir.colors", default = NULL)
+
   if (!is.null(candidate)) {
-    # accept palette name string
+    # Resolve palette name string → colour vector
     if (is.character(candidate) && length(candidate) == 1 &&
         candidate %in% list_palettes()) {
       candidate <- get_palette(candidate)
     }
     if (length(candidate) >= n)
       return(candidate[seq_len(n)])
+
+    warning(
+      "Supplied palette has ", length(candidate), " colour(s) but ",
+      n, " are needed. Falling back to built-in rules.",
+      call. = FALSE
+    )
   }
 
-  # 2 — built-in rules
+  # ── Priority 3: built-in n-aware rules ───────────────────────────────────
+
+  # Rule A — exactly 2 groups: dedicated high-contrast pair
   if (n == 2) {
     pal2 <- get_palette("hdir2")
-    if (!is.null(pal2)) return(pal2)
+    if (!is.null(pal2) && length(pal2) >= 2)
+      return(pal2[seq_len(n)])
   }
+
+  # Rule B — up to 10 groups: first n from hdir
   hdir_pal <- get_palette("hdir")
   if (!is.null(hdir_pal) && n <= length(hdir_pal))
     return(hdir_pal[seq_len(n)])
 
-  # 3 — viridis fallback
+  # Rule C — more than 10 groups: viridis continuous interpolation
+  if (!requireNamespace("viridis", quietly = TRUE))
+    stop(
+      n, " colours requested but hdir only has 10 and {viridis} is not ",
+      "installed.\nInstall it: install.packages('viridis')",
+      call. = FALSE
+    )
   viridis::viridis(n, option = "D")
 }
