@@ -32,6 +32,7 @@
 #'   Tooltips, accessibility module, and all other Highcharts declarative
 #'   features are **always** present.  Set `FALSE` for clean, no-custom-JS
 #'   widgets.  Ignored by the ggplot2 backend.
+#' @param module Use available modules js from CDN [https://api.highcharts.com/highcharts](https://api.highcharts.com/highcharts)
 #' @param filename  Character or `NULL`.  Base filename for the Highcharts
 #'   export menu (no extension).  Default: `"highdir-figure"`.
 #' @param smooth    Logical.  `type = "line"` only — spline curves (`TRUE`,
@@ -123,6 +124,7 @@ hd_make <- function(spec,
                      opts        = NULL,
                      backend     = "highcharter",
                      use_js      = TRUE,
+                     module      = TRUE,
                      filename    = NULL,
                      smooth      = TRUE,
                      dot_size    = 4,
@@ -164,6 +166,7 @@ hd_make <- function(spec,
     opts        = opts,
     geom_params = geom_params,
     use_js      = use_js,
+    module      = module,
     filename    = filename
   )
 }

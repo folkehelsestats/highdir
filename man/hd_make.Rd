@@ -10,6 +10,7 @@ hd_make(
   opts = NULL,
   backend = "highcharter",
   use_js = TRUE,
+  module = TRUE,
   filename = NULL,
   smooth = TRUE,
   dot_size = 4,
@@ -43,6 +44,8 @@ interactive) or \code{"ggplot2"} (static), or any engine added with
 Tooltips, accessibility module, and all other Highcharts declarative
 features are \strong{always} present.  Set \code{FALSE} for clean, no-custom-JS
 widgets.  Ignored by the ggplot2 backend.}
+
+\item{module}{Use available modules js from CDN \url{https://api.highcharts.com/highcharts}}
 
 \item{filename}{Character or \code{NULL}.  Base filename for the Highcharts
 export menu (no extension).  Default: \code{"highdir-figure"}.}

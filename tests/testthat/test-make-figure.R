@@ -115,7 +115,7 @@ test_that("hd_make: gg pie returns ggplot", {
   expect_true(is_ggplot(fig))
 })
 
-# ── fig_opts reuse ────────────────────────────────────────────────────────────
+# ── hd_opts reuse ────────────────────────────────────────────────────────────
 
 test_that("same spec renders with two different opts", {
   opts_a <- hd_opts(title = "A", ylim = c(0, 60))
@@ -149,4 +149,28 @@ test_that("hd_make: works without group column", {
                    "age", "pct")
   expect_true(is_highchart(hd_make(s_ng, "column", opts)))
   expect_true(is_ggplot(hd_make(s_ng, "column", opts, backend = "ggplot2")))
+})
+
+# ── Modules ────────────────────────────────────────────────────────────
+test_that("hd_make: modules = TRUE adds accessibility dependency", {
+  spec <- hd_spec(data.frame(x = c("A","B"), y = c(1,2)), "x", "y")
+  fig  <- hd_make(spec, "column", hd_opts(), module = TRUE)
+  deps <- vapply(fig$dependencies, function(d) d$name, character(1))
+  expect_true(any(grepl("accessibility", deps, ignore.case = TRUE)))
+})
+
+test_that("hd_make: modules = FALSE skips standard dependencies", {
+  spec <- hd_spec(data.frame(x = c("A","B"), y = c(1,2)), "x", "y")
+  fig  <- hd_make(spec, "column", hd_opts(), module = FALSE)
+  deps <- vapply(fig$dependencies, function(d) d$name, character(1))
+  expect_false(any(grepl("accessibility", deps, ignore.case = TRUE)))
+})
+
+test_that("hd_make: modules ignored silently for ggplot2 backend", {
+  spec <- hd_spec(data.frame(x = c("A","B"), y = c(1,2)), "x", "y")
+  expect_s3_class(
+    hd_make(spec, "column", hd_opts(),
+            backend = "ggplot2", module = FALSE),
+    "ggplot"
+  )
 })

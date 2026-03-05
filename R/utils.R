@@ -41,7 +41,7 @@ check_ylim <- function(ylim) {
   invisible(NULL)
 }
 
-# ── Line-symbol helpers ──────────────────────────────────────────────────────
+# --- Line-symbol helpers ----
 
 #' Valid Highcharts marker symbol names
 #' @keywords internal
@@ -68,4 +68,18 @@ resolve_symbols <- function(n, symbols = NULL) {
     warning("Number of symbols (", length(symbols), ") != groups (", n,
             "). Recycling.", call. = FALSE)
   rep(symbols, length.out = n)
+}
+
+## ----- Modules dependency -----------
+#' Version-safe hc_add_dependency wrapper
+#'
+#' highcharter 0.9.4 takes the path as a positional argument.
+#' Older versions used name = . This wrapper handles both.
+#' @keywords internal
+.hd_add_dep <- function(chart, path) {
+  tryCatch(
+    highcharter::hc_add_dependency(chart, path),
+    error = function(e)
+      highcharter::hc_add_dependency(chart, name = path)
+  )
 }
