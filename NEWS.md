@@ -1,3 +1,9 @@
+# highdir 0.3.1
+
+* `DESCRIPTION` version bumped to 0.3.1.
+* Can deactivate CDN modules available from [https://api.highcharts.com/highcharts](https://api.highcharts.com/highcharts) see (#2)
+* Fixed Shiny app GUI for downloading
+
 # highdir 0.3.0
 
 * `DESCRIPTION` version bumped to 0.3.0.

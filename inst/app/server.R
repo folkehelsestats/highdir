@@ -49,8 +49,8 @@ server <- function(input, output, session) {
         shiny::downloadButton("dl_json", "JSON"),
         shiny::downloadButton("dl_html", "HTML")
       )
-      if (.has_webshot2)
-        btns <- c(btns, list(shiny::downloadButton("dl_hc_png", "PNG")))
+      ## if (.has_webshot2)
+      ##   btns <- c(btns, list(shiny::downloadButton("dl_hc_png", "PNG")))
       do.call(shiny::tagList, btns)
     } else {
       shiny::tagList(
@@ -217,7 +217,7 @@ server <- function(input, output, session) {
 
   output$dl_json   <- .dl("json", hc_fig)
   output$dl_html   <- .dl("html", hc_fig)
-  output$dl_hc_png <- .dl("png",  hc_fig)
+  ## output$dl_hc_png <- .dl("png",  hc_fig)
   output$dl_gg_png <- .dl("png",  gg_fig)
   output$dl_gg_svg <- .dl("svg",  gg_fig)
 }

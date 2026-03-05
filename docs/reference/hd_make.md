@@ -17,6 +17,7 @@ hd_make(
   opts = NULL,
   backend = "highcharter",
   use_js = TRUE,
+  module = TRUE,
   filename = NULL,
   smooth = TRUE,
   dot_size = 4,
@@ -69,6 +70,11 @@ hd_make(
   module, and all other Highcharts declarative features are **always**
   present. Set `FALSE` for clean, no-custom-JS widgets. Ignored by the
   ggplot2 backend.
+
+- module:
+
+  Use available modules js from CDN
+  <https://api.highcharts.com/highcharts>
 
 - filename:
 

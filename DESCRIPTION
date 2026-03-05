@@ -1,6 +1,6 @@
 Package: highdir
 Title: Backend-Agnostic Figure Builder for Highcharter and ggplot2
-Version: 0.3.0
+Version: 0.3.1
 Authors@R:
   person(
     given = "Yusman",
