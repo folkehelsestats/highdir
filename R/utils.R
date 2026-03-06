@@ -83,3 +83,26 @@ resolve_symbols <- function(n, symbols = NULL) {
       highcharter::hc_add_dependency(chart, name = path)
   )
 }
+
+## ---- Axis labelling -----------
+#' Resolve an axis label from opts and spec
+#'
+#' Three-way logic:
+#'   NULL   → hide the axis label entirely
+#'   " "    → use the column name from spec as the fallback
+#'   string → use the string as-is
+#'
+#' @param opts_label The value from hd_opts()$ylab or $xlab.
+#' @param spec_col   The column name from hd_spec()$y or $x.
+#' @return Character string or NULL.
+#' @keywords internal
+.resolve_axis_label <- function(opts_label, spec_col) {
+
+  if (is.null(opts_label))
+    return(NULL)          # explicit NULL → hide
+
+  if (identical(opts_label, " "))
+    return(spec_col)      # sentinel → use column name
+
+  opts_label              # any other string → use as-is
+}

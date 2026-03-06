@@ -25,6 +25,13 @@
 #' @param subtitle Character or `NULL`. Subtitle.  Highcharter default:
 #'   `"Kilde: Navn av kilder"`.
 #' @param caption  Character or `NULL`. Caption text (highcharter only).
+#' @param ylab     Character or NULL. Y-axis label.
+#'   \describe{
+#'     \item{`" "` (default)}{Use the `y` column name from [hd_spec()].}
+#'     \item{`NULL`}{Hide the y-axis label completely.}
+#'     \item{any string}{Use that string as the label.}
+#'   }
+#' @param xlab     Character or NULL. X-axis label. Same rules as `ylab`.
 #' @param ylim     Numeric vector of length 2 or `NULL`. Fixed y-axis limits,
 #'   e.g. `c(0, 100)`.
 #' @param yint     Positive numeric. Y-axis tick interval.  Default `10`.
@@ -51,13 +58,15 @@
 #'
 #' @export
 hd_opts <- function(title    = NULL,
-                     subtitle = NULL,
-                     caption  = NULL,
-                     ylim     = NULL,
-                     yint     = 10,
-                     flip     = FALSE,
-                     colors   = NULL,
-                     hc_theme = NULL) {
+                    subtitle = NULL,
+                    caption  = NULL,
+                    ylab     = " ",
+                    xlab     = " ",
+                    ylim     = NULL,
+                    yint     = 10,
+                    flip     = FALSE,
+                    colors   = NULL,
+                    hc_theme = NULL) {
 
   check_ylim(ylim)
   if (!is.numeric(yint) || length(yint) != 1 || yint <= 0)
@@ -67,6 +76,8 @@ hd_opts <- function(title    = NULL,
     list(title    = title,
          subtitle = subtitle,
          caption  = caption,
+         ylab     = ylab,
+         xlab     = xlab,
          ylim     = ylim,
          yint     = yint,
          flip     = flip,

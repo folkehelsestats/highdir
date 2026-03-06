@@ -61,3 +61,19 @@ test_that("resolve_symbols: warns on invalid symbols and falls back", {
 test_that("resolve_symbols: warns on length mismatch and recycles", {
   expect_warning(resolve_symbols(4, c("circle", "square")), "Recycling")
 })
+
+## --- Axis labeling --
+test_that(".resolve_axis_label: sentinel returns column name", {
+  expect_equal(highdir:::.resolve_axis_label(" ", "rate"), "rate")
+})
+
+test_that(".resolve_axis_label: NULL returns NULL", {
+  expect_null(highdir:::.resolve_axis_label(NULL, "rate"))
+})
+
+test_that(".resolve_axis_label: custom string returned as-is", {
+  expect_equal(
+    highdir:::.resolve_axis_label("Rate per 100 000", "rate"),
+    "Rate per 100 000"
+  )
+})

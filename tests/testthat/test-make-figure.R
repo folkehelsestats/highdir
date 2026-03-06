@@ -174,3 +174,28 @@ test_that("hd_make: modules ignored silently for ggplot2 backend", {
     "ggplot"
   )
 })
+
+## -- Axis labelling --------
+test_that("HC: default opts uses column name as y label", {
+  spec <- hd_spec(data.frame(x = c("A","B"), rate = c(1,2)), "x", "rate")
+  fig  <- hd_make(spec, "column", hd_opts())
+  expect_equal(fig$x$hc_opts$yAxis$title$text, "rate")
+})
+
+test_that("HC: NULL ylab hides y axis title", {
+  spec <- hd_spec(data.frame(x = c("A","B"), rate = c(1,2)), "x", "rate")
+  fig  <- hd_make(spec, "column", hd_opts(ylab = NULL))
+  expect_null(fig$x$hc_opts$yAxis$title$text)
+})
+
+test_that("HC: custom ylab used as axis title", {
+  spec <- hd_spec(data.frame(x = c("A","B"), rate = c(1,2)), "x", "rate")
+  fig  <- hd_make(spec, "column", hd_opts(ylab = "Rate per 100 000"))
+  expect_equal(fig$x$hc_opts$yAxis$title$text, "Rate per 100 000")
+})
+
+test_that("gg: NULL ylab applies element_blank to axis.title.y", {
+  spec <- hd_spec(data.frame(x = c("A","B"), rate = c(1,2)), "x", "rate")
+  fig  <- hd_make(spec, "column", hd_opts(ylab = NULL), backend = "ggplot2")
+  expect_s3_class(fig$theme$axis.title.y, "element_blank")
+})
