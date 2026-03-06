@@ -2,9 +2,9 @@
 
 * `DESCRIPTION` version bumped to 0.3.1.
 * Can deactivate CDN modules available from [https://api.highcharts.com/highcharts](https://api.highcharts.com/highcharts) see (#2)
-* Fixed Shiny app GUI for downloading
+* Fixed Shiny app GUI for downloading and axis labels
 * Move arg `xlab` and `ylab` are related to figure presentation and not
-data specification. Move them to `hd_opts()` (#5) 
+data specification. Move them to `hd_opts()`. Use `NULL` to hide axis labels. (#5) 
 
 # highdir 0.3.0
 

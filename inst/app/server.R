@@ -100,6 +100,8 @@ server <- function(input, output, session) {
       title    = if (nzchar(input$title    %||% "")) input$title    else NULL,
       subtitle = if (nzchar(input$subtitle %||% "")) input$subtitle else NULL,
       caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
+      xlab     = if (nzchar(input$xlab     %||% "")) input$xlab     else NULL,
+      ylab     = if (nzchar(input$ylab     %||% "")) input$ylab     else NULL,
       colors   = parsed_colors(),
       hc_theme = input$hc_theme %||% NULL
     )
@@ -164,6 +166,10 @@ server <- function(input, output, session) {
                 paste0('  subtitle = "', input$subtitle, '",\n') else ""
     cap_l  <- if (nzchar(input$caption  %||% ""))
                 paste0('  caption  = "', input$caption,  '",\n') else ""
+    xlb_l  <- if (nzchar(input$xlab     %||% ""))
+                paste0('  xlab  = "', input$xlab,  '",\n') else ""
+    ylb_l  <- if (nzchar(input$ylab     %||% ""))
+                paste0('  ylab  = "', input$ylab,  '",\n') else ""
 
     extra_str <- {
       ex <- geom_args()
@@ -191,7 +197,7 @@ server <- function(input, output, session) {
       grp_l, n_l,
       ")\n\n",
       "opts <- hd_opts(\n",
-      ttl_l, sub_l, cap_l,
+      ttl_l, sub_l, cap_l, xlb_l, ylb_l,
       ")\n\n",
       "hd_make(\n",
       "  spec    = spec,\n",

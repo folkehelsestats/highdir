@@ -62,8 +62,7 @@
       highcharter::hc_chart(inverted = isTRUE(opts$flip)) |>
       highcharter::hc_yAxis(
         title        = list(text = opts$ylab),
-        ## labels       = list(format = "{value}%"),
-        labels       = list(format = "{value}"), #TODO: optional with %
+        labels       = list(format = "{value}"), #TODO: optional with % use: list(format = "{value}%")
         tickInterval = opts$yint,
         min          = if (!is.null(opts$ylim)) opts$ylim[1] else 0,
         max          = if (!is.null(opts$ylim)) opts$ylim[2] else NULL
@@ -113,8 +112,8 @@
 base_fig <- function(spec, opts, backend) {
 
   ## Resolve axis labels
-  opts$ylab <- .resolve_axis_label(opts$ylab, spec$y)
   opts$xlab <- .resolve_axis_label(opts$xlab, spec$x)
+  opts$ylab <- .resolve_axis_label(opts$ylab, spec$y)
 
   ctor <- .base_constructors[[backend]]
   if (is.null(ctor))

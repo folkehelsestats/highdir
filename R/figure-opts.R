@@ -60,8 +60,8 @@
 hd_opts <- function(title    = NULL,
                     subtitle = NULL,
                     caption  = NULL,
-                    ylab     = " ",
                     xlab     = " ",
+                    ylab     = " ",
                     ylim     = NULL,
                     yint     = 10,
                     flip     = FALSE,
@@ -76,8 +76,8 @@ hd_opts <- function(title    = NULL,
     list(title    = title,
          subtitle = subtitle,
          caption  = caption,
-         ylab     = ylab,
          xlab     = xlab,
+         ylab     = ylab,
          ylim     = ylim,
          yint     = yint,
          flip     = flip,
@@ -95,6 +95,8 @@ print.hd_opts <- function(x, ...) {
   if (!is.null(x$title))    cat("  title    :", x$title,    "\n")
   if (!is.null(x$subtitle)) cat("  subtitle :", x$subtitle, "\n")
   if (!is.null(x$caption))  cat("  caption  :", x$caption,  "\n")
+  if (!is.null(x$xlab))     cat("  xlab     :", x$xlab,     "\n")
+  if (!is.null(x$ylab))     cat("  ylab     :", x$ylab,     "\n")
   if (!is.null(x$ylim))     cat("  ylim     :", x$ylim,     "\n")
   cat("  yint     :", x$yint, "\n")
   cat("  flip     :", x$flip, "\n")
