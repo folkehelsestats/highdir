@@ -1,4 +1,3 @@
-# R/backend.R ── Backend engine functions
 #
 # Engine contract:
 #   function(spec, geom, opts, geom_params, use_js, filename, ...)
@@ -9,46 +8,11 @@
 #   1. The engine signature is stable regardless of how many geoms exist.
 #   2. Nothing unexpected leaks into hc_add_series() causing tibble errors.
 
-# ── ggplot2 engine ───────────────────────────────────────────────────────────
-
-#' @keywords internal
-ggplot_engine <- function(spec, geom, opts, geom_params,
-                          use_js = TRUE, filename = NULL, ...) {
-
-  # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
-  if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
-    layers <- geom$ggplot_fun(spec, opts, geom_params)
-    p <- ggplot2::ggplot() +
-      ggplot2::labs(
-        title    = opts$title,
-        subtitle = opts$subtitle,
-        caption  = opts$caption
-      )
-    for (layer in layers) p <- p + layer
-    return(p)
-  }
-
-  p <- base_fig(spec, opts, "ggplot2")
-
-  layers <- geom$ggplot_fun(spec, opts, geom_params)
-
-  # geom functions return a list of layers; + works element-wise on ggplots
-  for (layer in layers) p <- p + layer
-
-  p <- apply_gg_colors(p, opts$colors)
-
-  font <- getOption("highdir.font", default = NULL)
-  if (!is.null(font))
-    p <- p + ggplot2::theme(text = ggplot2::element_text(family = font))
-
-  p
-}
-
 # ── highcharter engine ───────────────────────────────────────────────────────
 
 #' @keywords internal
 highcharter_engine <- function(spec, geom, opts, geom_params,
-                               use_js = TRUE, filename = NULL, ...) {
+                               use_js = TRUE, module = TRUE, filename = NULL, ...) {
 
   # ── Map geom builds its own fresh highchart(type="map") ──────────────────
   # The standard base_fig() canvas (x/y axes, yAxis etc.) is meaningless for
@@ -98,9 +62,15 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
       enabled       = TRUE,
       filename      = filename %||% "highdir-figure",
       accessibility = list(enabled = TRUE)
-    ) |>
-    # Accessibility module always loaded — not controlled by use_js
-    highcharter::hc_add_dependency(name = "plugins/accessibility.js")
+    )
+
+  # When to use FALSE:
+  #   - embedding in apps where modules are loaded globally already via hc_function
+  #   - unit tests where CDN access is unavailable
+  #   - performance-critical contexts with many widgets on one page
+  if (isTRUE(module)) {
+    chart <- .hd_add_dep(chart, "plugins/accessibility.js")
+  }
 
   # ── Series (geom renders here) ────────────────────────────────────────────
   chart <- geom$highcharter_fun(chart, spec, opts, geom_params,

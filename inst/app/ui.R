@@ -26,6 +26,8 @@
   shiny::textInput("title",    "Title",    placeholder = "Optional"),
   shiny::textInput("subtitle", "Subtitle", placeholder = "Optional"),
   shiny::textInput("caption",  "Caption",  placeholder = "Optional"),
+  shiny::textInput("xlab",     "X-axis label",  placeholder = "Optional"),
+  shiny::textInput("ylab",     "Y-axis label",  placeholder = "Optional"),
 
   shiny::tags$hr(),
 
@@ -82,7 +84,7 @@
   shiny::tags$hr(),
 
   shiny::actionButton("run", "Draw",
-                       icon  = shiny::icon("chart-bar"),
+                       icon  = shiny::icon("palette"),
                        class = "btn-primary"),
 
   shiny::br(), shiny::br(),

@@ -24,14 +24,35 @@
 
     p <- ggplot2::ggplot(spec$data, mapping) +
       ggplot2::labs(
-        x        = spec$xlab,
-        y        = spec$ylab,
+        x        = opts$xlab %||% ggplot2::waiver(),
+        y        = opts$ylab %||% ggplot2::waiver(),
         title    = opts$title,
         subtitle = opts$subtitle,
         caption  = opts$caption
       )
 
+    ## NULL → hide with element_blank() so no space is reserved
+    if (is.null(opts$ylab))
+      p <- p + ggplot2::theme(
+        axis.title.y = ggplot2::element_blank()
+      )
+    if (is.null(opts$ylab))
+      p <- p + ggplot2::theme(
+        axis.title.x = ggplot2::element_blank()
+      )
+
+    if (!is.null(opts$ylim))
+      p <- p + ggplot2::scale_y_continuous(limits = opts$ylim)
+
+    if (!is.null(opts$yint))
+      p <- p + ggplot2::geom_hline(
+                   yintercept = opts$yint,
+                   linetype   = "dashed",
+                   colour     = "#AAAAAA"
+                   )
+
     if (isTRUE(opts$flip)) p <- p + ggplot2::coord_flip()
+
     p
   },
 
@@ -40,9 +61,8 @@
     chart <- highcharter::highchart() |>
       highcharter::hc_chart(inverted = isTRUE(opts$flip)) |>
       highcharter::hc_yAxis(
-        title        = list(text = spec$ylab %||% " "),
-        ## labels       = list(format = "{value}%"),
-        labels       = list(format = "{value}"), #TODO: optional with %
+        title        = list(text = opts$ylab),
+        labels       = list(format = "{value}"), #TODO: optional with % use: list(format = "{value}%")
         tickInterval = opts$yint,
         min          = if (!is.null(opts$ylim)) opts$ylim[1] else 0,
         max          = if (!is.null(opts$ylim)) opts$ylim[2] else NULL
@@ -51,14 +71,14 @@
     # x-axis: categories for character, numeric labels otherwise
     if (!is.numeric(spec$data[[spec$x]])) {
       chart <- chart |> highcharter::hc_xAxis(
-        title        = list(text = spec$xlab %||% " "),
+        title        = list(text = opts$xlab),
         categories   = unique(spec$data[[spec$x]]),
         tickInterval = 1,
         labels       = list(step = 1)
       )
     } else {
       chart <- chart |> highcharter::hc_xAxis(
-        title  = list(text = spec$xlab %||% " "),
+        title  = list(text = opts$xlab),
         labels = list(step = 1)
       )
     }
@@ -90,6 +110,11 @@
 #' @return A `ggplot` or `highchart` object.
 #' @keywords internal
 base_fig <- function(spec, opts, backend) {
+
+  ## Resolve axis labels
+  opts$xlab <- .resolve_axis_label(opts$xlab, spec$x)
+  opts$ylab <- .resolve_axis_label(opts$ylab, spec$y)
+
   ctor <- .base_constructors[[backend]]
   if (is.null(ctor))
     stop("No base constructor registered for backend '", backend, "'.",
