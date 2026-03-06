@@ -114,8 +114,8 @@ df <- data.frame(
   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
-                 ylab = "Percentage (\%)")
+spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
+
 opts <- hd_opts(title    = "Health survey results",
                  subtitle = "Source: FHI 2024",
                  ylim     = c(0, 80))

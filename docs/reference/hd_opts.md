@@ -12,6 +12,8 @@ hd_opts(
   title = NULL,
   subtitle = NULL,
   caption = NULL,
+  xlab = " ",
+  ylab = " ",
   ylim = NULL,
   yint = 10,
   flip = FALSE,
@@ -34,6 +36,27 @@ hd_opts(
 - caption:
 
   Character or `NULL`. Caption text (highcharter only).
+
+- xlab:
+
+  Character or NULL. X-axis label.
+
+  `" "` (default)
+
+  :   Use the `x` column name from
+      [`hd_spec()`](https://github.com/folkehelsestats/highdir/reference/hd_spec.md).
+
+  `NULL`
+
+  :   Hide the x-axis label completely.
+
+  any string
+
+  :   Use that string as the label.
+
+- ylab:
+
+  Character or NULL. Y-axis label. Same rules as `xlab`.
 
 - ylim:
 

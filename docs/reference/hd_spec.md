@@ -11,16 +11,7 @@ object.
 ## Usage
 
 ``` r
-hd_spec(
-  data,
-  x,
-  y,
-  group = NULL,
-  n = NULL,
-  colour = NULL,
-  xlab = NULL,
-  ylab = NULL
-)
+hd_spec(data, x, y, group = NULL, n = NULL, colour = NULL)
 ```
 
 ## Arguments
@@ -52,14 +43,6 @@ hd_spec(
   Character or `NULL`. ggplot2 colour aesthetic column. Defaults to
   `group` when `NULL` and `group` is set.
 
-- xlab:
-
-  Character or `NULL`. X-axis label. Defaults to `x`.
-
-- ylab:
-
-  Character or `NULL`. Y-axis label. Defaults to `y`.
-
 ## Value
 
 An S3 object of class `"hd_spec"`.
@@ -79,14 +62,13 @@ df <- data.frame(
   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
-                 ylab = "Percentage (%)")
+spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
 spec
 #> <hd_spec>
 #>   x      : age 
 #>   y      : pct 
 #>   xlab   : age 
-#>   ylab   : Percentage (%) 
+#>   ylab   : pct 
 #>   group  : sex 
 #>   n      : n 
 #>   rows   : 8 

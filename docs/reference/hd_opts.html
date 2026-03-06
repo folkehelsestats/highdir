@@ -34,7 +34,7 @@ it to accept all defaults."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create Figure Presentation Options</h1>
-      <small class="dont-index">Source: <a href="https://github.com/folkehelsestats/highdir/blob/HEAD/R/figure-spec.R"><code>R/figure-spec.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/folkehelsestats/highdir/blob/HEAD/R/figure-opts.R"><code>R/figure-opts.R</code></a></small>
       <div class="d-none name"><code>hd_opts.Rd</code></div>
     </div>
 
@@ -50,6 +50,8 @@ it to accept all defaults.</p>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  caption <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xlab <span class="op">=</span> <span class="st">" "</span>,</span>
+<span>  ylab <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  yint <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -73,6 +75,24 @@ it to accept all defaults.</p>
 
 <dt id="arg-caption">caption<a class="anchor" aria-label="anchor" href="#arg-caption"></a></dt>
 <dd><p>Character or <code>NULL</code>. Caption text (highcharter only).</p></dd>
+
+
+<dt id="arg-xlab">xlab<a class="anchor" aria-label="anchor" href="#arg-xlab"></a></dt>
+<dd><p>Character or NULL. X-axis label.</p><dl><dt><code>" "</code> (default)</dt>
+<dd><p>Use the <code>x</code> column name from <code><a href="hd_spec.html">hd_spec()</a></code>.</p></dd>
+
+<dt><code>NULL</code></dt>
+<dd><p>Hide the x-axis label completely.</p></dd>
+
+<dt>any string</dt>
+<dd><p>Use that string as the label.</p></dd>
+
+
+</dl></dd>
+
+
+<dt id="arg-ylab">ylab<a class="anchor" aria-label="anchor" href="#arg-ylab"></a></dt>
+<dd><p>Character or NULL. Y-axis label. Same rules as <code>xlab</code>.</p></dd>
 
 
 <dt id="arg-ylim">ylim<a class="anchor" aria-label="anchor" href="#arg-ylim"></a></dt>

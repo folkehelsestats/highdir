@@ -25,13 +25,13 @@
 #' @param subtitle Character or `NULL`. Subtitle.  Highcharter default:
 #'   `"Kilde: Navn av kilder"`.
 #' @param caption  Character or `NULL`. Caption text (highcharter only).
-#' @param ylab     Character or NULL. Y-axis label.
+#' @param xlab     Character or NULL. X-axis label.
 #'   \describe{
-#'     \item{`" "` (default)}{Use the `y` column name from [hd_spec()].}
-#'     \item{`NULL`}{Hide the y-axis label completely.}
+#'     \item{`" "` (default)}{Use the `x` column name from [hd_spec()].}
+#'     \item{`NULL`}{Hide the x-axis label completely.}
 #'     \item{any string}{Use that string as the label.}
 #'   }
-#' @param xlab     Character or NULL. X-axis label. Same rules as `ylab`.
+#' @param ylab     Character or NULL. Y-axis label. Same rules as `xlab`.
 #' @param ylim     Numeric vector of length 2 or `NULL`. Fixed y-axis limits,
 #'   e.g. `c(0, 100)`.
 #' @param yint     Positive numeric. Y-axis tick interval.  Default `10`.
