@@ -2,8 +2,8 @@
 #
 # Two complementary constructors are provided:
 #
-#   hd_spec()  — *what* the data means  (x, y, group, n, axis labels)
-#   hd_opts()  — *how* it should look   (title, ylim, flip, colours, theme)
+#   hd_spec()  — *what* the data means  (x, y, group, n)
+#   hd_opts()  — *how* it should look   (title, ylab, ylim, flip, colours, theme)
 #
 # Keeping them separate means:
 #   * The same hd_spec can be rendered with different opts (e.g. EN vs NO
@@ -12,7 +12,7 @@
 #   * Validation errors are localised to the object they belong to.
 
 # ════════════════════════════════════════════════════════════════════════════
-# hd_spec ── data mapping
+# hd_spec ── data mapping and structure
 # ════════════════════════════════════════════════════════════════════════════
 
 #' Create a Figure Data Specification
@@ -32,8 +32,6 @@
 #'   highcharter tooltips alongside the y value.  Ignored by ggplot2.
 #' @param colour Character or `NULL`. ggplot2 colour aesthetic column.
 #'   Defaults to `group` when `NULL` and `group` is set.
-#' @param xlab   Character or `NULL`. X-axis label.  Defaults to `x`.
-#' @param ylab   Character or `NULL`. Y-axis label.  Defaults to `y`.
 #'
 #' @return An S3 object of class `"hd_spec"`.
 #'
@@ -47,19 +45,17 @@
 #'   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 #' )
 #'
-#' spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
-#'                  ylab = "Percentage (%)")
+#' spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
 #' spec
 #'
 #' @export
 hd_spec <- function(data,
-                     x,
-                     y,
-                     group  = NULL,
-                     n      = NULL,
-                     colour = NULL,
-                     xlab   = NULL,
-                     ylab   = NULL) {
+                    x,
+                    y,
+                    group  = NULL,
+                    n      = NULL,
+                    colour = NULL
+                    ) {
 
   if (!is.data.frame(data))
     stop("`data` must be a data.frame.", call. = FALSE)
@@ -73,9 +69,7 @@ hd_spec <- function(data,
       y      = y,
       group  = group,
       n      = n,
-      colour = colour,
-      xlab   = xlab %||% x,
-      ylab   = ylab %||% y
+      colour = colour
     ),
     class = "hd_spec"
   )

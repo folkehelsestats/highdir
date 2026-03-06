@@ -1,4 +1,10 @@
 # ── hd_spec ──────────────────────────────────────────────────────────────────
+test_that("hd_spec: no longer accepts xlab/ylab", {
+  expect_error(
+    hd_spec(data.frame(x=1, y=1), "x", "y", ylab = "Rate"),
+    "unused argument"
+  )
+})
 
 test_that("hd_spec: constructs with correct class and fields", {
   spec <- hd_spec(survey_df, x = "age", y = "pct")
@@ -7,16 +13,7 @@ test_that("hd_spec: constructs with correct class and fields", {
   expect_equal(spec$y,    "pct")
   expect_null(spec$group)
   expect_null(spec$n)
-  expect_equal(spec$xlab, "age")  # defaults to x
-  expect_equal(spec$ylab, "pct")  # defaults to y
   expect_equal(nrow(spec$data), nrow(survey_df))
-})
-
-test_that("hd_spec: custom xlab/ylab stored", {
-  spec <- hd_spec(survey_df, "age", "pct",
-                   xlab = "Age group", ylab = "Percent (%)")
-  expect_equal(spec$xlab, "Age group")
-  expect_equal(spec$ylab, "Percent (%)")
 })
 
 test_that("hd_spec: rejects non-data.frame", {
@@ -102,4 +99,19 @@ test_that("hd_opts: as.list returns plain list", {
 test_that("default_opts returns hd_opts with defaults", {
   expect_s3_class(default_opts(), "hd_opts")
   expect_equal(default_opts()$yint, 10)
+})
+
+test_that("hd_opts: default ylab is sentinel ' '", {
+  opts <- hd_opts()
+  expect_equal(opts$ylab, " ")
+})
+
+test_that("hd_opts: NULL ylab preserved as NULL", {
+  opts <- hd_opts(ylab = NULL)
+  expect_null(opts$ylab)
+})
+
+test_that("hd_opts: custom ylab stored correctly", {
+  opts <- hd_opts(ylab = "Rate per 100 000")
+  expect_equal(opts$ylab, "Rate per 100 000")
 })
