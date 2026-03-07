@@ -19,7 +19,6 @@ ggplot_engine <- function(spec,
                           module   = TRUE,
                           filename = NULL, ...) {
 
-  # ---- Map geom -------------------------------------------------
   if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
     layers <- geom$ggplot_fun(spec, opts, geom_params)
     p <- ggplot2::ggplot() +
@@ -32,37 +31,39 @@ ggplot_engine <- function(spec,
     return(p)
   }
 
-  p      <- base_fig(spec, opts, "ggplot2")
-  layers <- geom$ggplot_fun(spec, opts, geom_params)
-  for (layer in layers) p <- p + layer
+  p <- base_fig(spec, opts, "ggplot2")
 
-  # ── Count groups so resolve_colors() applies the right rule ──────────────
-  # grp_col mirrors the same logic as .base_constructors[[ggplot2]] uses
-  # for the colour/group aesthetic — spec$colour takes priority over
-  # spec$group, exactly as the canvas mapping does.
-  # spec$colour takes priority over spec$group, same as in base_fig()
+  # ── Resolve colour before handing off to the geom ────────────────────────
   grp_col <- spec$colour %||% spec$group
 
-  n_groups <- if (!is.null(grp_col)) {
-    length(unique(spec$data[[grp_col]]))
+  if (!is.null(grp_col)) {
+    # Multi-series: resolve palette, pass the full vector
+    # geom functions use it via scale_fill_manual / scale_color_manual
+    n_groups     <- length(unique(spec$data[[grp_col]]))
+    group_levels <- as.character(unique(spec$data[[grp_col]]))
+    single_colour <- NULL   # not used for multi-series
+
+    layers <- geom$ggplot_fun(spec, opts, geom_params)
+    for (layer in layers) p <- p + layer
+    p <- apply_gg_colors(p,
+                         colors       = opts$colors,
+                         n_groups     = n_groups,
+                         group_levels = group_levels)
+
   } else {
-    1L
+    # Single series: resolve exactly one colour and inject at layer level
+    # resolve_colors(1, ...) returns hdir[1] by default — the brand teal
+    single_colour <- resolve_colors(1L, opts$colors)[1]
+
+    # Pass single_colour into geom_params so the geom function can use it
+    # as a fixed fill/colour argument — NOT as a mapped aesthetic
+    geom_params$single_colour <- single_colour
+
+    layers <- geom$ggplot_fun(spec, opts, geom_params)
+    for (layer in layers) p <- p + layer
+    # No apply_gg_colors call for single series — colour is already in layers
   }
 
-  # Group levels in data order — used to name the palette vector so
-  # ggplot2 maps colours by name rather than by alphabetical sort order
-  group_levels <- if (!is.null(grp_col)) {
-    as.character(unique(spec$data[[grp_col]]))
-  } else {
-    NULL
-  }
-
-  p <- apply_gg_colors(p,
-                       colors       = opts$colors,
-                       n_groups     = n_groups,
-                       group_levels = group_levels)
-
-  # ── Font ──────────────────────────────────────────────────────────────────
   font <- getOption("highdir.font", default = NULL)
   if (!is.null(font))
     p <- p + ggplot2::theme(text = ggplot2::element_text(family = font))
