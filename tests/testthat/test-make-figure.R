@@ -115,6 +115,46 @@ test_that("hd_make: gg pie returns ggplot", {
   expect_true(is_ggplot(fig))
 })
 
+# ── ggplot2 colors and palettes ──────────────────────────────────────────────────
+
+test_that("gg n=2 uses hdir2 not hdir[1:2]", {
+  fig   <- hd_make(spec2, "column", hd_opts(), backend = "ggplot2")
+  fills <- .extract_gg_fill_values(fig)
+  hdir2 <- get_palette("hdir2")
+  expect_equal(sort(unname(fills)), sort(hdir2[1:2]))
+  expect_false(identical(sort(unname(fills)),
+                          sort(get_palette("hdir")[1:2])))
+})
+
+test_that("gg and HC assign same colour to same group", {
+  fig_hc <- hd_make(spec2, "column", hd_opts())
+  fig_gg <- hd_make(spec2, "column", hd_opts(), backend = "ggplot2")
+
+  hc_male <- fig_hc$x$hc_opts$series[[
+    which(vapply(fig_hc$x$hc_opts$series,
+                 function(s) s$name == "Male", logical(1)))
+  ]]$color
+
+  gg_fills <- .extract_gg_fill_values(fig_gg)
+  expect_equal(gg_fills[["Male"]], hc_male)
+})
+
+test_that("gg palette name string resolved not passed raw", {
+  # Previously crashed with scale_color_manual(values = "hdir")
+  expect_s3_class(
+    hd_make(spec2, "column", hd_opts(colors = "hdir"), backend = "ggplot2"),
+    "ggplot"
+  )
+})
+
+test_that("gg too-short palette warns and falls back", {
+  expect_warning(
+    hd_make(spec2, "column", hd_opts(colors = "#FF0000"),
+            backend = "ggplot2"),
+    "Falling back"
+  )
+})
+
 # ── hd_opts reuse ────────────────────────────────────────────────────────────
 
 test_that("same spec renders with two different opts", {

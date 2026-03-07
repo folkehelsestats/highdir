@@ -130,14 +130,79 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
 
 # ── ggplot2 colour helper ────────────────────────────────────────────────────
 
+#' Apply brand colours to a ggplot object
+#'
+#' Uses the same `resolve_colors()` priority chain as the highcharter
+#' engine so both backends always produce identical colour assignments:
+#'
+#' 1. Explicit `colors` argument
+#' 2. `getOption("highdir.colors")` session default
+#' 3. Built-in rules: n==2 → hdir2, n<=10 → hdir\[1:n\], n>10 → viridis
+#'
+#' @param p            A ggplot object.
+#' @param colors       Character vector, palette name string, or NULL.
+#' @param n_groups     Integer. Number of groups in the data. Drives which
+#'   palette rule fires. Passed from `ggplot_engine()`.
+#' @param group_levels Character vector or NULL. Group level names in data
+#'   order. Used to name the palette so ggplot2 matches colours to groups
+#'   by name rather than alphabetical sort.
+#' @return The modified ggplot object.
 #' @keywords internal
-apply_gg_colors <- function(p, colors = NULL) {
-  pal <- colors %||% getOption("highdir.colors", default = NULL)
+apply_gg_colors <- function(p,
+                            colors       = NULL,
+                            n_groups     = NULL,
+                            group_levels = NULL) {
+
+  # ── Resolve palette through the shared rule engine ────────────────────────
+  # resolve_colors() applies the same priority chain used by hc_column,
+  # hc_line, hc_scatter etc. — so HC and ggplot2 always agree on colours.
+  #
+  # If n_groups is unknown (NULL) we still resolve the palette name to a
+  # vector, but we cannot apply the n-aware rules. This happens only when
+  # apply_gg_colors is called directly outside the engine.
+  if (!is.null(n_groups) && n_groups >= 1L) {
+    pal <- resolve_colors(n_groups, colors)
+    #      └── n==2  → hdir2[1:2]
+    #      └── n<=10 → hdir[1:n]
+    #      └── n>10  → viridis(n)
+    #      └── explicit colors vector → used directly if long enough
+    #      └── palette name string   → resolved then trimmed to n
+  } else {
+    # Fallback path: no n available — resolve name to vector only
+    candidate <- colors %||% getOption("highdir.colors", default = NULL)
+    if (is.character(candidate) && length(candidate) == 1L &&
+        candidate %in% list_palettes()) {
+      candidate <- get_palette(candidate)
+    }
+    pal <- candidate
+  }
+
+  # Nothing resolved — return plot unchanged
+  # This happens when colors = NULL, no session option set, and
+  # hdir palettes are not registered (should not occur in normal use)
   if (is.null(pal)) return(p)
+
+  # ── Name the palette by group level in data order ────────────────────────
+  # Without names, ggplot2 assigns colours alphabetically by group level.
+  # With names, ggplot2 looks up each group by name → order matches HC.
+  #
+  # Example: data order is c("Male","Female") → HC assigns Male=pal[1]
+  # Without naming, ggplot2 sorts to c("Female","Male") → Female=pal[1] ✗
+  # With naming, ggplot2 sees Male=pal[1], Female=pal[2] → matches HC  ✓
+  if (!is.null(group_levels) &&
+      length(pal) >= length(group_levels)) {
+    pal <- stats::setNames(
+      pal[seq_along(group_levels)],
+      group_levels
+    )
+  }
+
+  # ── Inject colour scales ─────────────────────────────────────────────────
   p +
     ggplot2::scale_color_manual(values = pal) +
     ggplot2::scale_fill_manual(values  = pal)
 }
+
 
 # ── JavaScript injection ─────────────────────────────────────────────────────
 
