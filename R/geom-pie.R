@@ -39,6 +39,24 @@ gg_pie <- function(spec, opts, geom_params, ...) {
   )
 }
 
+## # Pie is always single-series from ggplot2's perspective but uses ##
+## # fill to distinguish slices — single_colour is ignored here.     ##
+## gg_pie <- function(spec, opts, geom_params) {                     ##
+##   list(                                                           ##
+##     ggplot2::geom_bar(                                            ##
+##       ggplot2::aes(x    = "",                                     ##
+##                    y    = .data[[spec$y]],                        ##
+##                    fill = .data[[spec$x]]),                       ##
+##       stat     = "identity",                                      ##
+##       width    = 1,                                               ##
+##       position = "stack"                                          ##
+##     ),                                                            ##
+##     ggplot2::coord_polar("y", start = 0),                         ##
+##     ggplot2::theme_void()                                         ##
+##   )                                                               ##
+## }                                                                 ##
+
+
 #' @keywords internal
 hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
   inner_size <- geom_params$inner_size %||% "0%"   # "50%" = donut

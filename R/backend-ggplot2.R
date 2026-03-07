@@ -15,11 +15,10 @@ ggplot_engine <- function(spec,
                           geom,
                           opts,
                           geom_params,
-                          use_js = TRUE,
-                          module = TRUE, #only for hc but passed silently in backend engine
+                          use_js   = TRUE,
+                          module   = TRUE,
                           filename = NULL, ...) {
 
-  # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
   if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
     layers <- geom$ggplot_fun(spec, opts, geom_params)
     p <- ggplot2::ggplot() +
@@ -34,12 +33,36 @@ ggplot_engine <- function(spec,
 
   p <- base_fig(spec, opts, "ggplot2")
 
-  layers <- geom$ggplot_fun(spec, opts, geom_params)
+  # ── Resolve colour before handing off to the geom ────────────────────────
+  grp_col <- spec$colour %||% spec$group
 
-  # geom functions return a list of layers; + works element-wise on ggplots
-  for (layer in layers) p <- p + layer
+  if (!is.null(grp_col)) {
+    # Multi-series: resolve palette, pass the full vector
+    # geom functions use it via scale_fill_manual / scale_color_manual
+    n_groups     <- length(unique(spec$data[[grp_col]]))
+    group_levels <- as.character(unique(spec$data[[grp_col]]))
+    single_colour <- NULL   # not used for multi-series
 
-  p <- apply_gg_colors(p, opts$colors)
+    layers <- geom$ggplot_fun(spec, opts, geom_params)
+    for (layer in layers) p <- p + layer
+    p <- apply_gg_colors(p,
+                         colors       = opts$colors,
+                         n_groups     = n_groups,
+                         group_levels = group_levels)
+
+  } else {
+    # Single series: resolve exactly one colour and inject at layer level
+    # resolve_colors(1, ...) returns hdir[1] by default — the brand teal
+    single_colour <- resolve_colors(1L, opts$colors)[1]
+
+    # Pass single_colour into geom_params so the geom function can use it
+    # as a fixed fill/colour argument — NOT as a mapped aesthetic
+    geom_params$single_colour <- single_colour
+
+    layers <- geom$ggplot_fun(spec, opts, geom_params)
+    for (layer in layers) p <- p + layer
+    # No apply_gg_colors call for single series — colour is already in layers
+  }
 
   font <- getOption("highdir.font", default = NULL)
   if (!is.null(font))
@@ -47,4 +70,3 @@ ggplot_engine <- function(spec,
 
   p
 }
-

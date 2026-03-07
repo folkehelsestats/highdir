@@ -14,18 +14,38 @@
 # hc_add_series() via bare `...`.
 
 #' @keywords internal
-gg_line <- function(spec, opts, geom_params, ...) {
-  smooth   <- isTRUE(geom_params$smooth)
-  dot_size <- geom_params$dot_size %||% 4
+gg_line <- function(spec, opts, geom_params) {
+  sc     <- geom_params$single_colour
+  smooth <- isTRUE(geom_params$smooth)
+  size   <- geom_params$dot_size %||% 4L
 
-  if (smooth) {
-    if (requireNamespace("ggforce", quietly = TRUE))
-      return(list(ggforce::geom_bspline(linewidth = 0.8)))
-    return(list(ggplot2::geom_line(linewidth = 0.8)))
+  if (!is.null(sc)) {
+    layers <- list(
+      ggplot2::geom_line(colour = sc, linewidth = 0.8),
+      ggplot2::geom_point(colour = sc, size = size / 3)
+    )
+    if (smooth)
+      layers <- c(layers, list(
+        ggplot2::geom_smooth(method = "loess", formula = y ~ x,
+                             se = FALSE, colour = sc,
+                             linewidth = 0.5, linetype = "dashed")
+      ))
+  } else {
+    layers <- list(
+      ggplot2::geom_line(linewidth = 0.8),
+      ggplot2::geom_point(size = size / 3)
+    )
+    if (smooth)
+      layers <- c(layers, list(
+        ggplot2::geom_smooth(method = "loess", formula = y ~ x,
+                             se = FALSE, linewidth = 0.5,
+                             linetype = "dashed")
+      ))
   }
-  list(ggplot2::geom_line(linewidth = 0.8),
-       ggplot2::geom_point(size = dot_size))
+
+  layers
 }
+
 
 #' @keywords internal
 hc_line <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {

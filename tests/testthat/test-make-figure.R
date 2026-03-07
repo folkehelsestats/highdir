@@ -115,6 +115,135 @@ test_that("hd_make: gg pie returns ggplot", {
   expect_true(is_ggplot(fig))
 })
 
+# ── ggplot2 colors and palettes ──────────────────────────────────────────────────
+
+test_that("gg n=2 uses hdir2 not hdir[1:2]", {
+  fig   <- hd_make(spec2, "column", hd_opts(), backend = "ggplot2")
+  fills <- .extract_gg_fill_values(fig)
+  hdir2 <- get_palette("hdir2")
+  expect_equal(sort(unname(fills)), sort(hdir2[1:2]))
+  expect_false(identical(sort(unname(fills)),
+                          sort(get_palette("hdir")[1:2])))
+})
+
+test_that("gg and HC assign same colour to same group", {
+  fig_hc <- hd_make(spec2, "column", hd_opts())
+  fig_gg <- hd_make(spec2, "column", hd_opts(), backend = "ggplot2")
+
+  hc_male <- fig_hc$x$hc_opts$series[[
+    which(vapply(fig_hc$x$hc_opts$series,
+                 function(s) s$name == "Male", logical(1)))
+  ]]$color
+
+  gg_fills <- .extract_gg_fill_values(fig_gg)
+  expect_equal(gg_fills[["Male"]], hc_male)
+})
+
+test_that("gg palette name string resolved not passed raw", {
+  # Previously crashed with scale_color_manual(values = "hdir")
+  expect_s3_class(
+    hd_make(spec2, "column", hd_opts(colors = "hdir"), backend = "ggplot2"),
+    "ggplot"
+  )
+})
+
+test_that("gg too-short palette warns and falls back", {
+  expect_warning(
+    hd_make(spec2, "column", hd_opts(colors = "#FF0000"),
+            backend = "ggplot2"),
+    "Falling back"
+  )
+})
+
+# --- ggplot2 with single color ----------------------
+
+test_that("gg single series bar uses hdir[1] colour", {
+  spec <- hd_spec(data.frame(year = 2018:2022, val = c(1,2,3,4,5)),
+                  "year", "val")
+  fig  <- hd_make(spec, "column", hd_opts(), backend = "ggplot2")
+  expect_equal(.layer_aes(fig, "GeomCol", "fill"), get_palette("hdir")[1])
+})
+
+test_that("gg line single series uses hdir[1]", {
+  spec <- hd_spec(data.frame(year = 2018:2022, val = c(1,2,3,4,5)),
+                  "year", "val")
+  fig  <- hd_make(spec, "line", hd_opts(), backend = "ggplot2")
+  expect_equal(.layer_aes(fig, "GeomLine", "colour"), get_palette("hdir")[1])
+})
+
+test_that("gg scatter single series uses hdir[1]", {
+  spec <- hd_spec(data.frame(year = 2018:2022, val = c(1,2,3,4,5)),
+                  "year", "val")
+  fig  <- hd_make(spec, "scatter", hd_opts(), backend = "ggplot2")
+  expect_equal(.layer_aes(fig, "GeomPoint", "colour"), get_palette("hdir")[1])
+})
+
+test_that("gg single series does not add fill or colour scales", {
+  spec <- hd_spec(data.frame(year = 2018:2022, val = c(1,2,3,4,5)),
+                  "year", "val")
+  fig  <- hd_make(spec, "column", hd_opts(), backend = "ggplot2")
+
+  scale_aes <- unlist(lapply(fig$scales$scales, function(s) s$aesthetics))
+  expect_false("fill"   %in% scale_aes)
+  expect_false("colour" %in% scale_aes)
+})
+
+test_that("gg single series explicit colour override respected", {
+  spec <- hd_spec(data.frame(year = 2018:2022, val = c(1,2,3,4,5)),
+                  "year", "val")
+  fig  <- hd_make(spec, "column", hd_opts(colors = "#FF0000"),
+                  backend = "ggplot2")
+
+  layer_fill <- .layer_aes(fig, "GeomCol", "colour")
+  expect_equal(layer_fill, "#FF0000")
+})
+
+test_that("gg multi-series still uses apply_gg_colors", {
+  df <- data.frame(
+    year = rep(2018:2020, 2),
+    val  = c(1,2,3,4,5,6),
+    grp  = rep(c("A","B"), each = 3)
+  )
+  spec <- hd_spec(df, "year", "val", group = "grp")
+  fig  <- hd_make(spec, "column", hd_opts(), backend = "ggplot2")
+
+  scale_aes <- unlist(lapply(fig$scales$scales, function(s) s$aesthetics))
+  expect_true("fill" %in% scale_aes)
+})
+
+# -- ggplot2 multi colors
+
+test_that("gg multi-series column uses hdir2 not grey", {
+  df <- data.frame(
+    year = rep(2018:2020, 2),
+    val  = c(1,2,3,4,5,6),
+    grp  = rep(c("A","B"), each = 3)
+  )
+  spec <- hd_spec(df, "year", "val", group = "grp")
+  fig  <- hd_make(spec, "column", hd_opts(), backend = "ggplot2")
+
+  # Fill scale must exist — means apply_gg_colors was called
+  scale_aes <- unlist(lapply(fig$scales$scales, function(s) s$aesthetics))
+  expect_true("fill" %in% scale_aes)
+
+  # The geom layer must NOT have a fixed fill — it must inherit from mapping
+  col_layer_idx <- .find_layers(fig, "GeomCol")
+  layer_fill    <- fig$layers[[col_layer_idx[1]]]$aes_params$fill
+  expect_null(layer_fill)   # NULL = not fixed, inherits mapped aesthetic
+})
+
+test_that("gg single series column has no fill scale", {
+  spec <- hd_spec(data.frame(year = 2018:2022, val = c(1,2,3,4,5)),
+                  "year", "val")
+  fig  <- hd_make(spec, "column", hd_opts(), backend = "ggplot2")
+
+  scale_aes <- unlist(lapply(fig$scales$scales, function(s) s$aesthetics))
+  expect_false("fill" %in% (scale_aes %||% character(0)))
+
+  # Fixed colour is on the layer itself
+  expect_equal(.layer_aes(fig, "GeomCol", "fill"), get_palette("hdir")[1])
+})
+
 # ── hd_opts reuse ────────────────────────────────────────────────────────────
 
 test_that("same spec renders with two different opts", {

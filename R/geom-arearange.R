@@ -14,21 +14,33 @@
 # hc_add_series() via bare `...`.
 
 #' @keywords internal
-gg_arearange <- function(spec, opts, geom_params, ...) {
-  ## required args
-  ymin      <- geom_params$ymin
-  ymax      <- geom_params$ymax
+gg_arearange <- function(spec, opts, geom_params) {
+  sc   <- geom_params$single_colour
+
+  # required args
+  ymin <- geom_params$ymin
+  ymax <- geom_params$ymax
 
   ## show main line
   show_line <- isTRUE(geom_params$show_line %||% TRUE)
 
-  layers <- list(
-    # Ribbon always drawn first so the line sits on top of it
-    ggplot2::geom_ribbon(
-      ggplot2::aes(ymin = .data[[ymin]], ymax = .data[[ymax]]),
-      alpha = 0.15        # matches the Highcharts fillOpacity = 0.15
+  if (!is.null(sc)) {
+    layers <- list(
+      ggplot2::geom_ribbon(ggplot2::aes(ymin = .data[[ymin]],
+                                        ymax = .data[[ymax]]),
+                           fill = sc, alpha = 0.25),
+      ggplot2::geom_line(colour = sc, linewidth = 0.8),
+      ggplot2::geom_point(colour = sc, size = 2)
     )
-  )
+  } else {
+    layers <- list(
+      ggplot2::geom_ribbon(ggplot2::aes(ymin = .data[[ymin]],
+                                        ymax = .data[[ymax]]),
+                           alpha = 0.25),
+      ggplot2::geom_line(linewidth = 0.8),
+      ggplot2::geom_point(size = 2)
+    )
+  }
 
   # Centre line added on top of the ribbon
   if (show_line) {

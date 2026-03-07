@@ -13,11 +13,7 @@
                      "#BF78DE", "#767676"
                    ))
 
-  register_palette("hdir2",
-                   c(
-                     "rgba(49,101,117,1)",
-                     "rgba(138,41,77,1)"
-                     ))
+  register_palette("hdir2", c("#315975", "#8A294D"))
 
   # ── Backends ──────────────────────────────────────────────────────────────
   register_backend("ggplot2",     ggplot_engine)

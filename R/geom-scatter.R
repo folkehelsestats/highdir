@@ -15,9 +15,16 @@
 # hc_add_series() via bare `...`.
 
 #' @keywords internal
-gg_scatter <- function(spec, opts, geom_params, ...) {
-  dot_size <- geom_params$dot_size %||% 2
-  list(ggplot2::geom_point(size = dot_size))
+gg_scatter <- function(spec, opts, geom_params) {
+  sc   <- geom_params$single_colour
+  size <- geom_params$dot_size %||% 4L
+
+  if (!is.null(sc)) {
+    list(ggplot2::geom_point(colour = sc, fill = sc,
+                              size = size / 3, shape = 21))
+  } else {
+    list(ggplot2::geom_point(size = size / 3, shape = 21))
+  }
 }
 
 #' @keywords internal

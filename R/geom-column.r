@@ -14,9 +14,24 @@
 # hc_add_series() via bare `...`.
 
 #' @keywords internal
-gg_column <- function(spec, opts, geom_params, ...) {
-  list(ggplot2::geom_col(position = "dodge"))
+gg_column <- function(spec, opts, geom_params) {
+  sc <- geom_params$single_colour
+
+  list(
+    if (!is.null(sc)) {
+      # Single series: inject brand colour as fixed aesthetic
+      ggplot2::geom_col(
+        position = "dodge",
+        fill = sc,
+        colour = sc
+      )
+    } else {
+      # Multi-series: no fixed colour — inherits from mapped aesthetic
+      ggplot2::geom_col(position = "dodge")
+    }
+  )
 }
+
 
 #' @keywords internal
 hc_column <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
