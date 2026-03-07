@@ -40,6 +40,7 @@ ggplot_engine <- function(spec,
   # grp_col mirrors the same logic as .base_constructors[[ggplot2]] uses
   # for the colour/group aesthetic — spec$colour takes priority over
   # spec$group, exactly as the canvas mapping does.
+  # spec$colour takes priority over spec$group, same as in base_fig()
   grp_col <- spec$colour %||% spec$group
 
   n_groups <- if (!is.null(grp_col)) {

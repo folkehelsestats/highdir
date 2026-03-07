@@ -61,11 +61,11 @@ server <- function(input, output, session) {
   })
 
   # ── Helpers ────────────────────────────────────────────────────────────────
-
   parsed_colors <- shiny::reactive({
     raw <- trimws(input$colors %||% "")
     if (!nzchar(raw)) return(NULL)
-    strsplit(raw, "\\s*,\\s*")[[1]]
+    cols <- strsplit(raw, "\\s*,\\s*")[[1]]
+    unname(cols)   # ← add unname() to strip any accidental names
   })
 
   geom_args <- shiny::reactive({
@@ -100,19 +100,22 @@ server <- function(input, output, session) {
       title    = if (nzchar(input$title    %||% "")) input$title    else NULL,
       subtitle = if (nzchar(input$subtitle %||% "")) input$subtitle else NULL,
       caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
-      xlab     = if (nzchar(input$xlab     %||% "")) input$xlab     else NULL,
-      ylab     = if (nzchar(input$ylab     %||% "")) input$ylab     else NULL,
+      # Empty text box → sentinel " " (use column name from spec)
+      # Filled text box → use what the user typed
+      # NULL is reserved for explicitly hiding the label — never from an empty box
+      xlab     = if (nzchar(input$xlab %||% "")) input$xlab else " ",
+      ylab     = if (nzchar(input$ylab %||% "")) input$ylab else " ",
       colors   = parsed_colors(),
       hc_theme = input$hc_theme %||% NULL
     )
   })
 
-  # ── Rendering ──────────────────────────────────────────────────────────────
+                                        # ── Rendering ──────────────────────────────────────────────────────────────
 
   hc_fig <- shiny::eventReactive(input$run, {
     shiny::req(input$backend == "highcharter", the_spec())
     do.call(hd_make, c(
-      list(spec       = the_spec(),
+                       list(spec       = the_spec(),
            type       = input$geom,
            opts       = the_opts(),
            backend    = "highcharter",

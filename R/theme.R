@@ -162,13 +162,15 @@ apply_gg_colors <- function(p,
   # apply_gg_colors is called directly outside the engine.
   if (!is.null(n_groups) && n_groups >= 1L) {
     pal <- resolve_colors(n_groups, colors)
-    #      └── n==2  → hdir2[1:2]
-    #      └── n<=10 → hdir[1:n]
-    #      └── n>10  → viridis(n)
-    #      └── explicit colors vector → used directly if long enough
-    #      └── palette name string   → resolved then trimmed to n
+    # resolve_colors() always returns a plain character vector — never a
+    # palette name string — so scale_*_manual receives valid colour values
+    # - n==2  → hdir2[1:2]
+    # - n<=10 → hdir[1:n]
+    # - n>10  → viridis(n)
+    # - explicit colors vector → used directly if long enough
+    # - palette name string   → resolved then trimmed to n
   } else {
-    # Fallback path: no n available — resolve name to vector only
+    # n_groups unknown: resolve palette name to vector but do not trim
     candidate <- colors %||% getOption("highdir.colors", default = NULL)
     if (is.character(candidate) && length(candidate) == 1L &&
         candidate %in% list_palettes()) {

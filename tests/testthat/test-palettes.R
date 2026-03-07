@@ -61,3 +61,26 @@ test_that("resolve_colors: all returned values are character strings", {
     expect_type(result, "character")
   }
 })
+
+test_that("all registered palette colours are valid R colour strings", {
+  for (name in list_palettes()) {
+    pal <- get_palette(name)
+    for (col in pal) {
+      expect_true(
+        tryCatch({ grDevices::col2rgb(col); TRUE }, error = function(e) FALSE),
+        label = paste0("palette '", name, "' colour '", col,
+                       "' must be a valid R colour")
+      )
+    }
+  }
+})
+
+test_that("hdir2 colours parse in both ggplot2 and as hex", {
+  hdir2 <- get_palette("hdir2")
+  expect_equal(length(hdir2), 2L)
+  # Both must be valid R colours
+  expect_no_error(grDevices::col2rgb(hdir2[1]))
+  expect_no_error(grDevices::col2rgb(hdir2[2]))
+  # Both should be hex format
+  expect_true(all(grepl("^#[0-9A-Fa-f]{6}$", hdir2)))
+})
