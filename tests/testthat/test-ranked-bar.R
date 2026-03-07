@@ -229,7 +229,7 @@ test_that("gg: flip = TRUE (default) adds CoordFlip", {
 })
 
 test_that("gg: flip = FALSE does not add CoordFlip", {
-  optsFlip$flip = FALSE
+  optsFlip    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000", flip = FALSE)
   fig <- hd_make(spec_n, "ranked_bar", optsFlip,
                  backend = "ggplot2")
   expect_false(inherits(fig$coordinates, "CoordFlip"))
