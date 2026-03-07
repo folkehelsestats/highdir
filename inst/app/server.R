@@ -114,39 +114,51 @@ server <- function(input, output, session) {
 
   hc_fig <- shiny::eventReactive(input$run, {
     shiny::req(input$backend == "highcharter", the_spec())
+    aim_val <- if (!is.na(input$aim %||% NA)) input$aim else NULL
     do.call(hd_make, c(
-                       list(spec       = the_spec(),
-           type       = input$geom,
-           opts       = the_opts(),
-           backend    = "highcharter",
-           use_js     = isTRUE(input$use_js),
-           smooth     = isTRUE(input$smooth),
-           dot_size   = input$dot_size   %||% 4L,
-           inner_size  = input$inner_size  %||% "0%",
-           level       = input$map_level    %||% "county",
-           value_lab   = if (nzchar(input$map_value_lab %||% "")) input$map_value_lab else NULL,
-           low_col     = input$map_low_col   %||% "#C6DBEF",
-           high_col    = input$map_high_col  %||% "#025169",
-           na_fill     = input$map_na_fill   %||% "#D3D3D3"),
+      list(
+        spec       = the_spec(),
+        type       = input$geom,
+        opts       = the_opts(),
+        backend    = "highcharter",
+        use_js     = isTRUE(input$use_js),
+        smooth     = isTRUE(input$smooth),
+        dot_size   = input$dot_size   %||% 4L,
+        inner_size  = input$inner_size  %||% "0%",
+        level       = input$map_level    %||% "county",
+        value_lab   = if (nzchar(input$map_value_lab %||% "")) input$map_value_lab else NULL,
+        low_col     = input$map_low_col   %||% "#C6DBEF",
+        high_col    = input$map_high_col  %||% "#025169",
+        na_fill     = input$map_na_fill   %||% "#D3D3D3",
+        ascending = isTRUE(input$ascending),
+        comp      = if (nzchar(input$comp %||% "")) input$comp else NULL,
+        aim       = aim_val
+      ),
       geom_args()
     ))
   })
 
   gg_fig <- shiny::eventReactive(input$run, {
     shiny::req(input$backend == "ggplot2", the_spec())
+    aim_val <- if (!is.na(input$aim %||% NA)) input$aim else NULL
     do.call(hd_make, c(
-      list(spec       = the_spec(),
-           type       = input$geom,
-           opts       = the_opts(),
-           backend    = "ggplot2",
-           smooth     = isTRUE(input$smooth),
-           dot_size   = input$dot_size   %||% 4L,
-           inner_size  = input$inner_size  %||% "0%",
-           level       = input$map_level    %||% "county",
-           value_lab   = if (nzchar(input$map_value_lab %||% "")) input$map_value_lab else NULL,
-           low_col     = input$map_low_col   %||% "#C6DBEF",
-           high_col    = input$map_high_col  %||% "#025169",
-           na_fill     = input$map_na_fill   %||% "#D3D3D3"),
+      list(
+        spec       = the_spec(),
+        type       = input$geom,
+        opts       = the_opts(),
+        backend    = "ggplot2",
+        smooth     = isTRUE(input$smooth),
+        dot_size   = input$dot_size   %||% 4L,
+        inner_size  = input$inner_size  %||% "0%",
+        level       = input$map_level    %||% "county",
+        value_lab   = if (nzchar(input$map_value_lab %||% "")) input$map_value_lab else NULL,
+        low_col     = input$map_low_col   %||% "#C6DBEF",
+        high_col    = input$map_high_col  %||% "#025169",
+        na_fill     = input$map_na_fill   %||% "#D3D3D3",
+        ascending = isTRUE(input$ascending),
+        comp      = if (nzchar(input$comp %||% "")) input$comp else NULL,
+        aim       = aim_val
+      ),
       geom_args()
     ))
   })

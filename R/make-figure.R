@@ -55,6 +55,18 @@
 #'   the continuous gradient.  Default `"#C6DBEF"`.
 #' @param high_col  Character.  `type = "map"`, ggplot2 backend — high end of
 #'   the continuous gradient.  Default `"#025169"`.
+#' @param ascending Logical. If \code{TRUE} (default) bars are sorted in
+#'   ascending order of \code{y}.
+#' @param comp Character string (partial match) identifying one category to
+#'   highlight with a contrasting fill colour (\code{col2}). If omitted all
+#'   bars use \code{col1}.
+#' @param char_scale Numeric scaling factor that converts label character-count
+#'   into axis-range units. Controls how generously space is estimated for each
+#'   character. Defaults to \code{0.045}; increase (e.g. \code{0.06}) for
+#'   larger text sizes, decrease (e.g. \code{0.03}) for smaller ones.
+#' @param min_frac  Numeric. Minimum fraction of the axis range that a bar must
+#'   span before its label is considered to fit inside. Acts as a safety floor
+#'   for very short labels. Defaults to \code{0.08} (8 \%).
 #' @param ...       Extra arguments forwarded to the geometry function.
 #'   Required arguments (e.g. `ymin`, `ymax` for `"arearange"`) **must**
 #'   be supplied here.
@@ -120,22 +132,27 @@
 #'
 #' @export
 hd_make <- function(spec,
-                     type        = "column",
-                     opts        = NULL,
-                     backend     = "highcharter",
-                     use_js      = TRUE,
-                     module      = TRUE,
-                     filename    = NULL,
-                     smooth      = TRUE,
-                     dot_size    = 4,
-                     line_symbols = NULL,
-                     inner_size  = "0%",
-                     level       = "county",
-                     value_lab   = NULL,
-                     na_fill     = "#D3D3D3",
-                     low_col     = "#C6DBEF",
-                     high_col    = "#025169",
-                     ...) {
+                    type        = "column",
+                    opts        = NULL,
+                    backend     = "highcharter",
+                    use_js      = TRUE,
+                    module      = TRUE,
+                    filename    = NULL,
+                    smooth      = TRUE,
+                    dot_size    = 4,
+                    line_symbols = NULL,
+                    inner_size  = "0%",
+                    level       = "county",
+                    value_lab   = NULL,
+                    na_fill     = "#D3D3D3",
+                    low_col     = "#C6DBEF",
+                    high_col    = "#025169",
+                    ascending   = TRUE,
+                    comp        = NULL,
+                    aim         = NULL,
+                    char_scale  = 0.045,
+                    min_frac    = 0.08,
+                    ...) {
 
   opts <- opts %||% default_opts()
 
@@ -143,15 +160,22 @@ hd_make <- function(spec,
   # stays stable as new geoms are added.
   extra_args  <- list(...)
   geom_params <- c(
-    list(smooth       = smooth,
-         dot_size     = dot_size,
-         line_symbols = line_symbols,
-         inner_size   = inner_size,
-         level        = level,
-         value_lab    = value_lab,
-         na_fill      = na_fill,
-         low_col      = low_col,
-         high_col     = high_col),
+    list(
+      smooth       = smooth,
+      dot_size     = dot_size,
+      line_symbols = line_symbols,
+      inner_size   = inner_size,
+      level        = level,
+      value_lab    = value_lab,
+      na_fill      = na_fill,
+      low_col      = low_col,
+      high_col     = high_col,
+      ascending   = ascending,
+      comp        = comp,
+      aim         = aim,
+      char_scale  = char_scale,
+      min_frac    = min_frac
+    ),
     extra_args
   )
 

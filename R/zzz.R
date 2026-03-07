@@ -46,6 +46,14 @@
     highcharter_fun = hc_pie
   )
 
+  register_geom(
+    "ranked_bar",
+    ggplot_fun     = gg_ranked_bar,
+    highcharter_fun = hc_ranked_bar,
+    required_args  = character(0),
+    is_map_geom    = FALSE
+  )
+
   ## register_geom("map",
   ##   ggplot_fun      = gg_map,
   ##   highcharter_fun = hc_map,

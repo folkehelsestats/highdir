@@ -20,6 +20,20 @@
   # Dynamic required-arg inputs (e.g. ymin/ymax for arearange)
   shiny::uiOutput("ui_required"),
 
+  # Add ranked_bar controls
+  shiny::conditionalPanel(
+    "input.geom == 'ranked_bar'",
+    shiny::checkboxInput("ascending", "Ascending order", value = TRUE),
+    shiny::textInput("comp",
+                     "Comparison group (highlight)",
+                     placeholder = "e.g. Oslo"),
+    shiny::numericInput("aim", "Target/aim line (optional)",
+                        value = NA, min = 0),
+    shiny::textInput("n_col_label",
+                     "N= column for x labels (optional)",
+                     placeholder = "column name")
+  ),
+
   shiny::tags$hr(),
 
   # Labels

@@ -1,0 +1,312 @@
+
+# ggplot2 ---------------------
+#' @keywords internal
+gg_ranked_bar <- function(spec, opts, geom_params) {
+
+  # ── Extract params ──────────────────────────────────────────────────────────
+  ascending  <- isTRUE(geom_params$ascending %||% TRUE)
+  comp       <- geom_params$comp        # character or NULL: comparison group name
+  aim        <- geom_params$aim         # numeric or NULL: target line
+  char_scale <- geom_params$char_scale  %||% 0.045
+  min_frac   <- geom_params$min_frac    %||% 0.08
+  sc         <- geom_params$single_colour  # NULL for multi-series
+
+  # ── Resolve colours ─────────────────────────────────────────────────────────
+  # col1: default bar colour (single series or non-highlighted bars)
+  # col2: highlighted comparison bar colour
+  # Both come from the hdir palette so they stay on-brand.
+  pal  <- resolve_colors(2L, NULL)   # always need 2: default + highlight
+  col1 <- sc %||% pal[1]            # single_colour overrides if set
+  col2 <- pal[2]
+
+  # ── Build working data ──────────────────────────────────────────────────────
+  # Work on a copy — do not mutate spec$data
+  d        <- spec$data
+  x_col    <- spec$x
+  y_col    <- spec$y
+
+  # Append N to x labels if spec$n is set
+  # spec$n mirrors the `num` argument from the original regbar function
+  if (!is.null(spec$n)) {
+    d$.xname <- sprintf("%s (N=%s)", d[[x_col]], d[[spec$n]])
+  } else {
+    d$.xname <- as.character(d[[x_col]])
+  }
+
+  # ── Smart label placement ───────────────────────────────────────────────────
+  # Mirrors the original regbar logic exactly.
+  # ypos = 1 → label inside bar (bar is long enough)
+  # ypos = 0 → label outside bar (bar too short)
+  y_range     <- max(d[[y_col]]) - min(0, min(d[[y_col]]))
+  label_chars <- nchar(as.character(d[[y_col]]))
+  label_width <- label_chars * char_scale * y_range
+  threshold   <- pmax(label_width, min_frac * y_range)
+  d$ypos      <- ifelse(d[[y_col]] > threshold, 1L, 0L)
+
+  # ── Sort bars ───────────────────────────────────────────────────────────────
+  if (ascending) {
+    d$.xname <- factor(d$.xname,
+                        levels = d$.xname[order(d[[y_col]])])
+  } else {
+    d$.xname <- factor(d$.xname,
+                        levels = d$.xname[order(d[[y_col]], decreasing = TRUE)])
+  }
+
+  # ── Resolve comparison highlight ────────────────────────────────────────────
+  # comp matches against the original x column (before N= appending)
+  # so the user passes the raw category name e.g. comp = "Oslo"
+  use_comp <- !is.null(comp) && nzchar(comp)
+  if (use_comp) {
+    comp_match  <- d$.xname[grepl(comp, d[[x_col]], fixed = TRUE)]
+    d$.is_comp  <- d$.xname %in% comp_match
+    bar_fill_aes <- ggplot2::aes(fill = .data[[".is_comp"]])
+    fill_scale   <- ggplot2::scale_fill_manual(
+      values = c("FALSE" = col1, "TRUE" = col2),
+      guide  = "none"
+    )
+  } else {
+    bar_fill_aes <- NULL
+    fill_scale   <- NULL
+  }
+
+  # ── Split data for inside / outside labels ──────────────────────────────────
+  inside  <- d[d$ypos == 1L, , drop = FALSE]
+  outside <- d[d$ypos == 0L, , drop = FALSE]
+
+  # ── Build layer list ────────────────────────────────────────────────────────
+  pos  <- ggplot2::position_dodge(width = 0.80)
+  wdth <- 0.80
+
+  layers <- list()
+
+  # Aim line (drawn first so it sits behind bars)
+  if (!is.null(aim)) {
+    layers <- c(layers, list(
+      ggplot2::geom_hline(
+        yintercept = aim,
+        colour     = resolve_colors(3L, NULL)[3],   # hdir[3] for contrast
+        linewidth  = 1,
+        linetype   = "dashed"
+      )
+    ))
+  }
+
+  # Bars
+  if (use_comp) {
+    layers <- c(layers, list(
+      ggplot2::geom_bar(
+        data     = d,
+        mapping  = ggplot2::aes(x = .data[[".xname"]],
+                                y = .data[[y_col]],
+                                fill = .data[[".is_comp"]]),
+        width    = wdth,
+        stat     = "identity",
+        position = pos
+      )
+    ))
+  } else {
+    layers <- c(layers, list(
+      ggplot2::geom_bar(
+        data    = d,
+        mapping = ggplot2::aes(x = .data[[".xname"]],
+                               y = .data[[y_col]]),
+        width   = wdth,
+        stat    = "identity",
+        fill    = col1,
+        position = pos
+      )
+    ))
+  }
+
+  # Inside labels
+  if (nrow(inside) > 0) {
+    layers <- c(layers, list(
+      ggplot2::geom_text(
+        data     = inside,
+        mapping  = ggplot2::aes(x     = .data[[".xname"]],
+                                y     = .data[[y_col]],
+                                label = .data[[y_col]]),
+        hjust    = 1.5,
+        position = pos,
+        size     = 3.5,
+        colour   = "#FFFFFF"
+      )
+    ))
+  }
+
+  # Outside labels
+  if (nrow(outside) > 0) {
+    layers <- c(layers, list(
+      ggplot2::geom_text(
+        data     = outside,
+        mapping  = ggplot2::aes(x     = .data[[".xname"]],
+                                y     = .data[[y_col]],
+                                label = .data[[y_col]]),
+        hjust    = -0.5,
+        position = pos,
+        size     = 3.5,
+        colour   = "#555555"
+      )
+    ))
+  }
+
+  # Fill scale for comparison highlighting
+  if (!is.null(fill_scale))
+    layers <- c(layers, list(fill_scale))
+
+  # x remapping — replace spec$x with .xname in the plot
+  # base_fig maps aes(x = spec$x) but we want the sorted factor .xname
+  # Override via scale_x_discrete
+  layers <- c(layers, list(
+    ggplot2::scale_x_discrete(),   # accepts the factor levels from .xname
+    ggplot2::scale_y_continuous(expand = c(0, 0))
+  ))
+
+  layers
+}
+
+
+# Highcharter ---------------
+
+#' @keywords internal
+hc_ranked_bar <- function(chart, spec, opts, geom_params,
+                           use_js = TRUE, ...) {
+
+  ascending  <- isTRUE(geom_params$ascending %||% TRUE)
+  comp       <- geom_params$comp
+  aim        <- geom_params$aim
+
+  d     <- spec$data
+  x_col <- spec$x
+  y_col <- spec$y
+
+  # ── BEFORE: appended N to .xname for x-axis labels
+  #     d$.xname <- sprintf("%s (N=%s)", d[[x_col]], d[[spec$n]])
+  #   This bloated the axis labels with "(N=693494)" which is
+  #   unnecessary in Highcharts where tooltip can carry that info.
+  #
+  # ── NOW: .xname is always the plain category label.
+  #   N is attached to each point's data object for the tooltip only.
+  d$.xname <- as.character(d[[x_col]])
+
+  # Sort by value
+  ord <- order(d[[y_col]], decreasing = !ascending)
+  d   <- d[ord, ]
+
+  # Colours
+  pal  <- resolve_colors(2L, opts$colors)
+  col1 <- pal[1]
+  col2 <- pal[2]
+
+  # ── Highlight comparison bar ───────────────────────────────────────────────
+  # grepl must only be called when comp is a non-NULL non-empty string.
+  # The & operator in ifelse() does NOT short-circuit, so
+  # ifelse(use_comp & grepl(comp, ...), ...) evaluates grepl(NULL, ...)
+  # when comp is NULL → "invalid 'pattern' argument" error.
+  use_comp <- !is.null(comp) && nzchar(comp)
+
+  if (use_comp) {
+    is_comp    <- grepl(comp, d[[x_col]], fixed = TRUE)
+    colors_vec <- ifelse(is_comp, col2, col1)
+  } else {
+    colors_vec <- rep(col1, nrow(d))
+  }
+
+  # ── BEFORE: point_data embedded the N= label in the name field
+  #     list(
+  #       name  = d$.xname[i],   ← was plain name or "Name (N=X)"
+  #       y     = d[[y_col]][i],
+  #       color = colors_vec[i]
+  #     )
+  #
+  # ── NOW: each point carries separate fields for name, y, and n_obs.
+  #   The tooltip pointFormat references {point.name}, {point.y},
+  #   and {point.n_obs} individually — Highcharts renders them cleanly
+  #   without cluttering the axis label.
+  #   n_obs is only added to the point when spec$n is set.
+  point_data <- lapply(seq_len(nrow(d)), function(i) {
+    pt <- list(
+      name  = d$.xname[i],
+      y     = d[[y_col]][i],
+      color = colors_vec[i]
+    )
+    if (!is.null(spec$n)) {
+      pt$n_obs <- d[[spec$n]][i]
+    }
+    pt
+  })
+
+  # x categories in sorted order (plain labels, no N= suffix)
+  chart <- chart |>
+    highcharter::hc_xAxis(
+      categories = d$.xname,
+      title      = list(text = opts$xlab)
+    )
+
+  # Aim line as plot line on y-axis
+  if (!is.null(aim)) {
+    chart <- chart |>
+      highcharter::hc_yAxis(
+        plotLines = list(list(
+          value     = aim,
+          color     = resolve_colors(3L, opts$colors)[3],
+          width     = 2,
+          dashStyle = "Dash",
+          zIndex    = 5
+        ))
+      )
+  }
+
+  # ── BEFORE: tooltip was handled by the shared highcharter_engine()
+  #   pointFormat which showed "{point.y}%" — not meaningful for ranked
+  #   bar since values are rates/counts, not percentages. Also had no
+  #   way to conditionally show N when spec$n is present.
+  #
+  # ── NOW: ranked_bar sets its own tooltip via hc_tooltip() here.
+  #   This overrides the engine-level tooltip for this geom only.
+  #   pointFormat shows value and — when spec$n is set — N on a
+  #   second line. When spec$n is NULL the N line is omitted entirely.
+  point_fmt <- if (!is.null(spec$n)) {
+    paste0(
+      '<span style="color:{point.color}">\u25CF</span> ',
+      '<b>{point.name}</b><br/>',
+      opts$ylab %||% y_col, ': <b>{point.y}</b><br/>',
+      'N: <b>{point.n_obs}</b>'
+    )
+  } else {
+    paste0(
+      '<span style="color:{point.color}">\u25CF</span> ',
+      '<b>{point.name}</b><br/>',
+      opts$ylab %||% y_col, ': <b>{point.y}</b>'
+    )
+  }
+
+  chart <- chart |>
+    highcharter::hc_tooltip(
+      useHTML      = TRUE,
+      shared       = FALSE,   # ranked bar: one bar per hover, not shared
+      headerFormat = "",      # name already in pointFormat
+      pointFormat  = point_fmt
+    )
+
+  # Add series
+  # ── BEFORE: dataLabels enabled with inside=FALSE showed value on each bar.
+  #     hc_plotOptions(bar = list(
+  #       dataLabels = list(enabled = TRUE, inside = FALSE, ...)
+  #     ))
+  #   This duplicated what the tooltip already shows, and caused label
+  #   overflow on short bars. N was never shown in data labels anyway.
+  #
+  # ── NOW: dataLabels disabled entirely. Value and N both live in
+  #   the tooltip which is always readable regardless of bar length.
+  chart <- chart |>
+    highcharter::hc_add_series(
+      type         = "bar",
+      name         = opts$ylab %||% y_col,
+      data         = point_data,
+      showInLegend = FALSE,
+      dataLabels   = list(enabled = FALSE)
+    )
+
+  chart
+}
