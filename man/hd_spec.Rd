@@ -4,16 +4,7 @@
 \alias{hd_spec}
 \title{Create a Figure Data Specification}
 \usage{
-hd_spec(
-  data,
-  x,
-  y,
-  group = NULL,
-  n = NULL,
-  colour = NULL,
-  xlab = NULL,
-  ylab = NULL
-)
+hd_spec(data, x, y, group = NULL, n = NULL, colour = NULL)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing all referenced columns.}
@@ -31,10 +22,6 @@ highcharter tooltips alongside the y value.  Ignored by ggplot2.}
 
 \item{colour}{Character or \code{NULL}. ggplot2 colour aesthetic column.
 Defaults to \code{group} when \code{NULL} and \code{group} is set.}
-
-\item{xlab}{Character or \code{NULL}. X-axis label.  Defaults to \code{x}.}
-
-\item{ylab}{Character or \code{NULL}. Y-axis label.  Defaults to \code{y}.}
 }
 \value{
 An S3 object of class \code{"hd_spec"}.
@@ -53,8 +40,7 @@ df <- data.frame(
   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
-                 ylab = "Percentage (\%)")
+spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
 spec
 
 }

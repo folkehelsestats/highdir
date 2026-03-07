@@ -6,7 +6,12 @@
 - Can deactivate CDN modules available from
   <https://api.highcharts.com/highcharts> see
   ([\#2](https://github.com/folkehelsestats/highdir/issues/2))
-- Fixed Shiny app GUI for downloading
+- Fixed Shiny app GUI for downloading and axis labels
+- Move arg `xlab` and `ylab` are related to figure presentation and not
+  data specification. Move them to
+  [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md).
+  Use `NULL` to hide axis labels.
+  ([\#5](https://github.com/folkehelsestats/highdir/issues/5))
 
 ## highdir 0.3.0
 

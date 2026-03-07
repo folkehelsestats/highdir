@@ -26,6 +26,16 @@ remotes::install_github("folkehelsestats/highdir@dev")
 
 ------------------------------------------------------------------------
 
+## Shiny GUI
+
+This is the fastest way to start using **highdir** package.
+
+``` r
+hd_app()
+```
+
+------------------------------------------------------------------------
+
 ## Quick start
 
 ``` r
@@ -38,10 +48,10 @@ df <- data.frame(
   n    = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-# Describe the figure once
+# Figure data specification 
 spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
 
-# How the figure should look like
+# Specify figure presentation
 opts <- hd_opts(title = "Health survey",
                 subtitle = "Source: Example data",
                 caption  = "Tall om helse"
@@ -91,14 +101,6 @@ fig <- hd_add_js(fig, file = "path/to/my-plugin.js")
 
 # From a bundled plugin (inst/js/<name>.js)
 fig <- hd_add_js(fig, plugin = "my-plugin")
-```
-
-------------------------------------------------------------------------
-
-## Shiny GUI
-
-``` r
-hd_app()
 ```
 
 ------------------------------------------------------------------------
