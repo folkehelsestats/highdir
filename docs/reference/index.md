@@ -30,13 +30,9 @@
   : Norway County Reference Table
 - [`no_municipalities()`](https://github.com/folkehelsestats/highdir/reference/no_municipalities.md)
   : Norway Municipality Reference Table
-- [`pie_df`](https://github.com/folkehelsestats/highdir/reference/pie_df.md)
-  : Standard pie data frame
 - [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
   : Register a Rendering Backend
 - [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)
   : Register a Geometry
 - [`register_palette()`](https://github.com/folkehelsestats/highdir/reference/register_palette.md)
   : Register a Named Colour Palette
-- [`survey_df`](https://github.com/folkehelsestats/highdir/reference/survey_df.md)
-  : Standard health-survey data frame used across tests

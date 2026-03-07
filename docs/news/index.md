@@ -12,6 +12,8 @@
   [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md).
   Use `NULL` to hide axis labels.
   ([\#5](https://github.com/folkehelsestats/highdir/issues/5))
+- Fix ggplot2 color palettes selection to follow the standard rule from
+  [`resolve_colors()`](https://github.com/folkehelsestats/highdir/reference/resolve_colors.md).
 
 ## highdir 0.3.0
 
