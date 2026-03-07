@@ -5,6 +5,7 @@
 * Fixed Shiny app GUI for downloading and axis labels
 * Move arg `xlab` and `ylab` are related to figure presentation and not
 data specification. Move them to `hd_opts()`. Use `NULL` to hide axis labels. (#5) 
+* Fix ggplot2 color palettes selection to follow the standard rule from `resolve_colors()`. 
 
 # highdir 0.3.0
 
