@@ -318,12 +318,7 @@
                                       "flat","flatdark","ggplot2"),
                          selected = "default"),
       shiny::checkboxInput("use_js", "JS hover band", value = TRUE)
-    ),
-
-    shiny::div(class = "hd-label", "Download"),
-    shiny::textInput("dl_filename", NULL,
-                     placeholder = paste0("highdir-figure_", Sys.Date())),
-    shiny::div(class = "hd-dl-row", shiny::uiOutput("ui_downloads"))
+    )
   ),
 
   # ── Always visible: Geom-specific args ───────────────────────
@@ -373,7 +368,13 @@
   # ── Draw ─────────────────────────────────────────────────────
   shiny::actionButton("run", "Draw figure",
                       icon  = shiny::icon("palette"),
-                      class = "btn-primary")
+                      class = "btn-primary"),
+
+  # -- Download ----
+    shiny::div(class = "hd-label", "Download"),
+    shiny::textInput("dl_filename", NULL,
+                     placeholder = paste0("highdir-figure_", Sys.Date())),
+    shiny::div(class = "hd-dl-row", shiny::uiOutput("ui_downloads"))
 )
 
 # ── Main output tabs ──────────────────────────────────────────────────────────

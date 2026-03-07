@@ -11,7 +11,13 @@ server <- function(input, output, session) {
 
   output$tbl_head <- shiny::renderTable({
     shiny::req(dataset())
-    utils::head(dataset(), 10)
+    nTot <- nrow(dataset())
+    if (nTot > 20){
+      rowIndx <- order(sample(1:nTot, 15))
+      dataset()[rowIndx,]
+    } else {
+      utils::head(dataset(), 10)
+    }
   })
 
   # ── Dynamic UI ─────────────────────────────────────────────────────────────
