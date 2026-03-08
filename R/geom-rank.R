@@ -1,12 +1,25 @@
 
-# ggplot2 ---------------------
+#' @param ascending Logical. If \code{TRUE} (default) bars are sorted in
+#'   ascending order of \code{y}.
+#' @param comp Character string (partial match) identifying one category to
+#'   highlight with a contrasting fill colour (\code{col2}). If omitted all
+#'   bars use \code{col1}.
+#' @param char_scale Numeric scaling factor that converts label character-count
+#'   into axis-range units. Controls how generously space is estimated for each
+#'   character. Defaults to \code{0.045}; increase (e.g. \code{0.06}) for
+#'   larger text sizes, decrease (e.g. \code{0.03}) for smaller ones.
+#' @param min_frac  Numeric. Minimum fraction of the axis range that a bar must
+#'   span before its label is considered to fit inside. Acts as a safety floor
+#'   for very short labels. Defaults to \code{0.08} (8 \%).
+
+# --- ggplot2 ---------------------
 #' @keywords internal
 gg_ranked_bar <- function(spec, opts, geom_params) {
 
   # ── Extract params ──────────────────────────────────────────────────────────
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  comp       <- geom_params$comp        # character or NULL: comparison group name
-  aim        <- geom_params$aim         # numeric or NULL: target line
+  comp       <- geom_params$comp        %||% NULL   # character or NULL: comparison group name
+  aim        <- geom_params$aim         %||% NULL   # numeric or NULL: target line
   char_scale <- geom_params$char_scale  %||% 0.045
   min_frac   <- geom_params$min_frac    %||% 0.08
   sc         <- geom_params$single_colour  # NULL for multi-series
@@ -173,8 +186,8 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
                            use_js = TRUE, ...) {
 
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  comp       <- geom_params$comp
-  aim        <- geom_params$aim
+  comp       <- geom_params$comp        %||% NULL   # character or NULL: comparison group name
+  aim        <- geom_params$aim         %||% NULL   # numeric or NULL: target line
 
   d     <- spec$data
   x_col <- spec$x

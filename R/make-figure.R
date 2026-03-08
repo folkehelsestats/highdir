@@ -34,29 +34,13 @@
 #'   widgets.  Ignored by the ggplot2 backend.
 #' @param module Use available modules js from CDN [https://api.highcharts.com/highcharts](https://api.highcharts.com/highcharts)
 #' @param filename  Character or `NULL`.  Base filename for the Highcharts
-#'   export menu (no extension).  Default: `"highdir-figure"`.
-#' @param smooth    Logical.  `type = "line"` only — spline curves (`TRUE`,
-#'   default) or straight segments (`FALSE`).
-#' @param dot_size  Numeric.  `type = "line"` / `"scatter"` — marker radius
-#'   in pixels.  Default `4`.
+#'   export or save menu (no extension).  Default: `"highdir-figure"`.
 #' @param line_symbols Character vector or `NULL`.  `type = "line"` only —
 #'   per-group Highcharts marker symbols.  Valid: `"circle"`, `"square"`,
 #'   `"diamond"`, `"triangle"`, `"triangle-down"`.
 #' @param inner_size Character or `NULL`.  `type = "pie"` only — inner
 #'   radius as a CSS percentage string, e.g. `"50%"` for a donut chart.
 #'   Default `"0%"` (solid pie).
-#' @param ascending Logical. If \code{TRUE} (default) bars are sorted in
-#'   ascending order of \code{y}.
-#' @param comp Character string (partial match) identifying one category to
-#'   highlight with a contrasting fill colour (\code{col2}). If omitted all
-#'   bars use \code{col1}.
-#' @param char_scale Numeric scaling factor that converts label character-count
-#'   into axis-range units. Controls how generously space is estimated for each
-#'   character. Defaults to \code{0.045}; increase (e.g. \code{0.06}) for
-#'   larger text sizes, decrease (e.g. \code{0.03}) for smaller ones.
-#' @param min_frac  Numeric. Minimum fraction of the axis range that a bar must
-#'   span before its label is considered to fit inside. Acts as a safety floor
-#'   for very short labels. Defaults to \code{0.08} (8 \%).
 #' @param ...       Extra arguments forwarded to the geometry function.
 #'   Required arguments (e.g. `ymin`, `ymax` for `"arearange"`) **must**
 #'   be supplied here.
@@ -128,15 +112,8 @@ hd_make <- function(spec,
                     use_js      = TRUE,
                     module      = TRUE,
                     filename    = NULL,
-                    smooth      = TRUE,
-                    dot_size    = 4,
                     line_symbols = NULL,
                     inner_size  = "0%",
-                    ascending   = TRUE,
-                    comp        = NULL,
-                    aim         = NULL,
-                    char_scale  = 0.045,
-                    min_frac    = 0.08,
                     ...) {
 
   opts <- opts %||% default_opts()
@@ -146,15 +123,8 @@ hd_make <- function(spec,
   extra_args  <- list(...)
   geom_params <- c(
     list(
-      smooth       = smooth,
-      dot_size     = dot_size,
       line_symbols = line_symbols,
-      inner_size   = inner_size,
-      ascending   = ascending,
-      comp        = comp,
-      aim         = aim,
-      char_scale  = char_scale,
-      min_frac    = min_frac
+      inner_size   = inner_size
     ),
     extra_args
   )

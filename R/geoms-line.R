@@ -13,10 +13,16 @@
 # engine signature stays stable as new geoms are added.  Nothing leaks into
 # hc_add_series() via bare `...`.
 
+# --- Extra arguments----------------
+#' @param smooth    Logical.  `type = "line"` only — spline curves (`TRUE`,
+#'   default) or straight segments (`FALSE`).
+#' @param dot_size  Numeric.  `type = "line"` / `"scatter"` — marker radius
+#'   in pixels.  Default `4`.
+
 #' @keywords internal
 gg_line <- function(spec, opts, geom_params) {
   sc     <- geom_params$single_colour
-  smooth <- isTRUE(geom_params$smooth)
+  smooth <- geom_params$smooth %||% TRUE
   size   <- geom_params$dot_size %||% 4L
 
   if (!is.null(sc)) {
@@ -49,7 +55,8 @@ gg_line <- function(spec, opts, geom_params) {
 
 #' @keywords internal
 hc_line <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
-  smooth   <- isTRUE(geom_params$smooth)
+  smooth   <- geom_params$smooth %||% TRUE
+  ## smooth   <- isTRUE(geom_params$smooth) ##
   dot_size <- geom_params$dot_size     %||% 4
   symbols  <- geom_params$line_symbols
   groups   <- .group_split(spec)
