@@ -117,17 +117,7 @@ hd_make <- function(spec,
                     ...) {
 
   opts <- opts %||% default_opts()
-
-  # Collect all geom-specific args into one list so the engine signature
-  # stays stable as new geoms are added.
   extra_args  <- list(...)
-  geom_params <- c(
-    list(
-      line_symbols = line_symbols,
-      inner_size   = inner_size
-    ),
-    extra_args
-  )
 
   validate_fig_inputs(spec, opts, type, backend, extra_args)
 
@@ -138,7 +128,7 @@ hd_make <- function(spec,
     spec        = spec,
     geom        = geom,
     opts        = opts,
-    geom_params = geom_params,
+    geom_params = extra_args,
     use_js      = use_js,
     module      = module,
     filename    = filename

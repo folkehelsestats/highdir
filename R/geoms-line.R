@@ -1,31 +1,51 @@
 # ════════════════════════════════════════════════════════════════════════════
 # LINE / SPLINE
 # ════════════════════════════════════════════════════════════════════════════
-# Each geometry is a pair:
-#   gg_<name>  → returns a ggplot2 layer (or list of layers)
-#   hc_<name>  → adds series to a highchart object, returns the updated chart
 #
-# Calling convention (enforced by the registry):
-#   gg_*:  function(spec, opts, geom_params, ...)
-#   hc_*:  function(chart, spec, opts, geom_params, use_js, ...)
+# Optional arguments (all via geom_params, never hard-coded in hd_make):
 #
-# geom_params is a named list carrying all geom-specific args so that the
-# engine signature stays stable as new geoms are added.  Nothing leaks into
-# hc_add_series() via bare `...`.
-
-# --- Extra arguments----------------
-#' @param smooth    Logical.  `type = "line"` only — spline curves (`TRUE`,
-#'   default) or straight segments (`FALSE`).
-#' @param dot_size  Numeric.  `type = "line"` / `"scatter"` — marker radius
-#'   in pixels.  Default `4`.
+#   smooth       Logical.  TRUE = spline/loess, FALSE = straight line + points.
+#                Default TRUE.  Both backends.
+#   dot_size     Numeric.  Marker radius (px for HC, ggplot size / 3 for gg).
+#                Default 4.  Both backends.
+#   line_symbols Character vector.  Per-group Highcharts marker shapes.
+#                Default NULL (uses resolve_symbols()).  Highcharter only —
+#                gg_line silently ignores it.
+#
+# These three are documented in the registry (zzz.R) under optional_args so
+# that geom_args("line") shows them to users.  The geom functions themselves
+# apply the defaults via `geom_params$key %||% default` — the registry entry
+# is for discoverability only, not enforcement.
+#
+# Why smooth and dot_size are NOT named params of hd_make():
+#   They belong to the line geometry, not to hd_make() itself.  Adding them
+#   to hd_make()'s signature would mean every column/pie/map caller sees them
+#   in autocomplete even though they are irrelevant.  Passing them via `...`
+#   keeps hd_make() closed for modification when new geoms are added.
+#
+# Why line_symbols IS still accepted via `...` and not a hard-coded param:
+#   Same reason — it is geom-specific.  It was previously a named param of
+#   hd_make() but has been moved to `...` alongside smooth and dot_size.
+# ════════════════════════════════════════════════════════════════════════════
 
 #' @keywords internal
 gg_line <- function(spec, opts, geom_params) {
-  sc     <- geom_params$single_colour
-  smooth <- geom_params$smooth %||% TRUE
-  size   <- geom_params$dot_size %||% 4L
+
+  # Read from geom_params with fallback defaults.
+  # These defaults must match what is registered in zzz.R optional_args
+  # so that geom_args("line") shows the same values the geom actually uses.
+  sc       <- geom_params$single_colour   # set by ggplot_engine for no-group specs
+  smooth   <- geom_params$smooth   %||% TRUE
+  size     <- geom_params$dot_size  %||% 4L
+
+  # line_symbols is intentionally NOT read here — it is a Highcharts concept
+  # (named marker shapes like "circle", "square").  ggplot2 uses shape
+  # integers via scale_shape, which is handled by apply_gg_colors().
+  # Passing line_symbols to the ggplot2 backend is therefore silently ignored,
+  # which is the intended behaviour.
 
   if (!is.null(sc)) {
+    # Single-series path: colour injected directly so no scale conflict
     layers <- list(
       ggplot2::geom_line(colour = sc, linewidth = 0.8),
       ggplot2::geom_point(colour = sc, size = size / 3)
@@ -37,6 +57,7 @@ gg_line <- function(spec, opts, geom_params) {
                              linewidth = 0.5, linetype = "dashed")
       ))
   } else {
+    # Multi-series path: colour comes from apply_gg_colors() in ggplot_engine
     layers <- list(
       ggplot2::geom_line(linewidth = 0.8),
       ggplot2::geom_point(size = size / 3)
@@ -55,16 +76,22 @@ gg_line <- function(spec, opts, geom_params) {
 
 #' @keywords internal
 hc_line <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
-  smooth   <- geom_params$smooth %||% TRUE
-  ## smooth   <- isTRUE(geom_params$smooth) ##
+
+  # Read optional args from geom_params with fallback defaults.
+  # Defaults must match zzz.R optional_args for geom_args("line") accuracy.
+  smooth   <- geom_params$smooth       %||% TRUE
   dot_size <- geom_params$dot_size     %||% 4
-  symbols  <- geom_params$line_symbols
+  symbols  <- geom_params$line_symbols          # NULL → resolve_symbols() picks automatically
+
   groups   <- .group_split(spec)
   palette  <- resolve_colors(length(groups), opts$colors)
   syms     <- resolve_symbols(length(groups), symbols)
   point_ev <- point_events_or_null(use_js)
   xmap     <- .hc_x_map(spec)
-  ctype    <- if (smooth) "spline" else "line"
+
+  # smooth = TRUE  → Highcharts "spline" type (cubic interpolation)
+  # smooth = FALSE → Highcharts "line"   type (straight segments)
+  ctype <- if (smooth) "spline" else "line"
 
   for (i in seq_along(groups)) {
     grp  <- groups[[i]]
