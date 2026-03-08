@@ -89,53 +89,58 @@ mod_figure_server <- function(id,
       do.call(hd_opts, opts_r())
     })
 
-    # ── Sanitise geom args before passing to hd_make ─────────────────────────
-    # geom_inputs_r() is a flat named list from input$ values.
-    # Some need coercion or NULL-guarding before hd_make() sees them.
-    # Rather than doing this per-geom, we apply general rules:
-    #   • Empty string  → NULL   (optional character args left blank)
-    #   • NA numeric    → NULL   (numeric inputs cleared by user)
-    #   • Everything else passes through as-is
+    # ── Build extra args for hd_make() ──────────────────────────────────────
+    # Merges two sources:
+    #   • geom_inputs_r() — optional args read from top-level input$ in server.R
+    #                        keyed by names(optional_args) from the registry
+    #   • data_r$req_args() — required args (e.g. ymin/ymax) read inside the
+    #                          data module with the correct "data-" namespace
+    # .sanitise() converts empty strings → NULL and NA numerics → NULL so
+    # hd_make() never receives a blank textInput value as a real argument.
     .sanitise <- function(args) {
       lapply(args, function(v) {
-        if (is.null(v))                       return(NULL)
-        if (is.character(v) && !nzchar(v))    return(NULL)
-        if (is.numeric(v)   && is.na(v))      return(NULL)
+        if (is.null(v))                     return(NULL)
+        if (is.character(v) && !nzchar(v))  return(NULL)
+        if (is.numeric(v)   && is.na(v))    return(NULL)
         v
       })
     }
 
+    .build_extra <- function() {
+      # optional args from top-level geom option inputs (server.R)
+      opt <- .sanitise(geom_inputs_r())
+      # required args from the data module (correct namespace)
+      req <- .sanitise(data_r$req_args())
+      c(opt, req)
+    }
+
     # ── Highcharter figure ────────────────────────────────────────────────────
-    # geom_inputs_r() flows into hd_make() here as the `extra` named list.
-    # server.R builds geom_inputs_r by reading input[[nm]] for every nm in
-    # names(optional_args) and names(required_args) of the current geometry.
-    # .sanitise() converts empty strings and NA numerics to NULL.
-    # do.call() splices the list as named ... args, so hd_make receives e.g.:
-    #   hd_make(spec, type, opts, backend, use_js, smooth = TRUE, dot_size = 4)
+    # .build_extra() merges optional + required geom args → hd_make() via ...
+    # do.call() splices extra as named args, so hd_make receives e.g.:
+    #   hd_make(spec, type, opts, backend, use_js, smooth=TRUE, dot_size=4,
+    #           ymin="lo_col", ymax="hi_col")
     hc_fig <- shiny::eventReactive(run_r(), {
       shiny::req(backend_r() == "highcharter", the_spec())
-      extra <- .sanitise(geom_inputs_r())   # ← from server.R → to hd_make(...)
       do.call(hd_make, c(
         list(spec    = the_spec(),
              type    = geom_r(),
              opts    = the_opts(),
              backend = "highcharter",
              use_js  = use_js_r()),
-        extra
+        .build_extra()   # ← optional + required geom args → hd_make(...)
       ))
     })
 
     # ── ggplot2 figure ────────────────────────────────────────────────────────
-    # Same flow as hc_fig above: geom_inputs_r() → .sanitise() → extra → hd_make(...)
+    # Same flow: .build_extra() → hd_make(...)
     gg_fig <- shiny::eventReactive(run_r(), {
       shiny::req(backend_r() == "ggplot2", the_spec())
-      extra <- .sanitise(geom_inputs_r())   # ← from server.R → to hd_make(...)
       do.call(hd_make, c(
         list(spec    = the_spec(),
              type    = geom_r(),
              opts    = the_opts(),
              backend = "ggplot2"),
-        extra
+        .build_extra()   # ← optional + required geom args → hd_make(...)
       ))
     })
 
@@ -148,7 +153,8 @@ mod_figure_server <- function(id,
       shiny::req(data_r$x(), data_r$y(), geom_r(), backend_r())
 
       o  <- opts_r()
-      gi <- .sanitise(geom_inputs_r())
+      # Merge optional + required geom args for code preview (same as .build_extra())
+      gi <- c(.sanitise(geom_inputs_r()), .sanitise(data_r$req_args()))
 
       # Helper: emit one "  name = value,\n" line, or "" if value is absent
       L <- function(nm, val, quote = TRUE) {

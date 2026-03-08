@@ -65,7 +65,7 @@ server <- function(input, output, session) {
       # Truncated to 80 chars and shown as small grey text under the widget.
       desc_short <- entry$desc
       if (nchar(desc_short) > 80)
-        desc_short <- paste0(substr(desc_short, 1, 77), "\u2026")
+        desc_short <- paste0(substr(desc_short, 1, 80), "\u2026")
       helper <- shiny::tags$p(
         style = "font-size:10px; color:#8b949e; margin:-3px 0 5px;",
         desc_short
@@ -101,22 +101,18 @@ server <- function(input, output, session) {
     shiny::tagList(inputs)
   })
 
-  # ── Collect geom sidebar inputs → sent to hd_make() ───────────────────────
-  # Reads every optional_arg AND required_arg for the current geometry from
-  # input$ by name.  The resulting named list is passed to mod_figure_server()
-  # as geom_inputs_r, which forwards it to hd_make() via do.call() —
-  # see mod_figure.R, the hc_fig and gg_fig eventReactives.
+  # ── Collect geom optional-arg inputs → forwarded to hd_make() ────────────
+  # Reads ONLY optional_args for the current geometry from top-level input$.
+  # Input IDs match because ui_geom_opts sets inputId = nm (the arg name from
+  # names(optional_args)), so input[["smooth"]], input[["dot_size"]] etc. work.
   #
-  # Input IDs match exactly because ui_geom_opts above sets inputId = nm
-  # (the arg name from names(optional_args)), so input[["smooth"]] etc. work.
+  # Required args (e.g. ymin/ymax for arearange) are NOT collected here.
+  # They are rendered inside the data module under namespaced IDs ("data-ymin"),
+  # so input[[nm]] at top-level would return NULL.  mod_figure_server() merges
+  # required args via data_r$req_args() which reads them in the correct namespace.
   geom_inputs_r <- shiny::reactive({
-    geom_def <- get_geom(input$geom)
-    oa_names <- names(geom_def$optional_args)
-    args <- lapply(stats::setNames(oa_names, oa_names), function(nm) input[[nm]])
-    # Also include required args so mod_figure gets everything in one place
-    ra_names <- geom_def$required_args
-    ra_vals  <- lapply(stats::setNames(ra_names, ra_names), function(nm) input[[nm]])
-    c(args, ra_vals)
+    oa_names <- names(get_geom(input$geom)$optional_args)
+    lapply(stats::setNames(oa_names, oa_names), function(nm) input[[nm]])
   })
 
   # ── 4. Figure ──────────────────────────────────────────────────────────────
