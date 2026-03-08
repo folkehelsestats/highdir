@@ -35,12 +35,6 @@
 #' @param module Use available modules js from CDN [https://api.highcharts.com/highcharts](https://api.highcharts.com/highcharts)
 #' @param filename  Character or `NULL`.  Base filename for the Highcharts
 #'   export or save menu (no extension).  Default: `"highdir-figure"`.
-#' @param line_symbols Character vector or `NULL`.  `type = "line"` only —
-#'   per-group Highcharts marker symbols.  Valid: `"circle"`, `"square"`,
-#'   `"diamond"`, `"triangle"`, `"triangle-down"`.
-#' @param inner_size Character or `NULL`.  `type = "pie"` only — inner
-#'   radius as a CSS percentage string, e.g. `"50%"` for a donut chart.
-#'   Default `"0%"` (solid pie).
 #' @param ...       Extra arguments forwarded to the geometry function.
 #'   Required arguments (e.g. `ymin`, `ymax` for `"arearange"`) **must**
 #'   be supplied here.
@@ -112,8 +106,6 @@ hd_make <- function(spec,
                     use_js      = TRUE,
                     module      = TRUE,
                     filename    = NULL,
-                    line_symbols = NULL,
-                    inner_size  = "0%",
                     ...) {
 
   opts <- opts %||% default_opts()

@@ -58,12 +58,12 @@
       # but passing it to the ggplot2 backend is harmless (silently ignored).
       line_symbols = list(
         default = NULL,
-        desc    = paste0("Character vector. Per-group marker shapes: ",
-                         "'circle','square','diamond','triangle','triangle-down'. ",
-                         "Highcharter only.")
+        desc    = paste0("Character vector. Highcharter only. Per-group marker shapes: ",
+                         "'circle','square','diamond','triangle','triangle-down'."
+                         )
       )
     )
-  )
+    )
 
   register_geom("scatter",
     ggplot_fun      = gg_scatter,
