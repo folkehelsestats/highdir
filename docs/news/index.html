@@ -37,10 +37,14 @@
 <h2 class="pkg-version" data-toc-text="0.3.1" id="highdir-031">highdir 0.3.1<a class="anchor" aria-label="anchor" href="#highdir-031"></a></h2>
 <ul><li>
 <code>DESCRIPTION</code> version bumped to 0.3.1.</li>
-<li>Can deactivate CDN modules available from <a href="https://api.highcharts.com/highcharts" class="external-link">https://api.highcharts.com/highcharts</a> see (<a href="https://github.com/folkehelsestats/highdir/issues/2">#2</a>)</li>
-<li>Fixed Shiny app GUI for downloading and axis labels</li>
-<li>Move arg <code>xlab</code> and <code>ylab</code> are related to figure presentation and not data specification. Move them to <code><a href="../reference/hd_opts.html">hd_opts()</a></code>. Use <code>NULL</code> to hide axis labels. (<a href="https://github.com/folkehelsestats/highdir/issues/5">#5</a>)</li>
-<li>Fix ggplot2 color palettes selection to follow the standard rule from <code><a href="../reference/resolve_colors.html">resolve_colors()</a></code>.</li>
+<li>Added option to deactivate CDN-loaded modules available from <a href="https://api.highcharts.com/highcharts" class="external-link uri">https://api.highcharts.com/highcharts</a>. (<a href="https://github.com/folkehelsestats/highdir/issues/2">#2</a>)</li>
+<li>Fixed Shiny app GUI issues related to downloading and axis labels.</li>
+<li>Moved <code>xlab</code> and <code>ylab</code> arguments to <code><a href="../reference/hd_opts.html">hd_opts()</a></code>, since they relate to figure presentation rather than data specification. Use NULL to hide axis labels. (<a href="https://github.com/folkehelsestats/highdir/issues/5">#5</a>)</li>
+<li>Corrected ggplot2 color palette selection to follow the standard rules defined by <code><a href="../reference/resolve_colors.html">resolve_colors()</a></code>.</li>
+<li>Improved the overall visual appearance of the highdir Shiny app.</li>
+<li>Implemented modules in the Shiny app.</li>
+<li>Added a registry for optional arguments for specific geoms. List them using <code><a href="../reference/geom_args.html">geom_args()</a></code>.</li>
+<li>Shiny app now displays optional geom arguments along with explanatory comments.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="highdir-030">highdir 0.3.0<a class="anchor" aria-label="anchor" href="#highdir-030"></a></h2>
@@ -69,9 +73,9 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="highdir-0009000">highdir 0.0.0.9000<a class="anchor" aria-label="anchor" href="#highdir-0009000"></a></h2>
-<ul><li>Birth of <em>highdir</em> using existing function.</li>
-<li>No planned structure</li>
-<li>For demo purpose only to show what <em>highdir</em> can offer and its potential.</li>
+<ul><li>Initial prototype of highdir using existing functions.</li>
+<li>No defined structure.</li>
+<li>Created for demonstration purposes to illustrate the potential of highdir.</li>
 </ul></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -19,15 +19,6 @@ hd_make(
   use_js = TRUE,
   module = TRUE,
   filename = NULL,
-  smooth = TRUE,
-  dot_size = 4,
-  line_symbols = NULL,
-  inner_size = "0%",
-  level = "county",
-  value_lab = NULL,
-  na_fill = "#D3D3D3",
-  low_col = "#C6DBEF",
-  high_col = "#025169",
   ...
 )
 ```
@@ -78,55 +69,8 @@ hd_make(
 
 - filename:
 
-  Character or `NULL`. Base filename for the Highcharts export menu (no
-  extension). Default: `"highdir-figure"`.
-
-- smooth:
-
-  Logical. `type = "line"` only — spline curves (`TRUE`, default) or
-  straight segments (`FALSE`).
-
-- dot_size:
-
-  Numeric. `type = "line"` / `"scatter"` — marker radius in pixels.
-  Default `4`.
-
-- line_symbols:
-
-  Character vector or `NULL`. `type = "line"` only — per-group
-  Highcharts marker symbols. Valid: `"circle"`, `"square"`, `"diamond"`,
-  `"triangle"`, `"triangle-down"`.
-
-- inner_size:
-
-  Character or `NULL`. `type = "pie"` only — inner radius as a CSS
-  percentage string, e.g. `"50%"` for a donut chart. Default `"0%"`
-  (solid pie).
-
-- level:
-
-  Character. `type = "map"` only — `"county"` (default) for fylker or
-  `"municipality"` for kommuner.
-
-- value_lab:
-
-  Character or `NULL`. `type = "map"` only — label shown on the
-  colour-scale legend. Defaults to `spec$ylab`.
-
-- na_fill:
-
-  Character. `type = "map"` only — fill colour for regions with no data.
-  Default `"#D3D3D3"`.
-
-- low_col:
-
-  Character. `type = "map"`, ggplot2 backend — low end of the continuous
-  gradient. Default `"#C6DBEF"`.
-
-- high_col:
-
-  Character. `type = "map"`, ggplot2 backend — high end of the
-  continuous gradient. Default `"#025169"`.
+  Character or `NULL`. Base filename for the Highcharts export or save
+  menu (no extension). Default: `"highdir-figure"`.
 
 - ...:
 

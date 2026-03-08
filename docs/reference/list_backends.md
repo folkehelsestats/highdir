@@ -11,10 +11,3 @@ list_backends()
 ## Value
 
 Character vector of registered backend names.
-
-## Examples
-
-``` r
-list_backends()
-#> [1] "ggplot2"     "highcharter"
-```

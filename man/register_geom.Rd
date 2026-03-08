@@ -9,39 +9,47 @@ register_geom(
   ggplot_fun = NULL,
   highcharter_fun = NULL,
   required_args = character(),
+  optional_args = list(),
   is_map_geom = FALSE
 )
 }
 \arguments{
 \item{name}{Character. Unique geometry identifier.}
 
-\item{ggplot_fun}{Function or \code{NULL}.  ggplot2 layer builder.}
+\item{ggplot_fun}{Function or \code{NULL}.}
 
-\item{highcharter_fun}{Function or \code{NULL}.  highcharter series builder.}
+\item{highcharter_fun}{Function or \code{NULL}.}
 
-\item{required_args}{Character vector.  Names of required \code{geom_params}
-entries beyond x/y (e.g. \code{c("ymin", "ymax")} for \code{"arearange"}).}
+\item{required_args}{Character vector. Args that MUST be supplied via
+\code{...} in \code{hd_make()}. Validation fails if any are missing.}
+
+\item{optional_args}{Named list of \code{list(default, desc)}. Args that MAY
+be supplied and have a sensible default when omitted.  These are purely
+informational from the registry's perspective — the geom function applies
+the defaults itself via \code{geom_params$key \%||\% default}.}
+
+\item{is_map_geom}{Logical. Bypasses \code{base_fig()} in both engines.}
 }
 \value{
 \code{name}, invisibly.
 }
 \description{
-Adds a named geometry to the geom registry.  A geometry pairs a ggplot2
-layer function with a highcharter series function.
+Adds a geometry to the registry.  The \code{optional_args} field is the key
+mechanism for user discoverability: it is what \code{geom_args()} prints, what
+the Shiny app reads to build dynamic UI, and what automated documentation
+can harvest without parsing source code.
 }
 \details{
-The geom functions receive \verb{(spec, opts, geom_params, ...)} for ggplot2 and
-\verb{(chart, spec, opts, geom_params, use_js, ...)} for highcharter.
-\code{geom_params} is a named list containing all geom-specific arguments
-(e.g. \code{smooth}, \code{dot_size}, \code{ymin}, \code{ymax}).
-}
-\examples{
-\dontrun{
-register_geom(
-  "violin",
-  ggplot_fun      = function(spec, opts, geom_params, ...) ggplot2::geom_violin(),
-  highcharter_fun = NULL,   # highcharter has no violin
-  required_args   = character()
+Structure of \code{optional_args}:
+A named list where each element is itself a list with two fields:
+\code{default} — the value used when the arg is not supplied (may be \code{NULL})
+\code{desc}    — a short human-readable description (shown by \code{geom_args()})
+
+Example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{optional_args = list(
+  smooth   = list(default = TRUE,  desc = "Spline smoothing (logical)"),
+  dot_size = list(default = 4,     desc = "Marker radius in px (numeric)")
 )
-}
+}\if{html}{\out{</div>}}
 }

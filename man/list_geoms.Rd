@@ -12,6 +12,3 @@ Character vector of registered geometry names.
 \description{
 List Registered Geometries
 }
-\examples{
-list_geoms()
-}
