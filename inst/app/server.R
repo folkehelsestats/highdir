@@ -3,28 +3,50 @@
 server <- function(input, output, session) {
 
   # ── Data ───────────────────────────────────────────────────────────────────
-
+  # Load dataset once when file changes
+  # Reads uploaded file using rio which automatically detects format.
+  # Supports CSV, Excel, RDS, SPSS, Stata, JSON etc.
   dataset <- shiny::reactive({
     shiny::req(input$file)
+
     rio::import(input$file$datapath)
   })
 
-  output$tbl_head <- shiny::renderTable({
+  # Cache column names (avoids repeated dataset() calls)
+  dataset_cols <- shiny::reactive({
     shiny::req(dataset())
-    nTot <- nrow(dataset())
-    if (nTot > 20){
-      rowIndx <- order(sample(1:nTot, 15))
-      dataset()[rowIndx,]
-    } else {
-      utils::head(dataset(), 10)
-    }
+    names(dataset())
   })
 
-  # ── Dynamic UI ─────────────────────────────────────────────────────────────
+  output$tbl_head <- DT::renderDT(expr = {
 
-  output$ui_mapping <- shiny::renderUI({
     shiny::req(dataset())
-    cols <- names(dataset())
+
+    dat <- dataset()
+
+    if (nrow(dat) > 20) {
+      dat <- dat[sample(seq_len(nrow(dat)), 15), ]
+    } else {
+      dat <- head(dat, 10)
+    }
+
+    DT::datatable(
+      dat,
+      options = list(
+        pageLength = 10,
+        scrollX = TRUE
+      ),
+      rownames = FALSE
+    )
+  }, server = TRUE) #avoid uploading big data to browser for speed
+
+  # ── Dynamic UI ─────────────────────────────────────────────────────────────
+  # Generates dropdowns allowing the user to map dataset columns
+  # to x, y, group and tooltip count variables.
+  # The UI updates automatically after a dataset is uploaded.
+  output$ui_mapping <- shiny::renderUI({
+    shiny::req(dataset_cols())
+    cols <- dataset_cols()
     shiny::tagList(
       shiny::selectInput("x",     "X variable",             choices = cols),
       shiny::selectInput("y",     "Y variable",             choices = cols),
@@ -39,11 +61,15 @@ server <- function(input, output, session) {
     )
   })
 
+  # ── Geometry specific arguments ──────────────────────────────
+  # Some geometries require additional columns (e.g. arearange
+  # requires ymin/ymax). This block dynamically creates the
+  # appropriate inputs based on the selected geometry.
   output$ui_required <- shiny::renderUI({
-    shiny::req(input$geom, dataset())
+    shiny::req(input$geom, dataset_cols())
     ra <- get_geom(input$geom)$required_args
     if (length(ra) == 0) return(NULL)
-    cols <- names(dataset())
+    cols <- dataset_cols()
     shiny::tagList(lapply(ra, function(a)
       shiny::selectInput(a, paste("Column:", a), choices = cols)))
   })
@@ -89,8 +115,9 @@ server <- function(input, output, session) {
   })
 
   # ── Spec + opts ────────────────────────────────────────────────────────────
-
-  the_spec <- shiny::reactive({
+  # Creates a highdir specification object that defines how the
+  # dataset variables map to chart aesthetics (x, y, group etc.)
+  the_spec <- shiny::eventReactive(input$run, {
     shiny::req(dataset(), input$x, input$y)
     hd_spec(
       data  = dataset(),
@@ -116,8 +143,9 @@ server <- function(input, output, session) {
     )
   })
 
-                                        # ── Rendering ──────────────────────────────────────────────────────────────
-
+  # ── Figure rendering ─────────────────────────────────────────
+  # Generates the final figure using hd_make(). The backend can
+  # be either highcharter (interactive JS chart) or ggplot2.
   hc_fig <- shiny::eventReactive(input$run, {
     shiny::req(input$backend == "highcharter", the_spec())
     aim_val <- if (!is.na(input$aim %||% NA)) input$aim else NULL

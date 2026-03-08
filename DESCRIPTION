@@ -32,6 +32,7 @@ Imports:
     rlang       (>= 1.1.0),
     viridis     (>= 0.6.0),
     shiny       (>= 1.7.0),
+    DT          (>= 0.34.0),
     tools,
     utils,
     stats

@@ -255,10 +255,22 @@
 
 .sidebar <- shiny::div(
 
-  # Title
-  shiny::div(class = "hd-title",   "highdir"),
-  shiny::div(class = "hd-tagline", "Figure Builder"),
+  # Title + Logo row
+  shiny::div(
+    style = "display:flex; align-items:center; justify-content:space-between;",
 
+    shiny::div(
+      shiny::div(class = "hd-title", "highdir"),
+      shiny::div(class = "hd-tagline", "Create Figure")
+    ),
+
+    shiny::img(
+      src = "logo.png",
+      height = "60px",
+      style = "margin-left:6px;",
+      id = "app_logo"
+    )
+  ),
   # ── Always visible: Data + config ────────────────────────────
   shiny::div(class = "hd-label", "Data"),
   shiny::fileInput("file", NULL,
@@ -397,7 +409,7 @@
 
   shiny::tabPanel("Data",
     shiny::br(),
-    shiny::tableOutput("tbl_head")
+    DT::DTOutput("tbl_head")
   ),
 
   shiny::tabPanel("R code",
