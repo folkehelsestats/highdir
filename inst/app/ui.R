@@ -1,46 +1,29 @@
 # inst/app/ui.R
 # ── highdir Shiny app — UI ────────────────────────────────────────────────────
 #
-# Layout: sidebarLayout (sidebar 30% / main 70%)
-#
-# Sidebar zones:
+# Sidebar zones (top → bottom):
 #   1. Title + logo             always visible
-#   2. File upload              always visible
-#   3. Geometry + Backend       always visible
-#   4. [Spec ▾] collapsible     variable mapping  — from mod_data_ui()
-#   5. [Opts ▾] collapsible     labels & style    — from mod_opts_ui()
-#   6. Geom options             always visible (conditionalPanel per geom)
-#   7. Draw button              always visible
-#   8. Download filename        always visible
+#   2. Geometry + Backend       always visible
+#   3. [Spec ▾] collapsible     file upload + variable mapping
+#   4. [Opts ▾] collapsible     labels & style
+#   5. Geom options             renderUI — driven by input$geom (server-side)
+#   6. Draw button              always visible
+#   7. Download buttons         always visible (static, conditionalPanel)
 #
-# CSS and JS are in inst/app/www/ and loaded via tags$head().
-# Shiny serves every file in www/ automatically at the root URL path,
-# so "styles.css" → href="styles.css" and "app.js" → src="app.js".
+# Download buttons are STATIC in the UI (not inside renderUI) so they appear
+# immediately and their IDs are unambiguous — no module namespace issues.
+# Handlers are registered directly in server.R.
 
 # ── Head assets ───────────────────────────────────────────────────────────────
 
 .head_assets <- shiny::tags$head(
   shiny::tags$meta(charset = "utf-8"),
-
-  # Google Fonts — declared first so the browser starts fetching the font
-  # before it even downloads styles.css.  Using <link> (not @import) is
-  # faster because @import blocks CSS parsing until the font is loaded.
+  shiny::tags$link(rel = "preconnect", href = "https://fonts.googleapis.com"),
   shiny::tags$link(
-    rel  = "preconnect",
-    href = "https://fonts.googleapis.com"
+    rel  = "stylesheet",
+    href = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
   ),
-  shiny::tags$link(
-    rel         = "stylesheet",
-    href        = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap",
-    crossorigin = NA
-  ),
-
-  # App stylesheet — served from inst/app/www/styles.css
   shiny::tags$link(rel = "stylesheet", href = "styles.css"),
-
-  # App JS — served from inst/app/www/app.js
-  # Placed in <head> with defer so it does not block page render,
-  # and jQuery (loaded by Shiny) is guaranteed to be available when it runs.
   shiny::tags$script(defer = NA, src = "app.js")
 )
 
@@ -59,62 +42,59 @@
                style = "margin-left:6px;", id = "app_logo")
   ),
 
-  # Geometry + Backend — always visible, populated from the registry
+  # Geometry + Backend
   shiny::div(class = "hd-label", "Figure"),
   shiny::selectInput("geom",    NULL, choices = list_geoms(),    selected = "column"),
   shiny::selectInput("backend", NULL, choices = list_backends(), selected = "highcharter"),
 
-  # Spec collapsible — mod_data_ui() owns file upload + column mapping
+  # Spec collapsible — file upload + column mapping
   mod_data_ui("data"),
 
-  # Opts collapsible — mod_opts_ui() owns labels, style, downloads
+  # Opts collapsible — labels, style
   mod_opts_ui("opts"),
 
-  # ── Geom-specific options (always visible, client-side show/hide) ─────────
+  # ── Geom options (dynamic — rendered from registry in server.R) ──────────
+  # uiOutput here is intentional: the number and type of inputs varies
+  # entirely by geometry.  The server reads optional_args from the registry
+  # and builds the appropriate inputs.  This replaces the previous
+  # hard-coded conditionalPanel blocks which were incomplete.
   shiny::div(class = "hd-label", "Geom options"),
+  shiny::uiOutput("ui_geom_opts"),
 
-  shiny::conditionalPanel(
-    condition = "input.geom == 'ranked_bar'",
-    shiny::checkboxInput("ascending", "Ascending order", value = TRUE),
-    shiny::textInput("comp", NULL, placeholder = "Highlight group (e.g. Oslo)"),
-    shiny::numericInput("aim", "Aim line", value = NA, min = 0)
-  ),
-
-  shiny::conditionalPanel(
-    condition = "input.geom == 'line'",
-    shiny::checkboxInput("smooth",   "Smooth spline", value = TRUE),
-    shiny::numericInput("dot_size", "Dot size (px)", value = 4, min = 1, max = 20)
-  ),
-
-  shiny::conditionalPanel(
-    condition = "input.geom == 'pie'",
-    shiny::textInput("inner_size", "Inner radius",
-                     value = "0%", placeholder = "e.g. 50%")
-  ),
-
-  shiny::conditionalPanel(
-    condition = "input.geom == 'map'",
-    shiny::selectInput("map_level", "Level",
-                       choices  = c("County" = "county", "Municipality" = "municipality"),
-                       selected = "county"),
-    shiny::textInput("map_value_lab", "Scale label",   placeholder = "Rate per 100 000"),
-    shiny::textInput("map_low_col",   "Low colour",    value = "#C6DBEF"),
-    shiny::textInput("map_high_col",  "High colour",   value = "#025169"),
-    shiny::textInput("map_na_fill",   "NA fill",       value = "#D3D3D3")
-  ),
-
-  shiny::conditionalPanel(
-    condition = "input.geom == 'column' || input.geom == 'scatter' || input.geom == 'arearange'",
-    shiny::tags$p(
-      style = "font-size:11px; color:#8b949e; margin:2px 0 0;",
-      "No extra options for this geometry."
-    )
-  ),
-
-  # Draw button — full width, always visible
+  # ── Draw button ───────────────────────────────────────────────────────────
   shiny::actionButton("run", "Draw figure",
                       icon  = shiny::icon("palette"),
-                      class = "btn-primary")
+                      class = "btn-primary"),
+
+  # ── Download buttons — STATIC, always in DOM ──────────────────────────────
+  # Placing these here (not inside renderUI or a module) means:
+  #   • They appear immediately — no server round-trip, no delay
+  #   • Their IDs ("dl_json", "dl_html", etc.) are top-level — handlers
+  #     registered as output$dl_json in server.R match without namespace issues
+  #   • conditionalPanel hides/shows client-side — zero server cost
+  #
+  # Buttons are disabled via CSS class "disabled" until a figure exists;
+  # server.R removes the class via shinyjs or we rely on downloadHandler's
+  # own guard (req()) — the button is always clickable but produces nothing
+  # until a figure has been drawn.
+  shiny::div(class = "hd-label", "Download"),
+  shiny::textInput("dl_filename", NULL,
+                   placeholder = paste0("highdir-figure_", Sys.Date())),
+  shiny::div(
+    class = "hd-dl-row",
+    # HC buttons — shown when backend == highcharter
+    shiny::conditionalPanel(
+      condition = "input.backend == 'highcharter'",
+      shiny::downloadButton("dl_json", "JSON"),
+      shiny::downloadButton("dl_html", "HTML")
+    ),
+    # ggplot2 buttons — shown when backend == ggplot2
+    shiny::conditionalPanel(
+      condition = "input.backend == 'ggplot2'",
+      shiny::downloadButton("dl_gg_png", "PNG"),
+      shiny::downloadButton("dl_gg_svg", "SVG")
+    )
+  )
 )
 
 # ── Root UI ───────────────────────────────────────────────────────────────────
