@@ -1,132 +1,108 @@
-# inst/app/ui.R ── highdir Shiny app UI
+# inst/app/ui.R
+# ── highdir Shiny app — UI ────────────────────────────────────────────────────
+#
+# Sidebar zones (top → bottom):
+#   1. Title + logo             always visible
+#   2. Geometry + Backend       always visible
+#   3. [Spec ▾] collapsible     file upload + variable mapping
+#   4. [Opts ▾] collapsible     labels & style
+#   5. Geom options             renderUI — driven by input$geom (server-side)
+#   6. Draw button              always visible
+#   7. Download buttons         always visible (static, conditionalPanel)
+#
+# Download buttons are STATIC in the UI (not inside renderUI) so they appear
+# immediately and their IDs are unambiguous — no module namespace issues.
+# Handlers are registered directly in server.R.
 
-.sidebar_controls <- shiny::tagList(
+# ── Head assets ───────────────────────────────────────────────────────────────
 
-  shiny::fileInput("file", "Upload dataset",
-                   accept = c(".csv", ".xlsx", ".xls",
-                              ".rds", ".sav", ".dta", ".json")),
-
-  shiny::selectInput("geom",    "Geometry",
-                     choices  = list_geoms(),
-                     selected = "column"),
-
-  shiny::selectInput("backend", "Backend",
-                     choices  = list_backends(),
-                     selected = "highcharter"),
-
-  # Dynamic axis mapping (populated after upload)
-  shiny::uiOutput("ui_mapping"),
-
-  # Dynamic required-arg inputs (e.g. ymin/ymax for arearange)
-  shiny::uiOutput("ui_required"),
-
-  shiny::tags$hr(),
-
-  # Labels
-  shiny::textInput("title",    "Title",    placeholder = "Optional"),
-  shiny::textInput("subtitle", "Subtitle", placeholder = "Optional"),
-  shiny::textInput("caption",  "Caption",  placeholder = "Optional"),
-  shiny::textInput("xlab",     "X-axis label",  placeholder = "Optional"),
-  shiny::textInput("ylab",     "Y-axis label",  placeholder = "Optional"),
-
-  shiny::tags$hr(),
-
-  # Style
-  shiny::conditionalPanel(
-    "input.backend == 'highcharter'",
-    shiny::selectInput("hc_theme", "Highcharts theme",
-                       choices  = c("default","smpl","economist","darkunica",
-                                    "gridlight","bloom","flat","flatdark",
-                                    "ggplot2"),
-                       selected = "default")
+.head_assets <- shiny::tags$head(
+  shiny::tags$meta(charset = "utf-8"),
+  shiny::tags$link(rel = "preconnect", href = "https://fonts.googleapis.com"),
+  shiny::tags$link(
+    rel  = "stylesheet",
+    href = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
   ),
-  shiny::textInput("colors", "Colours (comma-sep hex)",
-                   placeholder = "#025169, #7C145C, ..."),
-
-  shiny::tags$hr(),
-
-  # Line options
-  shiny::conditionalPanel(
-    "input.geom == 'line'",
-    shiny::checkboxInput("smooth",   "Smooth spline", value = TRUE),
-    shiny::numericInput("dot_size", "Dot size (px)",
-                        value = 4, min = 1, max = 20)
-  ),
-
-  # Pie / donut option
-  shiny::conditionalPanel(
-    "input.geom == 'pie'",
-    shiny::textInput("inner_size", "Inner radius (donut)",
-                     value = "0%", placeholder = "e.g. 50%")
-  ),
-
-  # Map options
-  shiny::conditionalPanel(
-    "input.geom == 'map'",
-    shiny::selectInput("map_level", "Map level",
-                       choices  = c("County" = "county",
-                                    "Municipality" = "municipality"),
-                       selected = "county"),
-    shiny::textInput("map_value_lab", "Scale label",
-                     placeholder = "e.g. Rate per 100 000"),
-    shiny::textInput("map_low_col",  "Low colour",  value = "#C6DBEF"),
-    shiny::textInput("map_high_col", "High colour", value = "#025169"),
-    shiny::textInput("map_na_fill",  "NA fill",     value = "#D3D3D3")
-  ),
-
-
-  # JS hover band
-  shiny::conditionalPanel(
-    "input.backend == 'highcharter'",
-    shiny::checkboxInput("use_js", "Enable JS hover band", value = TRUE)
-  ),
-
-  shiny::tags$hr(),
-
-  shiny::actionButton("run", "Draw",
-                       icon  = shiny::icon("palette"),
-                       class = "btn-primary"),
-
-  shiny::br(), shiny::br(),
-
-  shiny::textInput("dl_filename", "Download filename (no extension)",
-                   placeholder = paste0("highdir-figure_", Sys.Date())),
-
-  shiny::uiOutput("ui_downloads")
+  shiny::tags$link(rel = "stylesheet", href = "styles.css"),
+  shiny::tags$script(defer = NA, src = "app.js")
 )
 
-.main_tabs <- shiny::tabsetPanel(
+# ── Sidebar ───────────────────────────────────────────────────────────────────
 
-  shiny::tabPanel("Figure", shiny::br(),
-    shiny::conditionalPanel(
-      "input.backend == 'highcharter'",
-      highcharter::highchartOutput("hc_out", height = "460px")
+.sidebar <- shiny::div(
+
+  # Title + logo
+  shiny::div(
+    style = "display:flex; align-items:center; justify-content:space-between;",
+    shiny::div(
+      shiny::div(class = "hd-title",   "highdir"),
+      shiny::div(class = "hd-tagline", "Create Figure")
     ),
-    shiny::conditionalPanel(
-      "input.backend == 'ggplot2'",
-      shiny::plotOutput("gg_out", height = "460px")
-    )
+    shiny::img(src = "logo.png", height = "60px",
+               style = "margin-left:6px;", id = "app_logo")
   ),
 
-  shiny::tabPanel("Data preview", shiny::br(),
-    shiny::tableOutput("tbl_head")),
+  # Geometry + Backend
+  shiny::div(class = "hd-label", "Figure"),
+  shiny::selectInput("geom",    NULL, choices = list_geoms(),    selected = "column"),
+  shiny::selectInput("backend", NULL, choices = list_backends(), selected = "highcharter"),
 
-  shiny::tabPanel("R code", shiny::br(),
-    shiny::verbatimTextOutput("code_preview"))
-)
+  # Spec collapsible — file upload + column mapping
+  mod_data_ui("data"),
 
-ui <- if (.has_bslib) {
-  bslib::page_sidebar(
-    title   = "highdir \u2014 Figure Builder",
-    sidebar = bslib::sidebar(.sidebar_controls, width = 320),
-    .main_tabs
-  )
-} else {
-  shiny::fluidPage(
-    shiny::titlePanel("highdir \u2014 Figure Builder"),
-    shiny::sidebarLayout(
-      shiny::sidebarPanel(.sidebar_controls, width = 3),
-      shiny::mainPanel(.main_tabs)
+  # Opts collapsible — labels, style
+  mod_opts_ui("opts"),
+
+  # ── Geom options (dynamic — rendered from registry in server.R) ──────────
+  # uiOutput here is intentional: the number and type of inputs varies
+  # entirely by geometry.  The server reads optional_args from the registry
+  # and builds the appropriate inputs.  This replaces the previous
+  # hard-coded conditionalPanel blocks which were incomplete.
+  shiny::div(class = "hd-label", "Geom options"),
+  shiny::uiOutput("ui_geom_opts"),
+
+  # ── Draw button ───────────────────────────────────────────────────────────
+  shiny::actionButton("run", "Draw figure",
+                      icon  = shiny::icon("palette"),
+                      class = "btn-primary"),
+
+  # ── Download buttons — STATIC, always in DOM ──────────────────────────────
+  # Placing these here (not inside renderUI or a module) means:
+  #   • They appear immediately — no server round-trip, no delay
+  #   • Their IDs ("dl_json", "dl_html", etc.) are top-level — handlers
+  #     registered as output$dl_json in server.R match without namespace issues
+  #   • conditionalPanel hides/shows client-side — zero server cost
+  #
+  # Buttons are disabled via CSS class "disabled" until a figure exists;
+  # server.R removes the class via shinyjs or we rely on downloadHandler's
+  # own guard (req()) — the button is always clickable but produces nothing
+  # until a figure has been drawn.
+  shiny::div(class = "hd-label", "Download"),
+  shiny::textInput("dl_filename", NULL,
+                   placeholder = paste0("highdir-figure_", Sys.Date())),
+  shiny::div(
+    class = "hd-dl-row",
+    # HC buttons — shown when backend == highcharter
+    shiny::conditionalPanel(
+      condition = "input.backend == 'highcharter'",
+      shiny::downloadButton("dl_json", "JSON"),
+      shiny::downloadButton("dl_html", "HTML")
+    ),
+    # ggplot2 buttons — shown when backend == ggplot2
+    shiny::conditionalPanel(
+      condition = "input.backend == 'ggplot2'",
+      shiny::downloadButton("dl_gg_png", "PNG"),
+      shiny::downloadButton("dl_gg_svg", "SVG")
     )
   )
-}
+)
+
+# ── Root UI ───────────────────────────────────────────────────────────────────
+
+ui <- shiny::fluidPage(
+  .head_assets,
+  shiny::sidebarLayout(
+    shiny::sidebarPanel(.sidebar,          width = 3),
+    shiny::mainPanel(mod_figure_ui("fig"), width = 9)
+  )
+)

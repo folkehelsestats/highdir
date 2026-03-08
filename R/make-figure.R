@@ -34,27 +34,7 @@
 #'   widgets.  Ignored by the ggplot2 backend.
 #' @param module Use available modules js from CDN [https://api.highcharts.com/highcharts](https://api.highcharts.com/highcharts)
 #' @param filename  Character or `NULL`.  Base filename for the Highcharts
-#'   export menu (no extension).  Default: `"highdir-figure"`.
-#' @param smooth    Logical.  `type = "line"` only — spline curves (`TRUE`,
-#'   default) or straight segments (`FALSE`).
-#' @param dot_size  Numeric.  `type = "line"` / `"scatter"` — marker radius
-#'   in pixels.  Default `4`.
-#' @param line_symbols Character vector or `NULL`.  `type = "line"` only —
-#'   per-group Highcharts marker symbols.  Valid: `"circle"`, `"square"`,
-#'   `"diamond"`, `"triangle"`, `"triangle-down"`.
-#' @param inner_size Character or `NULL`.  `type = "pie"` only — inner
-#'   radius as a CSS percentage string, e.g. `"50%"` for a donut chart.
-#'   Default `"0%"` (solid pie).
-#' @param level     Character.  `type = "map"` only — `"county"` (default)
-#'   for fylker or `"municipality"` for kommuner.
-#' @param value_lab Character or `NULL`.  `type = "map"` only — label shown
-#'   on the colour-scale legend.  Defaults to `spec$ylab`.
-#' @param na_fill   Character.  `type = "map"` only — fill colour for regions
-#'   with no data.  Default `"#D3D3D3"`.
-#' @param low_col   Character.  `type = "map"`, ggplot2 backend — low end of
-#'   the continuous gradient.  Default `"#C6DBEF"`.
-#' @param high_col  Character.  `type = "map"`, ggplot2 backend — high end of
-#'   the continuous gradient.  Default `"#025169"`.
+#'   export or save menu (no extension).  Default: `"highdir-figure"`.
 #' @param ...       Extra arguments forwarded to the geometry function.
 #'   Required arguments (e.g. `ymin`, `ymax` for `"arearange"`) **must**
 #'   be supplied here.
@@ -120,40 +100,16 @@
 #'
 #' @export
 hd_make <- function(spec,
-                     type        = "column",
-                     opts        = NULL,
-                     backend     = "highcharter",
-                     use_js      = TRUE,
-                     module      = TRUE,
-                     filename    = NULL,
-                     smooth      = TRUE,
-                     dot_size    = 4,
-                     line_symbols = NULL,
-                     inner_size  = "0%",
-                     level       = "county",
-                     value_lab   = NULL,
-                     na_fill     = "#D3D3D3",
-                     low_col     = "#C6DBEF",
-                     high_col    = "#025169",
-                     ...) {
+                    type        = "column",
+                    opts        = NULL,
+                    backend     = "highcharter",
+                    use_js      = TRUE,
+                    module      = TRUE,
+                    filename    = NULL,
+                    ...) {
 
   opts <- opts %||% default_opts()
-
-  # Collect all geom-specific args into one list so the engine signature
-  # stays stable as new geoms are added.
   extra_args  <- list(...)
-  geom_params <- c(
-    list(smooth       = smooth,
-         dot_size     = dot_size,
-         line_symbols = line_symbols,
-         inner_size   = inner_size,
-         level        = level,
-         value_lab    = value_lab,
-         na_fill      = na_fill,
-         low_col      = low_col,
-         high_col     = high_col),
-    extra_args
-  )
 
   validate_fig_inputs(spec, opts, type, backend, extra_args)
 
@@ -164,7 +120,7 @@ hd_make <- function(spec,
     spec        = spec,
     geom        = geom,
     opts        = opts,
-    geom_params = geom_params,
+    geom_params = extra_args,
     use_js      = use_js,
     module      = module,
     filename    = filename

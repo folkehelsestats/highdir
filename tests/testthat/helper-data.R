@@ -33,3 +33,4 @@ spec2 <- hd_spec(df2, "x", "y", group = "grp")
     length(fig$scales$scales[[idx[1]]]$range$range)
   )
 }
+

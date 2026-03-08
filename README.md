@@ -3,6 +3,10 @@
 
 # highdir <img src='man/figures/logo.png' alt="Package logo" align="right" width="120" height="138" />
 
+<!-- badges: start --> [![Codecov test
+coverage](https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg)](https://app.codecov.io/gh/folkehelsestats/highdir)
+<!-- badges: end -->
+
 **highdir** is an R package that provides a unified, backend-agnostic
 API for building figures with either
 [**highcharter**](https://jkunst.com/highcharter/) (interactive) or

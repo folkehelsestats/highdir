@@ -21,6 +21,11 @@ hd_make(
   na_fill = "#D3D3D3",
   low_col = "#C6DBEF",
   high_col = "#025169",
+  ascending = TRUE,
+  comp = NULL,
+  aim = NULL,
+  char_scale = 0.045,
+  min_frac = 0.08,
   ...
 )
 }
@@ -78,6 +83,22 @@ the continuous gradient.  Default \code{"#C6DBEF"}.}
 
 \item{high_col}{Character.  \code{type = "map"}, ggplot2 backend — high end of
 the continuous gradient.  Default \code{"#025169"}.}
+
+\item{ascending}{Logical. If \code{TRUE} (default) bars are sorted in
+ascending order of \code{y}.}
+
+\item{comp}{Character string (partial match) identifying one category to
+highlight with a contrasting fill colour (\code{col2}). If omitted all
+bars use \code{col1}.}
+
+\item{char_scale}{Numeric scaling factor that converts label character-count
+into axis-range units. Controls how generously space is estimated for each
+character. Defaults to \code{0.045}; increase (e.g. \code{0.06}) for
+larger text sizes, decrease (e.g. \code{0.03}) for smaller ones.}
+
+\item{min_frac}{Numeric. Minimum fraction of the axis range that a bar must
+span before its label is considered to fit inside. Acts as a safety floor
+for very short labels. Defaults to \code{0.08} (8 \\%).}
 
 \item{...}{Extra arguments forwarded to the geometry function.
 Required arguments (e.g. \code{ymin}, \code{ymax} for \code{"arearange"}) \strong{must}
