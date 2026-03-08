@@ -123,6 +123,8 @@ opts
 #>   title    : Health survey results 
 #>   subtitle : Source: FHI 2024 
 #>   caption  : Tall om helse 
+#>   xlab     :   
+#>   ylab     :   
 #>   ylim     : 0 100 
 #>   yint     : 20 
 #>   flip     : FALSE 

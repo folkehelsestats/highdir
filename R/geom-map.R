@@ -1,24 +1,24 @@
-# R/geom-map.R ── Norway choropleth map geometry
+# R/geom-map.R -- Norway choropleth map geometry
 #
 # Two backends:
 #
-#   gg_map  — static sf / ggplot2 choropleth.
+#   gg_map  -- static sf / ggplot2 choropleth.
 #             Geometry: downloads Highcharts TopoJSON the first time, caches
 #             it in the session via .norway_sf_cache.  Requires {sf}.
 #
-#   hc_map  — interactive Highcharter / Highmaps choropleth.
+#   hc_map  -- interactive Highcharter / Highmaps choropleth.
 #             Uses highcharter::hcmap() which loads TopoJSON from the
 #             Highcharts CDN at render time (browser does the fetch).
 #
-# ── Data contract ------------------------------------------───
+# -- Data contract ----------------------------------------------------------------
 #
-#   spec$x  → column with region identifiers.  Accepts:
+#   spec$x  -> column with region identifiers.  Accepts:
 #               - 2-digit county code as integer/character   ("03", 3)
 #               - 4-digit municipality code                  ("0301", 301)
 #               - Full Highcharts hc-key                     ("no-03", "no-0301")
 #             Codes are auto-detected and zero-padded.
-#   spec$y  → column with numeric fill values
-#   spec$group → ignored (maps are single-series)
+#   spec$y  -> column with numeric fill values
+#   spec$group -> ignored (maps are single-series)
 #
 # geom_params from hd_make():
 #   level      "county" (default) | "municipality"
@@ -27,12 +27,12 @@
 #   low_col    Low-end choropleth colour.       Default "#C6DBEF"
 #   high_col   High-end choropleth colour.      Default "#025169"
 
-# ── Session geometry cache (avoids repeated downloads) ────────────────────────
+# -- Session geometry cache (avoids repeated downloads) --------------------------
 
 #' @keywords internal
 .norway_sf_cache <- new.env(parent = emptyenv())
 
-# ── Region-code normalisation ─────────────────────────────────────────────────
+# -- Region-code normalisation ----------------------------------------------------
 
 #' Convert any supported Norway region code to a zero-padded string
 #'
@@ -69,21 +69,7 @@
   paste0("no-", county, "-", padded)
 }
 
-# -- Args required for both gg and hc ---------------
-
-#' @param na_fill   Character.  `type = "map"` only — fill colour for regions
-#'   with no data.  Default `"#D3D3D3"`.
-#' @param low_col   Character.  `type = "map"`, ggplot2 backend — low end of
-#'   the continuous gradient.  Default `"#C6DBEF"`.
-#' @param high_col  Character.  `type = "map"`, ggplot2 backend — high end of
-#'   the continuous gradient.  Default `"#025169"`.
-#' @param level     Character.  `type = "map"` only — `"county"` (default)
-#'   for fylker or `"municipality"` for kommuner.
-#' @param value_lab Character or `NULL`.  `type = "map"` only — label shown
-#'   on the colour-scale legend.  Defaults to `spec$ylab`.
-#'
-
-# ── ggplot2 map geom ------------------------------------------
+# -- ggplot2 map geom -------------------------------------------------------------
 
 #' @keywords internal
 gg_map <- function(spec, opts, geom_params, ...) {
@@ -149,7 +135,7 @@ gg_map <- function(spec, opts, geom_params, ...) {
   )
 }
 
-# ── highcharter map geom -------------------------------------
+# -- highcharter map geom ---------------------------------------------------------
 
 #' @keywords internal
 hc_map <- function(chart_ignored, spec, opts, geom_params,
@@ -259,7 +245,7 @@ hc_map <- function(chart_ignored, spec, opts, geom_params,
   mc
 }
 
-# ── sf download + session cache ───────────────────────────────────────────────
+# -- sf download + session cache --------------------------------------------------
 
 #' Get Norway sf geometry (download once, then cache)
 #' @keywords internal
@@ -320,7 +306,7 @@ hc_map <- function(chart_ignored, spec, opts, geom_params,
   geo[, c("hc_key", geom_col), drop = FALSE]
 }
 
-#' Fallback Norway sf from the {maps} package (county-level only)
+#' Fallback Norway sf from the \pkg{maps} package (county-level only)
 #' @keywords internal
 .fallback_norway_sf <- function() {
   if (!requireNamespace("maps", quietly = TRUE))
@@ -336,7 +322,7 @@ hc_map <- function(chart_ignored, spec, opts, geom_params,
   sf_obj
 }
 
-# ── Public reference tables ───────────────────────────────────────────────────
+# -- Public reference tables ------------------------------------------------------
 
 #' Norway County Reference Table
 #'
@@ -367,10 +353,10 @@ no_counties <- function() {
   data.frame(
     fylkesnummer = c("03","11","15","18","30","34","38",
                      "42","46","50","54","55","56","57","58"),
-    name         = c("Oslo","Rogaland","Møre og Romsdal","Nordland",
+    name         = c("Oslo","Rogaland","M\u00f8re og Romsdal","Nordland",
                      "Viken","Innlandet","Vestfold og Telemark",
-                     "Agder","Vestland","Trøndelag","Troms og Finnmark",
-                     "Jan Mayen","Svalbard","Bouvetøya","Peter I\u2019s \u00f8y"),
+                     "Agder","Vestland","Tr\u00f8ndelag","Troms og Finnmark",
+                     "Jan Mayen","Svalbard","Bouvet\u00f8ya","Peter I\u2019s \u00f8y"),
     hc_key       = c("no-03","no-11","no-15","no-18","no-30","no-34","no-38",
                      "no-42","no-46","no-50","no-54","no-55","no-56","no-57","no-58"),
     stringsAsFactors = FALSE
@@ -406,26 +392,26 @@ no_municipalities <- function() {
     list("1103","Stavanger",     "11"),
     list("1106","Haugesund",     "11"),
     list("1108","Sandnes",       "11"),
-    list("1149","Karmøy",        "11"),
-    # Møre og Romsdal
+    list("1149","Karm\u00f8y",        "11"),
+    # M\u00f8re og Romsdal
     list("1505","Kristiansund",  "15"),
     list("1506","Molde",         "15"),
-    list("1507","Ålesund",       "15"),
+    list("1507","\u00c5lesund",       "15"),
     # Nordland
-    list("1804","Bodø",          "18"),
+    list("1804","Bod\u00f8",          "18"),
     list("1806","Narvik",        "18"),
     list("1833","Rana",          "18"),
     # Viken
     list("3005","Drammen",       "30"),
-    list("3024","Bærum",         "30"),
+    list("3024","B\u00e6rum",         "30"),
     list("3025","Asker",         "30"),
-    list("3030","Lillestrøm",    "30"),
+    list("3030","Lillestr\u00f8m",    "30"),
     # Innlandet
     list("3403","Hamar",         "34"),
     list("3405","Lillehammer",   "34"),
-    list("3407","Gjøvik",        "34"),
+    list("3407","Gj\u00f8vik",        "34"),
     # Vestfold og Telemark
-    list("3803","Tønsberg",      "38"),
+    list("3803","T\u00f8nsberg",      "38"),
     list("3804","Sandefjord",    "38"),
     list("3806","Porsgrunn",     "38"),
     list("3807","Skien",         "38"),
@@ -435,16 +421,16 @@ no_municipalities <- function() {
     list("4205","Lindesnes",     "42"),
     # Vestland
     list("4601","Bergen",        "46"),
-    list("4615","Øygarden",      "46"),
-    list("4616","Askøy",         "46"),
-    # Trøndelag
+    list("4615","\u00d8ygarden",      "46"),
+    list("4616","Ask\u00f8y",         "46"),
+    # Tr\u00f8ndelag
     list("5001","Trondheim",     "50"),
     list("5006","Steinkjer",     "50"),
     list("5007","Namsos",        "50"),
     list("5024","Levanger",      "50"),
     list("5025","Verdal",        "50"),
     # Troms og Finnmark
-    list("5401","Tromsø",        "54"),
+    list("5401","Troms\u00f8",        "54"),
     list("5402","Harstad",       "54"),
     list("5403","Alta",          "54"),
     list("5406","Hammerfest",    "54")

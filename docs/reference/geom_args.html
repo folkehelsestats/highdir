@@ -5,7 +5,7 @@ for geometry-specific arguments that do not appear in hd_make()'s
 signature."><meta property="og:description" content="Prints the required and optional ... arguments accepted by a geometry
 when used with hd_make().  This is the primary discoverability tool
 for geometry-specific arguments that do not appear in hd_make()'s
-signature."></head><body>
+signature."><meta property="og:image" content="https://github.com/folkehelsestats/highdir/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -23,6 +23,10 @@ signature."></head><body>
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Home"><span class="fa fa-home fa-lg"></span></a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/start-use.html">Getting started</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -34,8 +38,7 @@ signature."></head><body>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-
-      <h1>Show Arguments for a Geometry</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Show Arguments for a Geometry</h1>
       <small class="dont-index">Source: <a href="https://github.com/folkehelsestats/highdir/blob/HEAD/R/registry.R"><code>R/registry.R</code></a></small>
       <div class="d-none name"><code>geom_args.Rd</code></div>
     </div>
@@ -81,13 +84,93 @@ in a readable table.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">geom_args</span><span class="op">(</span><span class="st">"line"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_args("line"):</span> could not find function "geom_args"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "line", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument      kind      default  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ------------  --------  -------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   smooth        optional  TRUE     Logical. TRUE = spline curves, FALSE = straight segments. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   dot_size      optional  4        Numeric. Marker radius in pixels. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   line_symbols  optional  NULL     Character vector. Highcharter only. Per-group marker shapes: 'circle','square','diamond','triangle','triangle-down'.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">geom_args</span><span class="op">(</span><span class="st">"ranked_bar"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_args("ranked_bar"):</span> could not find function "geom_args"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "ranked_bar", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument    kind      default  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ----------  --------  -------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ascending   optional  TRUE     Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   comp        optional  NULL     Character. Category name to highlight with a second colour. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   flip        optional  TRUE     Logical. TRUE = horizontal bars (default for ranked_bar). ggplot2 only.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">geom_args</span><span class="op">(</span><span class="st">"arearange"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_args("arearange"):</span> could not find function "geom_args"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "arearange", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument  kind      default        description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   --------  --------  -------------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ymin      required  (must supply)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ymax      required  (must supply)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">geom_args</span><span class="op">(</span><span class="op">)</span>           <span class="co"># all registered geometries</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_args():</span> could not find function "geom_args"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "arearange", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument  kind      default        description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   --------  --------  -------------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ymin      required  (must supply)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ymax      required  (must supply)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> geom 'column' has no extra arguments.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "line", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument      kind      default  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ------------  --------  -------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   smooth        optional  TRUE     Logical. TRUE = spline curves, FALSE = straight segments. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   dot_size      optional  4        Numeric. Marker radius in pixels. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   line_symbols  optional  NULL     Character vector. Highcharter only. Per-group marker shapes: 'circle','square','diamond','triangle','triangle-down'.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "map", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument   kind      default  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---------  --------  -------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   level      optional  county   Character. Map granularity: 'county' or 'municipality'.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   value_lab  optional  NULL     Character. Colour scale legend label.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   low_col    optional  #C6DBEF  Character. Hex colour for the low end of the choropleth scale.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   high_col   optional  #025169  Character. Hex colour for the high end of the choropleth scale.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   na_fill    optional  #D3D3D3  Character. Hex fill colour for regions with no data.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "pie", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument    kind      default  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ----------  --------  -------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   inner_size  optional  0%       Character. Inner radius as CSS %, e.g. '50%' for a donut. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "ranked_bar", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument    kind      default  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ----------  --------  -------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ascending   optional  TRUE     Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   comp        optional  NULL     Character. Category name to highlight with a second colour. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   flip        optional  TRUE     Logical. TRUE = horizontal bars (default for ranked_bar). ggplot2 only.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "scatter", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument  kind      default  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   --------  --------  -------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   dot_size  optional  4        Numeric. Point size (ggplot2) or marker radius in px (highcharter).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
