@@ -1,0 +1,229 @@
+/* inst/app/www/styles.css
+ *
+ * WHERE THIS FILE LIVES:
+ *   inst/app/www/ is Shiny's static-file directory.
+ *   Any file placed here is served automatically at the root URL path.
+ *   Load it in ui.R with:
+ *     tags$head(tags$link(rel = "stylesheet", href = "styles.css"))
+ *
+ * Google Fonts @import is NOT here — it lives in ui.R's <head> so the
+ * browser fires that network request as early as possible, before this
+ * stylesheet is even fetched.
+ */
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  background: #f4f5f7;
+  color: #1a1d23;
+}
+
+/* ── Sidebar panel ──────────────────────────────────────────────────────── */
+.well {
+  background: #ffffff !important;
+  border: none !important;
+  border-right: 1px solid #e1e8ed !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 14px 14px 20px !important;
+  min-height: 100vh;
+}
+
+/* ── App title / tagline ─────────────────────────────────────────────────── */
+.hd-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: #025169;
+  letter-spacing: -0.3px;
+  margin-bottom: 2px;
+}
+.hd-tagline {
+  font-size: 10.5px;
+  color: #8b949e;
+  font-weight: 300;
+  margin-bottom: 14px;
+}
+
+/* ── Section labels ─────────────────────────────────────────────────────── */
+.hd-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: #025169;
+  border-bottom: 1px solid #e6ebf0;
+  padding-bottom: 3px;
+  margin: 12px 0 7px;
+}
+.hd-label:first-of-type { margin-top: 0; }
+
+/* ── Collapsible toggle buttons ─────────────────────────────────────────── */
+.hd-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 8px 0 0;
+  padding: 5px 9px;
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #1a1d23;
+  transition: background 0.12s, border-color 0.12s;
+  outline: none;
+}
+.hd-toggle:hover,
+.hd-toggle.open {
+  background: #e8f4f8;
+  border-color: #025169;
+  color: #025169;
+}
+.hd-toggle .hd-arrow {
+  font-size: 9px;
+  transition: transform 0.18s;
+  display: inline-block;
+}
+.hd-toggle.open .hd-arrow {
+  transform: rotate(180deg);
+}
+
+/* ── Collapsible body ───────────────────────────────────────────────────── */
+.hd-collapse {
+  display: none;
+  background: #fafcfd;
+  border: 1px solid #e1e8ed;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  padding: 10px 10px 6px;
+  margin-bottom: 4px;
+}
+.hd-collapse.open { display: block; }
+
+/* ── Form controls ──────────────────────────────────────────────────────── */
+.form-group { margin-bottom: 7px; }
+
+label {
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  color: #57606a !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.35px !important;
+  margin-bottom: 2px !important;
+}
+.form-control {
+  font-size: 12px !important;
+  height: 28px !important;
+  padding: 3px 8px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 4px !important;
+  background: #f6f8fa !important;
+  transition: border-color 0.12s, box-shadow 0.12s !important;
+}
+.form-control:focus {
+  border-color: #025169 !important;
+  box-shadow: 0 0 0 2px rgba(2,81,105,0.1) !important;
+  background: #fff !important;
+  outline: none !important;
+}
+select.form-control     { height: 28px !important; }
+.form-control[readonly] { color: #8b949e; }
+
+.checkbox label {
+  text-transform: none !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #1a1d23 !important;
+  letter-spacing: 0 !important;
+}
+.btn-file span { font-size: 11px !important; }
+
+/* ── Draw button ────────────────────────────────────────────────────────── */
+#run {
+  width: 100%;
+  margin-top: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  background: #025169 !important;
+  border: none !important;
+  color: #fff !important;
+  padding: 7px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#run:hover { background: #037090 !important; }
+
+/* ── Download buttons ───────────────────────────────────────────────────── */
+.hd-dl-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.hd-dl-row .btn {
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid #d0d7de;
+  background: #f6f8fa;
+  color: #1a1d23;
+}
+.hd-dl-row .btn:hover { background: #e1e8ed; }
+
+/* ── Output tabs ────────────────────────────────────────────────────────── */
+.nav-tabs > li > a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #57606a;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 7px 14px;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li > a:hover {
+  color: #025169 !important;
+  border-bottom: 3px solid #025169 !important;
+  background: transparent !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+.tab-content { padding-top: 10px; }
+
+/* ── Code preview ───────────────────────────────────────────────────────── */
+pre {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  background: #0d1117;
+  color: #c9d1d9;
+  border: none;
+  border-radius: 6px;
+  padding: 14px 16px;
+  line-height: 1.65;
+}
+
+/* ── Data table ─────────────────────────────────────────────────────────── */
+.table { font-size: 12px; }
+.table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #57606a;
+  border-bottom: 2px solid #025169 !important;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c6cbd1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #8b949e; }
