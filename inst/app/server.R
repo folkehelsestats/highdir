@@ -25,20 +25,25 @@ server <- function(input, output, session) {
   opts_m <- mod_opts_server("opts")
 
   # ── 3. Dynamic geom options ────────────────────────────────────────────────
-  # Reads optional_args from the registry for the selected geometry and builds
-  # the appropriate input widgets.  This replaces the previous hard-coded
-  # conditionalPanel blocks and automatically shows ALL documented args.
+  # Builds input widgets for every optional_arg of the selected geometry.
+  # Arg names come from names(optional_args) — e.g. "smooth", "dot_size".
+  # The desc string is shown as small helper text below each widget, NOT as
+  # the label.  This was the bug: the previous code derived lbl from
+  # entry$desc (the long description) instead of from nm (the arg name).
   #
-  # Input widget type is chosen by the class of the default value:
+  # Widget type is chosen by the class of entry$default:
   #   logical   → checkboxInput
   #   numeric   → numericInput
-  #   character → textInput  (or selectInput when choices are documented)
-  #   NULL      → textInput  (user enters a value or leaves blank)
+  #   character → textInput  (selectInput for "level" special case)
+  #   NULL      → textInput  (user types a value or leaves blank)
+  #
+  # The input IDs are set to nm exactly (e.g. inputId = "smooth") so that
+  # geom_inputs_r() can read them back with input[[nm]] and pass them to
+  # hd_make() — see the "Collect geom sidebar inputs" block below.
   output$ui_geom_opts <- shiny::renderUI({
     geom_def <- get_geom(input$geom)
-    oa       <- geom_def$optional_args
+    oa       <- geom_def$optional_args   # named list from registry
 
-    # Geoms with no optional args
     if (length(oa) == 0L) {
       return(shiny::tags$p(
         style = "font-size:11px; color:#8b949e; margin:2px 0 0;",
@@ -46,43 +51,64 @@ server <- function(input, output, session) {
       ))
     }
 
+    # names(oa) gives the exact arg names: "smooth", "dot_size", "comp", …
     inputs <- lapply(names(oa), function(nm) {
-      entry   <- oa[[nm]]
-      def     <- entry$default
-      # Truncate long desc to a short label (first sentence / 60 chars)
-      lbl     <- gsub("\\..*", "", entry$desc)
-      if (nchar(lbl) > 60) lbl <- paste0(substr(lbl, 1, 57), "\u2026")
+      entry <- oa[[nm]]
+      def   <- entry$default
 
-      # Special case: map "level" gets a selectInput
-      if (nm == "level") {
-        return(shiny::selectInput(nm, lbl,
+      # ── Label: the arg name, formatted for display ──────────────────────
+      # nm  = "dot_size"  →  lbl = "dot_size"
+      # Do NOT use entry$desc here — that is the long description string.
+      lbl <- nm
+
+      # ── Helper text: one-line version of entry$desc ─────────────────────
+      # Truncated to 80 chars and shown as small grey text under the widget.
+      desc_short <- entry$desc
+      if (nchar(desc_short) > 80)
+        desc_short <- paste0(substr(desc_short, 1, 77), "\u2026")
+      helper <- shiny::tags$p(
+        style = "font-size:10px; color:#8b949e; margin:-3px 0 5px;",
+        desc_short
+      )
+
+      # ── Widget — special case first, then type dispatch ─────────────────
+      widget <- if (nm == "level") {
+        # "level" has a fixed set of valid values → selectInput
+        shiny::selectInput(nm, lbl,
           choices  = c("County" = "county", "Municipality" = "municipality"),
-          selected = def %||% "county"))
-      }
+          selected = def %||% "county")
 
-      # General type dispatch
-      if (is.logical(def) || identical(def, TRUE) || identical(def, FALSE)) {
+      } else if (is.logical(def) ||
+                 identical(def, TRUE) || identical(def, FALSE)) {
         shiny::checkboxInput(nm, lbl, value = isTRUE(def))
 
       } else if (is.numeric(def)) {
         shiny::numericInput(nm, lbl, value = def)
 
       } else {
-        # character or NULL → textInput; show default as placeholder
+        # character default or NULL → textInput
+        # Show the default as both the initial value and the placeholder
         ph <- if (!is.null(def)) as.character(def) else lbl
         shiny::textInput(nm, lbl,
-                         value       = if (!is.null(def)) as.character(def) else "",
-                         placeholder = ph)
+          value       = if (!is.null(def)) as.character(def) else "",
+          placeholder = ph)
       }
+
+      # Wrap widget + helper in a div so they stay together visually
+      shiny::div(widget, helper)
     })
 
     shiny::tagList(inputs)
   })
 
-  # ── Collect geom sidebar inputs ────────────────────────────────────────────
-  # These are read dynamically: we look up the optional_args names for the
-  # current geom and pull each from input$.  Unknown/missing inputs return
-  # NULL gracefully.
+  # ── Collect geom sidebar inputs → sent to hd_make() ───────────────────────
+  # Reads every optional_arg AND required_arg for the current geometry from
+  # input$ by name.  The resulting named list is passed to mod_figure_server()
+  # as geom_inputs_r, which forwards it to hd_make() via do.call() —
+  # see mod_figure.R, the hc_fig and gg_fig eventReactives.
+  #
+  # Input IDs match exactly because ui_geom_opts above sets inputId = nm
+  # (the arg name from names(optional_args)), so input[["smooth"]] etc. work.
   geom_inputs_r <- shiny::reactive({
     geom_def <- get_geom(input$geom)
     oa_names <- names(geom_def$optional_args)

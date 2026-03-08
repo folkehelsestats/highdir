@@ -106,9 +106,15 @@ mod_figure_server <- function(id,
     }
 
     # ── Highcharter figure ────────────────────────────────────────────────────
+    # geom_inputs_r() flows into hd_make() here as the `extra` named list.
+    # server.R builds geom_inputs_r by reading input[[nm]] for every nm in
+    # names(optional_args) and names(required_args) of the current geometry.
+    # .sanitise() converts empty strings and NA numerics to NULL.
+    # do.call() splices the list as named ... args, so hd_make receives e.g.:
+    #   hd_make(spec, type, opts, backend, use_js, smooth = TRUE, dot_size = 4)
     hc_fig <- shiny::eventReactive(run_r(), {
       shiny::req(backend_r() == "highcharter", the_spec())
-      extra <- .sanitise(geom_inputs_r())
+      extra <- .sanitise(geom_inputs_r())   # ← from server.R → to hd_make(...)
       do.call(hd_make, c(
         list(spec    = the_spec(),
              type    = geom_r(),
@@ -120,9 +126,10 @@ mod_figure_server <- function(id,
     })
 
     # ── ggplot2 figure ────────────────────────────────────────────────────────
+    # Same flow as hc_fig above: geom_inputs_r() → .sanitise() → extra → hd_make(...)
     gg_fig <- shiny::eventReactive(run_r(), {
       shiny::req(backend_r() == "ggplot2", the_spec())
-      extra <- .sanitise(geom_inputs_r())
+      extra <- .sanitise(geom_inputs_r())   # ← from server.R → to hd_make(...)
       do.call(hd_make, c(
         list(spec    = the_spec(),
              type    = geom_r(),
