@@ -45,16 +45,6 @@
 #' @param inner_size Character or `NULL`.  `type = "pie"` only — inner
 #'   radius as a CSS percentage string, e.g. `"50%"` for a donut chart.
 #'   Default `"0%"` (solid pie).
-#' @param level     Character.  `type = "map"` only — `"county"` (default)
-#'   for fylker or `"municipality"` for kommuner.
-#' @param value_lab Character or `NULL`.  `type = "map"` only — label shown
-#'   on the colour-scale legend.  Defaults to `spec$ylab`.
-#' @param na_fill   Character.  `type = "map"` only — fill colour for regions
-#'   with no data.  Default `"#D3D3D3"`.
-#' @param low_col   Character.  `type = "map"`, ggplot2 backend — low end of
-#'   the continuous gradient.  Default `"#C6DBEF"`.
-#' @param high_col  Character.  `type = "map"`, ggplot2 backend — high end of
-#'   the continuous gradient.  Default `"#025169"`.
 #' @param ascending Logical. If \code{TRUE} (default) bars are sorted in
 #'   ascending order of \code{y}.
 #' @param comp Character string (partial match) identifying one category to
@@ -142,11 +132,6 @@ hd_make <- function(spec,
                     dot_size    = 4,
                     line_symbols = NULL,
                     inner_size  = "0%",
-                    level       = "county",
-                    value_lab   = NULL,
-                    na_fill     = "#D3D3D3",
-                    low_col     = "#C6DBEF",
-                    high_col    = "#025169",
                     ascending   = TRUE,
                     comp        = NULL,
                     aim         = NULL,
@@ -165,11 +150,6 @@ hd_make <- function(spec,
       dot_size     = dot_size,
       line_symbols = line_symbols,
       inner_size   = inner_size,
-      level        = level,
-      value_lab    = value_lab,
-      na_fill      = na_fill,
-      low_col      = low_col,
-      high_col     = high_col,
       ascending   = ascending,
       comp        = comp,
       aim         = aim,

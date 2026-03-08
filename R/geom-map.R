@@ -10,7 +10,7 @@
 #             Uses highcharter::hcmap() which loads TopoJSON from the
 #             Highcharts CDN at render time (browser does the fetch).
 #
-# ── Data contract ─────────────────────────────────────────────────────────────
+# ── Data contract ------------------------------------------───
 #
 #   spec$x  → column with region identifiers.  Accepts:
 #               - 2-digit county code as integer/character   ("03", 3)
@@ -69,7 +69,21 @@
   paste0("no-", county, "-", padded)
 }
 
-# ── ggplot2 map geom ──────────────────────────────────────────────────────────
+# -- Args required for both gg and hc ---------------
+
+#' @param na_fill   Character.  `type = "map"` only — fill colour for regions
+#'   with no data.  Default `"#D3D3D3"`.
+#' @param low_col   Character.  `type = "map"`, ggplot2 backend — low end of
+#'   the continuous gradient.  Default `"#C6DBEF"`.
+#' @param high_col  Character.  `type = "map"`, ggplot2 backend — high end of
+#'   the continuous gradient.  Default `"#025169"`.
+#' @param level     Character.  `type = "map"` only — `"county"` (default)
+#'   for fylker or `"municipality"` for kommuner.
+#' @param value_lab Character or `NULL`.  `type = "map"` only — label shown
+#'   on the colour-scale legend.  Defaults to `spec$ylab`.
+#'
+
+# ── ggplot2 map geom ------------------------------------------
 
 #' @keywords internal
 gg_map <- function(spec, opts, geom_params, ...) {
@@ -135,7 +149,7 @@ gg_map <- function(spec, opts, geom_params, ...) {
   )
 }
 
-# ── highcharter map geom ──────────────────────────────────────────────────────
+# ── highcharter map geom -------------------------------------
 
 #' @keywords internal
 hc_map <- function(chart_ignored, spec, opts, geom_params,
