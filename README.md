@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# highdir <img src='man/figures/logo.png' alt="Package logo" align="right" width="120" height="138" />
+# highdir <img src='inst/app/www/logo.png' alt="Package logo" align="right" width="120" height="138" />
 
 <!-- badges: start -->
 
@@ -9,7 +9,6 @@
 [![Codecov test
 coverage](https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg)](https://app.codecov.io/gh/folkehelsestats/highdir)
 
-[![R-CMD-check](https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **highdir** is an R package that provides a unified, backend-agnostic

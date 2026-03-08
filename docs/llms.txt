@@ -1,4 +1,4 @@
-# highdir ![Package logo](reference/figures/logo.png)
+# highdir ![Package logo](inst/app/www/logo.png)
 
 **highdir** is an R package that provides a unified, backend-agnostic
 API for building figures with either
