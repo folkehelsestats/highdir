@@ -112,6 +112,19 @@
         default = NULL,
         desc    = "Numeric. Value for a dashed target/aim line. Both backends."
       ),
+      char_scale = list(
+        default = 0.045,
+        desc = paste0("Numeric scaling factor that converts label character-count",
+                      "into axis-range units. Controls how generously space is estimated for each",
+                      "character. Defaults to 0.045; increase (e.g. 0.06) for",
+                      "larger text sizes, decrease (e.g. 0.03) for smaller ones.")
+      ),
+      min_frac = list(
+        default = 0.08,
+        desc = paste0("Numeric. Minimum fraction of the axis range that a bar must",
+                      "span before its label is considered to fit inside. Acts as a safety floor",
+                      "for very short labels. Defaults to 0.08 (8%).")
+      ),
       flip = list(
         default = TRUE,
         desc    = "Logical. TRUE = horizontal bars (default for ranked_bar). ggplot2 only."
