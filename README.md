@@ -37,7 +37,7 @@ remotes::install_github("folkehelsestats/highdir@dev")
 ## Shiny GUI
 
 The simplest way to get started with *highdir* is by using the built‑in
-Shiny app. Its source code also demonstrates how to use the package
+Shiny app. It shows also codes to demonstrate how to use the package
 programmatically in R. Start the app with:
 
 ``` r
