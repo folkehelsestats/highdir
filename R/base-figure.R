@@ -10,54 +10,54 @@
 .base_constructors <- list(
 
   # ── ggplot2 ─────────────────────────────────────────────────────────────
- ggplot2 = function(spec, opts) {
+  ggplot2 = function(spec, opts) {
 
-  # ── Coerce group column to factor so ggplot2 treats it as discrete ────────
-  # If the group column is numeric (1, 2, 3...) ggplot2 maps it as a
-  # continuous variable. scale_color_manual is discrete-only and errors.
-  # Converting to factor here fixes the aesthetic type before any layer
-  # or scale is added — the fix applies to all geoms automatically.
-  plot_data <- spec$data
-  grp_col   <- spec$colour %||% spec$group
-  if (!is.null(grp_col) && is.numeric(plot_data[[grp_col]])) {
-    plot_data[[grp_col]] <- as.factor(plot_data[[grp_col]])
-  }
+    # ── Coerce group column to factor so ggplot2 treats it as discrete ────────
+    # If the group column is numeric (1, 2, 3...) ggplot2 maps it as a
+    # continuous variable. scale_color_manual is discrete-only and errors.
+    # Converting to factor here fixes the aesthetic type before any layer
+    # or scale is added — the fix applies to all geoms automatically.
+    plot_data <- spec$data
+    grp_col   <- spec$colour %||% spec$group
+    if (!is.null(grp_col) && is.numeric(plot_data[[grp_col]])) {
+      plot_data[[grp_col]] <- as.factor(plot_data[[grp_col]])
+    }
 
-  mapping <- ggplot2::aes(x = .data[[spec$x]], y = .data[[spec$y]])
+    mapping <- ggplot2::aes(x = .data[[spec$x]], y = .data[[spec$y]])
 
-  if (!is.null(grp_col)) {
-    mapping <- utils::modifyList(mapping, ggplot2::aes(
-      colour = .data[[grp_col]],
-      group  = .data[[grp_col]],
-      fill   = .data[[grp_col]]
-    ))
-  }
+    if (!is.null(grp_col)) {
+      mapping <- utils::modifyList(mapping, ggplot2::aes(
+        colour = .data[[grp_col]],
+        group  = .data[[grp_col]],
+        fill   = .data[[grp_col]]
+      ))
+    }
 
-  p <- ggplot2::ggplot(plot_data, mapping) +   # ← use plot_data not spec$data
-    ggplot2::labs(
-      x        = opts$xlab %||% ggplot2::waiver(),
-      y        = opts$ylab %||% ggplot2::waiver(),
-      title    = opts$title,
-      subtitle = opts$subtitle,
-      caption  = opts$caption
-    )
+    p <- ggplot2::ggplot(plot_data, mapping) +   # ← use plot_data not spec$data
+      ggplot2::labs(
+        x        = opts$xlab %||% ggplot2::waiver(),
+        y        = opts$ylab %||% ggplot2::waiver(),
+        title    = opts$title,
+        subtitle = opts$subtitle,
+        caption  = opts$caption
+      )
 
-  if (is.null(opts$ylab))
-    p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
-  if (is.null(opts$xlab))
-    p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
-  if (!is.null(opts$ylim))
-    p <- p + ggplot2::scale_y_continuous(limits = opts$ylim)
-  if (!is.null(opts$yint))
-    p <- p + ggplot2::geom_hline(
-               yintercept = opts$yint,
-               linetype   = "dashed",
-               colour     = "#AAAAAA")
-  if (isTRUE(opts$flip))
-    p <- p + ggplot2::coord_flip()
+    if (is.null(opts$ylab))
+      p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
+    if (is.null(opts$xlab))
+      p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
+    if (!is.null(opts$ylim))
+      p <- p + ggplot2::scale_y_continuous(limits = opts$ylim)
+    if (!is.null(opts$yint))
+      p <- p + ggplot2::geom_hline(
+        yintercept = opts$yint,
+        linetype   = "dashed",
+        colour     = "#AAAAAA")
+    if (isTRUE(opts$flip))
+      p <- p + ggplot2::coord_flip()
 
-  p
-},
+    p
+  },
 
   # ── highcharter ──────────────────────────────────────────────────────────
   highcharter = function(spec, opts) {
