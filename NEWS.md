@@ -9,6 +9,7 @@
 - Implemented modules in the Shiny app.
 - Added a registry for optional arguments for specific geoms. List them using `geom_args()`.
 - Shiny app now displays optional geom arguments along with explanatory comments.
+- Add arg `percent` to `hd_opts()` to show `%` in tooltip and y-axis if `TRUE`.
 
 # highdir 0.3.0
 

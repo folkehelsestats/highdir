@@ -61,11 +61,19 @@
 
   # ── highcharter ──────────────────────────────────────────────────────────
   highcharter = function(spec, opts) {
+
+    # --- percent % symbol ---
+    pros_fmt <- if (isTRUE(opts$percent)){
+      list(format = "{value}%")
+    } else {
+      list(format = "{value}")
+    }
+
     chart <- highcharter::highchart() |>
       highcharter::hc_chart(inverted = isTRUE(opts$flip)) |>
       highcharter::hc_yAxis(
         title        = list(text = opts$ylab),
-        labels       = list(format = "{value}"), #TODO: optional with % use: list(format = "{value}%")
+        labels       = pros_fmt,
         tickInterval = opts$yint,
         min          = if (!is.null(opts$ylim)) opts$ylim[1] else 0,
         max          = if (!is.null(opts$ylim)) opts$ylim[2] else NULL
