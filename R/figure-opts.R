@@ -21,25 +21,25 @@
 #' hd_make(spec, "column", opts_no)
 #' ```
 #'
-#' @param title    Character or `NULL`. Chart title.
-#' @param subtitle Character or `NULL`. Subtitle.  Highcharter default:
+#' @param title Character or `NULL`. Chart title.
+#' @param subtitle Character or `NULL`. Subtitle. Highcharter default:
 #'   `"Kilde: Navn av kilder"`.
-#' @param caption  Character or `NULL`. Caption text (highcharter only).
-#' @param xlab     Character or NULL. X-axis label.
-#'   \describe{
-#'     \item{`" "` (default)}{Use the `x` column name from [hd_spec()].}
-#'     \item{`NULL`}{Hide the x-axis label completely.}
-#'     \item{any string}{Use that string as the label.}
-#'   }
-#' @param ylab     Character or NULL. Y-axis label. Same rules as `xlab`.
-#' @param ylim     Numeric vector of length 2 or `NULL`. Fixed y-axis limits,
-#'   e.g. `c(0, 100)`.
-#' @param yint     Positive numeric. Y-axis tick interval.  Default `10`.
-#' @param flip     Logical. Invert axes (horizontal bars).  Default `FALSE`.
-#' @param colors   Character vector, palette name string, or `NULL`.
-#'   Per-figure colour override; takes precedence over [hd_set_theme()].
-#' @param hc_theme Character or `NULL`. Per-figure highcharter theme name;
-#'   takes precedence over [hd_set_theme()].
+#' @param caption Character or `NULL`. Caption text (highcharter only).
+#' @param xlab Character or NULL. X-axis label. \describe{ \item{`" "`
+#'   (default)}{Use the `x` column name from [hd_spec()].} \item{`NULL`}{Hide
+#'   the x-axis label completely.} \item{any string}{Use that string as the
+#'   label.} }
+#' @param ylab Character or NULL. Y-axis label. Same rules as `xlab`.
+#' @param ylim Numeric vector of length 2 or `NULL`. Fixed y-axis limits, e.g.
+#'   `c(0, 100)`.
+#' @param yint Positive numeric. Y-axis tick interval. Default `10`.
+#' @param percent Logical. Either y-axis is percentage value. If it's then the
+#'   tooltip and y-tick uses `%` symbol.
+#' @param flip Logical. Invert axes (horizontal bars). Default `FALSE`.
+#' @param colors Character vector, palette name string, or `NULL`. Per-figure
+#'   colour override; takes precedence over [hd_set_theme()].
+#' @param hc_theme Character or `NULL`. Per-figure highcharter theme name; takes
+#'   precedence over [hd_set_theme()].
 #'
 #' @return An S3 object of class `"hd_opts"`.
 #'
@@ -64,6 +64,7 @@ hd_opts <- function(title    = NULL,
                     ylab     = " ",
                     ylim     = NULL,
                     yint     = 10,
+                    percent  = FALSE,
                     flip     = FALSE,
                     colors   = NULL,
                     hc_theme = NULL) {
@@ -80,6 +81,7 @@ hd_opts <- function(title    = NULL,
          ylab     = ylab,
          ylim     = ylim,
          yint     = yint,
+         percent  = percent,
          flip     = flip,
          colors   = colors,
          hc_theme = hc_theme),
@@ -99,6 +101,7 @@ print.hd_opts <- function(x, ...) {
   if (!is.null(x$ylab))     cat("  ylab     :", x$ylab,     "\n")
   if (!is.null(x$ylim))     cat("  ylim     :", x$ylim,     "\n")
   cat("  yint     :", x$yint, "\n")
+  cat("  percent  :", x$percent, "\n")
   cat("  flip     :", x$flip, "\n")
   if (!is.null(x$colors))
     cat("  colors   :", paste(x$colors, collapse = ", "), "\n")
