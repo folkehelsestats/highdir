@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md)
+  : Show Arguments for a Geometry
 - [`get_palette()`](https://github.com/folkehelsestats/highdir/reference/get_palette.md)
   : Retrieve a Named Palette
 - [`hd_add_js()`](https://github.com/folkehelsestats/highdir/reference/hd_add_js.md)

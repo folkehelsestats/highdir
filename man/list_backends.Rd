@@ -12,6 +12,3 @@ Character vector of registered backend names.
 \description{
 List Registered Backends
 }
-\examples{
-list_backends()
-}

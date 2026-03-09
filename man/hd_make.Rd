@@ -12,20 +12,6 @@ hd_make(
   use_js = TRUE,
   module = TRUE,
   filename = NULL,
-  smooth = TRUE,
-  dot_size = 4,
-  line_symbols = NULL,
-  inner_size = "0\%",
-  level = "county",
-  value_lab = NULL,
-  na_fill = "#D3D3D3",
-  low_col = "#C6DBEF",
-  high_col = "#025169",
-  ascending = TRUE,
-  comp = NULL,
-  aim = NULL,
-  char_scale = 0.045,
-  min_frac = 0.08,
   ...
 )
 }
@@ -53,52 +39,7 @@ widgets.  Ignored by the ggplot2 backend.}
 \item{module}{Use available modules js from CDN \url{https://api.highcharts.com/highcharts}}
 
 \item{filename}{Character or \code{NULL}.  Base filename for the Highcharts
-export menu (no extension).  Default: \code{"highdir-figure"}.}
-
-\item{smooth}{Logical.  \code{type = "line"} only — spline curves (\code{TRUE},
-default) or straight segments (\code{FALSE}).}
-
-\item{dot_size}{Numeric.  \code{type = "line"} / \code{"scatter"} — marker radius
-in pixels.  Default \code{4}.}
-
-\item{line_symbols}{Character vector or \code{NULL}.  \code{type = "line"} only —
-per-group Highcharts marker symbols.  Valid: \code{"circle"}, \code{"square"},
-\code{"diamond"}, \code{"triangle"}, \code{"triangle-down"}.}
-
-\item{inner_size}{Character or \code{NULL}.  \code{type = "pie"} only — inner
-radius as a CSS percentage string, e.g. \code{"50\%"} for a donut chart.
-Default \code{"0\%"} (solid pie).}
-
-\item{level}{Character.  \code{type = "map"} only — \code{"county"} (default)
-for fylker or \code{"municipality"} for kommuner.}
-
-\item{value_lab}{Character or \code{NULL}.  \code{type = "map"} only — label shown
-on the colour-scale legend.  Defaults to \code{spec$ylab}.}
-
-\item{na_fill}{Character.  \code{type = "map"} only — fill colour for regions
-with no data.  Default \code{"#D3D3D3"}.}
-
-\item{low_col}{Character.  \code{type = "map"}, ggplot2 backend — low end of
-the continuous gradient.  Default \code{"#C6DBEF"}.}
-
-\item{high_col}{Character.  \code{type = "map"}, ggplot2 backend — high end of
-the continuous gradient.  Default \code{"#025169"}.}
-
-\item{ascending}{Logical. If \code{TRUE} (default) bars are sorted in
-ascending order of \code{y}.}
-
-\item{comp}{Character string (partial match) identifying one category to
-highlight with a contrasting fill colour (\code{col2}). If omitted all
-bars use \code{col1}.}
-
-\item{char_scale}{Numeric scaling factor that converts label character-count
-into axis-range units. Controls how generously space is estimated for each
-character. Defaults to \code{0.045}; increase (e.g. \code{0.06}) for
-larger text sizes, decrease (e.g. \code{0.03}) for smaller ones.}
-
-\item{min_frac}{Numeric. Minimum fraction of the axis range that a bar must
-span before its label is considered to fit inside. Acts as a safety floor
-for very short labels. Defaults to \code{0.08} (8 \\%).}
+export or save menu (no extension).  Default: \code{"highdir-figure"}.}
 
 \item{...}{Extra arguments forwarded to the geometry function.
 Required arguments (e.g. \code{ymin}, \code{ymax} for \code{"arearange"}) \strong{must}

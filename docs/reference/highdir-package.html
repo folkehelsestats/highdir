@@ -191,7 +191,7 @@ hd_app()Launch the Shiny GUI
 
 
 
-'></head><body>
+'><meta property="og:image" content="https://github.com/folkehelsestats/highdir/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -209,6 +209,10 @@ hd_app()Launch the Shiny GUI
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Home"><span class="fa fa-home fa-lg"></span></a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/start-use.html">Getting started</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -220,8 +224,7 @@ hd_app()Launch the Shiny GUI
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-
-      <h1>highdir: Backend-Agnostic Figure Builder for Helsedirektoratet</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>highdir: Backend-Agnostic Figure Builder for Helsedirektoratet</h1>
       <small class="dont-index">Source: <a href="https://github.com/folkehelsestats/highdir/blob/HEAD/R/highdir-package.R"><code>R/highdir-package.R</code></a></small>
       <div class="d-none name"><code>highdir-package.Rd</code></div>
     </div>

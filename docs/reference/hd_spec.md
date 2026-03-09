@@ -67,8 +67,8 @@ spec
 #> <hd_spec>
 #>   x      : age 
 #>   y      : pct 
-#>   xlab   : age 
-#>   ylab   : pct 
+#>   xlab   : 
+#>   ylab   : 
 #>   group  : sex 
 #>   n      : n 
 #>   rows   : 8 

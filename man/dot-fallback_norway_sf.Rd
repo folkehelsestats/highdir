@@ -2,11 +2,11 @@
 % Please edit documentation in R/geom-map.R
 \name{.fallback_norway_sf}
 \alias{.fallback_norway_sf}
-\title{Fallback Norway sf from the {maps} package (county-level only)}
+\title{Fallback Norway sf from the \pkg{maps} package (county-level only)}
 \usage{
 .fallback_norway_sf()
 }
 \description{
-Fallback Norway sf from the {maps} package (county-level only)
+Fallback Norway sf from the \pkg{maps} package (county-level only)
 }
 \keyword{internal}

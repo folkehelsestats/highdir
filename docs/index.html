@@ -18,6 +18,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Backend-Agnostic Figure Builder for Highcharter and ggplot2">
 <meta name="description" content="Provides a unified, backend-agnostic API for building interactive figures with highcharter or static figures with ggplot2. A figure is described once via a spec object and rendered to either backend without changing the calling code. Includes a Norwegian health-survey colour palette, flexible theme/style configuration, optional JavaScript injection for hover effects and accessibility, and both standalone save helpers and a Shiny GUI.">
 <meta property="og:description" content="Provides a unified, backend-agnostic API for building interactive figures with highcharter or static figures with ggplot2. A figure is described once via a spec object and rendered to either backend without changing the calling code. Includes a Norwegian health-survey colour palette, flexible theme/style configuration, optional JavaScript injection for hover effects and accessibility, and both standalone save helpers and a Shiny GUI.">
+<meta property="og:image" content="https://github.com/folkehelsestats/highdir/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -38,6 +39,12 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="index.html" aria-label="Home"><span class="fa fa-home fa-lg"></span></a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/start-use.html">Getting started</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">News</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -53,8 +60,14 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="highdir-">highdir <img src="reference/figures/logo.png" alt="Package logo" align="right" width="120" height="138"><a class="anchor" aria-label="anchor" href="#highdir-"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="highdir-">highdir 
+<a class="anchor" aria-label="anchor" href="#highdir-"></a>
+</h1>
+</div>
+<!-- badges: start -->
+
+<!-- badges: end -->
 <p><strong>highdir</strong> is an R package that provides a unified, backend-agnostic API for building figures with either <a href="https://jkunst.com/highcharter/" class="external-link"><strong>highcharter</strong></a> (interactive) or <a href="https://ggplot2.tidyverse.org/" class="external-link"><strong>ggplot2</strong></a> (static).</p>
 <p>A figure is described once as a <code>hd_spec</code> and <code>hd_opts</code> object and rendered to either backend without changing the calling code. The package ships with the default to use Helsedirektoratet colour palette, styling and theme. A Shiny GUI is introduced to make it user friendly.</p>
 <hr>
@@ -71,74 +84,9 @@
 <div class="section level2">
 <h2 id="shiny-gui">Shiny GUI<a class="anchor" aria-label="anchor" href="#shiny-gui"></a>
 </h2>
-<p>This is the fastest way to start using <strong>highdir</strong> package.</p>
+<p>The simplest way to get started with <em>highdir</em> is by using the built‑in Shiny app. It shows also codes to demonstrate how to use the package programmatically in R. Start the app with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/hd_app.html">hd_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(highdir)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">age  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"18-24"</span>, <span class="st">"25-34"</span>, <span class="st">"35-44"</span>, <span class="st">"45-54"</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">sex  =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>), <span class="dv">4</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="at">pct  =</span> <span class="fu">c</span>(<span class="dv">42</span>, <span class="dv">38</span>, <span class="dv">55</span>, <span class="dv">61</span>, <span class="dv">48</span>, <span class="dv">52</span>, <span class="dv">60</span>, <span class="dv">57</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="at">n    =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">115</span>, <span class="dv">200</span>, <span class="dv">210</span>, <span class="dv">180</span>, <span class="dv">175</span>, <span class="dv">160</span>, <span class="dv">155</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>)</span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># Figure data specification </span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>spec <span class="ot">&lt;-</span> <span class="fu">hd_spec</span>(df, <span class="at">x =</span> <span class="st">"age"</span>, <span class="at">y =</span> <span class="st">"pct"</span>, <span class="at">group =</span> <span class="st">"sex"</span>, <span class="at">n =</span> <span class="st">"n"</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co"># Specify figure presentation</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>opts <span class="ot">&lt;-</span> <span class="fu">hd_opts</span>(<span class="at">title =</span> <span class="st">"Health survey"</span>,</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>                <span class="at">subtitle =</span> <span class="st">"Source: Example data"</span>,</span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>                <span class="at">caption  =</span> <span class="st">"Tall om helse"</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>                <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))</span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, opts)                       <span class="co"># highcharter (default)</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, opts, <span class="at">backend =</span> <span class="st">"ggplot2"</span>)  <span class="co"># static ggplot2</span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"line"</span>,   opts, <span class="at">smooth =</span> <span class="cn">TRUE</span>)        <span class="co"># smooth spline</span></span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"pie"</span>,    opts)                       <span class="co"># pie / donut</span></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co"># Disable JavaScript (for static HTML export)</span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, opts, <span class="at">use_js =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co"># Save</span></span>
-<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="fu">hd_save</span>(<span class="fu">hd_make</span>(spec, <span class="st">"column"</span>), <span class="st">"chart.html"</span>)</span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="fu">hd_save</span>(<span class="fu">hd_make</span>(spec, <span class="st">"column"</span>, <span class="at">backend =</span> <span class="st">"ggplot2"</span>), <span class="st">"chart.png"</span>)</span></code></pre></div>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="theming">Theming<a class="anchor" aria-label="anchor" href="#theming"></a>
-</h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Set package-wide defaults for the session</span></span>
-<span><span class="fu"><a href="reference/hd_set_theme.html">hd_set_theme</a></span><span class="op">(</span></span>
-<span>  hc_theme <span class="op">=</span> <span class="st">"helsedirektoratet"</span>,</span>
-<span>  colors   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#025169"</span>, <span class="st">"#7C145C"</span>, <span class="st">"#C68803"</span><span class="op">)</span>,</span>
-<span>  font     <span class="op">=</span> <span class="st">"Source Sans Pro"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># All subsequent hd_make() calls use these settings automatically</span></span>
-<span><span class="fu"><a href="reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="javascript-injection">JavaScript injection<a class="anchor" aria-label="anchor" href="#javascript-injection"></a>
-</h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Inline JS</span></span>
-<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, code <span class="op">=</span> <span class="st">"console.log('chart loaded');"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># From a .js file</span></span>
-<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, file <span class="op">=</span> <span class="st">"path/to/my-plugin.js"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># From a bundled plugin (inst/js/&lt;name&gt;.js)</span></span>
-<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, plugin <span class="op">=</span> <span class="st">"my-plugin"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -235,7 +183,13 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/folkehelsestats/highdir" class="external-link"><img src="https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg" alt="Codecov test coverage"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

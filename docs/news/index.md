@@ -3,17 +3,25 @@
 ## highdir 0.3.1
 
 - `DESCRIPTION` version bumped to 0.3.1.
-- Can deactivate CDN modules available from
-  <https://api.highcharts.com/highcharts> see
+- Added option to deactivate CDN-loaded modules available from
+  <https://api.highcharts.com/highcharts>.
   ([\#2](https://github.com/folkehelsestats/highdir/issues/2))
-- Fixed Shiny app GUI for downloading and axis labels
-- Move arg `xlab` and `ylab` are related to figure presentation and not
-  data specification. Move them to
-  [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md).
-  Use `NULL` to hide axis labels.
+- Fixed Shiny app GUI issues related to downloading and axis labels.
+- Moved `xlab` and `ylab` arguments to
+  [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md),
+  since they relate to figure presentation rather than data
+  specification. Use NULL to hide axis labels.
   ([\#5](https://github.com/folkehelsestats/highdir/issues/5))
-- Fix ggplot2 color palettes selection to follow the standard rule from
+- Corrected ggplot2 color palette selection to follow the standard rules
+  defined by
   [`resolve_colors()`](https://github.com/folkehelsestats/highdir/reference/resolve_colors.md).
+- Improved the overall visual appearance of the highdir Shiny app.
+- Implemented modules in the Shiny app.
+- Added a registry for optional arguments for specific geoms. List them
+  using
+  [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md).
+- Shiny app now displays optional geom arguments along with explanatory
+  comments.
 
 ## highdir 0.3.0
 
@@ -44,7 +52,7 @@
 
 ## highdir 0.0.0.9000
 
-- Birth of *highdir* using existing function.
-- No planned structure
-- For demo purpose only to show what *highdir* can offer and its
-  potential.
+- Initial prototype of highdir using existing functions.
+- No defined structure.
+- Created for demonstration purposes to illustrate the potential of
+  highdir.
