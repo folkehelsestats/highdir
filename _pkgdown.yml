@@ -17,6 +17,6 @@ navbar:
       href: news/index.html
 
 articles:
-- title: "Getting started"
+- title: "Quick start"
   contents:
   - start-use

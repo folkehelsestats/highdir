@@ -16,9 +16,11 @@ hd_opts(
   ylab = " ",
   ylim = NULL,
   yint = 10,
+  percent = FALSE,
   flip = FALSE,
   colors = NULL,
-  hc_theme = NULL
+  hc_theme = NULL,
+  xtick = NULL
 )
 ```
 
@@ -67,6 +69,11 @@ hd_opts(
 
   Positive numeric. Y-axis tick interval. Default `10`.
 
+- percent:
+
+  Logical. Either y-axis is percentage value. If it's then the tooltip
+  and y-tick uses `%` symbol.
+
 - flip:
 
   Logical. Invert axes (horizontal bars). Default `FALSE`.
@@ -82,6 +89,13 @@ hd_opts(
   Character or `NULL`. Per-figure highcharter theme name; takes
   precedence over
   [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md).
+
+- xtick:
+
+  Column used to supply custom labels for the x-axis ticks. This is
+  required when the plotting x-values are numeric but the displayed tick
+  labels should come from another column. Only for highcharter backend.
+  Important: Highcharts indexes categories from 0, not 1 as in R.
 
 ## Value
 
@@ -127,6 +141,7 @@ opts
 #>   ylab     :   
 #>   ylim     : 0 100 
 #>   yint     : 20 
+#>   percent  : FALSE 
 #>   flip     : FALSE 
 #>   colors   : #025169, #7C145C 
 ```

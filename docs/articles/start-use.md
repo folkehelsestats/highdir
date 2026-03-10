@@ -55,21 +55,22 @@ There are 4 types specification in highdir and there are:
 - [`hd_spec()`](https://github.com/folkehelsestats/highdir/reference/hd_spec.md) -
   for data specification
 - [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md) -
-  for presentation specification or options
+  for presentation specification or options that can be applicable to
+  multiple geoms
 - `required specification` - the arguments that must be specified based
   on geom type
-- `optional specification` - for other specification depending on the
-  selected geom types
+- `optional specification` - other optional specification depending on
+  the selected geom types
 
 To see the required and optionals arguments:
 
 ``` r
-geom_args("line") #args in geom_line
+geom_args("line") #args in geom line
 geom_args("arearange")
 
 # or
-get_geom("ranked_bar")$optional_args
-get_geom("arearange")$required_args
+highdir:::get_geom("ranked_bar")$optional_args
+highdir:::get_geom("arearange")$required_args
 ```
 
 ------------------------------------------------------------------------
