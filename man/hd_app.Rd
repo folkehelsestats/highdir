@@ -4,7 +4,11 @@
 \alias{hd_app}
 \title{Launch the highdir Shiny GUI}
 \usage{
-hd_app()
+hd_app(return.app = FALSE)
+}
+\arguments{
+\item{return.app}{Logical. When deploying to server like Shiny.io to return
+the app object instead of launching it.}
 }
 \value{
 Launches a Shiny app; does not return a value.
@@ -19,18 +23,14 @@ The UI (\code{inst/app/ui.R}), server (\code{inst/app/server.R}) and shared setu
 independently to Shiny Server or shinyapps.io.
 }
 \section{Features}{
-
-\itemize{
-\item Upload datasets in any format supported by \strong{rio} (CSV, XLSX,
-SPSS, Stata, RDS, …).
-\item Choose geometry (\code{column}, \code{line}, \code{scatter}, \code{arearange}, \code{pie}),
-backend, axis variables, and group column.
-\item Set title, subtitle, caption, colour palette, and HC theme.
-\item Toggle JS hover band per figure.
-\item Render on demand with the \strong{Draw} button.
-\item Download as HTML / JSON / PNG (highcharter) or PNG / SVG (ggplot2).
-\item Copy the equivalent \code{hd_make()} call from the \strong{R code} tab.
-}
+ \itemize{ \item Upload datasets in any format supported by
+\strong{rio} (CSV, XLSX, SPSS, Stata, RDS, …). \item Choose geometry (\code{column},
+\code{line}, \code{scatter}, \code{arearange}, \code{pie}), backend, axis variables, and group
+column. \item Set title, subtitle, caption, colour palette, and HC theme.
+\item Toggle JS hover band per figure. \item Render on demand with the
+\strong{Draw} button. \item Download as HTML / JSON / PNG (highcharter) or PNG /
+SVG (ggplot2). \item Copy the equivalent \code{hd_make()} call from the \strong{R
+code} tab. }
 }
 
 \seealso{
