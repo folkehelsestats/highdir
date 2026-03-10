@@ -9,25 +9,26 @@
 #' (`inst/app/global.R`) live in `inst/app/` so the folder can be deployed
 #' independently to Shiny Server or shinyapps.io.
 #'
-#' @section Features:
-#' \itemize{
-#'   \item Upload datasets in any format supported by **rio** (CSV, XLSX,
-#'     SPSS, Stata, RDS, …).
-#'   \item Choose geometry (`column`, `line`, `scatter`, `arearange`, `pie`),
-#'     backend, axis variables, and group column.
-#'   \item Set title, subtitle, caption, colour palette, and HC theme.
-#'   \item Toggle JS hover band per figure.
-#'   \item Render on demand with the **Draw** button.
-#'   \item Download as HTML / JSON / PNG (highcharter) or PNG / SVG (ggplot2).
-#'   \item Copy the equivalent `hd_make()` call from the **R code** tab.
-#' }
+#' @param return.app Logical. When deploying to server like Shiny.io to return
+#'   the app object instead of launching it.
+#' @section Features: \itemize{ \item Upload datasets in any format supported by
+#'   **rio** (CSV, XLSX, SPSS, Stata, RDS, …). \item Choose geometry (`column`,
+#'   `line`, `scatter`, `arearange`, `pie`), backend, axis variables, and group
+#'   column. \item Set title, subtitle, caption, colour palette, and HC theme.
+#'   \item Toggle JS hover band per figure. \item Render on demand with the
+#'   **Draw** button. \item Download as HTML / JSON / PNG (highcharter) or PNG /
+#'   SVG (ggplot2). \item Copy the equivalent `hd_make()` call from the **R
+#'   code** tab. }
 #'
 #' @return Launches a Shiny app; does not return a value.
 #' @seealso [hd_make()], [hd_spec()], [hd_opts()], [hd_save()]
 #' @export
-hd_app <- function() {
+hd_app <- function(return.app = FALSE) {
   app_dir <- system.file("app", package = "highdir")
   if (!nzchar(app_dir) || !dir.exists(app_dir))
     stop("Could not find inst/app/. Is highdir installed?", call. = FALSE)
-  shiny::runApp(app_dir)
+
+  app <- shiny::shinyAppDir(app_dir)   # builds the app object from the directory
+  if (return.app) return(app)
+  shiny::runApp(app)
 }

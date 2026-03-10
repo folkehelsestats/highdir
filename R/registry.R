@@ -101,7 +101,7 @@ register_geom <- function(name,
 }
 
 #' @keywords internal
-get_geom <- function(name) .geom_registry[[name]]
+.get_geom <- function(name) .geom_registry[[name]]
 
 #' List Registered Geometries
 #' @return Character vector of registered geometry names.
@@ -147,7 +147,7 @@ geom_args <- function(type = NULL) {
     return(invisible(NULL))
   }
 
-  geom <- get_geom(type)
+  geom <- .get_geom(type)
   if (is.null(geom))
     stop("Unknown geometry '", type, "'. See list_geoms().", call. = FALSE)
 

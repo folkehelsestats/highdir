@@ -143,7 +143,7 @@ mod_data_server <- function(id, geom_r) {
     # ── Required-arg inputs (renderUI — structure varies by geom) ───────────
     output$ui_required <- shiny::renderUI({
       shiny::req(geom_r(), cols())
-      ra <- get_geom(geom_r())$required_args
+      ra <- highdir:::.get_geom(geom_r())$required_args
       if (length(ra) == 0L) return(NULL)
       ch <- cols()
       shiny::tagList(lapply(ra, function(a)
@@ -173,7 +173,7 @@ mod_data_server <- function(id, geom_r) {
       n_col    = shiny::reactive(input$n_col),
       req_args = shiny::reactive({
         # Named list of column selections for geoms that have required_args
-        ra <- get_geom(geom_r())$required_args
+        ra <- highdir:::.get_geom(geom_r())$required_args
         if (length(ra) == 0L) return(list())
         args <- lapply(ra, function(a) input[[a]])
         stats::setNames(args, ra)

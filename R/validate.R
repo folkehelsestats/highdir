@@ -27,7 +27,7 @@ validate_fig_inputs <- function(spec, opts, type, backend, extra_args) {
     stop("`opts` must be a hd_opts object created by hd_opts().",
          call. = FALSE)
 
-  geom <- get_geom(type)
+  geom <- .get_geom(type)
   if (is.null(geom))
     stop("Unknown geometry '", type, "'. Available: ",
          paste(sort(list_geoms()), collapse = ", "), call. = FALSE)

@@ -113,7 +113,7 @@ hd_make <- function(spec,
 
   validate_fig_inputs(spec, opts, type, backend, extra_args)
 
-  geom   <- get_geom(type)
+  geom   <- .get_geom(type)
   engine <- get_backend(backend)
 
   engine(

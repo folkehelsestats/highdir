@@ -32,20 +32,20 @@ Imports:
     rlang       (>= 1.1.0),
     viridis     (>= 0.6.0),
     shiny       (>= 1.7.0),
+    rio         (>= 1.2.4),
+    DT          (>= 0.34.0),
     tools,
     utils,
     stats
 Suggests:
     sf          (>= 1.0.0),
     maps        (>= 3.4.0),
-    rio,
     webshot2,
     bslib       (>= 0.7.0),
     testthat    (>= 3.0.0),
     withr       (>= 2.5.0),
     knitr,
     rmarkdown,
-    DT          (>= 0.28),
     tibble
 Config/testthat/edition: 3
 VignetteBuilder: knitr
