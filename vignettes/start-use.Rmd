@@ -78,8 +78,8 @@ geom_args("line") #args in geom line
 geom_args("arearange")
 
 # or
-highdir:::get_geom("ranked_bar")$optional_args
-highdir:::get_geom("arearange")$required_args
+highdir:::.get_geom("ranked_bar")$optional_args
+highdir:::.get_geom("arearange")$required_args
 ```
 
 ---
