@@ -40,6 +40,10 @@
 #'   colour override; takes precedence over [hd_set_theme()].
 #' @param hc_theme Character or `NULL`. Per-figure highcharter theme name; takes
 #'   precedence over [hd_set_theme()].
+#' @param xtick Column used to supply custom labels for the x-axis ticks.
+#'   This is required when the plotting x-values are numeric but the displayed
+#'   tick labels should come from another column. Only for highcharter backend.
+#'   Important: Highcharts indexes categories from 0, not 1 as in R.
 #'
 #' @return An S3 object of class `"hd_opts"`.
 #'
@@ -67,7 +71,8 @@ hd_opts <- function(title    = NULL,
                     percent  = FALSE,
                     flip     = FALSE,
                     colors   = NULL,
-                    hc_theme = NULL) {
+                    hc_theme = NULL,
+                    xtick    = NULL) {
 
   check_ylim(ylim)
   if (!is.numeric(yint) || length(yint) != 1 || yint <= 0)
@@ -84,7 +89,8 @@ hd_opts <- function(title    = NULL,
          percent  = percent,
          flip     = flip,
          colors   = colors,
-         hc_theme = hc_theme),
+         hc_theme = hc_theme,
+         xtick    = xtick),
     class = "hd_opts"
   )
 }
