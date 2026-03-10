@@ -19,14 +19,14 @@ test_that("register_backend: rejects non-function", {
   expect_error(register_backend("bad", "oops"), "function")
 })
 
-test_that("register_geom / get_geom round-trip", {
+test_that("register_geom / .get_geom round-trip", {
   register_geom("test_geom",
     ggplot_fun      = function(spec, opts, gp, ...) list(),
     highcharter_fun = function(chart, spec, opts, gp, ...) chart,
     required_args   = c("foo")
   )
   expect_true("test_geom" %in% list_geoms())
-  g <- get_geom("test_geom")
+  g <- .get_geom("test_geom")
   expect_equal(g$required_args, "foo")
   expect_true(is.function(g$ggplot_fun))
 })
@@ -43,10 +43,10 @@ test_that("validate_geom_args: stops on missing required args", {
 })
 
 test_that("arearange has correct required_args", {
-  g <- get_geom("arearange")
+  g <- .get_geom("arearange")
   expect_setequal(g$required_args, c("ymin", "ymax"))
 })
 
 test_that("pie has no required_args", {
-  expect_length(get_geom("pie")$required_args, 0)
+  expect_length(.get_geom("pie")$required_args, 0)
 })

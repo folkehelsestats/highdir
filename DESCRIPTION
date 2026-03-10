@@ -33,7 +33,7 @@ Imports:
     viridis     (>= 0.6.0),
     shiny       (>= 1.7.0),
     rio         (>= 1.2.4),
-    DT          (>= 0.34),
+    DT          (>= 0.34.0),
     tools,
     utils,
     stats

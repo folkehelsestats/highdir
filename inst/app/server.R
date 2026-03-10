@@ -41,7 +41,7 @@ server <- function(input, output, session) {
   # geom_inputs_r() can read them back with input[[nm]] and pass them to
   # hd_make() — see the "Collect geom sidebar inputs" block below.
   output$ui_geom_opts <- shiny::renderUI({
-    geom_def <- get_geom(input$geom)
+    geom_def <- highdir:::.get_geom(input$geom)
     oa       <- geom_def$optional_args   # named list from registry
 
     if (length(oa) == 0L) {
@@ -111,7 +111,7 @@ server <- function(input, output, session) {
   # so input[[nm]] at top-level would return NULL.  mod_figure_server() merges
   # required args via data_r$req_args() which reads them in the correct namespace.
   geom_inputs_r <- shiny::reactive({
-    oa_names <- names(get_geom(input$geom)$optional_args)
+    oa_names <- names(highdir:::.get_geom(input$geom)$optional_args)
     lapply(stats::setNames(oa_names, oa_names), function(nm) input[[nm]])
   })
 
