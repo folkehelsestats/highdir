@@ -11,10 +11,8 @@ navbar:
       aria-label: "Home"
     - text: Reference
       href: reference/index.html
-    - text: Articles
-      menu:
-      - text: Getting started
-        href: articles/start-use.html
+    - text: Quick start
+      href: articles/start-use.html
     - text: News
       href: news/index.html
 
