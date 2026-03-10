@@ -19,18 +19,6 @@ ggplot_engine <- function(spec,
                           module   = TRUE,
                           filename = NULL, ...) {
 
-  if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
-    layers <- geom$ggplot_fun(spec, opts, geom_params)
-    p <- ggplot2::ggplot() +
-      ggplot2::labs(
-        title    = opts$title,
-        subtitle = opts$subtitle,
-        caption  = opts$caption
-      )
-    for (layer in layers) p <- p + layer
-    return(p)
-  }
-
   p <- base_fig(spec, opts, "ggplot2")
 
   # ── Resolve colour before handing off to the geom ────────────────────────

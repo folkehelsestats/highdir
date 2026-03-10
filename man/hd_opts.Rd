@@ -12,40 +12,48 @@ hd_opts(
   ylab = " ",
   ylim = NULL,
   yint = 10,
+  percent = FALSE,
   flip = FALSE,
   colors = NULL,
-  hc_theme = NULL
+  hc_theme = NULL,
+  xtick = NULL
 )
 }
 \arguments{
 \item{title}{Character or \code{NULL}. Chart title.}
 
-\item{subtitle}{Character or \code{NULL}. Subtitle.  Highcharter default:
+\item{subtitle}{Character or \code{NULL}. Subtitle. Highcharter default:
 \code{"Kilde: Navn av kilder"}.}
 
 \item{caption}{Character or \code{NULL}. Caption text (highcharter only).}
 
-\item{xlab}{Character or NULL. X-axis label.
-\describe{
-\item{\code{" "} (default)}{Use the \code{x} column name from \code{\link[=hd_spec]{hd_spec()}}.}
-\item{\code{NULL}}{Hide the x-axis label completely.}
-\item{any string}{Use that string as the label.}
-}}
+\item{xlab}{Character or NULL. X-axis label. \describe{ \item{\code{" "}
+(default)}{Use the \code{x} column name from \code{\link[=hd_spec]{hd_spec()}}.} \item{\code{NULL}}{Hide
+the x-axis label completely.} \item{any string}{Use that string as the
+label.} }}
 
 \item{ylab}{Character or NULL. Y-axis label. Same rules as \code{xlab}.}
 
-\item{ylim}{Numeric vector of length 2 or \code{NULL}. Fixed y-axis limits,
-e.g. \code{c(0, 100)}.}
+\item{ylim}{Numeric vector of length 2 or \code{NULL}. Fixed y-axis limits, e.g.
+\code{c(0, 100)}.}
 
-\item{yint}{Positive numeric. Y-axis tick interval.  Default \code{10}.}
+\item{yint}{Positive numeric. Y-axis tick interval. Default \code{10}.}
 
-\item{flip}{Logical. Invert axes (horizontal bars).  Default \code{FALSE}.}
+\item{percent}{Logical. Either y-axis is percentage value. If it's then the
+tooltip and y-tick uses \verb{\%} symbol.}
 
-\item{colors}{Character vector, palette name string, or \code{NULL}.
-Per-figure colour override; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
+\item{flip}{Logical. Invert axes (horizontal bars). Default \code{FALSE}.}
 
-\item{hc_theme}{Character or \code{NULL}. Per-figure highcharter theme name;
-takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
+\item{colors}{Character vector, palette name string, or \code{NULL}. Per-figure
+colour override; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
+
+\item{hc_theme}{Character or \code{NULL}. Per-figure highcharter theme name; takes
+precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
+
+\item{xtick}{Column used to supply custom labels for the x-axis ticks.
+This is required when the plotting x-values are numeric but the displayed
+tick labels should come from another column. Only for highcharter backend.
+Important: Highcharts indexes categories from 0, not 1 as in R.}
 }
 \value{
 An S3 object of class \code{"hd_opts"}.

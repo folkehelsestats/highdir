@@ -40,38 +40,23 @@ hd_make(spec, "line",   opts, smooth = TRUE)         # HC spline
 hd_make(spec, "line",   opts, backend = "ggplot2")   # gg line
 hd_make(spec, "scatter")                             # HC scatter
 
-# ── 5. Choropleth maps — Norway counties and municipalities ──────────────
-# County map (fylker)
-county_df <- no_counties()
-county_df$value <- round(runif(15, 10, 80))
-map_spec <- hd_spec(county_df, x = "fylkesnummer", y = "value")
-map_opts <- hd_opts(title = "Helse per fylke", subtitle = "Kilde: FHI 2024")
-hd_make(map_spec, "map", map_opts)                          # interactive HC
-hd_make(map_spec, "map", map_opts, backend = "ggplot2")     # static ggplot2
-
-# Municipality map (kommuner)
-muni_df <- no_municipalities()
-muni_df$value <- round(runif(nrow(muni_df), 5, 100))
-m_spec <- hd_spec(muni_df, x = "kommunenummer", y = "value")
-hd_make(m_spec, "map", map_opts, level = "municipality")
-
 # Donut chart
 hd_make(pie_spec, "pie", pie_opts, inner_size = "50\%")
 
-# ── 6. Arearange (confidence intervals) ──────────────────────────────────
+# ── 5. Arearange (confidence intervals) ──────────────────────────────────
 df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
 spec2 <- hd_spec(df2, "age", "pct", group = "sex")
 hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 
-# ── 7. Save to disk ───────────────────────────────────────────────────────
+# ── 6. Save to disk ───────────────────────────────────────────────────────
 hd_save(hd_make(spec, "column", opts),               "chart.html")
 hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "chart.png")
 
-# ── 8. Session-wide styling ───────────────────────────────────────────────
+# ── 7. Session-wide styling ───────────────────────────────────────────────
 hd_set_theme(hc_theme = "economist",
              colors   = c("#025169","#7C145C","#C68803"))
 
-# ── 9. Launch the Shiny GUI ───────────────────────────────────────────────
+# ── 8. Launch the Shiny GUI ───────────────────────────────────────────────
 hd_app()
 }\if{html}{\out{</div>}}
 }
@@ -85,8 +70,6 @@ hd_app()
    \code{\link[=hd_set_theme]{hd_set_theme()}} \tab Session-wide colour / font / theme defaults \cr
    \code{\link[=hd_theme]{hd_theme()}} \tab Build a highcharter theme object directly \cr
    \code{\link[=hd_add_js]{hd_add_js()}} \tab Inject custom JS into a highchart \cr
-   \code{\link[=no_counties]{no_counties()}} \tab Norway 2024 county reference table (codes + hc-keys) \cr
-   \code{\link[=no_municipalities]{no_municipalities()}} \tab Norway municipality reference table \cr
    \code{\link[=register_geom]{register_geom()}} \tab Add a custom geometry \cr
    \code{\link[=register_backend]{register_backend()}} \tab Add a custom rendering backend \cr
    \code{\link[=register_palette]{register_palette()}} \tab Add a named colour palette \cr

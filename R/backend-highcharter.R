@@ -14,23 +14,27 @@
 highcharter_engine <- function(spec, geom, opts, geom_params,
                                use_js = TRUE, module = TRUE, filename = NULL, ...) {
 
-  # ── Map geom builds its own fresh highchart(type="map") ──────────────────
-  # The standard base_fig() canvas (x/y axes, yAxis etc.) is meaningless for
-  # a choropleth — hc_map() returns a fully-formed map widget instead.
-  if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
-    return(geom$highcharter_fun(NULL, spec, opts, geom_params,
-                                use_js = use_js, ...))
-  }
-
   chart <- base_fig(spec, opts, "highcharter")
 
   # ── Tooltip ──────────────────────────────────────────────────────────────
-  point_fmt <- if (is.null(spec$n)) {
+
+  ## Show % symbols
+  percent_fmt <- if (isTRUE(opts$percent)){
     paste0(
       '<span style="color:{series.color}">\u25CF</span> ',
       '<span style="color:black">{series.name}</span>: ',
       '<b>{point.y}%</b><br/>'
     )
+  } else {
+    paste0(
+      '<span style="color:{series.color}">\u25CF</span> ',
+      '<span style="color:black">{series.name}</span>: ',
+      '<b>{point.y}</b><br/>'
+    )
+  }
+
+  point_fmt <- if (is.null(spec$n)) {
+    percent_fmt
   } else {
     paste0(
       '<span style="color:{series.color}">\u25CF</span> ',

@@ -21,10 +21,7 @@ it to accept all defaults."><meta property="og:image" content="https://github.co
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Home"><span class="fa fa-home fa-lg"></span></a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/start-use.html">Getting started</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/start-use.html">Quick start</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -57,9 +54,11 @@ it to accept all defaults.</p>
 <span>  ylab <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  yint <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  hc_theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  hc_theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xtick <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -72,7 +71,7 @@ it to accept all defaults.</p>
 
 
 <dt id="arg-subtitle">subtitle<a class="anchor" aria-label="anchor" href="#arg-subtitle"></a></dt>
-<dd><p>Character or <code>NULL</code>. Subtitle.  Highcharter default:
+<dd><p>Character or <code>NULL</code>. Subtitle. Highcharter default:
 <code>"Kilde: Navn av kilder"</code>.</p></dd>
 
 
@@ -81,15 +80,15 @@ it to accept all defaults.</p>
 
 
 <dt id="arg-xlab">xlab<a class="anchor" aria-label="anchor" href="#arg-xlab"></a></dt>
-<dd><p>Character or NULL. X-axis label.</p><dl><dt><code>" "</code> (default)</dt>
+<dd><p>Character or NULL. X-axis label.</p><dl><dt><code>" "</code>
+(default)</dt>
 <dd><p>Use the <code>x</code> column name from <code><a href="hd_spec.html">hd_spec()</a></code>.</p></dd>
-
-<dt><code>NULL</code></dt>
-<dd><p>Hide the x-axis label completely.</p></dd>
-
-<dt>any string</dt>
-<dd><p>Use that string as the label.</p></dd>
-
+ <dt><code>NULL</code></dt>
+<dd><p>Hide
+the x-axis label completely.</p></dd>
+ <dt>any string</dt>
+<dd><p>Use that string as the
+label.</p></dd>
 
 </dl></dd>
 
@@ -99,26 +98,38 @@ it to accept all defaults.</p>
 
 
 <dt id="arg-ylim">ylim<a class="anchor" aria-label="anchor" href="#arg-ylim"></a></dt>
-<dd><p>Numeric vector of length 2 or <code>NULL</code>. Fixed y-axis limits,
-e.g. <code>c(0, 100)</code>.</p></dd>
+<dd><p>Numeric vector of length 2 or <code>NULL</code>. Fixed y-axis limits, e.g.
+<code>c(0, 100)</code>.</p></dd>
 
 
 <dt id="arg-yint">yint<a class="anchor" aria-label="anchor" href="#arg-yint"></a></dt>
-<dd><p>Positive numeric. Y-axis tick interval.  Default <code>10</code>.</p></dd>
+<dd><p>Positive numeric. Y-axis tick interval. Default <code>10</code>.</p></dd>
+
+
+<dt id="arg-percent">percent<a class="anchor" aria-label="anchor" href="#arg-percent"></a></dt>
+<dd><p>Logical. Either y-axis is percentage value. If it's then the
+tooltip and y-tick uses <code>%</code> symbol.</p></dd>
 
 
 <dt id="arg-flip">flip<a class="anchor" aria-label="anchor" href="#arg-flip"></a></dt>
-<dd><p>Logical. Invert axes (horizontal bars).  Default <code>FALSE</code>.</p></dd>
+<dd><p>Logical. Invert axes (horizontal bars). Default <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-colors">colors<a class="anchor" aria-label="anchor" href="#arg-colors"></a></dt>
-<dd><p>Character vector, palette name string, or <code>NULL</code>.
-Per-figure colour override; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
+<dd><p>Character vector, palette name string, or <code>NULL</code>. Per-figure
+colour override; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
 
 
 <dt id="arg-hc-theme">hc_theme<a class="anchor" aria-label="anchor" href="#arg-hc-theme"></a></dt>
-<dd><p>Character or <code>NULL</code>. Per-figure highcharter theme name;
-takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
+<dd><p>Character or <code>NULL</code>. Per-figure highcharter theme name; takes
+precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
+
+
+<dt id="arg-xtick">xtick<a class="anchor" aria-label="anchor" href="#arg-xtick"></a></dt>
+<dd><p>Column used to supply custom labels for the x-axis ticks.
+This is required when the plotting x-values are numeric but the displayed
+tick labels should come from another column. Only for highcharter backend.
+Important: Highcharts indexes categories from 0, not 1 as in R.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -160,6 +171,7 @@ be rendered with multiple styles without repetition:</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ylab     :   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ylim     : 0 100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   yint     : 20 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   percent  : FALSE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   flip     : FALSE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   colors   : #025169, #7C145C </span>
 <span class="r-in"><span></span></span>

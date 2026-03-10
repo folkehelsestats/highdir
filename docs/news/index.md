@@ -22,6 +22,12 @@
   [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md).
 - Shiny app now displays optional geom arguments along with explanatory
   comments.
+- Add arg `percent` to
+  [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md)
+  to show `%` in tooltip and y-axis if `TRUE`.
+- Add arg `xtick` to `hd_opts` to select column for custom x‑axis tick
+  labels when these differ from the numeric x values. Note that
+  Highcharts uses zero-based indexing, while R uses one-based indexing.
 
 ## highdir 0.3.0
 

@@ -132,33 +132,6 @@
     )
   )
 
-  register_geom("map",
-    ggplot_fun      = gg_map,
-    highcharter_fun = hc_map,
-    is_map_geom     = TRUE,
-    optional_args   = list(
-      level = list(
-        default = "county",
-        desc    = "Character. Map granularity: 'county' or 'municipality'."
-      ),
-      value_lab = list(
-        default = NULL,
-        desc    = "Character. Colour scale legend label."
-      ),
-      low_col = list(
-        default = "#C6DBEF",
-        desc    = "Character. Hex colour for the low end of the choropleth scale."
-      ),
-      high_col = list(
-        default = "#025169",
-        desc    = "Character. Hex colour for the high end of the choropleth scale."
-      ),
-      na_fill = list(
-        default = "#D3D3D3",
-        desc    = "Character. Hex fill colour for regions with no data."
-      )
-    )
-  )
 
   # ── Option defaults ────────────────────────────────────────────────────────
   op     <- options()

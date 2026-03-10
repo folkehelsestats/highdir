@@ -28,10 +28,6 @@
   : List Registered Geometries
 - [`list_palettes()`](https://github.com/folkehelsestats/highdir/reference/list_palettes.md)
   : List Registered Palettes
-- [`no_counties()`](https://github.com/folkehelsestats/highdir/reference/no_counties.md)
-  : Norway County Reference Table
-- [`no_municipalities()`](https://github.com/folkehelsestats/highdir/reference/no_municipalities.md)
-  : Norway Municipality Reference Table
 - [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
   : Register a Rendering Backend
 - [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)

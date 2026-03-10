@@ -45,6 +45,7 @@ mod_opts_ui <- function(id) {
       # HC-only options — client-side conditionalPanel, no server cost
       shiny::conditionalPanel(
         condition = "input.backend == 'highcharter'",
+        shiny::checkboxInput(ns("percent"), "Use % symbol", value = FALSE),
         shiny::selectInput(ns("hc_theme"), NULL,
                            choices  = c("default", "smpl", "economist",
                                         "darkunica", "gridlight", "bloom",
@@ -77,6 +78,7 @@ mod_opts_server <- function(id) {
         caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
         xlab     = if (nzchar(input$xlab %||% "")) input$xlab else " ",
         ylab     = if (nzchar(input$ylab %||% "")) input$ylab else " ",
+        percent  = isTRUE(input$percent),
         colors   = parsed_colors(),
         hc_theme = input$hc_theme %||% NULL
       )),
