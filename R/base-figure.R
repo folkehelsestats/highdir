@@ -33,20 +33,22 @@
       ))
     }
 
-    p <- ggplot2::ggplot(plot_data, mapping) +   # ← use plot_data not spec$data
-      ggplot2::labs(
-        x        = opts$xlab %||% ggplot2::waiver(),
-        y        = opts$ylab %||% ggplot2::waiver(),
-        title    = opts$title,
-        subtitle = opts$subtitle,
-        caption  = opts$caption
-      )
+    p <- ggplot2::ggplot(plot_data, mapping) + # ← use plot_data not spec$data
+        ggplot2::labs(
+            x        = opts$xlab,
+            y        = opts$ylab,
+            title    = opts$title,
+            subtitle = opts$subtitle,
+            caption  = opts$caption
+        )
 
+    # This is redundant with labs x and y above, but keep to safe guarded :)
     if (is.null(opts$ylab))
       p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
     if (is.null(opts$xlab))
       p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
     if (!is.null(opts$ylim))
+
       p <- p + ggplot2::scale_y_continuous(limits = opts$ylim)
     if (!is.null(opts$yint))
       p <- p + ggplot2::geom_hline(
@@ -69,10 +71,17 @@
       list(format = "{value}")
     }
 
+    # NOTE: %||% "" is intentional for both axis title fields.
+    # R silently drops NULL entries from lists: list(text = NULL) -> list().
+    # Highcharts then sees an empty title object and falls back to "Value".
+    # Passing "" serialises as {"text": ""}, which Highcharts correctly
+    # renders as a hidden title -- matching the NULL -> hide contract
+    # enforced upstream by .resolve_axis_label().
+
     chart <- highcharter::highchart() |>
       highcharter::hc_chart(inverted = isTRUE(opts$flip)) |>
       highcharter::hc_yAxis(
-        title        = list(text = opts$ylab),
+        title        = list(text = opts$ylab %||% ""),
         labels       = pros_fmt,
         tickInterval = opts$yint,
         min          = if (!is.null(opts$ylim)) opts$ylim[1] else 0,
@@ -82,14 +91,14 @@
     # x-axis: categories for character, numeric labels otherwise
     if (!is.numeric(spec$data[[spec$x]])) {
       chart <- chart |> highcharter::hc_xAxis(
-        title        = list(text = opts$xlab),
+        title        = list(text = opts$xlab %||% ""),
         categories   = unique(spec$data[[spec$x]]),
         tickInterval = 1,
         labels       = list(step = 1)
       )
     } else {
       chart <- chart |> highcharter::hc_xAxis(
-        title  = list(text = opts$xlab),
+        title        = list(text = opts$xlab %||% ""),
         labels = list(step = 1)
       )
     }
