@@ -184,7 +184,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
 
 #' @keywords internal
 hc_ranked_bar <- function(chart, spec, opts, geom_params,
-                           use_js = TRUE, ...) {
+                          use_js = TRUE, ...) {
 
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
   comp       <- geom_params$comp        %||% NULL   # character or NULL: comparison group name
@@ -194,13 +194,8 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
   x_col <- spec$x
   y_col <- spec$y
 
-  # ── BEFORE: appended N to .xname for x-axis labels
-  #     d$.xname <- sprintf("%s (N=%s)", d[[x_col]], d[[spec$n]])
-  #   This bloated the axis labels with "(N=693494)" which is
-  #   unnecessary in Highcharts where tooltip can carry that info.
-  #
-  # ── NOW: .xname is always the plain category label.
-  #   N is attached to each point's data object for the tooltip only.
+  # .xname is always the plain category label.
+  # N is attached to each point's data object for the tooltip only.
   d$.xname <- as.character(d[[x_col]])
 
   # Sort by value
@@ -226,18 +221,11 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
     colors_vec <- rep(col1, nrow(d))
   }
 
-  # ── BEFORE: point_data embedded the N= label in the name field
-  #     list(
-  #       name  = d$.xname[i],   ← was plain name or "Name (N=X)"
-  #       y     = d[[y_col]][i],
-  #       color = colors_vec[i]
-  #     )
-  #
-  # ── NOW: each point carries separate fields for name, y, and n_obs.
-  #   The tooltip pointFormat references {point.name}, {point.y},
-  #   and {point.n_obs} individually — Highcharts renders them cleanly
-  #   without cluttering the axis label.
-  #   n_obs is only added to the point when spec$n is set.
+  # Each point carries separate fields for name, y, and n_obs.
+  # The tooltip pointFormat references {point.name}, {point.y},
+  # and {point.n_obs} individually — Highcharts renders them cleanly
+  # without cluttering the axis label.
+  # n_obs is only added to the point when spec$n is set.
   point_data <- lapply(seq_len(nrow(d)), function(i) {
     pt <- list(
       name  = d$.xname[i],
@@ -271,15 +259,10 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
       )
   }
 
-  # ── BEFORE: tooltip was handled by the shared highcharter_engine()
-  #   pointFormat which showed "{point.y}%" — not meaningful for ranked
-  #   bar since values are rates/counts, not percentages. Also had no
-  #   way to conditionally show N when spec$n is present.
-  #
-  # ── NOW: ranked_bar sets its own tooltip via hc_tooltip() here.
-  #   This overrides the engine-level tooltip for this geom only.
-  #   pointFormat shows value and — when spec$n is set — N on a
-  #   second line. When spec$n is NULL the N line is omitted entirely.
+  # Ranked_bar sets its own tooltip via hc_tooltip() here.
+  # This overrides the engine-level tooltip for this geom only.
+  # pointFormat shows value and — when spec$n is set — N on a
+  # second line. When spec$n is NULL the N line is omitted entirely.
   point_fmt <- if (!is.null(spec$n)) {
     paste0(
       '<span style="color:{point.color}">\u25CF</span> ',
@@ -304,15 +287,8 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
     )
 
   # Add series
-  # ── BEFORE: dataLabels enabled with inside=FALSE showed value on each bar.
-  #     hc_plotOptions(bar = list(
-  #       dataLabels = list(enabled = TRUE, inside = FALSE, ...)
-  #     ))
-  #   This duplicated what the tooltip already shows, and caused label
-  #   overflow on short bars. N was never shown in data labels anyway.
-  #
-  # ── NOW: dataLabels disabled entirely. Value and N both live in
-  #   the tooltip which is always readable regardless of bar length.
+  # DataLabels disabled entirely. Value and N both live in
+  # the tooltip which is always readable regardless of bar length.
   chart <- chart |>
     highcharter::hc_add_series(
       type         = "bar",

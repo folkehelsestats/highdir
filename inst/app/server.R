@@ -27,9 +27,7 @@ server <- function(input, output, session) {
   # ── 3. Dynamic geom options ────────────────────────────────────────────────
   # Builds input widgets for every optional_arg of the selected geometry.
   # Arg names come from names(optional_args) — e.g. "smooth", "dot_size".
-  # The desc string is shown as small helper text below each widget, NOT as
-  # the label.  This was the bug: the previous code derived lbl from
-  # entry$desc (the long description) instead of from nm (the arg name).
+  # The desc string is shown as small helper text below each widget.
   #
   # Widget type is chosen by the class of entry$default:
   #   logical   → checkboxInput
