@@ -5,6 +5,7 @@
 - Implement flip support for bar and ranked‑bar charts in the Shiny app (#12).
 - Include standard ggplot2 themes.
 - Implement bar figure with no space below the bars but 10% above them i ggplot2 engine.
+- Deploy to shinyapps.io <https://bit.ly/highdir> 
 
 # highdir 0.3.1
 
