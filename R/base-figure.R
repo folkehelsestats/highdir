@@ -47,8 +47,9 @@
       p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
     if (is.null(opts$xlab))
       p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
-    if (!is.null(opts$ylim))
 
+
+    if (!is.null(opts$ylim))
       p <- p + ggplot2::scale_y_continuous(limits = opts$ylim)
     if (!is.null(opts$yint))
       p <- p + ggplot2::geom_hline(

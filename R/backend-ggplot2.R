@@ -66,6 +66,10 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   # session option "highdir.gg_theme" OR fallback "minimal".
   p <- p + gg_theme(opts$gg_theme)
 
+  # No space below the bars but 10% above them
+  if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]]))
+    p <- p + ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, .1)))
+
   # Font applied on top of the theme so it overrides the theme's font choice.
   font <- getOption("highdir.font", default = NULL)
   if (!is.null(font))
