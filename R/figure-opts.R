@@ -1,4 +1,3 @@
-
 # ════════════════════════════════════════════════════════════════════════════
 # hd_opts ── presentation options
 # ════════════════════════════════════════════════════════════════════════════
@@ -40,6 +39,10 @@
 #'   colour override; takes precedence over [hd_set_theme()].
 #' @param hc_theme Character or `NULL`. Per-figure highcharter theme name; takes
 #'   precedence over [hd_set_theme()].
+#' @param gg_theme Character name string, ggplot2 theme object, or `NULL`.
+#'   Per-figure ggplot2 theme; takes precedence over [hd_set_theme()].
+#'   Name strings: `"minimal"` (default), `"classic"`, `"bw"`, `"light"`,
+#'   `"dark"`, `"void"`, `"grey"`. Or pass a `ggplot2::theme_*()` object.
 #' @param xtick Column used to supply custom labels for the x-axis ticks.
 #'   This is required when the plotting x-values are numeric but the displayed
 #'   tick labels should come from another column. Only for highcharter backend.
@@ -72,6 +75,7 @@ hd_opts <- function(title    = NULL,
                     flip     = FALSE,
                     colors   = NULL,
                     hc_theme = NULL,
+                    gg_theme = NULL,
                     xtick    = NULL) {
 
   check_ylim(ylim)
@@ -90,6 +94,7 @@ hd_opts <- function(title    = NULL,
          flip     = flip,
          colors   = colors,
          hc_theme = hc_theme,
+         gg_theme = gg_theme,
          xtick    = xtick),
     class = "hd_opts"
   )
@@ -112,6 +117,7 @@ print.hd_opts <- function(x, ...) {
   if (!is.null(x$colors))
     cat("  colors   :", paste(x$colors, collapse = ", "), "\n")
   if (!is.null(x$hc_theme)) cat("  hc_theme :", x$hc_theme, "\n")
+  if (!is.null(x$gg_theme))  cat("  gg_theme :", format(x$gg_theme), "\n")
   invisible(x)
 }
 
