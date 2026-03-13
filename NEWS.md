@@ -1,3 +1,9 @@
+# highdir 0.3.2
+
+- Change highdir logo for historical reason for the birth of highdir.
+- Fix lab to hide y-axis and x-axis labels (#13)
+- Flip figure for bar and ranked-bar in Shiny app (#12)
+
 # highdir 0.3.1
 
 - `DESCRIPTION` version bumped to 0.3.1.
