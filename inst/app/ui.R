@@ -38,7 +38,7 @@
       shiny::div(class = "hd-title",   "highdir"),
       shiny::div(class = "hd-tagline", "Create Figure")
     ),
-    shiny::img(src = "logo.png", height = "60px",
+    shiny::img(src = "logo.png", height = "80px",
                style = "margin-left:6px;", id = "app_logo")
   ),
 
