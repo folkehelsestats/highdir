@@ -47,7 +47,17 @@ mod_opts_ui <- function(id) {
       # It is shown for all geoms; for most it has no visible effect.
       shiny::checkboxInput(ns("flip"), "Flip axes", value = FALSE),
 
-      # HC-only options — client-side conditionalPanel, no server cost
+      # ggplot2 themes
+      shiny::conditionalPanel(
+        condition = "input.backend == 'ggplot2'",
+        shiny::selectInput(ns("gg_theme"), NULL,
+                           choices  = c("classic", "minimal", "bw",
+                                        "light", "dark", "void",
+                                        "grey"),
+                           selected = "classic")
+        ),
+
+    # HC-only options — client-side conditionalPanel, no server cost
       shiny::conditionalPanel(
         condition = "input.backend == 'highcharter'",
         shiny::selectInput(ns("hc_theme"), NULL,
@@ -84,6 +94,7 @@ mod_opts_server <- function(id) {
         ylab     = if (nzchar(input$ylab %||% "")) input$ylab else " ",
         colors   = parsed_colors(),
         hc_theme = input$hc_theme %||% NULL,
+        gg_theme = input$gg_theme %||% NULL,
         flip     = isTRUE(input$flip)
       )),
       use_js_r = shiny::reactive(isTRUE(input$use_js))

@@ -3,6 +3,7 @@
 - Change highdir logo for historical reason for the birth of highdir.
 - Fix lab to hide y-axis and x-axis labels (#13)
 - Flip figure for bar and ranked-bar in Shiny app (#12)
+- Add ggplot2 standard themes
 
 # highdir 0.3.1
 
