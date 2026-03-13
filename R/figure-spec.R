@@ -57,6 +57,8 @@ hd_spec <- function(data,
                     colour = NULL
                     ) {
 
+  data.table::setattr(data, "src_data", deparse1(substitute(data)))
+
   if (!is.data.frame(data))
     stop("`data` must be a data.frame.", call. = FALSE)
 
@@ -80,10 +82,9 @@ hd_spec <- function(data,
 #' @export
 print.hd_spec <- function(x, ...) {
   cat("<hd_spec>\n")
+  cat("  data   :", get_src_data(x$data),  "\n")
   cat("  x      :", x$x,    "\n")
   cat("  y      :", x$y,    "\n")
-  cat("  xlab   :", x$xlab, "\n")
-  cat("  ylab   :", x$ylab, "\n")
   if (!is.null(x$group))  cat("  group  :", x$group,  "\n")
   if (!is.null(x$n))      cat("  n      :", x$n,      "\n")
   if (!is.null(x$colour)) cat("  colour :", x$colour, "\n")
@@ -98,3 +99,9 @@ as.list.hd_spec <- function(x, ...) {
   out
 }
 
+
+#' @keywords internal
+get_src_data <- function(obj) {
+  nm <- attr(obj, "src_data")
+  return(if (is.null(nm)) "<?>" else nm)
+}
