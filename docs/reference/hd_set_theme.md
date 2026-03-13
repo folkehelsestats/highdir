@@ -9,7 +9,13 @@ in the current R session. Call once at the top of a script or in
 ## Usage
 
 ``` r
-hd_set_theme(hc_theme = NULL, colors = NULL, font = NULL, js_plugins = NULL)
+hd_set_theme(
+  hc_theme = NULL,
+  gg_theme = NULL,
+  colors = NULL,
+  font = NULL,
+  js_plugins = NULL
+)
 ```
 
 ## Arguments
@@ -19,6 +25,14 @@ hd_set_theme(hc_theme = NULL, colors = NULL, font = NULL, js_plugins = NULL)
   Character or `NULL`. Built-in highcharter theme name: one of
   `"default"`, `"smpl"`, `"economist"`, `"darkunica"`, `"gridlight"`,
   `"bloom"`, `"flat"`, `"flatdark"`, `"ggplot2"`.
+
+- gg_theme:
+
+  Character, ggplot2 theme object, or `NULL`. Controls the ggplot2
+  backend appearance. Built-in name strings: `"minimal"` (default),
+  `"classic"`, `"bw"`, `"light"`, `"dark"`, `"void"`, `"grey"`.
+  Alternatively pass any `ggplot2::theme_*()` object directly for full
+  control, e.g. `ggplot2::theme_bw(base_size = 14)`.
 
 - colors:
 
@@ -55,8 +69,10 @@ for per-figure overrides
 ## Examples
 
 ``` r
-hd_set_theme(hc_theme = "economist",
+hd_set_theme(hc_theme = "economist", gg_theme = "classic",
              colors   = c("#025169", "#7C145C", "#C68803"))
+#> Error in hd_set_theme(hc_theme = "economist", gg_theme = "classic", colors = c("#025169",     "#7C145C", "#C68803")): unused argument (gg_theme = "classic")
 # Reset
-hd_set_theme(hc_theme = "default", colors = NULL)
+hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL)
+#> Error in hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL): unused argument (gg_theme = "minimal")
 ```

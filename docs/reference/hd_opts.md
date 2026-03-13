@@ -20,6 +20,7 @@ hd_opts(
   flip = FALSE,
   colors = NULL,
   hc_theme = NULL,
+  gg_theme = NULL,
   xtick = NULL
 )
 ```
@@ -89,6 +90,14 @@ hd_opts(
   Character or `NULL`. Per-figure highcharter theme name; takes
   precedence over
   [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md).
+
+- gg_theme:
+
+  Character name string, ggplot2 theme object, or `NULL`. Per-figure
+  ggplot2 theme; takes precedence over
+  [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md).
+  Name strings: `"minimal"` (default), `"classic"`, `"bw"`, `"light"`,
+  `"dark"`, `"void"`, `"grey"`. Or pass a `ggplot2::theme_*()` object.
 
 - xtick:
 

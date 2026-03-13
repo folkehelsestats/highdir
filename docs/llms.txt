@@ -33,6 +33,9 @@ programmatically in R. Start the app with:
 hd_app()
 ```
 
+The app is also available directly through ShinyApps.io at:
+<https://bit.ly/highdir>
+
 ------------------------------------------------------------------------
 
 ## Supported geometries
@@ -40,12 +43,20 @@ hd_app()
 | Name | highcharter type | ggplot2 equivalent | Extra args |
 |:---|:---|:---|:---|
 | `column` | column | `geom_col()` | — |
+| `ranked_bar` | column | `geom_col()` | `comp`, `aim` |
 | `line` | line / spline | `geom_line()` | `smooth`, `dot_size`, `line_symbols` |
 | `scatter` | scatter | `geom_point()` | — |
 | `arearange` | arearange | `geom_ribbon()` | `ymin`, `ymax` |
 | `pie` | pie | `geom_bar()`, `coord_polar()` | — |
 
 ------------------------------------------------------------------------
+
+To see complete list of extra arguments for specify geoms use:
+
+``` r
+geom_args("ranked_bar")
+geom_args("arearange")
+```
 
 ## License
 
@@ -59,6 +70,8 @@ MIT © Kamaleri
   : Show Arguments for a Geometry
 - [`get_palette()`](https://github.com/folkehelsestats/highdir/reference/get_palette.md)
   : Retrieve a Named Palette
+- [`gg_theme()`](https://github.com/folkehelsestats/highdir/reference/gg_theme.md)
+  : Resolve a ggplot2 Theme Object
 - [`hd_add_js()`](https://github.com/folkehelsestats/highdir/reference/hd_add_js.md)
   : Inject JavaScript into a Highcharts Widget
 - [`hd_app()`](https://github.com/folkehelsestats/highdir/reference/hd_app.md)

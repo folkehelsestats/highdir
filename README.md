@@ -44,6 +44,9 @@ programmatically in R. Start the app with:
 hd_app()
 ```
 
+The app is also available directly through ShinyApps.io at:
+<https://bit.ly/highdir>
+
 ------------------------------------------------------------------------
 
 ## Supported geometries

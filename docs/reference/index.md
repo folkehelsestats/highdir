@@ -6,6 +6,8 @@
   : Show Arguments for a Geometry
 - [`get_palette()`](https://github.com/folkehelsestats/highdir/reference/get_palette.md)
   : Retrieve a Named Palette
+- [`gg_theme()`](https://github.com/folkehelsestats/highdir/reference/gg_theme.md)
+  : Resolve a ggplot2 Theme Object
 - [`hd_add_js()`](https://github.com/folkehelsestats/highdir/reference/hd_add_js.md)
   : Inject JavaScript into a Highcharts Widget
 - [`hd_app()`](https://github.com/folkehelsestats/highdir/reference/hd_app.md)
