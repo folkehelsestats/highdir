@@ -44,8 +44,8 @@ To list all geom features.
 
 ``` r
 list_geoms()
-#> [1] "arearange"  "column"     "line"       "map"        "pie"       
-#> [6] "ranked_bar" "scatter"
+#> [1] "arearange"  "column"     "line"       "pie"        "ranked_bar"
+#> [6] "scatter"
 ```
 
 ### Specification
@@ -69,8 +69,8 @@ geom_args("line") #args in geom line
 geom_args("arearange")
 
 # or
-highdir:::get_geom("ranked_bar")$optional_args
-highdir:::get_geom("arearange")$required_args
+highdir:::.get_geom("ranked_bar")$optional_args
+highdir:::.get_geom("arearange")$required_args
 ```
 
 ------------------------------------------------------------------------
