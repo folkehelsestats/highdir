@@ -38,7 +38,7 @@
       shiny::div(class = "hd-title",   "highdir"),
       shiny::div(class = "hd-tagline", "Create Figure")
     ),
-    shiny::img(src = "logo.png", height = "80px",
+    shiny::img(src = "logo.png", height = "60px",
                style = "margin-left:6px;", id = "app_logo")
   ),
 
@@ -56,8 +56,7 @@
   # ── Geom options (dynamic — rendered from registry in server.R) ──────────
   # uiOutput here is intentional: the number and type of inputs varies
   # entirely by geometry.  The server reads optional_args from the registry
-  # and builds the appropriate inputs.  This replaces the previous
-  # hard-coded conditionalPanel blocks which were incomplete.
+  # and builds the appropriate inputs.
   shiny::div(class = "hd-label", "Geom options"),
   shiny::uiOutput("ui_geom_opts"),
 

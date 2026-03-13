@@ -32,8 +32,11 @@
   register_backend("ggplot2",     ggplot_engine)
   register_backend("highcharter", highcharter_engine)
 
-  # ── Geometries ────────────────────────────────────────────────────────────
-
+  # Geom optional args need to be defined here. They will be used in two different
+  # places:
+  # 1 - geom_args()
+  # 2 - app output$ui_geom_opts() or geom_intpu_r object in Shiny server
+  # --------------------------------------------------------------------------
   register_geom("column",
     ggplot_fun      = gg_column,
     highcharter_fun = hc_column
@@ -62,8 +65,7 @@
                          "'circle','square','diamond','triangle','triangle-down'."
                          )
       )
-    )
-    )
+    ))
 
   register_geom("scatter",
     ggplot_fun      = gg_scatter,
@@ -73,8 +75,7 @@
         default = 4,
         desc    = "Numeric. Point size (ggplot2) or marker radius in px (highcharter)."
       )
-    )
-  )
+    ))
 
   register_geom("arearange",
     ggplot_fun      = gg_arearange,
@@ -93,8 +94,7 @@
         default = "0%",
         desc    = "Character. Inner radius as CSS %, e.g. '50%' for a donut. Both backends."
       )
-    )
-  )
+    ))
 
   register_geom("ranked_bar",
     ggplot_fun      = gg_ranked_bar,
@@ -124,13 +124,8 @@
         desc = paste0("Numeric. Minimum fraction of the axis range that a bar must",
                       "span before its label is considered to fit inside. Acts as a safety floor",
                       "for very short labels. Defaults to 0.08 (8%).")
-      ),
-      flip = list(
-        default = TRUE,
-        desc    = "Logical. TRUE = horizontal bars (default for ranked_bar). ggplot2 only."
       )
-    )
-  )
+    ))
 
 
   # ── Option defaults ────────────────────────────────────────────────────────

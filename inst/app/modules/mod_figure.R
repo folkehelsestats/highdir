@@ -62,13 +62,13 @@ mod_figure_ui <- function(id) {
 #'                      in optional_args / required_args in the registry.
 #'                      Assembled in server.R from input$ values.
 mod_figure_server <- function(id,
-                               run_r,
-                               data_r,
-                               opts_r,
-                               use_js_r,
-                               geom_r,
-                               backend_r,
-                               geom_inputs_r) {
+                              run_r,
+                              data_r,
+                              opts_r,
+                              use_js_r,
+                              geom_r,
+                              backend_r,
+                              geom_inputs_r) {
 
   shiny::moduleServer(id, function(input, output, session) {
 
