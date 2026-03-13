@@ -4,12 +4,24 @@
 \alias{hd_set_theme}
 \title{Set Package-Wide Style Defaults}
 \usage{
-hd_set_theme(hc_theme = NULL, colors = NULL, font = NULL, js_plugins = NULL)
+hd_set_theme(
+  hc_theme = NULL,
+  gg_theme = NULL,
+  colors = NULL,
+  font = NULL,
+  js_plugins = NULL
+)
 }
 \arguments{
 \item{hc_theme}{Character or \code{NULL}. Built-in highcharter theme name: one
 of \code{"default"}, \code{"smpl"}, \code{"economist"}, \code{"darkunica"}, \code{"gridlight"},
 \code{"bloom"}, \code{"flat"}, \code{"flatdark"}, \code{"ggplot2"}.}
+
+\item{gg_theme}{Character, ggplot2 theme object, or \code{NULL}. Controls the
+ggplot2 backend appearance. Built-in name strings: \code{"minimal"} (default),
+\code{"classic"}, \code{"bw"}, \code{"light"}, \code{"dark"}, \code{"void"}, \code{"grey"}.
+Alternatively pass any \verb{ggplot2::theme_*()} object directly for full
+control, e.g. \code{ggplot2::theme_bw(base_size = 14)}.}
 
 \item{colors}{Character vector, palette name, or \code{NULL}. Applied to all
 figures in the session. See \code{\link[=register_palette]{register_palette()}}.}
@@ -35,10 +47,10 @@ Per-figure overrides are provided via \code{\link[=hd_opts]{hd_opts()}}, which a
 precedence over these session defaults.
 }
 \examples{
-hd_set_theme(hc_theme = "economist",
+hd_set_theme(hc_theme = "economist", gg_theme = "classic",
              colors   = c("#025169", "#7C145C", "#C68803"))
 # Reset
-hd_set_theme(hc_theme = "default", colors = NULL)
+hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL)
 
 }
 \seealso{

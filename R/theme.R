@@ -211,7 +211,7 @@ gg_theme <- function(theme = NULL) {
 #'
 #' 1. Explicit `colors` argument
 #' 2. `getOption("highdir.colors")` session default
-#' 3. Built-in rules: n==2 -> hdir2, n<=10 -> hdir[1:n], n>10 -> viridis
+#' 3. Built-in rules: n==2 -> hdir2, n<=10 -> `hdir[1:n]`, n>10 -> viridis
 #'
 #' @param p            A ggplot object.
 #' @param colors       Character vector, palette name string, or NULL.
