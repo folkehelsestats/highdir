@@ -11,7 +11,7 @@ it to accept all defaults."><meta property="og:image" content="https://github.co
 
     <a class="navbar-brand me-2" href="../index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,7 @@ it to accept all defaults.</p>
 <span>  flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hc_theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gg_theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xtick <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -123,6 +124,13 @@ colour override; takes precedence over <code><a href="hd_set_theme.html">hd_set_
 <dt id="arg-hc-theme">hc_theme<a class="anchor" aria-label="anchor" href="#arg-hc-theme"></a></dt>
 <dd><p>Character or <code>NULL</code>. Per-figure highcharter theme name; takes
 precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
+
+
+<dt id="arg-gg-theme">gg_theme<a class="anchor" aria-label="anchor" href="#arg-gg-theme"></a></dt>
+<dd><p>Character name string, ggplot2 theme object, or <code>NULL</code>.
+Per-figure ggplot2 theme; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.
+Name strings: <code>"minimal"</code> (default), <code>"classic"</code>, <code>"bw"</code>, <code>"light"</code>,
+<code>"dark"</code>, <code>"void"</code>, <code>"grey"</code>. Or pass a <code>ggplot2::theme_*()</code> object.</p></dd>
 
 
 <dt id="arg-xtick">xtick<a class="anchor" aria-label="anchor" href="#arg-xtick"></a></dt>

@@ -42,4 +42,5 @@ The modified ggplot object.
 
 2.  `getOption("highdir.colors")` session default
 
-3.  Built-in rules: n==2 → hdir2, n\<=10 → hdir\[1:n\], n\>10 → viridis
+3.  Built-in rules: n==2 -\> hdir2, n\<=10 -\> `hdir[1:n]`, n\>10 -\>
+    viridis

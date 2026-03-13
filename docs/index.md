@@ -33,6 +33,9 @@ programmatically in R. Start the app with:
 hd_app()
 ```
 
+The app is also available directly through ShinyApps.io at:
+<https://bit.ly/highdir>
+
 ------------------------------------------------------------------------
 
 ## Supported geometries
@@ -40,12 +43,20 @@ hd_app()
 | Name | highcharter type | ggplot2 equivalent | Extra args |
 |:---|:---|:---|:---|
 | `column` | column | `geom_col()` | — |
+| `ranked_bar` | column | `geom_col()` | `comp`, `aim` |
 | `line` | line / spline | `geom_line()` | `smooth`, `dot_size`, `line_symbols` |
 | `scatter` | scatter | `geom_point()` | — |
 | `arearange` | arearange | `geom_ribbon()` | `ymin`, `ymax` |
 | `pie` | pie | `geom_bar()`, `coord_polar()` | — |
 
 ------------------------------------------------------------------------
+
+To see complete list of extra arguments for specify geoms use:
+
+``` r
+geom_args("ranked_bar")
+geom_args("arearange")
+```
 
 ## License
 
