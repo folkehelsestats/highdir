@@ -29,7 +29,7 @@ engine so both backends always produce identical colour assignments:
 \enumerate{
 \item Explicit \code{colors} argument
 \item \code{getOption("highdir.colors")} session default
-\item Built-in rules: n==2 → hdir2, n<=10 → hdir[1:n], n>10 → viridis
+\item Built-in rules: n==2 -> hdir2, n<=10 -> \code{hdir[1:n]}, n>10 -> viridis
 }
 }
 \keyword{internal}

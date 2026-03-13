@@ -43,9 +43,18 @@ highcharter or ggplot2 without writing R code."><meta property="og:image" conten
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hd_app</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hd_app</span><span class="op">(</span>return.app <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
+<dl><dt id="arg-return-app">return.app<a class="anchor" aria-label="anchor" href="#arg-return-app"></a></dt>
+<dd><p>Logical. When deploying to server like Shiny.io to return
+the app object instead of launching it.</p></dd>
+
+</dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Launches a Shiny app; does not return a value.</p>
@@ -58,17 +67,19 @@ independently to Shiny Server or shinyapps.io.</p>
     </div>
     <div class="section level2">
     <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a></h2>
-
-
-<ul><li><p>Upload datasets in any format supported by <strong>rio</strong> (CSV, XLSX,
-SPSS, Stata, RDS, …).</p></li>
-<li><p>Choose geometry (<code>column</code>, <code>line</code>, <code>scatter</code>, <code>arearange</code>, <code>pie</code>),
-backend, axis variables, and group column.</p></li>
+    <p></p><ul><li><p>Upload datasets in any format supported by
+<strong>rio</strong> (CSV, XLSX, SPSS, Stata, RDS, …).</p></li>
+<li><p>Choose geometry (<code>column</code>,
+<code>line</code>, <code>scatter</code>, <code>arearange</code>, <code>pie</code>), backend, axis variables, and group
+column.</p></li>
 <li><p>Set title, subtitle, caption, colour palette, and HC theme.</p></li>
 <li><p>Toggle JS hover band per figure.</p></li>
-<li><p>Render on demand with the <strong>Draw</strong> button.</p></li>
-<li><p>Download as HTML / JSON / PNG (highcharter) or PNG / SVG (ggplot2).</p></li>
-<li><p>Copy the equivalent <code><a href="hd_make.html">hd_make()</a></code> call from the <strong>R code</strong> tab.</p></li>
+<li><p>Render on demand with the
+<strong>Draw</strong> button.</p></li>
+<li><p>Download as HTML / JSON / PNG (highcharter) or PNG /
+SVG (ggplot2).</p></li>
+<li><p>Copy the equivalent <code><a href="hd_make.html">hd_make()</a></code> call from the <strong>R
+code</strong> tab.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

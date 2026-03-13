@@ -1,3 +1,12 @@
+# highdir 0.3.2
+
+- Replace the Highdir logo to reflect its historical origin.
+- Add option to hide x‑ and y‑axis labels (#13).
+- Implement flip support for bar and ranked‑bar charts in the Shiny app (#12).
+- Include standard ggplot2 themes.
+- Implement bar figure with no space below the bars but 10% above them in ggplot2 engine.
+- Deploy to shinyapps.io <https://bit.ly/highdir> 
+
 # highdir 0.3.1
 
 - `DESCRIPTION` version bumped to 0.3.1.

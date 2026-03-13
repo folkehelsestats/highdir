@@ -1,3 +1,4 @@
+# ggplot2 backend ----------------------------------------------------
 #
 # Engine contract:
 #   function(spec, geom, opts, geom_params, use_js, filename, ...)
@@ -11,13 +12,21 @@
 # ── ggplot2 engine ───────────────────────────────────────────────────────────
 
 #' @keywords internal
-ggplot_engine <- function(spec,
-                          geom,
-                          opts,
-                          geom_params,
-                          use_js   = TRUE,
-                          module   = TRUE,
-                          filename = NULL, ...) {
+ggplot_engine <- function(spec, geom, opts, geom_params,
+                           use_js = TRUE, filename = NULL, ...) {
+
+  # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
+  if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
+    layers <- geom$ggplot_fun(spec, opts, geom_params)
+    p <- ggplot2::ggplot() +
+      ggplot2::labs(
+        title    = opts$title,
+        subtitle = opts$subtitle,
+        caption  = opts$caption
+      )
+    for (layer in layers) p <- p + layer
+    return(p)
+  }
 
   p <- base_fig(spec, opts, "ggplot2")
 
@@ -52,6 +61,16 @@ ggplot_engine <- function(spec,
     # No apply_gg_colors call for single series — colour is already in layers
   }
 
+  # -- ggplot2 theme (per-figure opts$gg_theme > session default) ------------
+  # gg_theme() resolves: theme object passed directly OR name string OR
+  # session option "highdir.gg_theme" OR fallback "minimal".
+  p <- p + gg_theme(opts$gg_theme)
+
+  # No space below the bars but 10% above them
+  if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]]))
+    p <- p + ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, .1)))
+
+  # Font applied on top of the theme so it overrides the theme's font choice.
   font <- getOption("highdir.font", default = NULL)
   if (!is.null(font))
     p <- p + ggplot2::theme(text = ggplot2::element_text(family = font))

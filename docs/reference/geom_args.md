@@ -92,17 +92,6 @@ geom_args()           # all registered geometries
 #>   line_symbols  optional  NULL     Character vector. Highcharter only. Per-group marker shapes: 'circle','square','diamond','triangle','triangle-down'.
 #> 
 #> 
-#> Arguments for hd_make(..., type = "map", ...):
-#> 
-#>   argument   kind      default  description
-#>   ---------  --------  -------  ------------------------------
-#>   level      optional  county   Character. Map granularity: 'county' or 'municipality'.
-#>   value_lab  optional  NULL     Character. Colour scale legend label.
-#>   low_col    optional  #C6DBEF  Character. Hex colour for the low end of the choropleth scale.
-#>   high_col   optional  #025169  Character. Hex colour for the high end of the choropleth scale.
-#>   na_fill    optional  #D3D3D3  Character. Hex fill colour for regions with no data.
-#> 
-#> 
 #> Arguments for hd_make(..., type = "pie", ...):
 #> 
 #>   argument    kind      default  description

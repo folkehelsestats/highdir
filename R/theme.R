@@ -1,16 +1,17 @@
-# R/theme.R ── Style, theme and JavaScript configuration
+# R/theme.R -- Style, theme and JavaScript configuration
 
-# ── Package-level option defaults (applied in zzz.R) ────────────────────────
+# -- Package-level option defaults (applied in zzz.R) ------------------------
 
 #' @keywords internal
 .hd_defaults <- list(
   highdir.hc_theme   = "default",
+  highdir.gg_theme   = "classic",
   highdir.colors     = NULL,
   highdir.font       = NULL,
   highdir.js_plugins = character(0)
 )
 
-# ── Session-wide style setter ────────────────────────────────────────────────
+# -- Session-wide style setter ------------------------------------------------
 
 #' Set Package-Wide Style Defaults
 #'
@@ -24,6 +25,11 @@
 #' @param hc_theme   Character or `NULL`. Built-in highcharter theme name: one
 #'   of `"default"`, `"smpl"`, `"economist"`, `"darkunica"`, `"gridlight"`,
 #'   `"bloom"`, `"flat"`, `"flatdark"`, `"ggplot2"`.
+#' @param gg_theme   Character, ggplot2 theme object, or `NULL`. Controls the
+#'   ggplot2 backend appearance. Built-in name strings: `"minimal"` (default),
+#'   `"classic"`, `"bw"`, `"light"`, `"dark"`, `"void"`, `"grey"`.
+#'   Alternatively pass any `ggplot2::theme_*()` object directly for full
+#'   control, e.g. `ggplot2::theme_bw(base_size = 14)`.
 #' @param colors     Character vector, palette name, or `NULL`. Applied to all
 #'   figures in the session. See [register_palette()].
 #' @param font       Character or `NULL`. Font family name, e.g.
@@ -36,14 +42,15 @@
 #'   restore.
 #'
 #' @examples
-#' hd_set_theme(hc_theme = "economist",
+#' hd_set_theme(hc_theme = "economist", gg_theme = "classic",
 #'              colors   = c("#025169", "#7C145C", "#C68803"))
 #' # Reset
-#' hd_set_theme(hc_theme = "default", colors = NULL)
+#' hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL)
 #'
 #' @seealso [hd_opts()] for per-figure overrides
 #' @export
 hd_set_theme <- function(hc_theme   = NULL,
+                         gg_theme   = NULL,
                          colors     = NULL,
                          font       = NULL,
                          js_plugins = NULL) {
@@ -51,6 +58,10 @@ hd_set_theme <- function(hc_theme   = NULL,
   if (!is.null(hc_theme)) {
     prev$highdir.hc_theme <- getOption("highdir.hc_theme")
     options(highdir.hc_theme = hc_theme)
+  }
+  if (!is.null(gg_theme)) {
+    prev$highdir.gg_theme <- getOption("highdir.gg_theme")
+    options(highdir.gg_theme = gg_theme)
   }
   if (!is.null(colors)) {
     prev$highdir.colors <- getOption("highdir.colors")
@@ -67,7 +78,7 @@ hd_set_theme <- function(hc_theme   = NULL,
   invisible(prev)
 }
 
-# ── Highcharter theme builder ────────────────────────────────────────────────
+# -- Highcharter theme builder ------------------------------------------------
 
 #' Build a Highcharts Theme Object
 #'
@@ -128,7 +139,70 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
     base
 }
 
-# ── ggplot2 colour helper ────────────────────────────────────────────────────
+# -- ggplot2 theme builder ----------------------------------------------------
+
+#' Resolve a ggplot2 Theme Object
+#'
+#' Returns a ggplot2 theme object from either a name string or a theme object
+#' passed directly. Priority: explicit argument > session option
+#' (`highdir.gg_theme`) > `"minimal"` fallback.
+#'
+#' Called automatically inside `ggplot_engine()`; useful when you want to
+#' apply the package theme to a ggplot built outside highdir.
+#'
+#' Built-in name strings and their ggplot2 equivalents:
+#'
+#' | Name | ggplot2 function |
+#' |:-----|:----------------|
+#' | `"minimal"` (default) | `theme_minimal()` |
+#' | `"classic"` | `theme_classic()` |
+#' | `"bw"` | `theme_bw()` |
+#' | `"light"` | `theme_light()` |
+#' | `"dark"` | `theme_dark()` |
+#' | `"void"` | `theme_void()` |
+#' | `"grey"` / `"gray"` | `theme_grey()` |
+#'
+#' @param theme Character name string, ggplot2 theme object, or `NULL`.
+#'   `NULL` reads from `getOption("highdir.gg_theme")`.
+#'
+#' @return A ggplot2 `theme` object.
+#'
+#' @examples
+#' gg_theme()                          # reads session default
+#' gg_theme("classic")                 # theme_classic()
+#' gg_theme(ggplot2::theme_bw(base_size = 14))  # object passed directly
+#'
+#' @export
+gg_theme <- function(theme = NULL) {
+
+  resolved <- theme %||% getOption("highdir.gg_theme", default = "classic")
+
+  # Already a theme object -- return as-is
+  if (inherits(resolved, "theme"))
+    return(resolved)
+
+  # Name string -- look up in the built-in map
+  if (!is.character(resolved) || length(resolved) != 1L)
+    stop("`gg_theme` must be a single theme name string or a ggplot2 theme ",
+         "object. Got: ", class(resolved)[1L], call. = FALSE)
+
+  switch(resolved,
+    "minimal" = ggplot2::theme_minimal(),
+    "classic" = ggplot2::theme_classic(),
+    "bw"      = ggplot2::theme_bw(),
+    "light"   = ggplot2::theme_light(),
+    "dark"    = ggplot2::theme_dark(),
+    "void"    = ggplot2::theme_void(),
+    "grey" = ,
+    "gray"    = ggplot2::theme_grey(),
+    stop("Unknown gg_theme name '", resolved, "'. ",
+         "Use: minimal, classic, bw, light, dark, void, grey. ",
+         "Or pass a ggplot2::theme_*() object directly.",
+         call. = FALSE)
+  )
+}
+
+# -- ggplot2 colour helper ----------------------------------------------------
 
 #' Apply brand colours to a ggplot object
 #'
@@ -137,7 +211,7 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
 #'
 #' 1. Explicit `colors` argument
 #' 2. `getOption("highdir.colors")` session default
-#' 3. Built-in rules: n==2 → hdir2, n<=10 → hdir\[1:n\], n>10 → viridis
+#' 3. Built-in rules: n==2 -> hdir2, n<=10 -> `hdir[1:n]`, n>10 -> viridis
 #'
 #' @param p            A ggplot object.
 #' @param colors       Character vector, palette name string, or NULL.
@@ -153,24 +227,10 @@ apply_gg_colors <- function(p,
                             n_groups     = NULL,
                             group_levels = NULL) {
 
-  # ── Resolve palette through the shared rule engine ────────────────────────
-  # resolve_colors() applies the same priority chain used by hc_column,
-  # hc_line, hc_scatter etc. — so HC and ggplot2 always agree on colours.
-  #
-  # If n_groups is unknown (NULL) we still resolve the palette name to a
-  # vector, but we cannot apply the n-aware rules. This happens only when
-  # apply_gg_colors is called directly outside the engine.
+  # -- Resolve palette through the shared rule engine ------------------------
   if (!is.null(n_groups) && n_groups >= 1L) {
     pal <- resolve_colors(n_groups, colors)
-    # resolve_colors() always returns a plain character vector — never a
-    # palette name string — so scale_*_manual receives valid colour values
-    # - n==2  → hdir2[1:2]
-    # - n<=10 → hdir[1:n]
-    # - n>10  → viridis(n)
-    # - explicit colors vector → used directly if long enough
-    # - palette name string   → resolved then trimmed to n
   } else {
-    # n_groups unknown: resolve palette name to vector but do not trim
     candidate <- colors %||% getOption("highdir.colors", default = NULL)
     if (is.character(candidate) && length(candidate) == 1L &&
         candidate %in% list_palettes()) {
@@ -179,18 +239,9 @@ apply_gg_colors <- function(p,
     pal <- candidate
   }
 
-  # Nothing resolved — return plot unchanged
-  # This happens when colors = NULL, no session option set, and
-  # hdir palettes are not registered (should not occur in normal use)
   if (is.null(pal)) return(p)
 
-  # ── Name the palette by group level in data order ────────────────────────
-  # Without names, ggplot2 assigns colours alphabetically by group level.
-  # With names, ggplot2 looks up each group by name → order matches HC.
-  #
-  # Example: data order is c("Male","Female") → HC assigns Male=pal[1]
-  # Without naming, ggplot2 sorts to c("Female","Male") → Female=pal[1] ✗
-  # With naming, ggplot2 sees Male=pal[1], Female=pal[2] → matches HC  ✓
+  # -- Name the palette by group level in data order -------------------------
   if (!is.null(group_levels) &&
       length(pal) >= length(group_levels)) {
     pal <- stats::setNames(
@@ -199,14 +250,13 @@ apply_gg_colors <- function(p,
     )
   }
 
-  # ── Inject colour scales ─────────────────────────────────────────────────
   p +
     ggplot2::scale_color_manual(values = pal) +
     ggplot2::scale_fill_manual(values  = pal)
 }
 
 
-# ── JavaScript injection ─────────────────────────────────────────────────────
+# -- JavaScript injection -----------------------------------------------------
 
 #' Inject JavaScript into a Highcharts Widget
 #'

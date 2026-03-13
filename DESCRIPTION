@@ -1,6 +1,6 @@
 Package: highdir
 Title: Backend-Agnostic Figure Builder for Highcharter and ggplot2
-Version: 0.3.1
+Version: 0.3.2
 Authors@R:
   person(
     given = "Yusman",
@@ -32,8 +32,6 @@ Imports:
     rlang       (>= 1.1.0),
     viridis     (>= 0.6.0),
     shiny       (>= 1.7.0),
-    rio         (>= 1.2.4),
-    DT          (>= 0.34.0),
     tools,
     utils,
     stats
@@ -44,6 +42,7 @@ Suggests:
     bslib       (>= 0.7.0),
     testthat    (>= 3.0.0),
     withr       (>= 2.5.0),
+    data.table,
     knitr,
     rmarkdown,
     tibble

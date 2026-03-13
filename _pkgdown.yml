@@ -3,6 +3,8 @@ url: https://github.com/folkehelsestats/highdir
 template:
   bootstrap: 5
   bootwatch: lumen
+  logo: man/figures/logo.png
+  favicon: man/figures/favicon.png
 
 navbar:
   left:

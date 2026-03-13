@@ -6,8 +6,15 @@ Opens an interactive browser-based application for building figures with
 ## Usage
 
 ``` r
-hd_app()
+hd_app(return.app = FALSE)
 ```
+
+## Arguments
+
+- return.app:
+
+  Logical. When deploying to server like Shiny.io to return the app
+  object instead of launching it.
 
 ## Value
 

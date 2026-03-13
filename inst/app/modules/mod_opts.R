@@ -42,10 +42,24 @@ mod_opts_ui <- function(id) {
       shiny::textInput(ns("colors"), NULL,
                        placeholder = "Colours: #025169, #7C145C, \u2026"),
 
-      # HC-only options — client-side conditionalPanel, no server cost
+      # flip belongs in opts (not geom_inputs) because base_fig reads opts$flip
+      # for BOTH backends — ggplot2 via coord_flip(), highcharter via inverted.
+      # It is shown for all geoms; for most it has no visible effect.
+      shiny::checkboxInput(ns("flip"), "Flip axes", value = FALSE),
+
+      # ggplot2 themes
+      shiny::conditionalPanel(
+        condition = "input.backend == 'ggplot2'",
+        shiny::selectInput(ns("gg_theme"), NULL,
+                           choices  = c("classic", "minimal", "bw",
+                                        "light", "dark", "void",
+                                        "grey"),
+                           selected = "classic")
+        ),
+
+    # HC-only options — client-side conditionalPanel, no server cost
       shiny::conditionalPanel(
         condition = "input.backend == 'highcharter'",
-        shiny::checkboxInput(ns("percent"), "Use % symbol", value = FALSE),
         shiny::selectInput(ns("hc_theme"), NULL,
                            choices  = c("default", "smpl", "economist",
                                         "darkunica", "gridlight", "bloom",
@@ -78,9 +92,10 @@ mod_opts_server <- function(id) {
         caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
         xlab     = if (nzchar(input$xlab %||% "")) input$xlab else " ",
         ylab     = if (nzchar(input$ylab %||% "")) input$ylab else " ",
-        percent  = isTRUE(input$percent),
         colors   = parsed_colors(),
-        hc_theme = input$hc_theme %||% NULL
+        hc_theme = input$hc_theme %||% NULL,
+        gg_theme = input$gg_theme %||% NULL,
+        flip     = isTRUE(input$flip)
       )),
       use_js_r = shiny::reactive(isTRUE(input$use_js))
     )

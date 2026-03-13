@@ -16,6 +16,7 @@ hd_opts(
   flip = FALSE,
   colors = NULL,
   hc_theme = NULL,
+  gg_theme = NULL,
   xtick = NULL
 )
 }
@@ -49,6 +50,11 @@ colour override; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()
 
 \item{hc_theme}{Character or \code{NULL}. Per-figure highcharter theme name; takes
 precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
+
+\item{gg_theme}{Character name string, ggplot2 theme object, or \code{NULL}.
+Per-figure ggplot2 theme; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.
+Name strings: \code{"minimal"} (default), \code{"classic"}, \code{"bw"}, \code{"light"},
+\code{"dark"}, \code{"void"}, \code{"grey"}. Or pass a \verb{ggplot2::theme_*()} object.}
 
 \item{xtick}{Column used to supply custom labels for the x-axis ticks.
 This is required when the plotting x-values are numeric but the displayed
