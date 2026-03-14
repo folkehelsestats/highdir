@@ -145,7 +145,7 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
 #'
 #' Returns a ggplot2 theme object from either a name string or a theme object
 #' passed directly. Priority: explicit argument > session option
-#' (`highdir.gg_theme`) > `"minimal"` fallback.
+#' (`highdir.gg_theme`) > `"classic"` fallback.
 #'
 #' Called automatically inside `ggplot_engine()`; useful when you want to
 #' apply the package theme to a ggplot built outside highdir.
@@ -154,8 +154,8 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
 #'
 #' | Name | ggplot2 function |
 #' |:-----|:----------------|
-#' | `"minimal"` (default) | `theme_minimal()` |
 #' | `"classic"` | `theme_classic()` |
+#' | `"minimal"` (default) | `theme_minimal()` |
 #' | `"bw"` | `theme_bw()` |
 #' | `"light"` | `theme_light()` |
 #' | `"dark"` | `theme_dark()` |
@@ -187,8 +187,8 @@ gg_theme <- function(theme = NULL) {
          "object. Got: ", class(resolved)[1L], call. = FALSE)
 
   switch(resolved,
-    "minimal" = ggplot2::theme_minimal(),
     "classic" = ggplot2::theme_classic(),
+    "minimal" = ggplot2::theme_minimal(),
     "bw"      = ggplot2::theme_bw(),
     "light"   = ggplot2::theme_light(),
     "dark"    = ggplot2::theme_dark(),
@@ -196,7 +196,7 @@ gg_theme <- function(theme = NULL) {
     "grey" = ,
     "gray"    = ggplot2::theme_grey(),
     stop("Unknown gg_theme name '", resolved, "'. ",
-         "Use: minimal, classic, bw, light, dark, void, grey. ",
+         "Use: classic, minimal, bw, light, dark, void, grey. ",
          "Or pass a ggplot2::theme_*() object directly.",
          call. = FALSE)
   )

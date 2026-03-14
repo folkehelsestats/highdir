@@ -1,7 +1,7 @@
-# ggplot2 backend ----------------------------------------------------
+# ggplot2 engine ----------------------------------------------------
 #
 # Engine contract:
-#   function(spec, geom, opts, geom_params, use_js, filename, ...)
+#   function(spec, geom, opts, geom_params, use_js, ...)
 #
 # `geom_params` is a named list built by hd_make() that carries *all*
 # geom-specific arguments (smooth, dot_size, line_symbols, ymin, ymax, …).
@@ -9,11 +9,10 @@
 #   1. The engine signature is stable regardless of how many geoms exist.
 #   2. Nothing unexpected leaks into hc_add_series() causing tibble errors.
 
-# ── ggplot2 engine ───────────────────────────────────────────────────────────
 
 #' @keywords internal
 ggplot_engine <- function(spec, geom, opts, geom_params,
-                           use_js = TRUE, filename = NULL, ...) {
+                           use_js = TRUE, ...) {
 
   # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
   if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
