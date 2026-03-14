@@ -7,8 +7,10 @@ API for building figures with either
 
 A figure is described once as a `hd_spec` and `hd_opts` object and
 rendered to either backend without changing the calling code. The
-package ships with the default to use Helsedirektoratet colour palette,
-styling and theme. A Shiny GUI is introduced to make it user friendly.
+package ships with the default to use [The Norwegian Directorate of
+Health](https://www.helsedirektoratet.no) (*Helsedirektoratet*) colour
+palette, styling and theme. A Shiny GUI is introduced to make it user
+friendly.
 
 ------------------------------------------------------------------------
 
