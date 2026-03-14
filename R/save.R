@@ -31,13 +31,13 @@
 #' @return `file`, invisibly.
 #' @export
 hd_save <- function(fig,
-                     file,
-                     type          = "auto",
-                     width         = 8,
-                     height        = 5,
-                     dpi           = 300,
-                     selfcontained = TRUE,
-                     ...) {
+                    file,
+                    type          = "auto",
+                    width         = 8,
+                    height        = 5,
+                    dpi           = 300,
+                    selfcontained = TRUE,
+                    ...) {
 
   type <- .resolve_type(type, file)
 

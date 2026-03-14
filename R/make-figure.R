@@ -33,8 +33,6 @@
 #'   features are **always** present.  Set `FALSE` for clean, no-custom-JS
 #'   widgets.  Ignored by the ggplot2 backend.
 #' @param module Use available modules js from CDN [https://api.highcharts.com/highcharts](https://api.highcharts.com/highcharts)
-#' @param filename  Character or `NULL`.  Base filename for the Highcharts
-#'   export or save menu (no extension).  Default: `"highdir-figure"`.
 #' @param ...       Extra arguments forwarded to the geometry function.
 #'   Required arguments (e.g. `ymin`, `ymax` for `"arearange"`) **must**
 #'   be supplied here.
@@ -105,7 +103,6 @@ hd_make <- function(spec,
                     backend     = "highcharter",
                     use_js      = TRUE,
                     module      = TRUE,
-                    filename    = NULL,
                     ...) {
 
   opts <- opts %||% default_opts()
@@ -122,7 +119,6 @@ hd_make <- function(spec,
     opts        = opts,
     geom_params = extra_args,
     use_js      = use_js,
-    module      = module,
-    filename    = filename
+    module      = module
   )
 }

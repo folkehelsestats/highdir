@@ -11,7 +11,6 @@ hd_make(
   backend = "highcharter",
   use_js = TRUE,
   module = TRUE,
-  filename = NULL,
   ...
 )
 }
@@ -37,9 +36,6 @@ features are \strong{always} present.  Set \code{FALSE} for clean, no-custom-JS
 widgets.  Ignored by the ggplot2 backend.}
 
 \item{module}{Use available modules js from CDN \url{https://api.highcharts.com/highcharts}}
-
-\item{filename}{Character or \code{NULL}.  Base filename for the Highcharts
-export or save menu (no extension).  Default: \code{"highdir-figure"}.}
 
 \item{...}{Extra arguments forwarded to the geometry function.
 Required arguments (e.g. \code{ymin}, \code{ymax} for \code{"arearange"}) \strong{must}

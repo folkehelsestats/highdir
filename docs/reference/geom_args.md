@@ -61,7 +61,6 @@ geom_args("ranked_bar")
 #>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.
 #>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.
 #>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).
-#>   flip        optional  TRUE     Logical. TRUE = horizontal bars (default for ranked_bar). ggplot2 only.
 #> 
 geom_args("arearange")
 #> 
@@ -108,7 +107,6 @@ geom_args()           # all registered geometries
 #>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.
 #>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.
 #>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).
-#>   flip        optional  TRUE     Logical. TRUE = horizontal bars (default for ranked_bar). ggplot2 only.
 #> 
 #> 
 #> Arguments for hd_make(..., type = "scatter", ...):

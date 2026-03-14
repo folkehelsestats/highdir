@@ -65,10 +65,9 @@ df <- data.frame(
 spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
 spec
 #> <hd_spec>
+#>   data   : df 
 #>   x      : age 
 #>   y      : pct 
-#>   xlab   : 
-#>   ylab   : 
 #>   group  : sex 
 #>   n      : n 
 #>   rows   : 8 

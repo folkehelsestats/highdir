@@ -23,6 +23,6 @@ Character vector of colours, or `NULL` if not found.
 
 ``` r
 get_palette("hdir")
-#>  [1] "#025169" "#0069E8" "#7C145C" "#047FA4" "#C68803" "#38A389" "#6996CE"
+#>  [1] "#025169" "#0069E8" "#7C145C" "#C68803" "#047FA4" "#38A389" "#6996CE"
 #>  [8] "#366558" "#BF78DE" "#767676"
 ```

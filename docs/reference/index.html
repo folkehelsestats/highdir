@@ -15,10 +15,13 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Home"><span class="fa fa-home fa-lg"></span></a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/quick-start.html">Quick start</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/start-use.html">Quick start</a></li>
-<li class="nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/quick-start.html">start-use</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="nav-link" href="https://github.com/folkehelsestats/highdir/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -33,9 +36,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="primary-functions">Primary functions<a class="anchor" aria-label="anchor" href="#primary-functions"></a></h2>
 
-
+      <div class="section-desc"><p>Core functions used to generate figures.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -44,38 +47,10 @@
 
       <dl><dt>
 
-          <code><a href="geom_args.html">geom_args()</a></code>
+          <code><a href="hd_spec.html">hd_spec()</a></code>
 
         </dt>
-        <dd>Show Arguments for a Geometry</dd>
-
-        <dt>
-
-          <code><a href="get_palette.html">get_palette()</a></code>
-
-        </dt>
-        <dd>Retrieve a Named Palette</dd>
-
-        <dt>
-
-          <code><a href="gg_theme.html">gg_theme()</a></code>
-
-        </dt>
-        <dd>Resolve a ggplot2 Theme Object</dd>
-
-        <dt>
-
-          <code><a href="hd_add_js.html">hd_add_js()</a></code>
-
-        </dt>
-        <dd>Inject JavaScript into a Highcharts Widget</dd>
-
-        <dt>
-
-          <code><a href="hd_app.html">hd_app()</a></code>
-
-        </dt>
-        <dd>Launch the highdir Shiny GUI</dd>
+        <dd>Create a Figure Data Specification</dd>
 
         <dt>
 
@@ -83,8 +58,17 @@
 
         </dt>
         <dd>Build a Figure from a Specification</dd>
+      </dl></div><div class="section level2">
+      <h2 id="secondary-functions">Secondary functions<a class="anchor" aria-label="anchor" href="#secondary-functions"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Additional optional functions that support workflows.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="hd_opts.html">hd_opts()</a></code>
 
@@ -100,26 +84,21 @@
 
         <dt>
 
-          <code><a href="hd_set_theme.html">hd_set_theme()</a></code>
+          <code><a href="hd_app.html">hd_app()</a></code>
 
         </dt>
-        <dd>Set Package-Wide Style Defaults</dd>
+        <dd>Launch the highdir Shiny GUI</dd>
+      </dl></div><div class="section level2">
+      <h2 id="backends">Backends<a class="anchor" aria-label="anchor" href="#backends"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Backend engines used to build figures.</p></div>
 
-          <code><a href="hd_spec.html">hd_spec()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Create a Figure Data Specification</dd>
 
-        <dt>
 
-          <code><a href="hd_theme.html">hd_theme()</a></code>
 
-        </dt>
-        <dd>Build a Highcharts Theme Object</dd>
-
-        <dt>
+      <dl><dt>
 
           <code><a href="list_backends.html">list_backends()</a></code>
 
@@ -128,10 +107,70 @@
 
         <dt>
 
+          <code><a href="register_backend.html">register_backend()</a></code>
+
+        </dt>
+        <dd>Register a Rendering Backend</dd>
+      </dl></div><div class="section level2">
+      <h2 id="geoms">Geoms<a class="anchor" aria-label="anchor" href="#geoms"></a></h2>
+
+      <div class="section-desc"><p>Geometric layers and related functions used to construct figures.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
           <code><a href="list_geoms.html">list_geoms()</a></code>
 
         </dt>
         <dd>List Registered Geometries</dd>
+
+        <dt>
+
+          <code><a href="geom_args.html">geom_args()</a></code>
+
+        </dt>
+        <dd>Show Arguments for a Geometry</dd>
+
+        <dt>
+
+          <code><a href="register_geom.html">register_geom()</a></code>
+
+        </dt>
+        <dd>Register a Geometry</dd>
+      </dl></div><div class="section level2">
+      <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a></h2>
+
+      <div class="section-desc"><p>Theme functions defining the visual style of figures.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="hd_theme.html">hd_theme()</a></code>
+
+        </dt>
+        <dd>Build a Highcharts Theme Object</dd>
+
+        <dt>
+
+          <code><a href="gg_theme.html">gg_theme()</a></code>
+
+        </dt>
+        <dd>Resolve a ggplot2 Theme Object</dd>
+
+        <dt>
+
+          <code><a href="hd_set_theme.html">hd_set_theme()</a></code>
+
+        </dt>
+        <dd>Set Package-Wide Style Defaults</dd>
 
         <dt>
 
@@ -142,17 +181,10 @@
 
         <dt>
 
-          <code><a href="register_backend.html">register_backend()</a></code>
+          <code><a href="get_palette.html">get_palette()</a></code>
 
         </dt>
-        <dd>Register a Rendering Backend</dd>
-
-        <dt>
-
-          <code><a href="register_geom.html">register_geom()</a></code>
-
-        </dt>
-        <dd>Register a Geometry</dd>
+        <dd>Retrieve a Named Palette</dd>
 
         <dt>
 
@@ -160,8 +192,25 @@
 
         </dt>
         <dd>Register a Named Colour Palette</dd>
+      </dl></div><div class="section level2">
+      <h2 id="javascript">JavaScript<a class="anchor" aria-label="anchor" href="#javascript"></a></h2>
+
+      <div class="section-desc"><p>JavaScript-related utilities (relevant for Highcharts output).</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="hd_add_js.html">hd_add_js()</a></code>
+
+        </dt>
+        <dd>Inject JavaScript into a Highcharts Widget</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
