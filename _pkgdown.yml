@@ -7,18 +7,64 @@ template:
   favicon: man/figures/favicon.png
 
 navbar:
-  left:
-    - icon: fa-home fa-lg
-      href: index.html
-      aria-label: "Home"
-    - text: Reference
-      href: reference/index.html
-    - text: Quick start
-      href: articles/start-use.html
-    - text: News
-      href: news/index.html
+  structure:
+    right: [search, github]
+  components:
+    intro:
+      text: Quick start
+      href: articles/quick-start.html
+  reference:
+    text: References
+    href: reference/index.html
+  articles:
+    text: Articles
+    menu:
+     - text: Quick start
+       href: articles/quick-start.html
+  news:
+    text: Updates
+    href: news/index.html
 
-articles:
-- title: "Quick start"
-  contents:
-  - start-use
+
+reference:
+  - title: Primary functions
+    desc: >
+      Core functions used to generate figures.
+    contents:
+      - hd_spec
+      - hd_make
+  - title: Secondary functions
+    desc: >-
+      Additional optional functions that support workflows.
+    contents:
+      - hd_opts
+      - hd_save
+      - hd_app
+  - title: Backends
+    desc: >-
+      Backend engines used to build figures.
+    contents:
+      - list_backends
+      - register_backend
+  - title: Geoms
+    desc: >-
+      Geometric layers and related functions used to construct figures.
+    contents:
+      - list_geoms
+      - geom_args
+      - register_geom
+  - title: Themes
+    desc: >-
+      Theme functions defining the visual style of figures.
+    contents:
+      - hd_theme
+      - gg_theme
+      - hd_set_theme
+      - list_palettes
+      - get_palette
+      - register_palette
+  - title: JavaScript
+    desc: >-
+      JavaScript-related utilities (relevant for Highcharts output).
+    contents:
+      - hd_add_js

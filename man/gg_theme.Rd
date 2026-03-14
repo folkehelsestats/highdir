@@ -16,7 +16,7 @@ A ggplot2 \code{theme} object.
 \description{
 Returns a ggplot2 theme object from either a name string or a theme object
 passed directly. Priority: explicit argument > session option
-(\code{highdir.gg_theme}) > \code{"minimal"} fallback.
+(\code{highdir.gg_theme}) > \code{"classic"} fallback.
 }
 \details{
 Called automatically inside \code{ggplot_engine()}; useful when you want to
@@ -24,8 +24,8 @@ apply the package theme to a ggplot built outside highdir.
 
 Built-in name strings and their ggplot2 equivalents:\tabular{ll}{
    Name \tab ggplot2 function \cr
-   \code{"minimal"} (default) \tab \code{theme_minimal()} \cr
    \code{"classic"} \tab \code{theme_classic()} \cr
+   \code{"minimal"} (default) \tab \code{theme_minimal()} \cr
    \code{"bw"} \tab \code{theme_bw()} \cr
    \code{"light"} \tab \code{theme_light()} \cr
    \code{"dark"} \tab \code{theme_dark()} \cr

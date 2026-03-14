@@ -18,7 +18,6 @@ hd_make(
   backend = "highcharter",
   use_js = TRUE,
   module = TRUE,
-  filename = NULL,
   ...
 )
 ```
@@ -66,11 +65,6 @@ hd_make(
 
   Use available modules js from CDN
   <https://api.highcharts.com/highcharts>
-
-- filename:
-
-  Character or `NULL`. Base filename for the Highcharts export or save
-  menu (no extension). Default: `"highdir-figure"`.
 
 - ...:
 

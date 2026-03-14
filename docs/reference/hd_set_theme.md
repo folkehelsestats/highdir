@@ -71,8 +71,6 @@ for per-figure overrides
 ``` r
 hd_set_theme(hc_theme = "economist", gg_theme = "classic",
              colors   = c("#025169", "#7C145C", "#C68803"))
-#> Error in hd_set_theme(hc_theme = "economist", gg_theme = "classic", colors = c("#025169",     "#7C145C", "#C68803")): unused argument (gg_theme = "classic")
 # Reset
 hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL)
-#> Error in hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL): unused argument (gg_theme = "minimal")
 ```
