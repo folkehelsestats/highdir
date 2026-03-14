@@ -12,7 +12,7 @@
 
 #' @keywords internal
 highcharter_engine <- function(spec, geom, opts, geom_params,
-                               use_js = TRUE, module = TRUE, filename = NULL, ...) {
+                               use_js = TRUE, module = TRUE, ...) {
 
   chart <- base_fig(spec, opts, "highcharter")
 
@@ -64,7 +64,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
     ) |>
     highcharter::hc_exporting(
       enabled       = TRUE,
-      filename      = filename %||% "highdir-figure",
+      filename      = "highdir-figure",
       accessibility = list(enabled = TRUE)
     )
 
