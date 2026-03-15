@@ -2,8 +2,6 @@
 <url><loc>https://github.com/folkehelsestats/highdir/404.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/articles/index.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/articles/quick-start.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/articles/start-use.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/articles/start.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/authors.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/index.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/LICENSE-text.html</loc></url>
@@ -13,14 +11,9 @@
 <url><loc>https://github.com/folkehelsestats/highdir/reference/base_fig.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/check_columns.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/check_ylim.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/reference/dot-download_norway_sf.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/reference/dot-fallback_norway_sf.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/reference/dot-get_norway_sf.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/dot-hc_symbols.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/dot-hd_add_dep.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/reference/dot-norm_code.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/dot-resolve_axis_label.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/reference/dot-to_hc_key.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/geom_args.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/get_palette.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/gg_theme.html</loc></url>
@@ -37,8 +30,6 @@
 <url><loc>https://github.com/folkehelsestats/highdir/reference/list_backends.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/list_geoms.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/list_palettes.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/reference/no_counties.html</loc></url>
-<url><loc>https://github.com/folkehelsestats/highdir/reference/no_municipalities.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/point_events_or_null.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/register_backend.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/register_geom.html</loc></url>

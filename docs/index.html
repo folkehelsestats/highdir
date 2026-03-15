@@ -42,7 +42,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/quick-start.html">start-use</a></li>
+<li><a class="dropdown-item" href="articles/quick-start.html">Quick start</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -69,7 +69,7 @@
 
 <!-- badges: end -->
 <p><strong>highdir</strong> is an R package that provides a unified, backend-agnostic API for building figures with either <a href="https://jkunst.com/highcharter/" class="external-link"><strong>highcharter</strong></a> (interactive) or <a href="https://ggplot2.tidyverse.org/" class="external-link"><strong>ggplot2</strong></a> (static).</p>
-<p>A figure is described once as a <code>hd_spec</code> and <code>hd_opts</code> object and rendered to either backend without changing the calling code. The package ships with the default to use <a href="https://www.helsedirektoratet.no" class="external-link">The Norwegian Directorate of Health</a> (<em>Helsedirektoratet</em>) colour palette, styling and theme. A Shiny GUI is introduced to make it user friendly.</p>
+<p>A figure is described once as a <code>hd_spec</code> object and rendered to any supported backend without changing the calling code. Additional presentation settings can be defined through <code>hc_opts</code> prior to rendering. The package ships with the default to use <a href="https://www.helsedirektoratet.no" class="external-link">The Norwegian Directorate of Health</a> (<em>Helsedirektoratet</em>) colour palette, styling and theme. To enhance usability, a Shiny graphical user interface is also included.</p>
 <hr>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -82,7 +82,7 @@
 <hr>
 </div>
 <div class="section level2">
-<h2 id="shiny-gui">Shiny GUI<a class="anchor" aria-label="anchor" href="#shiny-gui"></a>
+<h2 id="get-started">Get started<a class="anchor" aria-label="anchor" href="#get-started"></a>
 </h2>
 <p>The simplest way to get started with <em>highdir</em> is by using the built‑in Shiny app. It shows also codes to demonstrate how to use the package programmatically in R. Start the app with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">

@@ -2,4 +2,5 @@
 
 ### All vignettes
 
-- [start-use](https://github.com/folkehelsestats/highdir/articles/quick-start.md):
+- [Quick
+  start](https://github.com/folkehelsestats/highdir/articles/quick-start.md):
