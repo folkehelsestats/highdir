@@ -18,7 +18,6 @@
  * arrow via CSS transform) and the target div (sets display:block).
  *
  * This is 100% client-side — zero server round-trips.
- * The original code did the same thing with an inline script in ui.R.
  * Moving it here keeps ui.R free of JavaScript strings.
  */
 $(document).on("click", ".hd-toggle", function () {
