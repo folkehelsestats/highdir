@@ -1,11 +1,10 @@
-# start-use
-
-## Quick start
+# Quick start
 
 ``` r
 
 library(highdir)
 
+# Create dataset
 df <- data.frame(
   age  = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
   sex  = rep(c("Male", "Female"), 4),

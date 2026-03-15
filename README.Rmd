@@ -31,10 +31,11 @@ knitr::opts_chunk$set(
 building figures with either [**highcharter**](https://jkunst.com/highcharter/)
 (interactive) or [**ggplot2**](https://ggplot2.tidyverse.org/) (static).
 
-A figure is described once as a `hd_spec` and `hd_opts` object and rendered to
-either backend without changing the calling code. The package ships with the
-default to use [The Norwegian Directorate of Health](https://www.helsedirektoratet.no) (*Helsedirektoratet*) colour
-palette, styling and theme. A Shiny GUI is introduced to make it user friendly.
+A figure is described once as a `hd_spec` object and rendered to any supported
+backend without changing the calling code. Additional presentation settings can
+be defined through `hc_opts` prior to rendering. The package ships with the
+default to use [The Norwegian Directorate of Health](https://www.helsedirektoratet.no) (*Helsedirektoratet*)
+colour palette, styling and theme. To enhance usability, a Shiny graphical user interface is also included.
 
 ---
 
@@ -49,8 +50,7 @@ remotes::install_github("folkehelsestats/highdir@dev")
 
 ---
 
-## Shiny GUI
-
+## Get started 
 The simplest way to get started with *highdir* is by using the built‑in Shiny app.
 It shows also codes to demonstrate how to use the package programmatically in R.
 Start the app with:
