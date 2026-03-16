@@ -82,7 +82,15 @@
     highcharter_fun = hc_arearange,
     # ymin and ymax are required — the geom cannot render without them.
     # They are passed via ... in hd_make() like any other geom arg.
-    required_args   = c("ymin", "ymax")
+    required_args   = list(
+      ymin = list(
+        default = NULL,
+        desc    = "Minimum value of the y-axis range"
+      ),
+      ymax = list(
+        default = NULL,
+        desc    = "Maximum value of the y-axis range"
+      ))
     # No optional_args for arearange currently.
   )
 

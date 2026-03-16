@@ -154,13 +154,16 @@ geom_args <- function(type = NULL) {
   # ── Build a data frame with one row per argument ───────────────────────────
   rows <- list()
 
-  # Required args: must be supplied, no default
-  for (arg in geom$required_args) {
+  # Required args: have a default, may be omitted
+  for (arg in names(geom$required_args)) {
+    entry   <- geom$required_args[[arg]]
+    default <- if (is.null(entry$default)) "NULL"
+               else as.character(entry$default)
     rows[[length(rows) + 1L]] <- data.frame(
       argument = arg,
       kind     = "required",
-      default  = "(must supply)",
-      desc     = "",
+      default  = default,
+      desc     = entry$desc,
       stringsAsFactors = FALSE
     )
   }
@@ -169,7 +172,7 @@ geom_args <- function(type = NULL) {
   for (arg in names(geom$optional_args)) {
     entry   <- geom$optional_args[[arg]]
     default <- if (is.null(entry$default)) "NULL"
-               else                        as.character(entry$default)
+               else as.character(entry$default)
     rows[[length(rows) + 1L]] <- data.frame(
       argument = arg,
       kind     = "optional",
@@ -211,16 +214,3 @@ geom_args <- function(type = NULL) {
   invisible(out)
 }
 
-# ── Validation ────────────────────────────────────────────────────────────────
-
-#' @keywords internal
-validate_geom_args <- function(geom, extra_args) {
-  # Only required_args are checked here — optional_args have defaults so
-  # omitting them is fine.
-  missing_args <- setdiff(geom$required_args, names(extra_args))
-  if (length(missing_args) > 0)
-    stop("Missing required argument(s) for geometry '", geom$name, "': ",
-         paste(missing_args, collapse = ", "),
-         ".  Run geom_args('", geom$name, "') to see all arguments.",
-         call. = FALSE)
-}
