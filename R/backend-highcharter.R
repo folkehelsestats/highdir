@@ -81,6 +81,10 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
                                 use_js = use_js, ...)
 
   # ── Theme (per-figure opts$hc_theme overrides session default) ───────────
+  # hd_theme() resolves name, colors, and font in one call -- same priority
+  # chain as gg_theme() in ggplot_engine():
+  #   explicit opts > getOption("highdir.*") > package default
+  # Font is read from getOption("highdir.font") inside hd_theme() itself.
   chart <- chart |>
     highcharter::hc_add_theme(
       hd_theme(name   = opts$hc_theme,

@@ -1,4 +1,4 @@
-# R/theme.R -- Style, theme and JavaScript configuration
+# Style, theme and JavaScript configuration
 
 # -- Package-level option defaults (applied in zzz.R) ------------------------
 
@@ -141,65 +141,114 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
 
 # -- ggplot2 theme builder ----------------------------------------------------
 
-#' Resolve a ggplot2 Theme Object
+#' Build a ggplot2 Theme Object
 #'
-#' Returns a ggplot2 theme object from either a name string or a theme object
-#' passed directly. Priority: explicit argument > session option
-#' (`highdir.gg_theme`) > `"classic"` fallback.
+#' Constructs a ggplot2 theme by resolving a base theme, then merging colour
+#' and font overrides -- exactly mirroring what [hd_theme()] does for the
+#' highcharter backend.
 #'
-#' Called automatically inside `ggplot_engine()`; useful when you want to
-#' apply the package theme to a ggplot built outside highdir.
+#' Priority for each argument:
+#' - `theme`:  explicit argument > `getOption("highdir.gg_theme")` > `"classic"`
+#' - `colors`: explicit argument > `getOption("highdir.colors")` > `NULL`
+#' - `font`:   explicit argument > `getOption("highdir.font")`   > `NULL`
+#'
+#' Called automatically inside `ggplot_engine()`; also useful for applying the
+#' package theme to a ggplot built outside highdir.
 #'
 #' Built-in name strings and their ggplot2 equivalents:
 #'
 #' | Name | ggplot2 function |
 #' |:-----|:----------------|
-#' | `"classic"` | `theme_classic()` |
-#' | `"minimal"` (default) | `theme_minimal()` |
+#' | `"classic"` (default) | `theme_classic()` |
+#' | `"minimal"` | `theme_minimal()` |
 #' | `"bw"` | `theme_bw()` |
 #' | `"light"` | `theme_light()` |
 #' | `"dark"` | `theme_dark()` |
 #' | `"void"` | `theme_void()` |
 #' | `"grey"` / `"gray"` | `theme_grey()` |
 #'
-#' @param theme Character name string, ggplot2 theme object, or `NULL`.
+#' @param theme  Character name string, ggplot2 theme object, or `NULL`.
 #'   `NULL` reads from `getOption("highdir.gg_theme")`.
+#' @param colors Character vector, palette name string, or `NULL`. Resolved
+#'   colours are stored on the returned object and applied by
+#'   `ggplot_engine()` via `scale_color_manual` / `scale_fill_manual`.
+#'   `NULL` reads from `getOption("highdir.colors")`.
+#' @param font   Character or `NULL`. Font family applied to all text elements
+#'   via `theme(text = element_text(family = font))`. `NULL` reads from
+#'   `getOption("highdir.font")`.
 #'
-#' @return A ggplot2 `theme` object.
+#' @return An object of class `"hd_gg_theme"` — a list with two fields:
+#'   `$theme` (a ggplot2 `theme` object with font baked in) and `$colors`
+#'   (a resolved character vector or `NULL`).  `ggplot_engine()` unpacks
+#'   both.  The object can also be added directly to a ggplot with `+`
+#'   via the `+.gg` method (only the theme is applied; colors are handled
+#'   separately by `apply_gg_colors()`).
 #'
 #' @examples
-#' gg_theme()                          # reads session default
-#' gg_theme("classic")                 # theme_classic()
-#' gg_theme(ggplot2::theme_bw(base_size = 14))  # object passed directly
+#' gg_theme()                                    # session defaults
+#' gg_theme("bw")                                # theme_bw(), session colors/font
+#' gg_theme("classic", colors = c("#025169", "#7C145C"))
+#' gg_theme("minimal", font = "Source Sans Pro")
+#' gg_theme(ggplot2::theme_bw(base_size = 14), font = "mono")
 #'
 #' @export
-gg_theme <- function(theme = NULL) {
+gg_theme <- function(theme = NULL, colors = NULL, font = NULL) {
 
+  # -- 1. Resolve base theme --------------------------------------------------
   resolved <- theme %||% getOption("highdir.gg_theme", default = "classic")
 
-  # Already a theme object -- return as-is
-  if (inherits(resolved, "theme"))
-    return(resolved)
+  base <- if (inherits(resolved, "theme")) {
+    resolved
+  } else {
+    if (!is.character(resolved) || length(resolved) != 1L)
+      stop("`gg_theme` must be a single theme name string or a ggplot2 theme ",
+           "object. Got: ", class(resolved)[1L], call. = FALSE)
+    switch(resolved,
+      "classic" = ggplot2::theme_classic(),
+      "minimal" = ggplot2::theme_minimal(),
+      "bw"      = ggplot2::theme_bw(),
+      "light"   = ggplot2::theme_light(),
+      "dark"    = ggplot2::theme_dark(),
+      "void"    = ggplot2::theme_void(),
+      "grey" = ,
+      "gray"    = ggplot2::theme_grey(),
+      stop("Unknown gg_theme name '", resolved, "'. ",
+           "Use: classic, minimal, bw, light, dark, void, grey. ",
+           "Or pass a ggplot2::theme_*() object directly.",
+           call. = FALSE)
+    )
+  }
 
-  # Name string -- look up in the built-in map
-  if (!is.character(resolved) || length(resolved) != 1L)
-    stop("`gg_theme` must be a single theme name string or a ggplot2 theme ",
-         "object. Got: ", class(resolved)[1L], call. = FALSE)
+  # -- 2. Font override (same priority chain as hd_theme) ---------------------
+  font <- font %||% getOption("highdir.font", default = NULL)
+  if (!is.null(font))
+    base <- base + ggplot2::theme(text = ggplot2::element_text(family = font))
 
-  switch(resolved,
-    "classic" = ggplot2::theme_classic(),
-    "minimal" = ggplot2::theme_minimal(),
-    "bw"      = ggplot2::theme_bw(),
-    "light"   = ggplot2::theme_light(),
-    "dark"    = ggplot2::theme_dark(),
-    "void"    = ggplot2::theme_void(),
-    "grey" = ,
-    "gray"    = ggplot2::theme_grey(),
-    stop("Unknown gg_theme name '", resolved, "'. ",
-         "Use: classic, minimal, bw, light, dark, void, grey. ",
-         "Or pass a ggplot2::theme_*() object directly.",
-         call. = FALSE)
+  # -- 3. Resolve colors (stored for ggplot_engine, not baked into theme) -----
+  # Colors are plot-level scales (scale_color_manual / scale_fill_manual), not
+  # theme elements, so they cannot be embedded in the theme object itself.
+  # We carry them alongside the theme in the returned hd_gg_theme object so
+  # ggplot_engine() has one place to read everything -- mirroring how hc_theme
+  # carries colors inside the Highcharts theme JSON.
+  resolved_colors <- colors %||% getOption("highdir.colors", default = NULL)
+
+  structure(
+    list(theme = base, colors = resolved_colors),
+    class = "hd_gg_theme"
   )
+}
+
+#' @export
+#' @keywords internal
+# Allows `p + gg_theme("bw")` to work directly on a ggplot object.
+# Only the theme portion is applied; colors are handled by apply_gg_colors().
+"+.hd_gg_theme" <- function(e1, e2) {
+  if (inherits(e1, "hd_gg_theme")) {
+    # hd_gg_theme + something: apply theme to something if it is a ggplot
+    stop("Use `p + gg_theme(...)` not `gg_theme(...) + p`.", call. = FALSE)
+  }
+  # p + hd_gg_theme: standard ggplot + theme
+  e1 + e2$theme
 }
 
 # -- ggplot2 colour helper ----------------------------------------------------
