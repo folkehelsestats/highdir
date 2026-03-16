@@ -37,14 +37,14 @@ test_that("validate_geom_args: passes when all required present", {
 })
 
 test_that("validate_geom_args: stops on missing required args", {
-  g <- list(required_args = c("ymin", "ymax"))
-  expect_error(validate_geom_args(g, list()),           "Missing required")
+  g <- list(required_args = list(ymin = NULL, ymax = NULL))
+  expect_error(validate_geom_args(g, list()), "Missing required")
   expect_error(validate_geom_args(g, list(ymin = "a")), "ymax")
 })
 
 test_that("arearange has correct required_args", {
   g <- .get_geom("arearange")
-  expect_setequal(g$required_args, c("ymin", "ymax"))
+  expect_setequal(names(g$required_args), c("ymin", "ymax"))
 })
 
 test_that("pie has no required_args", {
