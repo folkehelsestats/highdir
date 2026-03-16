@@ -53,12 +53,13 @@
   # Opts collapsible — labels, style
   mod_opts_ui("opts"),
 
-  # ── Geom options (dynamic — rendered from registry in server.R) ──────────
-  # uiOutput here is intentional: the number and type of inputs varies
-  # entirely by geometry.  The server reads optional_args from the registry
-  # and builds the appropriate inputs.
-  shiny::div(class = "hd-label", "Geom options"),
-  shiny::uiOutput("ui_geom_opts"),
+  # ── Geom options (static, generated from registry at startup) ────────────
+  # geom_opts_ui() is defined in global.R.  It reads optional_args from the
+  # registry once at app startup and produces one hd-toggle collapsible panel
+  # per geometry, each wrapped in a conditionalPanel so only the panel for
+  # the currently selected geom is visible.  Pure client-side — zero server
+  # round-trips, no renderUI lag, no input flicker on geom switch.
+  geom_opts_ui(),
 
   # ── Draw button ───────────────────────────────────────────────────────────
   shiny::actionButton("run", "Draw figure",
