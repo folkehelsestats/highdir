@@ -32,109 +32,37 @@
   register_backend("ggplot2",     ggplot_engine)
   register_backend("highcharter", highcharter_engine)
 
+  # -- Geometries -------------------------------------------------------------
   # Geom optional args need to be defined here. They will be used in two different
   # places:
   # 1 - geom_args()
   # 2 - app output$ui_geom_opts() or geom_intpu_r object in Shiny server
   # --------------------------------------------------------------------------
-  register_geom("column",
-    ggplot_fun      = gg_column,
-    highcharter_fun = hc_column
-    # No optional_args: column has no extra knobs beyond spec/opts
-  )
+  # .geom_registry_defs is defined in R/additional_args.R.
+  # The gg_* and hc_* function objects are looked up here by name so that
+  # the plain list in additional_args.R does not need to reference them
+  # (function objects are not available at list-parse time in that file).
+  .fn <- function(geom_name, suffix) {
+    fn_name <- paste0(suffix, "_", geom_name)
+    if (exists(fn_name, mode = "function", envir = parent.env(environment()),
+               inherits = TRUE))
+      get(fn_name, mode = "function", envir = parent.env(environment()),
+          inherits = TRUE)
+    else
+      NULL
+  }
 
-  register_geom("line",
-    ggplot_fun      = gg_line,
-    highcharter_fun = hc_line,
-    # optional_args documents every key that gg_line / hc_line reads from
-    # geom_params.  Users discover these by calling geom_args("line").
-    optional_args = list(
-      smooth = list(
-        default = TRUE,
-        desc    = "Logical. TRUE = spline curves, FALSE = straight segments. Both backends."
-      ),
-      dot_size = list(
-        default = 4,
-        desc    = "Numeric. Marker radius in pixels. Both backends."
-      ),
-      # line_symbols is listed as highcharter-only because gg_line ignores it;
-      # but passing it to the ggplot2 backend is harmless (silently ignored).
-      line_symbols = list(
-        default = NULL,
-        desc    = paste0("Character vector. Highcharter only. Per-group marker shapes: ",
-                         "'circle','square','diamond','triangle','triangle-down'."
-                         )
-      )
-    ))
-
-  register_geom("scatter",
-    ggplot_fun      = gg_scatter,
-    highcharter_fun = hc_scatter,
-    optional_args   = list(
-      dot_size = list(
-        default = 4,
-        desc    = "Numeric. Point size (ggplot2) or marker radius in px (highcharter)."
-      )
-    ))
-
-  register_geom("arearange",
-    ggplot_fun      = gg_arearange,
-    highcharter_fun = hc_arearange,
-    # ymin and ymax are required — the geom cannot render without them.
-    # They are passed via ... in hd_make() like any other geom arg.
-    required_args   = list(
-      ymin = list(
-        default = NULL,
-        desc    = "Minimum value of the y-axis range"
-      ),
-      ymax = list(
-        default = NULL,
-        desc    = "Maximum value of the y-axis range"
-      ))
-    # No optional_args for arearange currently.
-  )
-
-  register_geom("pie",
-    ggplot_fun      = gg_pie,
-    highcharter_fun = hc_pie,
-    optional_args   = list(
-      inner_size = list(
-        default = "0%",
-        desc    = "Character. Inner radius as CSS %, e.g. '50%' for a donut. Both backends."
-      )
-    ))
-
-  register_geom("ranked_bar",
-    ggplot_fun      = gg_ranked_bar,
-    highcharter_fun = hc_ranked_bar,
-    optional_args   = list(
-      ascending = list(
-        default = TRUE,
-        desc    = "Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends."
-      ),
-      comp = list(
-        default = NULL,
-        desc    = "Character. Category name to highlight with a second colour. Both backends."
-      ),
-      aim = list(
-        default = NULL,
-        desc    = "Numeric. Value for a dashed target/aim line. Both backends."
-      ),
-      char_scale = list(
-        default = 0.045,
-        desc = paste0("Numeric scaling factor that converts label character-count",
-                      "into axis-range units. Controls how generously space is estimated for each",
-                      "character. Defaults to 0.045; increase (e.g. 0.06) for",
-                      "larger text sizes, decrease (e.g. 0.03) for smaller ones.")
-      ),
-      min_frac = list(
-        default = 0.08,
-        desc = paste0("Numeric. Minimum fraction of the axis range that a bar must",
-                      "span before its label is considered to fit inside. Acts as a safety floor",
-                      "for very short labels. Defaults to 0.08 (8%).")
-      )
-    ))
-
+  for (g in names(.geom_registry_defs)) {
+    def <- .geom_registry_defs[[g]]
+    register_geom(
+      name            = g,
+      ggplot_fun      = .fn(g, "gg"),
+      highcharter_fun = .fn(g, "hc"),
+      required_args   = def$required_args %||% character(),
+      optional_args   = def$optional_args %||% list(),
+      is_map_geom     = isTRUE(def$is_map_geom)
+    )
+  }
 
   # ── Option defaults ────────────────────────────────────────────────────────
   op     <- options()
