@@ -55,7 +55,7 @@ list_backends <- function() sort(ls(.backend_registry))
 #' @param name            Character. Unique geometry identifier.
 #' @param ggplot_fun      Function or `NULL`.
 #' @param highcharter_fun Function or `NULL`.
-#' @param required_args   Character vector. Args that MUST be supplied via
+#' @param required_args   Named list of `list(default, desc)`. Args that MUST be supplied via
 #'   `...` in `hd_make()`. Validation fails if any are missing.
 #' @param optional_args   Named list of `list(default, desc)`. Args that MAY
 #'   be supplied and have a sensible default when omitted.  These are purely
@@ -66,11 +66,11 @@ list_backends <- function() sort(ls(.backend_registry))
 #' @return `name`, invisibly.
 #' @export
 register_geom <- function(name,
-                           ggplot_fun      = NULL,
-                           highcharter_fun = NULL,
-                           required_args   = character(),
-                           optional_args   = list(),
-                           is_map_geom     = FALSE) {
+                          ggplot_fun      = NULL,
+                          highcharter_fun = NULL,
+                          required_args   = list(),
+                          optional_args   = list(),
+                          is_map_geom     = FALSE) {
 
   # optional_args must be a named list of list(default, desc) entries.
   # Validate structure so mis-registrations fail loudly at load time rather
