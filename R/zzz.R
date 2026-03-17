@@ -14,8 +14,7 @@
 
 #' @keywords internal
 .onLoad <- function(libname, pkgname) {
-
-  # ── Built-in colour palettes ───────────────────────────────────────────────
+  # Built-in colour palettes ------------------------------------------- -------
   register_palette("hdir", c(
     "#025169", "#0069E8",
     "#7C145C", "#C68803",
@@ -28,7 +27,7 @@
   ## register_palette("hdir2", c("rgba(49,101,117,1)", "rgba(138,41,77,1)")) ##
   register_palette("hdir2", c("#315975", "#8A294D"))
 
-  # ── Backends ──────────────────────────────────────────────────────────────
+  # Backends ----------------------------------------------------------- -------
   register_backend("ggplot2",     ggplot_engine)
   register_backend("highcharter", highcharter_engine)
 
@@ -64,7 +63,7 @@
     )
   }
 
-  # ── Option defaults ────────────────────────────────────────────────────────
+  # -- Option defaults ---------------------------------------------------------
   op     <- options()
   to_set <- .hd_defaults[!names(.hd_defaults) %in% names(op)]
   if (length(to_set)) options(to_set)

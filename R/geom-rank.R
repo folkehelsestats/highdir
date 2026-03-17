@@ -207,7 +207,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
   col1 <- pal[1]
   col2 <- pal[2]
 
-  # ── Highlight comparison bar ───────────────────────────────────────────────
+  # ── Highlight comparison bar ------------------------------------------------
   # grepl must only be called when vs is a non-NULL non-empty string.
   # The & operator in ifelse() does NOT short-circuit, so
   # ifelse(use_vs & grepl(vs, ...), ...) evaluates grepl(NULL, ...)

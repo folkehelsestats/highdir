@@ -1,5 +1,5 @@
 #
-# ── JS hover-band helpers ────────────────────────────────────────────────────
+# -- JS hover-band helpers -----------------------------------------------------
 
 #' Hover-band point events (or NULL)
 #'
@@ -29,7 +29,7 @@ point_events_or_null <- function(use_js,
   ))
 }
 
-# ── Shared x-mapping (category index vs numeric) ────────────────────────────
+# ── Shared x-mapping (category index vs numeric) ------------------------------
 ## Highcharts draws axes in two fundamentally different ways:
 ## Categorical axis (e.g. "18-24", "Oslo", "Male") — Highcharts expects 0-based integer positions: 0, 1, 2, 3… and a separate categories array for the labels
 ## Numeric axis (e.g. 1990, 1995, 2000) — Highcharts reads the raw numbers directly as x-positions
@@ -59,7 +59,7 @@ point_events_or_null <- function(use_js,
   }
 }
 
-# ── Group-splitting helper ───────────────────────────────────────────────────
+# ── Group-splitting helper ----------------------------------------------------
 ## Draws each group when exists as a separate series
 ## Example:
 ## groups  <- .group_split(spec)

@@ -74,7 +74,7 @@ hc_arearange <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
     # Without a unique id per group, all arearanges would link to the same line.
     line_id <- paste0("line_series_", i)
 
-    # ── 1. Main line series ──────────────────────────────────────────────────
+    # ── 1. Main line series ---------------------------------------------------
     # Added BEFORE the arearange so it renders on top in z-order.
     # id = line_id is what the arearange below will reference via linkedTo.
     # showInLegend = FALSE because the arearange entry already represents
@@ -104,7 +104,7 @@ hc_arearange <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
       chart <- do.call(highcharter::hc_add_series, line_args)
     }
 
-    # ── 2. Arearange (confidence band) ──────────────────────────────────────
+    # ── 2. Arearange (confidence band) ----------------------------------------
     # linkedTo ties this ribbon to the line series above.
     # When the user clicks the legend entry (owned by the line), both
     # the line AND its ribbon hide together.

@@ -39,7 +39,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
 
   p <- base_fig(spec, opts, "ggplot2")
 
-  # ── Colour + layers ───────────────────────────────────────────────────────
+  # -- Colour + layers ---------------------------------------------------------
   grp_col <- spec$colour %||% spec$group
 
   if (!is.null(grp_col)) {

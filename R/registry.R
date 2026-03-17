@@ -2,7 +2,7 @@
 # Both registries use a plain environment as a mutable named store.
 # Backends and geoms are registered in .onLoad() (zzz.R).
 
-# ── Backend registry ─────────────────────────────────────────────────────────
+# ── Backend registry ----------------------------------------------------------
 
 #' @keywords internal
 .backend_registry <- new.env(parent = emptyenv())
@@ -27,7 +27,7 @@ get_backend <- function(name) .backend_registry[[name]]
 #' @export
 list_backends <- function() sort(ls(.backend_registry))
 
-# ── Geometry registry ────────────────────────────────────────────────────────
+# ── Geometry registry ---------------------------------------------------------
 
 #' @keywords internal
 .geom_registry <- new.env(parent = emptyenv())
@@ -108,7 +108,7 @@ register_geom <- function(name,
 #' @export
 list_geoms <- function() sort(ls(.geom_registry))
 
-# ── geom_args(): user-facing discoverability helper ──────────────────────────
+# ── geom_args(): user-facing discoverability helper ---------------------------
 
 #' Show Arguments for a Geometry
 #'
@@ -151,7 +151,7 @@ geom_args <- function(type = NULL) {
   if (is.null(geom))
     stop("Unknown geometry '", type, "'. See list_geoms().", call. = FALSE)
 
-  # ── Build a data frame with one row per argument ───────────────────────────
+  # ── Build a data frame with one row per argument ----------------------------
   rows <- list()
 
   # Required args: have a default, may be omitted
@@ -189,7 +189,7 @@ geom_args <- function(type = NULL) {
 
   out <- do.call(rbind, rows)
 
-  # ── Print a readable table ─────────────────────────────────────────────────
+  # ── Print a readable table --------------------------------------------------
   cat(sprintf("\nArguments for hd_make(..., type = \"%s\", ...):\n\n", type))
 
   # Compute column widths for alignment

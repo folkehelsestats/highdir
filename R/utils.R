@@ -1,14 +1,14 @@
-# R/utils.R ── Internal helpers (not exported)
+# Internal helpers (not exported)
 #
 # All small utilities used across the package live here so there is a single
 # place to look for them.  Nothing in this file is exported.
 
-# ── NULL coalescing ──────────────────────────────────────────────────────────
+# -- NULL coalescing -----------------------------------------------------------
 
 #' @keywords internal
 `%||%` <- function(a, b) if (is.null(a)) b else a
 
-# ── Type predicates ──────────────────────────────────────────────────────────
+# ── Type predicates -----------------------------------------------------------
 
 #' @keywords internal
 is_highchart <- function(x) inherits(x, "highchart")
@@ -16,7 +16,7 @@ is_highchart <- function(x) inherits(x, "highchart")
 #' @keywords internal
 is_ggplot <- function(x) inherits(x, c("gg", "ggplot"))
 
-# ── Validation helpers ───────────────────────────────────────────────────────
+# ── Validation helpers --------------------------------------------------------
 
 #' Stop with a tidy message when columns are absent from a data frame
 #' @keywords internal
