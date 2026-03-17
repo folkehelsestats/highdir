@@ -57,7 +57,7 @@ geom_args("ranked_bar")
 #>   argument    kind      default  description
 #>   ----------  --------  -------  ------------------------------
 #>   ascending   optional  TRUE     Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends.
-#>   comp        optional  NULL     Character. Category name to highlight with a second colour. Both backends.
+#>   vs        optional  NULL     Character. Category name to highlight with a second colour. Both backends.
 #>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.
 #>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.
 #>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).
@@ -103,7 +103,7 @@ geom_args()           # all registered geometries
 #>   argument    kind      default  description
 #>   ----------  --------  -------  ------------------------------
 #>   ascending   optional  TRUE     Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends.
-#>   comp        optional  NULL     Character. Category name to highlight with a second colour. Both backends.
+#>   vs        optional  NULL     Character. Category name to highlight with a second colour. Both backends.
 #>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.
 #>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.
 #>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).

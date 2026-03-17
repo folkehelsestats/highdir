@@ -1,7 +1,7 @@
 
 # @param ascending Logical. If \code{TRUE} (default) bars are sorted in
 #   ascending order of \code{y}.
-# @param comp Character string (partial match) identifying one category to
+# @param vs Character string (partial match) identifying one category to
 #   highlight with a contrasting fill colour (\code{col2}). If omitted all
 #   bars use \code{col1}.
 # @param char_scale Numeric scaling factor that converts label character-count
@@ -19,7 +19,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
 
   # ── Extract params ──────────────────────────────────────────────────────────
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  comp       <- geom_params$comp        %||% NULL   # character or NULL: comparison group name
+  vs       <- geom_params$vs        %||% NULL   # character or NULL: vsarison group name
   aim        <- geom_params$aim         %||% NULL   # numeric or NULL: target line
   char_scale <- geom_params$char_scale  %||% 0.045
   min_frac   <- geom_params$min_frac    %||% 0.08
@@ -67,13 +67,13 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   }
 
   # ── Resolve comparison highlight ────────────────────────────────────────────
-  # comp matches against the original x column (before N= appending)
-  # so the user passes the raw category name e.g. comp = "Oslo"
-  use_comp <- !is.null(comp) && nzchar(comp)
-  if (use_comp) {
-    comp_match  <- d$.xname[grepl(comp, d[[x_col]], fixed = TRUE)]
-    d$.is_comp  <- d$.xname %in% comp_match
-    bar_fill_aes <- ggplot2::aes(fill = .data[[".is_comp"]])
+  # vs matches against the original x column (before N= appending)
+  # so the user passes the raw category name e.g. vs = "Oslo"
+  use_vs <- !is.null(vs) && nzchar(vs)
+  if (use_vs) {
+    vs_match  <- d$.xname[grepl(vs, d[[x_col]], fixed = TRUE)]
+    d$.is_vs  <- d$.xname %in% vs_match
+    bar_fill_aes <- ggplot2::aes(fill = .data[[".is_vs"]])
     fill_scale   <- ggplot2::scale_fill_manual(
       values = c("FALSE" = col1, "TRUE" = col2),
       guide  = "none"
@@ -106,13 +106,13 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   }
 
   # Bars
-  if (use_comp) {
+  if (use_vs) {
     layers <- c(layers, list(
       ggplot2::geom_bar(
         data     = d,
         mapping  = ggplot2::aes(x = .data[[".xname"]],
                                 y = .data[[y_col]],
-                                fill = .data[[".is_comp"]]),
+                                fill = .data[[".is_vs"]]),
         width    = wdth,
         stat     = "identity",
         position = pos
@@ -187,8 +187,8 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
                           use_js = TRUE, ...) {
 
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  comp       <- geom_params$comp        %||% NULL   # character or NULL: comparison group name
-  aim        <- geom_params$aim         %||% NULL   # numeric or NULL: target line
+  vs         <- geom_params$vs               %||% NULL   # character or NULL: vsarison group name
+  aim        <- geom_params$aim              %||% NULL   # numeric or NULL: target line
 
   d     <- spec$data
   x_col <- spec$x
@@ -208,15 +208,15 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
   col2 <- pal[2]
 
   # ── Highlight comparison bar ───────────────────────────────────────────────
-  # grepl must only be called when comp is a non-NULL non-empty string.
+  # grepl must only be called when vs is a non-NULL non-empty string.
   # The & operator in ifelse() does NOT short-circuit, so
-  # ifelse(use_comp & grepl(comp, ...), ...) evaluates grepl(NULL, ...)
+  # ifelse(use_vs & grepl(vs, ...), ...) evaluates grepl(NULL, ...)
   # when comp is NULL → "invalid 'pattern' argument" error.
-  use_comp <- !is.null(comp) && nzchar(comp)
+  use_vs <- !is.null(vs) && nzchar(vs)
 
-  if (use_comp) {
-    is_comp    <- grepl(comp, d[[x_col]], fixed = TRUE)
-    colors_vec <- ifelse(is_comp, col2, col1)
+  if (use_vs) {
+    is_vs    <- grepl(vs, d[[x_col]], fixed = TRUE)
+    colors_vec <- ifelse(is_vs, col2, col1)
   } else {
     colors_vec <- rep(col1, nrow(d))
   }

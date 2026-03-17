@@ -68,7 +68,7 @@ The app is also available directly through ShinyApps.io at: [https://bit.ly/high
 | Name        | highcharter type      | ggplot2 equivalent       | Extra args        |
 |:----------- |:--------------------- |:------------------------ |:----------------- |
 | `column`    | column                | `geom_col()`             | —                 |
-| `ranked_bar`| column                | `geom_col()`             | `comp`, `aim`     |
+| `ranked_bar`| column                | `geom_col()`             | `vs`, `aim`     |
 | `line`      | line / spline         | `geom_line()`            | `smooth`, `dot_size`, `line_symbols` |
 | `scatter`   | scatter               | `geom_point()`           | —                 |
 | `arearange` | arearange             | `geom_ribbon()`          | `ymin`, `ymax`    |
