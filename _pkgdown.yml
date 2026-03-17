@@ -21,6 +21,8 @@ navbar:
     menu:
      - text: Quick start
        href: articles/quick-start.html
+     - text: Specifications
+       href: articles/specification.html
   news:
     text: Updates
     href: news/index.html

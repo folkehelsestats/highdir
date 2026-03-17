@@ -46,7 +46,7 @@ The app is also available directly through ShinyApps.io at:
 | Name | highcharter type | ggplot2 equivalent | Extra args |
 |:---|:---|:---|:---|
 | `column` | column | `geom_col()` | — |
-| `ranked_bar` | column | `geom_col()` | `comp`, `aim` |
+| `ranked_bar` | column | `geom_col()` | `vs`, `aim` |
 | `line` | line / spline | `geom_line()` | `smooth`, `dot_size`, `line_symbols` |
 | `scatter` | scatter | `geom_point()` | — |
 | `arearange` | arearange | `geom_ribbon()` | `ymin`, `ymax` |
@@ -114,7 +114,7 @@ Theme functions defining the visual style of figures.
 - [`hd_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_theme.md)
   : Build a Highcharts Theme Object
 - [`gg_theme()`](https://github.com/folkehelsestats/highdir/reference/gg_theme.md)
-  : Resolve a ggplot2 Theme Object
+  : Build a ggplot2 Theme Object
 - [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md)
   : Set Package-Wide Style Defaults
 - [`list_palettes()`](https://github.com/folkehelsestats/highdir/reference/list_palettes.md)
@@ -137,3 +137,4 @@ JavaScript-related utilities (relevant for Highcharts output).
 
 - [Quick
   start](https://github.com/folkehelsestats/highdir/articles/quick-start.md):
+- [Specifications](https://github.com/folkehelsestats/highdir/articles/specification.md):

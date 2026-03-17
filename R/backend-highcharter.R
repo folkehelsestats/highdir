@@ -8,7 +8,7 @@
 #   1. The engine signature is stable regardless of how many geoms exist.
 #   2. Nothing unexpected leaks into hc_add_series() causing tibble errors.
 
-# ── highcharter engine ───────────────────────────────────────────────────────
+# -- highcharter engine --------------------------------------------------------
 
 #' @keywords internal
 highcharter_engine <- function(spec, geom, opts, geom_params,
@@ -16,7 +16,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
 
   chart <- base_fig(spec, opts, "highcharter")
 
-  # ── Tooltip ──────────────────────────────────────────────────────────────
+  # -- Tooltip -----------------------------------------------------------------
 
   ## Show % symbols
   percent_fmt <- if (isTRUE(opts$percent)){
@@ -76,18 +76,22 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
     chart <- .hd_add_dep(chart, "plugins/accessibility.js")
   }
 
-  # ── Series (geom renders here) ────────────────────────────────────────────
+  # -- Series (geom renders here) ----------------------------------------------
   chart <- geom$highcharter_fun(chart, spec, opts, geom_params,
                                 use_js = use_js, ...)
 
-  # ── Theme (per-figure opts$hc_theme overrides session default) ───────────
+  # ── Theme (per-figure opts$hc_theme overrides session default) --------------
+  # hd_theme() resolves name, colors, and font in one call -- same priority
+  # chain as gg_theme() in ggplot_engine():
+  #   explicit opts > getOption("highdir.*") > package default
+  # Font is read from getOption("highdir.font") inside hd_theme() itself.
   chart <- chart |>
     highcharter::hc_add_theme(
       hd_theme(name   = opts$hc_theme,
                colors = opts$colors)
     )
 
-  # ── Session-level JS plugins ──────────────────────────────────────────────
+  # ── Session-level JS plugins ------------------------------------------------
   for (plugin in getOption("highdir.js_plugins", default = character(0)))
     chart <- hd_add_js(chart, plugin = plugin)
 

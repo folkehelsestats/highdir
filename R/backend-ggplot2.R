@@ -3,16 +3,26 @@
 # Engine contract:
 #   function(spec, geom, opts, geom_params, use_js, ...)
 #
-# `geom_params` is a named list built by hd_make() that carries *all*
-# geom-specific arguments (smooth, dot_size, line_symbols, ymin, ymax, …).
-# Passing them as an explicit list instead of bare `...` means:
-#   1. The engine signature is stable regardless of how many geoms exist.
-#   2. Nothing unexpected leaks into hc_add_series() causing tibble errors.
-
+# Theme, colours, and font are resolved in one call to gg_theme() at the
+# top of the engine -- mirroring how highcharter_engine() calls hd_theme()
+# at the end.  Both follow the same priority chain:
+#   explicit opts > session option > package default
+#
+# gg_theme() returns an hd_gg_theme object with:
+#   $theme  -- ggplot2 theme object with font already merged in
+#   $colors -- resolved colour vector (or NULL)
+# gt$colors is then passed to apply_gg_colors() so colours flow through
+# a single resolved value rather than being read from opts twice.
 
 #' @keywords internal
 ggplot_engine <- function(spec, geom, opts, geom_params,
                            use_js = TRUE, ...) {
+
+  # -- Resolve theme + colors + font in one step (mirrors hd_theme() call) ---
+  # Priority for each: explicit opts > getOption("highdir.*") > default
+  gt <- gg_theme(opts$gg_theme, colors = opts$colors)
+  # gt$theme  = ggplot2 theme object with font baked in
+  # gt$colors = resolved colour vector used by apply_gg_colors() below
 
   # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
   if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
@@ -29,50 +39,39 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
 
   p <- base_fig(spec, opts, "ggplot2")
 
-  # ── Resolve colour before handing off to the geom ────────────────────────
+  # -- Colour + layers ---------------------------------------------------------
   grp_col <- spec$colour %||% spec$group
 
   if (!is.null(grp_col)) {
-    # Multi-series: resolve palette, pass the full vector
-    # geom functions use it via scale_fill_manual / scale_color_manual
+    # Multi-series: resolve palette from gt$colors (already priority-resolved)
     n_groups     <- length(unique(spec$data[[grp_col]]))
     group_levels <- as.character(unique(spec$data[[grp_col]]))
-    single_colour <- NULL   # not used for multi-series
+    single_colour <- NULL
 
     layers <- geom$ggplot_fun(spec, opts, geom_params)
     for (layer in layers) p <- p + layer
     p <- apply_gg_colors(p,
-                         colors       = opts$colors,
+                         colors       = gt$colors,
                          n_groups     = n_groups,
                          group_levels = group_levels)
 
   } else {
-    # Single series: resolve exactly one colour and inject at layer level
-    # resolve_colors(1, ...) returns hdir[1] by default — the brand teal
-    single_colour <- resolve_colors(1L, opts$colors)[1]
-
-    # Pass single_colour into geom_params so the geom function can use it
-    # as a fixed fill/colour argument — NOT as a mapped aesthetic
+    # Single series: one brand colour injected as a fixed aesthetic
+    single_colour          <- resolve_colors(1L, gt$colors)[1]
     geom_params$single_colour <- single_colour
 
     layers <- geom$ggplot_fun(spec, opts, geom_params)
     for (layer in layers) p <- p + layer
-    # No apply_gg_colors call for single series — colour is already in layers
   }
 
-  # -- ggplot2 theme (per-figure opts$gg_theme > session default) ------------
-  # gg_theme() resolves: theme object passed directly OR name string OR
-  # session option "highdir.gg_theme" OR fallback "minimal".
-  p <- p + gg_theme(opts$gg_theme)
-
-  # No space below the bars but 10% above them
+  # No space below bars, 10% breathing room above
   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]]))
-    p <- p + ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, .1)))
+    p <- p + ggplot2::scale_y_continuous(
+               expand = ggplot2::expansion(mult = c(0, .1)))
 
-  # Font applied on top of the theme so it overrides the theme's font choice.
-  font <- getOption("highdir.font", default = NULL)
-  if (!is.null(font))
-    p <- p + ggplot2::theme(text = ggplot2::element_text(family = font))
-
-  p
+  # -- Theme (per-figure opts$gg_theme > session default) --------------------
+  # Applied last so it sits on top of every layer -- same position as
+  # hd_theme() in highcharter_engine().  Font is already merged into gt$theme
+  # by gg_theme(), so no separate font block is needed here.
+  p + gt$theme
 }

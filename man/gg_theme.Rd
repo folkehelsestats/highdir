@@ -2,30 +2,51 @@
 % Please edit documentation in R/theme.R
 \name{gg_theme}
 \alias{gg_theme}
-\title{Resolve a ggplot2 Theme Object}
+\title{Build a ggplot2 Theme Object}
 \usage{
-gg_theme(theme = NULL)
+gg_theme(theme = NULL, colors = NULL, font = NULL)
 }
 \arguments{
 \item{theme}{Character name string, ggplot2 theme object, or \code{NULL}.
 \code{NULL} reads from \code{getOption("highdir.gg_theme")}.}
+
+\item{colors}{Character vector, palette name string, or \code{NULL}. Resolved
+colours are stored on the returned object and applied by
+\code{ggplot_engine()} via \code{scale_color_manual} / \code{scale_fill_manual}.
+\code{NULL} reads from \code{getOption("highdir.colors")}.}
+
+\item{font}{Character or \code{NULL}. Font family applied to all text elements
+via \code{theme(text = element_text(family = font))}. \code{NULL} reads from
+\code{getOption("highdir.font")}.}
 }
 \value{
-A ggplot2 \code{theme} object.
+An object of class \code{"hd_gg_theme"} — a list with two fields:
+\verb{$theme} (a ggplot2 \code{theme} object with font baked in) and \verb{$colors}
+(a resolved character vector or \code{NULL}).  \code{ggplot_engine()} unpacks
+both.  The object can also be added directly to a ggplot with \code{+}
+via the \code{+.gg} method (only the theme is applied; colors are handled
+separately by \code{apply_gg_colors()}).
 }
 \description{
-Returns a ggplot2 theme object from either a name string or a theme object
-passed directly. Priority: explicit argument > session option
-(\code{highdir.gg_theme}) > \code{"classic"} fallback.
+Constructs a ggplot2 theme by resolving a base theme, then merging colour
+and font overrides -- exactly mirroring what \code{\link[=hd_theme]{hd_theme()}} does for the
+highcharter backend.
 }
 \details{
-Called automatically inside \code{ggplot_engine()}; useful when you want to
-apply the package theme to a ggplot built outside highdir.
+Priority for each argument:
+\itemize{
+\item \code{theme}:  explicit argument > \code{getOption("highdir.gg_theme")} > \code{"classic"}
+\item \code{colors}: explicit argument > \code{getOption("highdir.colors")} > \code{NULL}
+\item \code{font}:   explicit argument > \code{getOption("highdir.font")}   > \code{NULL}
+}
+
+Called automatically inside \code{ggplot_engine()}; also useful for applying the
+package theme to a ggplot built outside highdir.
 
 Built-in name strings and their ggplot2 equivalents:\tabular{ll}{
    Name \tab ggplot2 function \cr
-   \code{"classic"} \tab \code{theme_classic()} \cr
-   \code{"minimal"} (default) \tab \code{theme_minimal()} \cr
+   \code{"classic"} (default) \tab \code{theme_classic()} \cr
+   \code{"minimal"} \tab \code{theme_minimal()} \cr
    \code{"bw"} \tab \code{theme_bw()} \cr
    \code{"light"} \tab \code{theme_light()} \cr
    \code{"dark"} \tab \code{theme_dark()} \cr
@@ -34,8 +55,10 @@ Built-in name strings and their ggplot2 equivalents:\tabular{ll}{
 }
 }
 \examples{
-gg_theme()                          # reads session default
-gg_theme("classic")                 # theme_classic()
-gg_theme(ggplot2::theme_bw(base_size = 14))  # object passed directly
+gg_theme()                                    # session defaults
+gg_theme("bw")                                # theme_bw(), session colors/font
+gg_theme("classic", colors = c("#025169", "#7C145C"))
+gg_theme("minimal", font = "Source Sans Pro")
+gg_theme(ggplot2::theme_bw(base_size = 14), font = "mono")
 
 }

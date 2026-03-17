@@ -13,7 +13,7 @@ register_geom(
   name,
   ggplot_fun = NULL,
   highcharter_fun = NULL,
-  required_args = character(),
+  required_args = list(),
   optional_args = list(),
   is_map_geom = FALSE
 )
@@ -35,7 +35,8 @@ register_geom(
 
 - required_args:
 
-  Character vector. Args that MUST be supplied via `...` in
+  Named list of `list(default, desc)`. Args that MUST be supplied via
+  `...` in
   [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md).
   Validation fails if any are missing.
 

@@ -1,4 +1,4 @@
-# R/validate.R ── Centralised pre-render validation
+# Centralised pre-render validation
 #
 # All checks that need to happen before a figure is rendered live here.
 # Having one function keeps error messages consistent and easy to update.
@@ -40,4 +40,17 @@ validate_fig_inputs <- function(spec, opts, type, backend, extra_args) {
   validate_geom_args(geom, extra_args)
 
   invisible(NULL)
+}
+
+# -- Geom args validation --------------------------------------------
+
+#' @keywords internal
+validate_geom_args <- function(geom, extra_args) {
+  # Only required_args are checked here
+  missing_args <- setdiff(names(geom$required_args), names(extra_args))
+  if (length(missing_args) > 0)
+    stop("Missing required argument(s) for geometry '", geom$name, "': ",
+         paste(missing_args, collapse = ", "),
+         ".  Run geom_args('", geom$name, "') to see all arguments.",
+         call. = FALSE)
 }

@@ -1,4 +1,4 @@
-# R/base-figure.R ── Blank canvas constructors
+# Blank canvas constructors
 #
 # .base_constructors is a dispatch table (named list) keyed by backend name.
 # Each entry is a function(spec, opts) that returns an empty backend object
@@ -9,7 +9,7 @@
 #' @keywords internal
 .base_constructors <- list(
 
-  # ── ggplot2 ─────────────────────────────────────────────────────────────
+  # ── ggplot2 -----------------------------------------------------------------
   ggplot2 = function(spec, opts) {
 
     # ── Coerce group column to factor so ggplot2 treats it as discrete ────────
@@ -62,7 +62,7 @@
     p
   },
 
-  # ── highcharter ──────────────────────────────────────────────────────────
+  # ── highcharter -------------------------------------------------------------
   highcharter = function(spec, opts) {
 
     # --- percent % symbol ---

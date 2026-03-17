@@ -127,35 +127,35 @@ test_that("gg: without spec$n, x labels are plain municipality names", {
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 4. Comparison highlight — gg backend
-#    When comp is set, a .is_comp column drives fill; the fill scale maps
+#    When vs is set, a .is_vs column drives fill; the fill scale maps
 #    TRUE → col2 and FALSE → col1.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-test_that("gg: comp adds .is_comp column to bar layer data", {
+test_that("gg: vs adds .is_vs column to bar layer data", {
   fig     <- hd_make(spec_n, "ranked_bar", opts,
-                     backend = "ggplot2", comp = "Oslo")
+                     backend = "ggplot2", vs = "Oslo")
   bar_idx <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
   bar_data <- fig$layers[[bar_idx]]$data
-  expect_true(".is_comp" %in% names(bar_data))
+  expect_true(".is_vs" %in% names(bar_data))
   # Exactly one row should be marked as the comparison bar
-  expect_equal(sum(bar_data$.is_comp), 1L)
+  expect_equal(sum(bar_data$.is_vs), 1L)
 })
 
-test_that("gg: comp = NULL produces no .is_comp column", {
+test_that("gg: vs = NULL produces no .is_vs column", {
   fig     <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
   bar_idx <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
   bar_data <- fig$layers[[bar_idx]]$data
-  expect_false(".is_comp" %in% names(bar_data))
+  expect_false(".is_vs" %in% names(bar_data))
 })
 
-test_that("gg: comp produces two distinct fill colours in built plot", {
+test_that("gg: vs produces two distinct fill colours in built plot", {
   # Test via ggplot_build() — avoids ggplot2 internal class names entirely.
   # Two fill colours means the highlight scale was applied correctly.
   fig     <- hd_make(spec_n, "ranked_bar", opts,
-                     backend = "ggplot2", comp = "Oslo")
+                     backend = "ggplot2", vs = "Oslo")
   built   <- ggplot2::ggplot_build(fig)
   bar_idx <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
@@ -163,7 +163,7 @@ test_that("gg: comp produces two distinct fill colours in built plot", {
   expect_length(fill_vals, 2L)
 })
 
-test_that("gg: comp = NULL produces a single fill colour in built plot", {
+test_that("gg: vs = NULL produces a single fill colour in built plot", {
   fig     <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
   built   <- ggplot2::ggplot_build(fig)
   bar_idx <- which(vapply(fig$layers, function(l)
@@ -172,16 +172,16 @@ test_that("gg: comp = NULL produces a single fill colour in built plot", {
   expect_length(fill_vals, 1L)
 })
 
-test_that("gg: partial comp match works (grepl, fixed = TRUE)", {
+test_that("gg: partial vs match works (grepl, fixed = TRUE)", {
   # "Oslo" matches "Oslo" exactly — but also test a substring match
   fig      <- hd_make(spec_n, "ranked_bar", opts,
-                      backend = "ggplot2", comp = "Ber")   # matches Bergen
+                      backend = "ggplot2", vs = "Ber")   # matches Bergen
   bar_idx  <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
   bar_data <- fig$layers[[bar_idx]]$data
-  comp_rows <- bar_data[bar_data$.is_comp, ]
-  expect_equal(nrow(comp_rows), 1L)
-  expect_true(grepl("Bergen", comp_rows$.xname[1], fixed = TRUE))
+  vs_rows <- bar_data[bar_data$.is_vs, ]
+  expect_equal(nrow(vs_rows), 1L)
+  expect_true(grepl("Bergen", vs_rows$.xname[1], fixed = TRUE))
 })
 
 
@@ -244,7 +244,7 @@ test_that("gg: flip = FALSE does not add CoordFlip", {
 test_that("gg: spec$data columns are unchanged after hd_make", {
   cols_before <- names(spec_n$data)
   hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2",
-          comp = "Oslo", aim = 80)
+          vs = "Oslo", aim = 80)
   expect_equal(names(spec_n$data), cols_before)
 })
 
@@ -352,9 +352,9 @@ test_that("hc: with spec$n, point names do NOT contain '(N='", {
 # 11. HC backend — comparison highlight colours
 # ═══════════════════════════════════════════════════════════════════════════════
 
-test_that("hc: comp highlights exactly one bar with a different colour", {
+test_that("hc: vs highlights exactly one bar with a different colour", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", comp = "Oslo")
+                    backend = "highcharter", vs = "Oslo")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   # Exactly one point should have the highlight (col2) colour
@@ -365,16 +365,16 @@ test_that("hc: comp highlights exactly one bar with a different colour", {
   expect_equal(sum(colors == minority_col), 1L)
 })
 
-test_that("hc: comp = NULL uses a single colour for all bars", {
+test_that("hc: vs = NULL uses a single colour for all bars", {
   fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   expect_length(unique(colors), 1L)
 })
 
-test_that("hc: highlighted point name matches comp string", {
+test_that("hc: highlighted point name matches vs string", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", comp = "Bergen")
+                    backend = "highcharter", vs = "Bergen")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   names  <- vapply(points, `[[`, character(1), "name")
@@ -453,33 +453,33 @@ test_that("hc: dataLabels are disabled on the series", {
 # 14. grepl NULL guard — the comp = NULL bug must not regress
 # ═══════════════════════════════════════════════════════════════════════════════
 
-test_that("hc: comp = NULL does not error (grepl NULL guard)", {
+test_that("hc: vs = NULL does not error (grepl NULL guard)", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "highcharter", comp = NULL)
+    hd_make(spec_n, "ranked_bar", opts, backend = "highcharter", vs = NULL)
   )
 })
 
-test_that("gg: comp = NULL does not error (grepl NULL guard)", {
+test_that("gg: vs = NULL does not error (grepl NULL guard)", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2", comp = NULL)
+    hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2", vs = NULL)
   )
 })
 
-test_that("hc: comp = '' (empty string) does not error", {
+test_that("hc: vs = '' (empty string) does not error", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "highcharter", comp = "")
+    hd_make(spec_n, "ranked_bar", opts, backend = "highcharter", vs = "")
   )
 })
 
-test_that("gg: comp = '' (empty string) does not error", {
+test_that("gg: vs = '' (empty string) does not error", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2", comp = "")
+    hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2", vs = "")
   )
 })
 
-test_that("hc: comp that matches nothing is silently ignored", {
+test_that("hc: vs that matches nothing is silently ignored", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", comp = "XXXXXX")
+                    backend = "highcharter", vs = "XXXXXX")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   # No highlight → single colour

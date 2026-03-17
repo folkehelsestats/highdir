@@ -78,6 +78,14 @@ mod_data_ui <- function(id) {
                          choices = c("(none)" = "")),
 
       # ── Required-arg inputs — static, shown/hidden by conditionalPanel ────
+      #
+      # WHY STATIC instead of renderUI:
+      #   The old renderUI fired on both geom changes and file uploads,
+      #   rebuilding DOM nodes both times.  Now:
+      #     - Show/hide is handled by conditionalPanel (client-side JS, free)
+      #     - Choices are updated by updateSelectInput in observeEvent(cols())
+      #       alongside x/y/group — one observer, one upload round-trip
+      #
       # If a future geom adds required_args, add a new conditionalPanel block
       # here and a matching updateSelectInput() call in the server.
       #
@@ -144,7 +152,7 @@ mod_data_server <- function(id, geom_r) {
       shiny::updateSelectInput(session, "ymax",
         choices  = ch,
         selected = ch[min(4, length(ch))])
-    }, ignoreNULL = TRUE) #don't fire if cols() is NULL
+    }, ignoreNULL = TRUE)
 
     # ── Data preview ──────────────────────────────────────────────────────────
     output$tbl_head <- DT::renderDT({
@@ -167,12 +175,17 @@ mod_data_server <- function(id, geom_r) {
       # req_args: named list of required-arg column selections for the current
       # geom.  Read from input$ directly — IDs match names(required_args)
       # because the static inputs above use ns("ymin"), ns("ymax") etc.
+      # req_args reads required_args as a NAMED LIST (same structure as
+      # optional_args).  names(ra) gives the arg names (e.g. 'ymin', 'ymax');
+      # input[[a]] reads the current column selection from the namespaced
+      # selectInput (ns('ymin'), ns('ymax')) declared statically above.
       req_args = shiny::reactive({
         ra <- highdir:::.get_geom(geom_r())$required_args
         if (length(ra) == 0L) return(list())
+        arg_names <- names(ra)
         stats::setNames(
-          lapply(ra, function(a) input[[a]]),
-          ra
+          lapply(arg_names, function(a) input[[a]]),
+          arg_names
         )
       })
     )

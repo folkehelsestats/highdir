@@ -2,7 +2,7 @@
 # Both registries use a plain environment as a mutable named store.
 # Backends and geoms are registered in .onLoad() (zzz.R).
 
-# ── Backend registry ─────────────────────────────────────────────────────────
+# ── Backend registry ----------------------------------------------------------
 
 #' @keywords internal
 .backend_registry <- new.env(parent = emptyenv())
@@ -27,7 +27,7 @@ get_backend <- function(name) .backend_registry[[name]]
 #' @export
 list_backends <- function() sort(ls(.backend_registry))
 
-# ── Geometry registry ────────────────────────────────────────────────────────
+# ── Geometry registry ---------------------------------------------------------
 
 #' @keywords internal
 .geom_registry <- new.env(parent = emptyenv())
@@ -55,7 +55,7 @@ list_backends <- function() sort(ls(.backend_registry))
 #' @param name            Character. Unique geometry identifier.
 #' @param ggplot_fun      Function or `NULL`.
 #' @param highcharter_fun Function or `NULL`.
-#' @param required_args   Character vector. Args that MUST be supplied via
+#' @param required_args   Named list of `list(default, desc)`. Args that MUST be supplied via
 #'   `...` in `hd_make()`. Validation fails if any are missing.
 #' @param optional_args   Named list of `list(default, desc)`. Args that MAY
 #'   be supplied and have a sensible default when omitted.  These are purely
@@ -66,11 +66,11 @@ list_backends <- function() sort(ls(.backend_registry))
 #' @return `name`, invisibly.
 #' @export
 register_geom <- function(name,
-                           ggplot_fun      = NULL,
-                           highcharter_fun = NULL,
-                           required_args   = character(),
-                           optional_args   = list(),
-                           is_map_geom     = FALSE) {
+                          ggplot_fun      = NULL,
+                          highcharter_fun = NULL,
+                          required_args   = list(),
+                          optional_args   = list(),
+                          is_map_geom     = FALSE) {
 
   # optional_args must be a named list of list(default, desc) entries.
   # Validate structure so mis-registrations fail loudly at load time rather
@@ -108,7 +108,7 @@ register_geom <- function(name,
 #' @export
 list_geoms <- function() sort(ls(.geom_registry))
 
-# ── geom_args(): user-facing discoverability helper ──────────────────────────
+# ── geom_args(): user-facing discoverability helper ---------------------------
 
 #' Show Arguments for a Geometry
 #'
@@ -151,16 +151,19 @@ geom_args <- function(type = NULL) {
   if (is.null(geom))
     stop("Unknown geometry '", type, "'. See list_geoms().", call. = FALSE)
 
-  # ── Build a data frame with one row per argument ───────────────────────────
+  # ── Build a data frame with one row per argument ----------------------------
   rows <- list()
 
-  # Required args: must be supplied, no default
-  for (arg in geom$required_args) {
+  # Required args: have a default, may be omitted
+  for (arg in names(geom$required_args)) {
+    entry   <- geom$required_args[[arg]]
+    default <- if (is.null(entry$default)) "NULL"
+               else as.character(entry$default)
     rows[[length(rows) + 1L]] <- data.frame(
       argument = arg,
       kind     = "required",
-      default  = "(must supply)",
-      desc     = "",
+      default  = default,
+      desc     = entry$desc,
       stringsAsFactors = FALSE
     )
   }
@@ -169,7 +172,7 @@ geom_args <- function(type = NULL) {
   for (arg in names(geom$optional_args)) {
     entry   <- geom$optional_args[[arg]]
     default <- if (is.null(entry$default)) "NULL"
-               else                        as.character(entry$default)
+               else as.character(entry$default)
     rows[[length(rows) + 1L]] <- data.frame(
       argument = arg,
       kind     = "optional",
@@ -186,7 +189,7 @@ geom_args <- function(type = NULL) {
 
   out <- do.call(rbind, rows)
 
-  # ── Print a readable table ─────────────────────────────────────────────────
+  # ── Print a readable table --------------------------------------------------
   cat(sprintf("\nArguments for hd_make(..., type = \"%s\", ...):\n\n", type))
 
   # Compute column widths for alignment
@@ -211,16 +214,3 @@ geom_args <- function(type = NULL) {
   invisible(out)
 }
 
-# ── Validation ────────────────────────────────────────────────────────────────
-
-#' @keywords internal
-validate_geom_args <- function(geom, extra_args) {
-  # Only required_args are checked here — optional_args have defaults so
-  # omitting them is fine.
-  missing_args <- setdiff(geom$required_args, names(extra_args))
-  if (length(missing_args) > 0)
-    stop("Missing required argument(s) for geometry '", geom$name, "': ",
-         paste(missing_args, collapse = ", "),
-         ".  Run geom_args('", geom$name, "') to see all arguments.",
-         call. = FALSE)
-}
