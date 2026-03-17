@@ -96,7 +96,7 @@
         default = TRUE,
         desc    = "Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends."
       ),
-      comp = list(
+      vs = list(
         default = NULL,
         desc    = "Character. Category name to highlight with a second colour. Both backends."
       ),
