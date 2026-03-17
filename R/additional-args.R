@@ -117,34 +117,34 @@
                          "Default 0.08 (8%).")
       )
     )
-  ),
-
-  map = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    is_map_geom     = TRUE,
-    optional_args   = list(
-      level = list(
-        default = "county",
-        desc    = "Character. Map granularity: 'county' or 'municipality'."
-      ),
-      value_lab = list(
-        default = NULL,
-        desc    = "Character. Colour scale legend label. Defaults to spec$ylab."
-      ),
-      low_col = list(
-        default = "#C6DBEF",
-        desc    = "Character. Hex colour for the low end of the choropleth scale."
-      ),
-      high_col = list(
-        default = "#025169",
-        desc    = "Character. Hex colour for the high end of the choropleth scale."
-      ),
-      na_fill = list(
-        default = "#D3D3D3",
-        desc    = "Character. Hex fill colour for regions with no data."
-      )
-    )
   )
+
+  # map = list(                                                                       #
+  #   ggplot_fun      = NULL,                                                         #
+  #   highcharter_fun = NULL,                                                         #
+  #   is_map_geom     = TRUE,                                                         #
+  #   optional_args   = list(                                                         #
+  #     level = list(                                                                 #
+  #       default = "county",                                                         #
+  #       desc    = "Character. Map granularity: 'county' or 'municipality'."         #
+  #     ),                                                                            #
+  #     value_lab = list(                                                             #
+  #       default = NULL,                                                             #
+  #       desc    = "Character. Colour scale legend label. Defaults to spec$ylab."    #
+  #     ),                                                                            #
+  #     low_col = list(                                                               #
+  #       default = "#C6DBEF",                                                        #
+  #       desc    = "Character. Hex colour for the low end of the choropleth scale."  #
+  #     ),                                                                            #
+  #     high_col = list(                                                              #
+  #       default = "#025169",                                                        #
+  #       desc    = "Character. Hex colour for the high end of the choropleth scale." #
+  #     ),                                                                            #
+  #     na_fill = list(                                                               #
+  #       default = "#D3D3D3",                                                        #
+  #       desc    = "Character. Hex fill colour for regions with no data."            #
+  #     )                                                                             #
+  #   )                                                                               #
+  # )                                                                                 #
 
 )
