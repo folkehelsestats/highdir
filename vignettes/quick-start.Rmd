@@ -62,14 +62,33 @@ To list all geom features.
 list_geoms()
 ```
 
-### Specification
+## Specification Types in highdir
 
-There are 4 types specification in highdir and there are:
+The highdir framework defines four categories of specifications used to
+construct plots. Each category serves a distinct role in data definition, visual
+configuration, and geom‑level customization.
 
-- `hd_spec()` - for data specification
-- `hd_opts()` - for presentation specification or options that can be applicable to multiple geoms
-- `required specification` - the arguments that must be specified based on geom type
-- `optional specification` - other optional specification depending on the selected geom types
+1. `hd_spec()` 
+
+Defines the data specifications that apply universally across all
+geom types. These specifications describe the input data structure and mappings
+required by the plotting system.
+
+2. `hd_opts()`
+
+Specifies presentation options that control chart appearance. These options are
+shared across multiple geoms and include settings related to layout, style, and
+display behavior.
+
+3. Required Specifications
+
+Parameters that a given geom must provide for successful rendering. These vary
+by geom and represent the minimum information needed for the geom to function.
+
+4. Optional Specifications
+
+Additional parameters that may be supplied depending on the selected geom. These
+extend or refine the behavior of a geom but are not mandatory.
 
 To see the required and optionals arguments:
 
