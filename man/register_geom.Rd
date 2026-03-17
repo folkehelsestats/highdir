@@ -8,7 +8,7 @@ register_geom(
   name,
   ggplot_fun = NULL,
   highcharter_fun = NULL,
-  required_args = character(),
+  required_args = list(),
   optional_args = list(),
   is_map_geom = FALSE
 )
@@ -20,7 +20,7 @@ register_geom(
 
 \item{highcharter_fun}{Function or \code{NULL}.}
 
-\item{required_args}{Character vector. Args that MUST be supplied via
+\item{required_args}{Named list of \code{list(default, desc)}. Args that MUST be supplied via
 \code{...} in \code{hd_make()}. Validation fails if any are missing.}
 
 \item{optional_args}{Named list of \code{list(default, desc)}. Args that MAY

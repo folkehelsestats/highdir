@@ -47,7 +47,7 @@ Theme functions defining the visual style of figures.
 - [`hd_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_theme.md)
   : Build a Highcharts Theme Object
 - [`gg_theme()`](https://github.com/folkehelsestats/highdir/reference/gg_theme.md)
-  : Resolve a ggplot2 Theme Object
+  : Build a ggplot2 Theme Object
 - [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md)
   : Set Package-Wide Style Defaults
 - [`list_palettes()`](https://github.com/folkehelsestats/highdir/reference/list_palettes.md)

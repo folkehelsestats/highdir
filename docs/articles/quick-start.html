@@ -40,6 +40,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
+    <li><a class="dropdown-item" href="../articles/specification.html">Specifications</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -113,66 +114,8 @@
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_geoms.html">list_geoms</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "arearange"  "column"     "line"       "pie"        "ranked_bar"</span></span>
 <span><span class="co">#&gt; [6] "scatter"</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="specification">Specification<a class="anchor" aria-label="anchor" href="#specification"></a>
-</h3>
-<p>There are 4 types specification in highdir and there are:</p>
-<ul>
-<li>
-<code><a href="../reference/hd_spec.html">hd_spec()</a></code> - for data specification</li>
-<li>
-<code><a href="../reference/hd_opts.html">hd_opts()</a></code> - for presentation specification or options
-that can be applicable to multiple geoms</li>
-<li>
-<code>required specification</code> - the arguments that must be
-specified based on geom type</li>
-<li>
-<code>optional specification</code> - other optional specification
-depending on the selected geom types</li>
-</ul>
-<p>To see the required and optionals arguments:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/geom_args.html">geom_args</a></span><span class="op">(</span><span class="st">"line"</span><span class="op">)</span> <span class="co">#args in geom line</span></span>
-<span><span class="fu"><a href="../reference/geom_args.html">geom_args</a></span><span class="op">(</span><span class="st">"arearange"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># or</span></span>
-<span><span class="fu">highdir</span><span class="fu">:::</span><span class="fu">.get_geom</span><span class="op">(</span><span class="st">"ranked_bar"</span><span class="op">)</span><span class="op">$</span><span class="va">optional_args</span></span>
-<span><span class="fu">highdir</span><span class="fu">:::</span><span class="fu">.get_geom</span><span class="op">(</span><span class="st">"arearange"</span><span class="op">)</span><span class="op">$</span><span class="va">required_args</span></span></code></pre></div>
-<hr>
 </div>
-</div>
-<div class="section level2">
-<h2 id="theming">Theming<a class="anchor" aria-label="anchor" href="#theming"></a>
-</h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Set package-wide defaults for the session</span></span>
-<span><span class="fu"><a href="../reference/hd_set_theme.html">hd_set_theme</a></span><span class="op">(</span></span>
-<span>  hc_theme <span class="op">=</span> <span class="st">"helsedirektoratet"</span>,</span>
-<span>  colors   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#025169"</span>, <span class="st">"#7C145C"</span>, <span class="st">"#C68803"</span><span class="op">)</span>,</span>
-<span>  font     <span class="op">=</span> <span class="st">"Source Sans Pro"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># All subsequent hd_make() calls use these settings automatically</span></span>
-<span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="javascript-injection">JavaScript injection<a class="anchor" aria-label="anchor" href="#javascript-injection"></a>
-</h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Inline JS</span></span>
-<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, code <span class="op">=</span> <span class="st">"console.log('chart loaded');"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># From a .js file</span></span>
-<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, file <span class="op">=</span> <span class="st">"path/to/my-plugin.js"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># From a bundled plugin (inst/js/&lt;name&gt;.js)</span></span>
-<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_add_js.html">hd_add_js</a></span><span class="op">(</span><span class="va">fig</span>, plugin <span class="op">=</span> <span class="st">"my-plugin"</span><span class="op">)</span></span></code></pre></div>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
+  </main>
 </div>
 
 
