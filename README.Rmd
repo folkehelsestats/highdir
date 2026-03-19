@@ -43,7 +43,9 @@ colour palette, styling and theme. To enhance usability, a Shiny graphical user 
 
 ```r
 # Install from GitHub
+if(!require(remotes)) install.packages("remotes")
 remotes::install_github("folkehelsestats/highdir")
+
 # Install from development version (dev branch)
 remotes::install_github("folkehelsestats/highdir@dev")
 ```

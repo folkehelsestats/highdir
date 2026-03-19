@@ -30,7 +30,9 @@ usability, a Shiny graphical user interface is also included.
 
 ``` r
 # Install from GitHub
+if(!require(remotes)) install.packages("remotes")
 remotes::install_github("folkehelsestats/highdir")
+
 # Install from development version (dev branch)
 remotes::install_github("folkehelsestats/highdir@dev")
 ```
