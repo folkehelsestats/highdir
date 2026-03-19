@@ -21,7 +21,7 @@ hd_opts(
   colors = NULL,
   hc_theme = NULL,
   gg_theme = NULL,
-  xtick = NULL
+  xtick_labels = NULL
 )
 ```
 
@@ -99,7 +99,7 @@ hd_opts(
   Name strings: `"minimal"` (default), `"classic"`, `"bw"`, `"light"`,
   `"dark"`, `"void"`, `"grey"`. Or pass a `ggplot2::theme_*()` object.
 
-- xtick:
+- xtick_labels:
 
   Column used to supply custom labels for the x-axis ticks. This is
   required when the plotting x-values are numeric but the displayed tick

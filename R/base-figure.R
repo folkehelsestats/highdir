@@ -105,11 +105,11 @@
     }
 
     # x-tick: Should it be different than x-axis
-    if (!is.null(opts$xtick)){
+    if (!is.null(opts$xtick_labels)){
       if (is.numeric(spec$data[[spec$x]])){
         message("Just a reminder, highchart index starts from 0")
       }
-      chart <- chart |> highcharter::hc_xAxis(categories = spec$data[[opts$xtick]])
+      chart <- chart |> highcharter::hc_xAxis(categories = spec$data[[opts$xtick_labels]])
     }
 
     if (!is.null(opts$title))
