@@ -12,7 +12,7 @@ hd_opts(
   ylab = " ",
   ylim = NULL,
   yint = 10,
-  percent = FALSE,
+  ysuffix = NULL,
   flip = FALSE,
   colors = NULL,
   hc_theme = NULL,
@@ -40,8 +40,8 @@ label.} }}
 
 \item{yint}{Positive numeric. Y-axis tick interval. Default \code{10}.}
 
-\item{percent}{Logical. Either y-axis is percentage value. If it's then the
-tooltip and y-tick uses \verb{\%} symbol.}
+\item{ysuffix}{Character string appended to y-axis tick labels, allowing
+custom units or symbols (e.g., "\%", "km"). Use NULL for no suffix.}
 
 \item{flip}{Logical. Invert axes (horizontal bars). Default \code{FALSE}.}
 
