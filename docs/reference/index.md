@@ -63,3 +63,12 @@ JavaScript-related utilities (relevant for Highcharts output).
 
 - [`hd_add_js()`](https://github.com/folkehelsestats/highdir/reference/hd_add_js.md)
   : Inject JavaScript into a Highcharts Widget
+
+## Datasets
+
+Example datasets
+
+- [`hd_data1`](https://github.com/folkehelsestats/highdir/reference/hd_data1.md)
+  : Alcohol Consumption Data (hd_data1)
+- [`hd_data2`](https://github.com/folkehelsestats/highdir/reference/hd_data2.md)
+  : Alcohol Consumption by Gender (hd_data2)

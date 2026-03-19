@@ -39,7 +39,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
+<li><a class="dropdown-item" href="../articles/examples.html">Geom examples</a></li>
+    <li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
     <li><a class="dropdown-item" href="../articles/specification.html">Specifications</a></li>
   </ul>
 </li>
@@ -62,7 +63,8 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Quick start</h1>
+
+      <h1>Quick start</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/folkehelsestats/highdir/blob/HEAD/vignettes/quick-start.Rmd"><code>vignettes/quick-start.Rmd</code></a></small>
@@ -106,14 +108,16 @@
 <span></span>
 <span><span class="va">gg01</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hd_save.html">hd_save</a></span><span class="op">(</span>fig <span class="op">=</span> <span class="va">gg01</span>, file <span class="op">=</span> <span class="st">"chart.png"</span><span class="op">)</span></span></code></pre></div>
+<p>For more example on how to use other geoms, please read in <a href="https://folkehelsestats.github.io/highdir/articles/examples.html" class="external-link">other
+geom examples</a></p>
 <div class="section level2">
 <h2 id="geom">Geom<a class="anchor" aria-label="anchor" href="#geom"></a>
 </h2>
 <p>To list all geom features.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_geoms.html">list_geoms</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "arearange"  "column"     "line"       "pie"        "ranked_bar"</span></span>
-<span><span class="co">#&gt; [6] "scatter"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "arearange"  "column"     "line"       "map"        "pie"       </span></span>
+<span><span class="co">#&gt; [6] "ranked_bar" "scatter"</span></span></code></pre></div>
 </div>
   </main>
 </div>

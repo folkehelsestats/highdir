@@ -16,7 +16,7 @@ hd_opts(
   ylab = " ",
   ylim = NULL,
   yint = 10,
-  percent = FALSE,
+  ysuffix = NULL,
   flip = FALSE,
   colors = NULL,
   hc_theme = NULL,
@@ -70,10 +70,10 @@ hd_opts(
 
   Positive numeric. Y-axis tick interval. Default `10`.
 
-- percent:
+- ysuffix:
 
-  Logical. Either y-axis is percentage value. If it's then the tooltip
-  and y-tick uses `%` symbol.
+  Character string appended to y-axis tick labels, allowing custom units
+  or symbols (e.g., "%", "km"). Use NULL for no suffix.
 
 - flip:
 
