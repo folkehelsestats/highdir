@@ -21,6 +21,7 @@
 #' @keywords internal
 .geom_registry_defs <- list(
 
+  # column ---------------------------------------------------------------------
   column = list(
     ggplot_fun      = NULL,   # filled in .onLoad() after namespace is ready
     highcharter_fun = NULL,
@@ -29,6 +30,7 @@
     # No optional_args: column has no extra knobs beyond spec / opts
   ),
 
+  # line -----------------------------------------------------------------------
   line = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
@@ -50,6 +52,7 @@
     )
   ),
 
+  # scatter --------------------------------------------------------------------
   scatter = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
@@ -61,6 +64,7 @@
     )
   ),
 
+  # arearange ------------------------------------------------------------------
   arearange = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
@@ -77,6 +81,7 @@
     optional_args   = list()
   ),
 
+  # pie ------------------------------------------------------------------------
   pie = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
@@ -88,6 +93,7 @@
     )
   ),
 
+  # ranked_bar -----------------------------------------------------------------
   ranked_bar = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
@@ -119,6 +125,7 @@
     )
   )
 
+  # map ------------------------------------------------------------------------
   # map = list(                                                                       #
   #   ggplot_fun      = NULL,                                                         #
   #   highcharter_fun = NULL,                                                         #

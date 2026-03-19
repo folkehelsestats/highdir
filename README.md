@@ -18,7 +18,7 @@ API for building figures with either
 
 A figure is described once as a `hd_spec` object and rendered to any
 supported backend without changing the calling code. Additional
-presentation settings can be defined through `hc_opts` prior to
+presentation settings can be defined through `hc_opts` object prior to
 rendering. The package ships with the default to use [The Norwegian
 Directorate of Health](https://www.helsedirektoratet.no)
 (*Helsedirektoratet*) colour palette, styling and theme. To enhance
@@ -30,7 +30,9 @@ usability, a Shiny graphical user interface is also included.
 
 ``` r
 # Install from GitHub
+if(!require(remotes)) install.packages("remotes")
 remotes::install_github("folkehelsestats/highdir")
+
 # Install from development version (dev branch)
 remotes::install_github("folkehelsestats/highdir@dev")
 ```

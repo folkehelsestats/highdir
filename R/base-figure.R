@@ -64,12 +64,12 @@
 
   # ── highcharter -------------------------------------------------------------
   highcharter = function(spec, opts) {
-
+    
     # --- percent % symbol ---
-    pros_fmt <- if (isTRUE(opts$percent)){
-      list(format = "{value}%")
-    } else {
+    pros_fmt <- if (is.null(opts$ysuffix)){
       list(format = "{value}")
+    } else {
+      list(format = paste0("{value}", opts$ysuffix))
     }
 
     # NOTE: %||% "" is intentional for both axis title fields.
@@ -105,11 +105,11 @@
     }
 
     # x-tick: Should it be different than x-axis
-    if (!is.null(opts$xtick)){
+    if (!is.null(opts$xtick_labels)){
       if (is.numeric(spec$data[[spec$x]])){
         message("Just a reminder, highchart index starts from 0")
       }
-      chart <- chart |> highcharter::hc_xAxis(categories = spec$data[[opts$xtick]])
+      chart <- chart |> highcharter::hc_xAxis(categories = spec$data[[opts$xtick_labels]])
     }
 
     if (!is.null(opts$title))

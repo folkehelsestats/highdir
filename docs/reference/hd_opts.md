@@ -16,12 +16,12 @@ hd_opts(
   ylab = " ",
   ylim = NULL,
   yint = 10,
-  percent = FALSE,
+  ysuffix = NULL,
   flip = FALSE,
   colors = NULL,
   hc_theme = NULL,
   gg_theme = NULL,
-  xtick = NULL
+  xtick_labels = NULL
 )
 ```
 
@@ -70,10 +70,10 @@ hd_opts(
 
   Positive numeric. Y-axis tick interval. Default `10`.
 
-- percent:
+- ysuffix:
 
-  Logical. Either y-axis is percentage value. If it's then the tooltip
-  and y-tick uses `%` symbol.
+  Character string appended to y-axis tick labels, allowing custom units
+  or symbols (e.g., "%", "km"). Use NULL for no suffix.
 
 - flip:
 
@@ -99,7 +99,7 @@ hd_opts(
   Name strings: `"minimal"` (default), `"classic"`, `"bw"`, `"light"`,
   `"dark"`, `"void"`, `"grey"`. Or pass a `ggplot2::theme_*()` object.
 
-- xtick:
+- xtick_labels:
 
   Column used to supply custom labels for the x-axis ticks. This is
   required when the plotting x-values are numeric but the displayed tick

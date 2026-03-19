@@ -22,11 +22,6 @@
 #   ymin / ymax            — static in UI, shown via conditionalPanel,
 #                            updated via updateSelectInput
 #
-# The old renderUI() for ui_required fired on BOTH geom changes AND new
-# uploads, rebuilding the DOM twice unnecessarily.  The new approach
-# separates the two concerns:
-#   • Structure (show/hide)  — conditionalPanel, pure client-side JS, zero cost
-#   • Choices (column names) — updateSelectInput in observeEvent(cols()), once
 
 # ── UI ────────────────────────────────────────────────────────────────────────
 
@@ -78,17 +73,6 @@ mod_data_ui <- function(id) {
                          choices = c("(none)" = "")),
 
       # ── Required-arg inputs — static, shown/hidden by conditionalPanel ────
-      #
-      # WHY STATIC instead of renderUI:
-      #   The old renderUI fired on both geom changes and file uploads,
-      #   rebuilding DOM nodes both times.  Now:
-      #     - Show/hide is handled by conditionalPanel (client-side JS, free)
-      #     - Choices are updated by updateSelectInput in observeEvent(cols())
-      #       alongside x/y/group — one observer, one upload round-trip
-      #
-      # If a future geom adds required_args, add a new conditionalPanel block
-      # here and a matching updateSelectInput() call in the server.
-      #
       # arearange: ymin + ymax
       shiny::conditionalPanel(
         condition = "input.geom == 'arearange'",

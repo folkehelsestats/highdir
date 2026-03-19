@@ -32,8 +32,8 @@
 #' @param ylim Numeric vector of length 2 or `NULL`. Fixed y-axis limits, e.g.
 #'   `c(0, 100)`.
 #' @param yint Positive numeric. Y-axis tick interval. Default `10`.
-#' @param percent Logical. Either y-axis is percentage value. If it's then the
-#'   tooltip and y-tick uses `%` symbol.
+#' @param ysuffix Character string appended to y-axis tick labels, allowing
+#'   custom units or symbols (e.g., "%", "km"). Use NULL for no suffix.
 #' @param flip Logical. Invert axes (horizontal bars). Default `FALSE`.
 #' @param colors Character vector, palette name string, or `NULL`. Per-figure
 #'   colour override; takes precedence over [hd_set_theme()].
@@ -43,7 +43,7 @@
 #'   Per-figure ggplot2 theme; takes precedence over [hd_set_theme()].
 #'   Name strings: `"minimal"` (default), `"classic"`, `"bw"`, `"light"`,
 #'   `"dark"`, `"void"`, `"grey"`. Or pass a `ggplot2::theme_*()` object.
-#' @param xtick Column used to supply custom labels for the x-axis ticks.
+#' @param xtick_labels Column used to supply custom labels for the x-axis ticks.
 #'   This is required when the plotting x-values are numeric but the displayed
 #'   tick labels should come from another column. Only for highcharter backend.
 #'   Important: Highcharts indexes categories from 0, not 1 as in R.
@@ -71,12 +71,12 @@ hd_opts <- function(title    = NULL,
                     ylab     = " ",
                     ylim     = NULL,
                     yint     = 10,
-                    percent  = FALSE,
+                    ysuffix  = NULL,
                     flip     = FALSE,
                     colors   = NULL,
                     hc_theme = NULL,
                     gg_theme = NULL,
-                    xtick    = NULL) {
+                    xtick_labels = NULL) {
 
   check_ylim(ylim)
   if (!is.numeric(yint) || length(yint) != 1 || yint <= 0)
@@ -90,12 +90,12 @@ hd_opts <- function(title    = NULL,
          ylab     = ylab,
          ylim     = ylim,
          yint     = yint,
-         percent  = percent,
+         ysuffix  = ysuffix,
          flip     = flip,
          colors   = colors,
          hc_theme = hc_theme,
          gg_theme = gg_theme,
-         xtick    = xtick),
+         xtick_labels = xtick_labels),
     class = "hd_opts"
   )
 }
@@ -105,19 +105,20 @@ hd_opts <- function(title    = NULL,
 #' @export
 print.hd_opts <- function(x, ...) {
   cat("<hd_opts>\n")
-  if (!is.null(x$title))    cat("  title    :", x$title,    "\n")
-  if (!is.null(x$subtitle)) cat("  subtitle :", x$subtitle, "\n")
-  if (!is.null(x$caption))  cat("  caption  :", x$caption,  "\n")
-  if (!is.null(x$xlab))     cat("  xlab     :", x$xlab,     "\n")
-  if (!is.null(x$ylab))     cat("  ylab     :", x$ylab,     "\n")
-  if (!is.null(x$ylim))     cat("  ylim     :", x$ylim,     "\n")
-  cat("  yint     :", x$yint, "\n")
-  cat("  percent  :", x$percent, "\n")
-  cat("  flip     :", x$flip, "\n")
+  if (!is.null(x$title))    cat("  title        :", x$title,    "\n")
+  if (!is.null(x$subtitle)) cat("  subtitle     :", x$subtitle, "\n")
+  if (!is.null(x$caption))  cat("  caption      :", x$caption,  "\n")
+  if (!is.null(x$xlab))     cat("  xlab         :", x$xlab,     "\n")
+  if (!is.null(x$ylab))     cat("  ylab         :", x$ylab,     "\n")
+  if (!is.null(x$ylim))     cat("  ylim         :", x$ylim,     "\n")
+  cat("  yint         :", x$yint, "\n")
+  if (!is.null(x$ysuffix))  cat("  ysuffix      :", x$ysuffix,  "\n")
+  cat("  flip         :", x$flip, "\n")
   if (!is.null(x$colors))
-    cat("  colors   :", paste(x$colors, collapse = ", "), "\n")
-  if (!is.null(x$hc_theme)) cat("  hc_theme :", x$hc_theme, "\n")
-  if (!is.null(x$gg_theme))  cat("  gg_theme :", format(x$gg_theme), "\n")
+    cat("  colors       :", paste(x$colors, collapse = ", "), "\n")
+  if (!is.null(x$hc_theme)) cat("  hc_theme     :", x$hc_theme, "\n")
+  if (!is.null(x$gg_theme)) cat("  gg_theme     :", format(x$gg_theme), "\n")
+  if (!is.null(x$xtick_labels)) cat("  xtick_labels :", format(x$xtick_labels), "\n")
   invisible(x)
 }
 

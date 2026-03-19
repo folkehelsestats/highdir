@@ -57,28 +57,28 @@ geom_args("ranked_bar")
 #>   argument    kind      default  description
 #>   ----------  --------  -------  ------------------------------
 #>   ascending   optional  TRUE     Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends.
-#>   comp        optional  NULL     Character. Category name to highlight with a second colour. Both backends.
+#>   vs          optional  NULL     Character. Category name to highlight with a second colour. Both backends.
 #>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.
-#>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.
-#>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).
+#>   char_scale  optional  0.045    Numeric. Scaling factor converting label character-count into axis-range units. Increase (e.g. 0.06) for larger text, decrease (e.g. 0.03) for smaller text. Default 0.045.
+#>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range a bar must span before its label fits inside. Safety floor for short labels. Default 0.08 (8%).
 #> 
 geom_args("arearange")
 #> 
 #> Arguments for hd_make(..., type = "arearange", ...):
 #> 
-#>   argument  kind      default        description
-#>   --------  --------  -------------  ------------------------------
-#>   ymin      required  (must supply)  
-#>   ymax      required  (must supply)  
+#>   argument  kind      default  description
+#>   --------  --------  -------  ------------------------------
+#>   ymin      required  NULL     Character. Column name for the lower bound of the range.
+#>   ymax      required  NULL     Character. Column name for the upper bound of the range.
 #> 
 geom_args()           # all registered geometries
 #> 
 #> Arguments for hd_make(..., type = "arearange", ...):
 #> 
-#>   argument  kind      default        description
-#>   --------  --------  -------------  ------------------------------
-#>   ymin      required  (must supply)  
-#>   ymax      required  (must supply)  
+#>   argument  kind      default  description
+#>   --------  --------  -------  ------------------------------
+#>   ymin      required  NULL     Character. Column name for the lower bound of the range.
+#>   ymax      required  NULL     Character. Column name for the upper bound of the range.
 #> 
 #> geom 'column' has no extra arguments.
 #> 
@@ -89,6 +89,17 @@ geom_args()           # all registered geometries
 #>   smooth        optional  TRUE     Logical. TRUE = spline curves, FALSE = straight segments. Both backends.
 #>   dot_size      optional  4        Numeric. Marker radius in pixels. Both backends.
 #>   line_symbols  optional  NULL     Character vector. Highcharter only. Per-group marker shapes: 'circle','square','diamond','triangle','triangle-down'.
+#> 
+#> 
+#> Arguments for hd_make(..., type = "map", ...):
+#> 
+#>   argument   kind      default  description
+#>   ---------  --------  -------  ------------------------------
+#>   level      optional  county   Character. Map granularity: 'county' or 'municipality'.
+#>   value_lab  optional  NULL     Character. Colour scale legend label. Defaults to spec$ylab.
+#>   low_col    optional  #C6DBEF  Character. Hex colour for the low end of the choropleth scale.
+#>   high_col   optional  #025169  Character. Hex colour for the high end of the choropleth scale.
+#>   na_fill    optional  #D3D3D3  Character. Hex fill colour for regions with no data.
 #> 
 #> 
 #> Arguments for hd_make(..., type = "pie", ...):
@@ -103,10 +114,10 @@ geom_args()           # all registered geometries
 #>   argument    kind      default  description
 #>   ----------  --------  -------  ------------------------------
 #>   ascending   optional  TRUE     Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends.
-#>   comp        optional  NULL     Character. Category name to highlight with a second colour. Both backends.
+#>   vs          optional  NULL     Character. Category name to highlight with a second colour. Both backends.
 #>   aim         optional  NULL     Numeric. Value for a dashed target/aim line. Both backends.
-#>   char_scale  optional  0.045    Numeric scaling factor that converts label character-countinto axis-range units. Controls how generously space is estimated for eachcharacter. Defaults to 0.045; increase (e.g. 0.06) forlarger text sizes, decrease (e.g. 0.03) for smaller ones.
-#>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range that a bar mustspan before its label is considered to fit inside. Acts as a safety floorfor very short labels. Defaults to 0.08 (8%).
+#>   char_scale  optional  0.045    Numeric. Scaling factor converting label character-count into axis-range units. Increase (e.g. 0.06) for larger text, decrease (e.g. 0.03) for smaller text. Default 0.045.
+#>   min_frac    optional  0.08     Numeric. Minimum fraction of the axis range a bar must span before its label fits inside. Safety floor for short labels. Default 0.08 (8%).
 #> 
 #> 
 #> Arguments for hd_make(..., type = "scatter", ...):

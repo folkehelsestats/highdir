@@ -3,7 +3,7 @@
 mapping.  Pass the result as the opts argument of hd_make(), or omit
 it to accept all defaults."><meta property="og:description" content="Defines the visual presentation of a figure independently from the data
 mapping.  Pass the result as the opts argument of hd_make(), or omit
-it to accept all defaults."><meta property="og:image" content="https://github.com/folkehelsestats/highdir/logo.png"></head><body>
+it to accept all defaults."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -23,7 +23,8 @@ it to accept all defaults."><meta property="og:image" content="https://github.co
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/examples.html">Geom examples</a></li>
+    <li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
     <li><a class="dropdown-item" href="../articles/specification.html">Specifications</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -37,7 +38,8 @@ it to accept all defaults."><meta property="og:image" content="https://github.co
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Create Figure Presentation Options</h1>
+
+      <h1>Create Figure Presentation Options</h1>
       <small class="dont-index">Source: <a href="https://github.com/folkehelsestats/highdir/blob/HEAD/R/figure-opts.R"><code>R/figure-opts.R</code></a></small>
       <div class="d-none name"><code>hd_opts.Rd</code></div>
     </div>
@@ -58,12 +60,12 @@ it to accept all defaults.</p>
 <span>  ylab <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  yint <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  percent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ysuffix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hc_theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gg_theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  xtick <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  xtick_labels <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -111,9 +113,9 @@ label.</p></dd>
 <dd><p>Positive numeric. Y-axis tick interval. Default <code>10</code>.</p></dd>
 
 
-<dt id="arg-percent">percent<a class="anchor" aria-label="anchor" href="#arg-percent"></a></dt>
-<dd><p>Logical. Either y-axis is percentage value. If it's then the
-tooltip and y-tick uses <code>%</code> symbol.</p></dd>
+<dt id="arg-ysuffix">ysuffix<a class="anchor" aria-label="anchor" href="#arg-ysuffix"></a></dt>
+<dd><p>Character string appended to y-axis tick labels, allowing
+custom units or symbols (e.g., "%", "km"). Use NULL for no suffix.</p></dd>
 
 
 <dt id="arg-flip">flip<a class="anchor" aria-label="anchor" href="#arg-flip"></a></dt>
@@ -137,7 +139,7 @@ Name strings: <code>"minimal"</code> (default), <code>"classic"</code>, <code>"b
 <code>"dark"</code>, <code>"void"</code>, <code>"grey"</code>. Or pass a <code>ggplot2::theme_*()</code> object.</p></dd>
 
 
-<dt id="arg-xtick">xtick<a class="anchor" aria-label="anchor" href="#arg-xtick"></a></dt>
+<dt id="arg-xtick-labels">xtick_labels<a class="anchor" aria-label="anchor" href="#arg-xtick-labels"></a></dt>
 <dd><p>Column used to supply custom labels for the x-axis ticks.
 This is required when the plotting x-values are numeric but the displayed
 tick labels should come from another column. Only for highcharter backend.

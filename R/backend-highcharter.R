@@ -19,22 +19,22 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
   # -- Tooltip -----------------------------------------------------------------
 
   ## Show % symbols
-  percent_fmt <- if (isTRUE(opts$percent)){
-    paste0(
-      '<span style="color:{series.color}">\u25CF</span> ',
-      '<span style="color:black">{series.name}</span>: ',
-      '<b>{point.y}%</b><br/>'
-    )
-  } else {
+  ysuffix_fmt <- if (is.null(opts$ysuffix)){
     paste0(
       '<span style="color:{series.color}">\u25CF</span> ',
       '<span style="color:black">{series.name}</span>: ',
       '<b>{point.y}</b><br/>'
     )
+  } else {
+    paste0(
+      '<span style="color:{series.color}">\u25CF</span> ',
+      '<span style="color:black">{series.name}</span>: ',
+      '<b>{point.y}', opts$ysuffix, '</b><br/>'
+    )
   }
 
   point_fmt <- if (is.null(spec$n)) {
-    percent_fmt
+    ysuffix_fmt
   } else {
     paste0(
       '<span style="color:{series.color}">\u25CF</span> ',

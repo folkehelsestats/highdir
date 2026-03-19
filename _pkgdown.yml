@@ -19,8 +19,8 @@ navbar:
   articles:
     text: Articles
     menu:
-     - text: Quick start
-       href: articles/quick-start.html
+     - text: Geom examples
+       href: articles/examples.html
      - text: Specifications
        href: articles/specification.html
   news:
@@ -70,3 +70,9 @@ reference:
       JavaScript-related utilities (relevant for Highcharts output).
     contents:
       - hd_add_js
+  - title: Datasets
+    desc: >-
+      Example datasets
+    contents:
+      - hd_data1
+      - hd_data2
