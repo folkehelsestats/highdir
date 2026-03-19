@@ -32,8 +32,8 @@
 #' @param ylim Numeric vector of length 2 or `NULL`. Fixed y-axis limits, e.g.
 #'   `c(0, 100)`.
 #' @param yint Positive numeric. Y-axis tick interval. Default `10`.
-#' @param percent Logical. Either y-axis is percentage value. If it's then the
-#'   tooltip and y-tick uses `%` symbol.
+#' @param ysuffix Character string appended to y-axis tick labels, allowing
+#'   custom units or symbols (e.g., "%", "km"). Use NULL for no suffix.
 #' @param flip Logical. Invert axes (horizontal bars). Default `FALSE`.
 #' @param colors Character vector, palette name string, or `NULL`. Per-figure
 #'   colour override; takes precedence over [hd_set_theme()].
@@ -71,7 +71,7 @@ hd_opts <- function(title    = NULL,
                     ylab     = " ",
                     ylim     = NULL,
                     yint     = 10,
-                    percent  = FALSE,
+                    ysuffix  = NULL,
                     flip     = FALSE,
                     colors   = NULL,
                     hc_theme = NULL,
@@ -90,7 +90,7 @@ hd_opts <- function(title    = NULL,
          ylab     = ylab,
          ylim     = ylim,
          yint     = yint,
-         percent  = percent,
+         ysuffix  = ysuffix,
          flip     = flip,
          colors   = colors,
          hc_theme = hc_theme,
@@ -112,7 +112,7 @@ print.hd_opts <- function(x, ...) {
   if (!is.null(x$ylab))     cat("  ylab     :", x$ylab,     "\n")
   if (!is.null(x$ylim))     cat("  ylim     :", x$ylim,     "\n")
   cat("  yint     :", x$yint, "\n")
-  cat("  percent  :", x$percent, "\n")
+  if (!is.null(x$ysuffix))  cat("  ysuffix  :", x$ysuffix,  "\n")
   cat("  flip     :", x$flip, "\n")
   if (!is.null(x$colors))
     cat("  colors   :", paste(x$colors, collapse = ", "), "\n")
