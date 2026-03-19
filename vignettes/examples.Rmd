@@ -1,0 +1,339 @@
+---
+title: "Geom examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Geom examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse  = TRUE,
+  comment   = "#>",
+  eval      = FALSE   # figures require a browser; set TRUE for local preview
+)
+```
+
+This vignette shows how to use each geometry in highdir.
+Every example follows the same two-step workflow:
+
+1. **`hd_spec()`** — describe *what* the data means (columns, labels)
+2. **`hd_make()`** — decide *how* to render it (geom, backend, options)
+
+The same `hd_spec` object can be passed to `hd_make()` multiple times with
+different geom types, backends, or `hd_opts()` objects — there is no need
+to rebuild the spec.
+
+```{r shared-data}
+library(highdir)
+
+# ── Time-series dataset (single group) ────────────────────────────────────────
+# Annual alcohol consumption estimate with 95 % confidence interval.
+alcohol <- data.frame(
+  year     = 2010:2023,
+  adj_mean = c(6.2, 6.5, 6.8, 7.0, 7.3, 7.1, 6.9, 6.7,
+               6.4, 6.2, 5.9, 5.7, 5.5, 5.3),
+  lower_95CI = c(5.8, 6.1, 6.3, 6.5, 6.8, 6.6, 6.4, 6.2,
+               5.9, 5.7, 5.4, 5.2, 5.0, 4.8),
+  upper_95CI = c(6.6, 6.9, 7.3, 7.5, 7.8, 7.6, 7.4, 7.2,
+               6.9, 6.7, 6.4, 6.2, 6.0, 5.8)
+)
+
+alcohol <- highdir::hd_data1
+
+# ── Time-series dataset (kjonn groups) ──────────────────────────────────────────
+alcohol2 <- data.frame(
+  year     = rep(2010:2023, each = 2),
+  kjonn      = rep(c("Male", "Female"), times = 14),
+  adj_mean = c(8.1, 4.5, 8.4, 4.8, 8.7, 5.1, 9.0, 5.3,
+               9.2, 5.6, 9.0, 5.4, 8.8, 5.2, 8.6, 5.0,
+               8.3, 4.8, 8.1, 4.6, 7.8, 4.3, 7.5, 4.1,
+               7.3, 3.9, 7.0, 3.7),
+  lower_95CI = c(7.6, 4.0, 7.9, 4.3, 8.2, 4.6, 8.5, 4.8,
+               8.7, 5.1, 8.5, 4.9, 8.3, 4.7, 8.1, 4.5,
+               7.8, 4.3, 7.6, 4.1, 7.3, 3.8, 7.0, 3.6,
+               6.8, 3.4, 6.5, 3.2),
+  upper_95CI = c(8.6, 5.0, 8.9, 5.3, 9.2, 5.6, 9.5, 5.8,
+               9.7, 6.1, 9.5, 5.9, 9.3, 5.7, 9.1, 5.5,
+               8.8, 5.3, 8.6, 5.1, 8.3, 4.8, 8.0, 4.6,
+               7.8, 4.4, 7.5, 4.2)
+)
+
+alcohol2 <- highdir::hd_data2
+
+# ── Age-group survey dataset (bars and pie) ────────────────────────────────────
+survey <- data.frame(
+  age_group = rep(c("18-24", "25-34", "35-44", "45-54", "55-64"), each = 2),
+  kjonn       = rep(c("Male", "Female"), times = 5),
+  pct       = c(42, 38, 55, 61, 48, 52, 60, 57, 65, 70),
+  n         = c(120, 115, 200, 210, 180, 175, 160, 155, 140, 145)
+)
+
+# ── Category share dataset (pie) ──────────────────────────────────────────────
+drinking_freq <- data.frame(
+  category = c("Never", "Rarely", "Monthly", "Weekly", "Daily"),
+  pct      = c(18, 25, 30, 20, 7)
+)
+```
+
+
+## Column chart
+
+Column charts are the default geometry and work with both grouped and
+ungrouped data.
+The `n` column is shown in the highcharter tooltip alongside the percentage.
+
+```{r column-grouped}
+spec_col <- hd_spec(survey,
+                    x     = "age_group",
+                    y     = "pct",
+                    group = "kjonn",
+                    n     = "n"
+                    )
+
+opts_col <- hd_opts(
+  title    = "Alcohol use by age group and kjonn",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylim     = c(0, 100),
+  yint     = 20,
+  ylab  = "Percentage (%)"
+)
+
+# Interactive (default)
+hd_make(spec_col, "column", opts_col)
+
+# Static ggplot2
+hd_make(spec_col, "column", opts_col, backend = "ggplot2")
+
+# Horizontal bars — flip applies to both backends
+opts_flip <- hd_opts(
+  title    = "Alcohol use by age group and kjonn",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylim     = c(0, 100),
+  flip     = TRUE
+)
+hd_make(spec_col, "column", opts_flip)
+hd_make(spec_col, "column", opts_flip, backend = "ggplot2")
+```
+
+
+## Line chart
+
+Line charts suit time-series data.
+Use `smooth = TRUE` (default) for spline curves, or `FALSE` for straight
+segments between points.
+`dot_size` controls the marker radius.
+
+```{r line-single}
+# Single series — no group column
+spec_line1 <- hd_spec(alcohol,
+                      x    = "year",
+                      y    = "adj_mean"
+                      )
+
+opts_line <- hd_opts(
+  title    = "Alcohol consumption over time",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylim     = c(0, 50),
+  ylab = "Litres per capita"
+)
+
+# Spline (smooth) — default
+hd_make(spec_line1, "line", opts_line)
+hd_make(spec_line1, "line", opts_line, backend = "ggplot2")
+
+# Straight segments
+hd_make(spec_line1, "line", opts_line, smooth = FALSE)
+hd_make(spec_line1, "line", opts_line, smooth = FALSE, backend = "ggplot2")
+```
+
+```{r line-grouped}
+# Grouped by kjonn
+spec_line2 <- hd_spec(alcohol2,
+                      x     = "year",
+                      y     = "adj_mean",
+                      group = "kjonn")
+
+# Larger markers, straight lines
+hd_make(spec_line2, "line", opts_line, smooth = FALSE, dot_size = 6)
+hd_make(spec_line2, "line", opts_line, smooth = FALSE, dot_size = 6,
+        backend = "ggplot2")
+
+# Highcharter only: custom per-group marker shapes
+hd_make(spec_line2, "line", opts_line,
+        line_symbols = c("circle", "square"))
+```
+
+
+## Arearange chart
+
+Arearange is designed for displaying a central estimate alongside a
+confidence interval or min/max band.
+`ymin` and `ymax` are **required** — they name the columns that define the
+lower and upper bounds of the shaded band.
+
+```{r arearange-single}
+# Single series
+spec_ar1 <- hd_spec(alcohol,
+                    x    = "year",
+                    y    = "adj_mean")
+
+opts_ar <- hd_opts(
+  title    = "Alcohol consumption with 95% CI",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylim     = c(0, 10),
+  ylab = "Litres per capita"
+)
+
+hd_make(spec_ar1, "arearange", opts_ar,
+        ymin = "lower_95CI", ymax = "upper_95CI")
+
+hd_make(spec_ar1, "arearange", opts_ar,
+        ymin = "lower_95CI", ymax = "upper_95CI", backend = "ggplot2")
+```
+
+```{r arearange-grouped}
+# Grouped by kjonn
+spec_ar2 <- hd_spec(alcohol2,
+                    x     = "year",
+                    y     = "adj_mean",
+                    group = "kjonn")
+
+hd_make(spec_ar2, "arearange", opts_ar,
+        ymin = "lower_95CI", ymax = "upper_95CI")
+
+hd_make(spec_ar2, "arearange", opts_ar,
+        ymin = "lower_95CI", ymax = "upper_95CI", backend = "ggplot2")
+```
+
+
+## Pie chart
+
+Pie charts map one categorical column to slice labels and one numeric
+column to slice values.
+Pass `inner_size = "50%"` (or any CSS percentage) to draw a donut chart.
+The `group` column is ignored for pie charts — use `x` for labels and `y`
+for values.
+
+```{r pie}
+spec_pie <- hd_spec(drinking_freq,
+                    x    = "category",
+                    y    = "pct")
+
+opts_pie <- hd_opts(
+  title    = "Drinking frequency",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylab = "Share (%)"
+)
+
+# Solid pie
+hd_make(spec_pie, "pie", opts_pie)
+hd_make(spec_pie, "pie", opts_pie, backend = "ggplot2")
+
+# Donut
+hd_make(spec_pie, "pie", opts_pie, inner_size = "50%")
+hd_make(spec_pie, "pie", opts_pie, inner_size = "50%", backend = "ggplot2")
+```
+
+
+## Reusing a spec across geoms
+
+Because `hd_spec()` and `hd_opts()` are separate from `hd_make()`, the
+same data description can be rendered as any geometry — no code duplication.
+
+```{r reuse}
+# One spec, three geoms
+spec_shared <- hd_spec(alcohol2,
+                       x     = "year",
+                       y     = "adj_mean",
+                       group = "kjonn")
+
+opts_shared <- hd_opts(
+  title    = "Alcohol consumption by kjonn",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylim     = c(0, 50),
+  ylab  = "Litres per capita"
+)
+
+hd_make(spec_shared, "column",    opts_shared)
+hd_make(spec_shared, "line",      opts_shared)
+hd_make(spec_shared, "arearange", opts_shared,
+        ymin = "lower_95CI", ymax = "upper_95CI")
+```
+
+
+## Reusing opts across languages
+
+An `hd_opts()` object only controls presentation.
+Create one per language and pair it with the same spec.
+
+```{r bilingual}
+opts_no <- hd_opts(
+  title    = "Alkoholbruk over tid",
+  subtitle = "Kilde: Helsedirektoratet",
+  caption  = "Tall om alkohol",
+  ylim     = c(0, 50)
+)
+
+opts_en <- hd_opts(
+  title    = "Alcohol use over time",
+  subtitle = "Source: Norwegian Directorate of Health",
+  caption  = "Annual health report",
+  ylim     = c(0, 50)
+)
+
+spec_ts <- hd_spec(alcohol2,
+                   x     = "year",
+                   y     = "adj_mean",
+                   group = "kjonn",
+                   ylab  = "Litres per capita")
+
+hd_make(spec_ts, "line", opts_no)
+hd_make(spec_ts, "line", opts_en)
+```
+
+
+## Theming
+
+Use `hd_set_theme()` once per session to apply a consistent visual style
+across all figures.
+Per-figure overrides are set via `hd_opts(hc_theme = ..., gg_theme = ...)`.
+
+```{r theming}
+# Session-wide defaults
+hd_set_theme(
+  hc_theme = "gridlight",
+  gg_theme = "classic",
+  colors   = c("#025169", "#7C145C", "#C68803")
+)
+
+hd_make(spec_ts, "line", opts_en)
+hd_make(spec_ts, "line", opts_en, backend = "ggplot2")
+
+# Per-figure override — does not change the session default
+hd_make(spec_ts, "line",
+        hd_opts(title = "Dark theme", hc_theme = "darkunica"),
+        backend = "highcharter")
+
+# Reset to package defaults
+hd_set_theme(hc_theme = "default", gg_theme = "classic", colors = NULL)
+```
+
+
+## Saving figures
+
+`hd_save()` exports highcharter figures to HTML or JSON and ggplot2
+figures to PNG, SVG, or PDF.
+The format is inferred from the file extension.
+
+```{r save, eval = FALSE}
+hc_fig <- hd_make(spec_ts, "line", opts_en)
+gg_fig <- hd_make(spec_ts, "line", opts_en, backend = "ggplot2")
+
+hd_save(hc_fig, "alcohol_line.html")
+hd_save(hc_fig, "alcohol_line.json")
+
+hd_save(gg_fig, "alcohol_line.png")
+hd_save(gg_fig, "alcohol_line.svg")
+```
