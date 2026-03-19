@@ -64,12 +64,12 @@
 
   # ── highcharter -------------------------------------------------------------
   highcharter = function(spec, opts) {
-
+    
     # --- percent % symbol ---
-    pros_fmt <- if (isTRUE(opts$percent)){
-      list(format = "{value}%")
-    } else {
+    pros_fmt <- if (is.null(opts$ysuffix)){
       list(format = "{value}")
+    } else {
+      list(format = paste0("{value}", opts$ysuffix))
     }
 
     # NOTE: %||% "" is intentional for both axis title fields.
