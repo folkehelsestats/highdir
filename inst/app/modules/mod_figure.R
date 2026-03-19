@@ -187,6 +187,8 @@ mod_figure_server <- function(id,
         L("caption",  o$caption),
         L("xlab",     if (!identical(o$xlab, " ")) o$xlab else ""),
         L("ylab",     if (!identical(o$ylab, " ")) o$ylab else ""),
+        L("ysuffix",  o$ysuffix),
+        L("xtick_labels",  o$xtick_labels),
         if (isTRUE(o$flip))
           paste0("  flip  = ", isTRUE(o$flip)),
         ")\n\n",
