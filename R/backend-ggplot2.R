@@ -36,7 +36,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     for (layer in layers) p <- p + layer
     return(p)
   }
-
+  
   p <- base_fig(spec, opts, "ggplot2")
 
   # -- Colour + layers ---------------------------------------------------------
@@ -68,10 +68,23 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]]))
     p <- p + ggplot2::scale_y_continuous(
                expand = ggplot2::expansion(mult = c(0, .1)))
-
+  
   # -- Theme (per-figure opts$gg_theme > session default) --------------------
   # Applied last so it sits on top of every layer -- same position as
   # hd_theme() in highcharter_engine().  Font is already merged into gt$theme
   # by gg_theme(), so no separate font block is needed here.
-  p + gt$theme
+  p <- p + gt$theme
+
+  # -- Axis label hiding (applied AFTER theme) --------------------------------
+  # .resolve_axis_label() in base_fig() already set opts$xlab / opts$ylab to
+  # NULL when the user passed NULL.  We re-apply element_blank() here, AFTER
+  # gt$theme, because many ggplot2 themes reset axis.title to their own
+  # default, silently undoing the element_blank() that base_fig() set earlier.
+  # Applying it last guarantees NULL -> hide regardless of theme choice.
+  # This also covers geoms like ranked_bar that bypass base_fig() entirely.
+  
+  p <- .apply_axis_label(p, .resolve_axis_label(opts$ylab, spec$y), "y")
+  p <- .apply_axis_label(p, .resolve_axis_label(opts$xlab, spec$x), "x")
+
+  p
 }

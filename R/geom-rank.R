@@ -1,4 +1,3 @@
-
 # @param ascending Logical. If \code{TRUE} (default) bars are sorted in
 #   ascending order of \code{y}.
 # @param vs Character string (partial match) identifying one category to
@@ -169,11 +168,22 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     layers <- c(layers, list(fill_scale))
 
   # x remapping — replace spec$x with .xname in the plot
-  # base_fig maps aes(x = spec$x) but we want the sorted factor .xname
-  # Override via scale_x_discrete
+  # base_fig maps aes(x = spec$x) but we want the sorted factor .xname.
+  # Override via scale_x_discrete.
   layers <- c(layers, list(
-    ggplot2::scale_x_discrete(),   # accepts the factor levels from .xname
+    ggplot2::scale_x_discrete(),
     ggplot2::scale_y_continuous(expand = c(0, 0))
+  ))
+
+  # Axis labels — ranked_bar overrides the x aesthetic with .xname so
+  # base_fig's labs() uses the wrong column name.  Re-apply here with the
+  # already-resolved opts$xlab / opts$ylab (NULL means hide, set via
+  # element_blank() in ggplot_engine after the theme is applied).
+  layers <- c(layers, list(
+    ggplot2::labs(
+      x = opts$xlab,
+      y = opts$ylab
+    )
   ))
 
   layers

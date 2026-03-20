@@ -11,7 +11,7 @@
 
   # ── ggplot2 -----------------------------------------------------------------
   ggplot2 = function(spec, opts) {
-
+    
     # ── Coerce group column to factor so ggplot2 treats it as discrete ────────
     # If the group column is numeric (1, 2, 3...) ggplot2 maps it as a
     # continuous variable. scale_color_manual is discrete-only and errors.
@@ -42,11 +42,10 @@
             caption  = opts$caption
         )
 
-    # This is redundant with labs x and y above, but keep to safe guarded :)
-    if (is.null(opts$ylab))
-      p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
-    if (is.null(opts$xlab))
-      p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
+    # NOTE: axis.title hiding (element_blank) is NOT applied here.
+    # It is applied in ggplot_engine() AFTER gt$theme so it always wins
+    # regardless of which ggplot2 theme was chosen.  Applying it here and
+    # then adding a theme on top would silently undo the hiding.
 
 
     if (!is.null(opts$ylim))
