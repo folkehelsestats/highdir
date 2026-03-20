@@ -13,8 +13,13 @@
 #' @return `name`, invisibly.
 #' @export
 register_backend <- function(name, engine) {
+
+  if (!is.character(name) || length(name) != 1L || !nzchar(name))
+    stop("`name` must be a single non-empty string.", call. = FALSE)
+
   if (!is.function(engine))
     stop("`engine` must be a function.", call. = FALSE)
+
   .backend_registry[[name]] <- engine
   invisible(name)
 }
@@ -94,7 +99,7 @@ register_geom <- function(name,
     ggplot_fun      = ggplot_fun,
     highcharter_fun = highcharter_fun,
     required_args   = required_args,
-    optional_args   = optional_args,    # NEW: user-discoverable optional args
+    optional_args   = optional_args,    # user-discoverable optional args
     is_map_geom     = is_map_geom
   )
   invisible(name)
