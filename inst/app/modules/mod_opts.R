@@ -39,6 +39,7 @@ mod_opts_ui <- function(id) {
       shiny::textInput(ns("ylab"),     NULL, placeholder = "Y-axis label"),
       shiny::textInput(ns("ysuffix"),  NULL, placeholder = "Y-tick suffix: %, km, mg ..."),
       shiny::textInput(ns("xtick_labels"),  NULL, placeholder = "x-tick labels, if different than x col"),
+      shiny::textInput(ns("decimals"), NULL, placeholder = "Decimals points else as.is eg. 2"),
 
       shiny::div(class = "hd-label", "Style"),
       shiny::textInput(ns("colors"), NULL,
@@ -96,6 +97,13 @@ mod_opts_server <- function(id) {
         ylab     = if (nzchar(input$ylab     %||% "")) input$ylab     else " ",
         ysuffix  = if (nzchar(input$ysuffix  %||% "")) input$ysuffix  else NULL,
         xtick_labels  = if (nzchar(input$xtick_labels  %||% "")) input$xtick_labels  else NULL,
+        decimals = {
+          raw <- suppressWarnings(as.numeric(input$decimals))
+          if (!is.null(raw) && !is.na(raw) && is.numeric(raw))
+            as.integer(raw)
+          else
+            NULL
+        },
         colors   = parsed_colors(),
         hc_theme = input$hc_theme %||% NULL,
         gg_theme = input$gg_theme %||% NULL,
