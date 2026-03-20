@@ -34,19 +34,21 @@
 #' @param yint Positive numeric. Y-axis tick interval. Default `10`.
 #' @param ysuffix Character string appended to y-axis tick labels, allowing
 #'   custom units or symbols (e.g., "%", "km"). Use NULL for no suffix.
+#' @param xtick_labels Column used to supply custom labels for the x-axis ticks.
+#'   This is required when the plotting x-values are numeric but the displayed
+#'   tick labels should come from another column. Only for highcharter backend.
+#'   Important: Highcharts indexes categories from 0, not 1 as in R.
+#' @param decimals Number of decimal places to display. If NULL, the column is
+#'   left unchanged. Default is NULL.
 #' @param flip Logical. Invert axes (horizontal bars). Default `FALSE`.
 #' @param colors Character vector, palette name string, or `NULL`. Per-figure
 #'   colour override; takes precedence over [hd_set_theme()].
 #' @param hc_theme Character or `NULL`. Per-figure highcharter theme name; takes
 #'   precedence over [hd_set_theme()].
 #' @param gg_theme Character name string, ggplot2 theme object, or `NULL`.
-#'   Per-figure ggplot2 theme; takes precedence over [hd_set_theme()].
-#'   Name strings: `"minimal"` (default), `"classic"`, `"bw"`, `"light"`,
-#'   `"dark"`, `"void"`, `"grey"`. Or pass a `ggplot2::theme_*()` object.
-#' @param xtick_labels Column used to supply custom labels for the x-axis ticks.
-#'   This is required when the plotting x-values are numeric but the displayed
-#'   tick labels should come from another column. Only for highcharter backend.
-#'   Important: Highcharts indexes categories from 0, not 1 as in R.
+#'   Per-figure ggplot2 theme; takes precedence over [hd_set_theme()]. Name
+#'   strings: `"minimal"` (default), `"classic"`, `"bw"`, `"light"`, `"dark"`,
+#'   `"void"`, `"grey"`. Or pass a `ggplot2::theme_*()` object.
 #'
 #' @return An S3 object of class `"hd_opts"`.
 #'
@@ -64,38 +66,42 @@
 #' opts
 #'
 #' @export
-hd_opts <- function(title    = NULL,
-                    subtitle = NULL,
-                    caption  = NULL,
-                    xlab     = " ",
-                    ylab     = " ",
-                    ylim     = NULL,
-                    yint     = 10,
-                    ysuffix  = NULL,
-                    flip     = FALSE,
-                    colors   = NULL,
-                    hc_theme = NULL,
-                    gg_theme = NULL,
-                    xtick_labels = NULL) {
+hd_opts <- function(title        = NULL,
+                    subtitle     = NULL,
+                    caption      = NULL,
+                    xlab         = " ",
+                    ylab         = " ",
+                    ylim         = NULL,
+                    yint         = 10,
+                    ysuffix      = NULL,
+                    xtick_labels = NULL,
+                    decimals     = NULL,
+                    flip         = FALSE,
+                    colors       = NULL,
+                    hc_theme     = NULL,
+                    gg_theme     = NULL
+                    ) {
 
   check_ylim(ylim)
   if (!is.numeric(yint) || length(yint) != 1 || yint <= 0)
     stop("`yint` must be a single positive number.", call. = FALSE)
 
   structure(
-    list(title    = title,
-         subtitle = subtitle,
-         caption  = caption,
-         xlab     = xlab,
-         ylab     = ylab,
-         ylim     = ylim,
-         yint     = yint,
-         ysuffix  = ysuffix,
-         flip     = flip,
-         colors   = colors,
-         hc_theme = hc_theme,
-         gg_theme = gg_theme,
-         xtick_labels = xtick_labels),
+    list(title        = title,
+         subtitle     = subtitle,
+         caption      = caption,
+         xlab         = xlab,
+         ylab         = ylab,
+         ylim         = ylim,
+         yint         = yint,
+         ysuffix      = ysuffix,
+         xtick_labels = xtick_labels,
+         decimals     = decimals,
+         flip         = flip,
+         colors       = colors,
+         hc_theme     = hc_theme,
+         gg_theme     = gg_theme
+         ),
     class = "hd_opts"
   )
 }
@@ -113,12 +119,13 @@ print.hd_opts <- function(x, ...) {
   if (!is.null(x$ylim))     cat("  ylim         :", x$ylim,     "\n")
   cat("  yint         :", x$yint, "\n")
   if (!is.null(x$ysuffix))  cat("  ysuffix      :", x$ysuffix,  "\n")
+  if (!is.null(x$xtick_labels)) cat("  xtick_labels :", format(x$xtick_labels), "\n")
+  if (!is.null(x$decimals)) cat("  decimals     :", x$decimals, "\n")
   cat("  flip         :", x$flip, "\n")
   if (!is.null(x$colors))
     cat("  colors       :", paste(x$colors, collapse = ", "), "\n")
   if (!is.null(x$hc_theme)) cat("  hc_theme     :", x$hc_theme, "\n")
   if (!is.null(x$gg_theme)) cat("  gg_theme     :", format(x$gg_theme), "\n")
-  if (!is.null(x$xtick_labels)) cat("  xtick_labels :", format(x$xtick_labels), "\n")
   invisible(x)
 }
 

@@ -106,3 +106,51 @@ resolve_symbols <- function(n, symbols = NULL) {
 
   opts_label              # any other string → use as-is
 }
+
+
+# Round numeric column ---------------------------------------------------------
+#' @keywords internal
+round_column <- function(data, column, digits = 0) {
+  # --- Validate dataset ---
+  if (!is.data.frame(data)) {
+    stop("`data` must be a data.frame.", call. = FALSE)
+  }
+  
+  # --- Validate column input (support bare name or quoted) ---
+  # Convert to string if user passes unquoted name
+  column_name <- deparse(substitute(column))
+  
+  if (!column_name %in% names(data)) {
+    stop(sprintf("Column '%s' does not exist in the dataset.", column_name),
+         call. = FALSE)
+  }
+  
+  # --- Validate digits ---
+  if (length(digits) != 1 || is.na(digits)) {
+    stop("`digits` must be a single non-NA numeric value.", call. = FALSE)
+  }
+  
+  # Coerce digits safely
+  digits_num <- suppressWarnings(as.numeric(digits))
+  if (is.na(digits_num)) {
+    stop("`digits` must be numeric.", call. = FALSE)
+  }
+  digits_int <- as.integer(round(digits_num))  # enforce integer
+  
+  # --- Validate column type ---
+  col <- data[[column_name]]
+  
+  if (!is.numeric(col)) {
+    stop(sprintf(
+      "Column '%s' is not numeric (found class: %s). Cannot apply rounding.",
+      column_name, paste(class(col), collapse = ", ")
+    ),
+    call. = FALSE)
+  }
+  
+  # --- Perform rounding (safe, no mutation of input data) ---
+  data[[column_name]] <- round(col, digits_int)
+  
+  # --- Return modified dataset ---
+  return(data)
+}
