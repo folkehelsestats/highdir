@@ -1,4 +1,4 @@
-# highdir [![highdir website](reference/figures/logo.png)](https://github.com/folkehelsestats/highdir)
+# highdir
 
 **highdir** is an R package that provides a unified, backend-agnostic
 API for building figures with either
