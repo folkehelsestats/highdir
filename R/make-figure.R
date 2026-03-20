@@ -108,6 +108,7 @@ hd_make <- function(spec,
   extra_args  <- list(...)
 
   validate_fig_inputs(spec, opts, type, backend, extra_args)
+  spec <- check_decimals(spec, opts, type, extra_args)
 
   geom   <- .get_geom(type)
   engine <- get_backend(backend)
