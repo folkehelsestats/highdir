@@ -108,6 +108,25 @@ resolve_symbols <- function(n, symbols = NULL) {
 }
 
 
+# -- Axis label hiding (applied AFTER theme) --------------------------------
+# -- For ggplot2 ---------------------------------------------------------------
+# .resolve_axis_label() is called again here (not just in base_fig) because:
+#   1. gt$theme can overwrite element_blank() that base_fig() set earlier.
+#   2. Geoms like ranked_bar bypass base_fig() entirely, so their labels
+#      would never be set otherwise.
+# Applying after gt$theme guarantees the resolved label always wins.
+.apply_axis_label <- function(p, resolved, axis) {
+  if (is.null(resolved)) {
+    axis_blank <- stats::setNames(list(resolved), axis)
+    p + do.call(ggplot2::labs, axis_blank)
+  } else {
+    # String -> set the label (covers both column-name fallback and custom text)
+    axis_labs <- stats::setNames(list(resolved), axis)
+    p + do.call(ggplot2::labs, axis_labs)
+  }
+}
+
+
 # Round numeric column ---------------------------------------------------------
 #' @keywords internal
 round_column <- function(data, column, digits = 0) {

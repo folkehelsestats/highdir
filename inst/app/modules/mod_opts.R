@@ -93,8 +93,8 @@ mod_opts_server <- function(id) {
         title    = if (nzchar(input$title    %||% "")) input$title    else NULL,
         subtitle = if (nzchar(input$subtitle %||% "")) input$subtitle else NULL,
         caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
-        xlab     = if (nzchar(input$xlab     %||% "")) input$xlab     else " ",
-        ylab     = if (nzchar(input$ylab     %||% "")) input$ylab     else " ",
+        xlab     = input_labs(input$xlab),
+        ylab     = input_labs(input$ylab),
         ysuffix  = if (nzchar(input$ysuffix  %||% "")) input$ysuffix  else NULL,
         xtick_labels  = if (nzchar(input$xtick_labels  %||% "")) input$xtick_labels  else NULL,
         decimals = {
@@ -112,4 +112,24 @@ mod_opts_server <- function(id) {
       use_js_r = shiny::reactive(isTRUE(input$use_js))
     )
   })
+}
+
+
+input_labs <- function(input){
+          x <- input %||% ""  # x is always a character now ("" if NULL)
+
+          # Case: user wants to hide (accept "NULL" in any case, with optional surrounding space)
+          is_hide    <- is.character(x) && length(x) == 1 &&
+            grepl("^\\s*NULL\\s*$", x, ignore.case = TRUE)
+
+          # Case: default sentinel (" ") OR the user cleared the box to empty ""
+          is_default <- identical(x, " ") || identical(x, "")
+
+          if (is_hide) {
+            NULL                  # pass NULL to labs() to remove the title
+          } else if (is_default) {
+            " "                   # keep sentinel so you can detect "default" upstream if needed
+          } else {
+            x                     # use the entered text as-is
+          }
 }

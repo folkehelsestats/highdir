@@ -185,8 +185,8 @@ mod_figure_server <- function(id,
         L("title",    o$title),
         L("subtitle", o$subtitle),
         L("caption",  o$caption),
-        L("xlab",     if (!identical(o$xlab, " ")) o$xlab else ""),
-        L("ylab",     if (!identical(o$ylab, " ")) o$ylab else ""),
+        print_label("xlab", o$xlab),
+        print_label("ylab", o$ylab),
         L("ysuffix",  o$ysuffix),
         L("xtick_labels",  o$xtick_labels),
         L("decimals", o$decimals, quote = FALSE),
@@ -208,4 +208,13 @@ mod_figure_server <- function(id,
     # Expose figures so server.R can wire download handlers
     list(hc_fig = hc_fig, gg_fig = gg_fig)
   })
+}
+
+
+print_label <- function(name, val) {
+  if (is.null(val)) {
+    paste0("  ", name, " = NULL\n")
+  } else {
+    paste0("  ", name, ' = "', val, '" \n')
+  }
 }
