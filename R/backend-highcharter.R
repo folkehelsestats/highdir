@@ -15,34 +15,29 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
                                use_js = TRUE, module = TRUE, ...) {
 
   chart <- base_fig(spec, opts, "highcharter")
-
+  
   # -- Tooltip -----------------------------------------------------------------
+  ysuffix <- opts$ysuffix %||% ""
+  has_suffix <- nzchar(ysuffix)
 
-  ## Show % symbols
-  ysuffix_fmt <- if (is.null(opts$ysuffix)){
-    paste0(
-      '<span style="color:{series.color}">\u25CF</span> ',
-      '<span style="color:black">{series.name}</span>: ',
-      '<b>{point.y}</b><br/>'
-    )
+  series_header <- paste0(
+    '<span style="color:{series.color}">\u25CF</span> ',
+    '<span style="color:black">{series.name}</span>: '
+  )
+
+  y_fmt <- if (has_suffix) paste0('{point.y}', ysuffix) else '{point.y}'
+
+  ysuffix_fmt <- paste0(series_header, '<b>', y_fmt, '</b><br/>')
+
+  tools_fmt <- if (is.null(spec$n) || !nzchar(spec$n)) {
+    paste0('<b>', y_fmt, '</b><br/>')
   } else {
-    paste0(
-      '<span style="color:{series.color}">\u25CF</span> ',
-      '<span style="color:black">{series.name}</span>: ',
-      '<b>{point.y}', opts$ysuffix, '</b><br/>'
-    )
+    paste0('<b>{point.', spec$n, '} (', y_fmt, ')</b><br/>')
   }
 
-  point_fmt <- if (is.null(spec$n)) {
-    ysuffix_fmt
-  } else {
-    paste0(
-      '<span style="color:{series.color}">\u25CF</span> ',
-      '<span style="color:black">{series.name}</span>: ',
-      '<b>{point.', spec$n, '} ({point.y}%)</b><br/>'
-    )
-  }
+  point_fmt <- if (is.null(spec$n) || !nzchar(spec$n)) ysuffix_fmt else paste0(series_header, tools_fmt)
 
+  # -- Chart -------------------------------------------------------------------
   chart <- chart |>
     highcharter::hc_tooltip(
       useHTML      = TRUE,

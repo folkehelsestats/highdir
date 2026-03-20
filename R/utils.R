@@ -106,3 +106,62 @@ resolve_symbols <- function(n, symbols = NULL) {
 
   opts_label              # any other string → use as-is
 }
+
+
+# Round numeric column ---------------------------------------------------------
+#' @keywords internal
+round_column <- function(data, column, digits = 0) {
+  # --- Validate dataset ---
+  if (!is.data.frame(data)) {
+    stop("`data` must be a data.frame.", call. = FALSE)
+  }
+  
+  if (!column %in% names(data)) {
+    stop(sprintf("Column '%s' does not exist in the dataset.", column),
+         call. = FALSE)
+  }
+  
+  # --- Validate digits ---
+  if (length(digits) != 1 || is.na(digits)) {
+    stop("`digits` must be a single non-NA numeric value.", call. = FALSE)
+  }
+  
+  # Coerce digits safely
+  digits_num <- suppressWarnings(as.numeric(digits))
+  if (is.na(digits_num)) {
+    stop("`digits` must be numeric.", call. = FALSE)
+  }
+  digits_int <- as.integer(round(digits_num))  # enforce integer
+  
+  # --- Validate column type ---
+  col <- data[[column]]
+  
+  if (!is.numeric(col)) {
+    stop(sprintf(
+      "Column '%s' is not numeric (found class: %s). Cannot apply rounding.",
+      column, paste(class(col), collapse = ", ")
+    ),
+    call. = FALSE)
+  }
+  
+  # --- Perform rounding (safe, no mutation of input data) ---
+  data[[column]] <- round(col, digits_int)
+  
+  # --- Return modified dataset ---
+  return(data)
+}
+
+check_decimals <- function(spec, opts, type, extra_args){
+
+  decs <- opts$decimals
+  
+  if (!is.null(decs))
+    spec$data <- round_column(spec$data, spec$y, decs)
+
+  if (type == "arearange" && !is.null(decs)){
+    spec$data <- round_column(spec$data, extra_args$ymin, decs)
+    spec$data <- round_column(spec$data, extra_args$ymax, decs)
+  }
+  
+  return(spec)
+}
