@@ -13,11 +13,12 @@ hd_opts(
   ylim = NULL,
   yint = 10,
   ysuffix = NULL,
+  xtick_labels = NULL,
+  decimals = NULL,
   flip = FALSE,
   colors = NULL,
   hc_theme = NULL,
-  gg_theme = NULL,
-  xtick_labels = NULL
+  gg_theme = NULL
 )
 }
 \arguments{
@@ -43,6 +44,14 @@ label.} }}
 \item{ysuffix}{Character string appended to y-axis tick labels, allowing
 custom units or symbols (e.g., "\%", "km"). Use NULL for no suffix.}
 
+\item{xtick_labels}{Column used to supply custom labels for the x-axis ticks.
+This is required when the plotting x-values are numeric but the displayed
+tick labels should come from another column. Only for highcharter backend.
+Important: Highcharts indexes categories from 0, not 1 as in R.}
+
+\item{decimals}{Number of decimal places to display. If NULL, the column is
+left unchanged. Default is NULL.}
+
 \item{flip}{Logical. Invert axes (horizontal bars). Default \code{FALSE}.}
 
 \item{colors}{Character vector, palette name string, or \code{NULL}. Per-figure
@@ -52,14 +61,9 @@ colour override; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()
 precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
 
 \item{gg_theme}{Character name string, ggplot2 theme object, or \code{NULL}.
-Per-figure ggplot2 theme; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.
-Name strings: \code{"minimal"} (default), \code{"classic"}, \code{"bw"}, \code{"light"},
-\code{"dark"}, \code{"void"}, \code{"grey"}. Or pass a \verb{ggplot2::theme_*()} object.}
-
-\item{xtick_labels}{Column used to supply custom labels for the x-axis ticks.
-This is required when the plotting x-values are numeric but the displayed
-tick labels should come from another column. Only for highcharter backend.
-Important: Highcharts indexes categories from 0, not 1 as in R.}
+Per-figure ggplot2 theme; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}. Name
+strings: \code{"minimal"} (default), \code{"classic"}, \code{"bw"}, \code{"light"}, \code{"dark"},
+\code{"void"}, \code{"grey"}. Or pass a \verb{ggplot2::theme_*()} object.}
 }
 \value{
 An S3 object of class \code{"hd_opts"}.

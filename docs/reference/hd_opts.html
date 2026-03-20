@@ -60,11 +60,12 @@ it to accept all defaults.</p>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  yint <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  ysuffix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xtick_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  decimals <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hc_theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  gg_theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  xtick_labels <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  gg_theme <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,6 +118,18 @@ label.</p></dd>
 custom units or symbols (e.g., "%", "km"). Use NULL for no suffix.</p></dd>
 
 
+<dt id="arg-xtick-labels">xtick_labels<a class="anchor" aria-label="anchor" href="#arg-xtick-labels"></a></dt>
+<dd><p>Column used to supply custom labels for the x-axis ticks.
+This is required when the plotting x-values are numeric but the displayed
+tick labels should come from another column. Only for highcharter backend.
+Important: Highcharts indexes categories from 0, not 1 as in R.</p></dd>
+
+
+<dt id="arg-decimals">decimals<a class="anchor" aria-label="anchor" href="#arg-decimals"></a></dt>
+<dd><p>Number of decimal places to display. If NULL, the column is
+left unchanged. Default is NULL.</p></dd>
+
+
 <dt id="arg-flip">flip<a class="anchor" aria-label="anchor" href="#arg-flip"></a></dt>
 <dd><p>Logical. Invert axes (horizontal bars). Default <code>FALSE</code>.</p></dd>
 
@@ -133,16 +146,9 @@ precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p>
 
 <dt id="arg-gg-theme">gg_theme<a class="anchor" aria-label="anchor" href="#arg-gg-theme"></a></dt>
 <dd><p>Character name string, ggplot2 theme object, or <code>NULL</code>.
-Per-figure ggplot2 theme; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.
-Name strings: <code>"minimal"</code> (default), <code>"classic"</code>, <code>"bw"</code>, <code>"light"</code>,
-<code>"dark"</code>, <code>"void"</code>, <code>"grey"</code>. Or pass a <code>ggplot2::theme_*()</code> object.</p></dd>
-
-
-<dt id="arg-xtick-labels">xtick_labels<a class="anchor" aria-label="anchor" href="#arg-xtick-labels"></a></dt>
-<dd><p>Column used to supply custom labels for the x-axis ticks.
-This is required when the plotting x-values are numeric but the displayed
-tick labels should come from another column. Only for highcharter backend.
-Important: Highcharts indexes categories from 0, not 1 as in R.</p></dd>
+Per-figure ggplot2 theme; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>. Name
+strings: <code>"minimal"</code> (default), <code>"classic"</code>, <code>"bw"</code>, <code>"light"</code>, <code>"dark"</code>,
+<code>"void"</code>, <code>"grey"</code>. Or pass a <code>ggplot2::theme_*()</code> object.</p></dd>
 
 </dl></div>
     <div class="section level2">
