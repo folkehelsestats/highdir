@@ -123,7 +123,25 @@
                          "Default 0.08 (8%).")
       )
     )
+  ),
+
+  stacked_column = list(
+  ggplot_fun      = NULL,
+  highcharter_fun = NULL,
+  required_args   = list(
+    stack = list(
+      default = NULL,
+      desc    = "Character. Column name that assigns rows to stack groups."
+    )
+  ),
+  optional_args   = list(
+    stacking = list(
+      default = "normal",
+      desc    = paste0("Character. Highcharter stacking mode: ",
+                       "'normal' (absolute values) or 'percent'.")
+    )
   )
+)
 
   # map ------------------------------------------------------------------------
   # map = list(                                                                       #
