@@ -11,31 +11,31 @@ vignette: >
 knitr::opts_chunk$set(
   collapse  = TRUE,
   comment   = "#>",
-  eval      = FALSE   # figures require a browser; set TRUE for local preview
+  eval      = TRUE   # figures require a browser; set TRUE for local preview
 )
 ```
 
 This vignette shows how to use each geometry in highdir.
 Every example follows the same two-step workflow:
 
-1. **`hd_spec()`** — describe *what* the data means (columns, labels)
-2. **`hd_make()`** — decide *how* to render it (geom, backend, options)
+1. **`hd_spec()`** - describe *what* the data means (columns, labels)
+2. **`hd_make()`** - decide *how* to render it (geom, backend, options)
 
 The same `hd_spec` object can be passed to `hd_make()` multiple times with
-different geom types, backends, or `hd_opts()` objects — there is no need
+different geom types, backends, or `hd_opts()` objects - there is no need
 to rebuild the spec.
 
 ```{r shared-data}
 library(highdir)
 
-# ── Time-series dataset (single group) ────────────────────────────────────────
+# Time-series dataset (single group) -------------------------------------------
 # Annual alcohol consumption estimate with 95 % confidence interval.
 alcohol <- highdir::hd_data1
 
-# ── Time-series dataset (kjonn groups) ──────────────────────────────────────────
+# Time-series dataset (kjonn groups) -------------------------------------------
 alcohol2 <- highdir::hd_data2
 
-# ── Age-group survey dataset (bars and pie) ────────────────────────────────────
+# Age-group survey dataset (bars and pie) --------------------------------------
 survey <- data.frame(
   age_group = rep(c("18-24", "25-34", "35-44", "45-54", "55-64"), each = 2),
   kjonn       = rep(c("Male", "Female"), times = 5),
@@ -43,7 +43,7 @@ survey <- data.frame(
   n         = c(120, 115, 200, 210, 180, 175, 160, 155, 140, 145)
 )
 
-# ── Category share dataset (pie) ──────────────────────────────────────────────
+# Category share dataset (pie) -------------------------------------------------
 drinking_freq <- data.frame(
   category = c("Never", "Rarely", "Monthly", "Weekly", "Daily"),
   pct      = c(18, 25, 30, 20, 7)
@@ -58,6 +58,8 @@ ungrouped data.
 The `n` column is shown in the highcharter tooltip alongside the percentage.
 
 ```{r column-grouped}
+#| out.width: "30%"
+
 spec_col <- hd_spec(survey,
                     x     = "age_group",
                     y     = "pct",
@@ -86,9 +88,16 @@ opts_flip <- hd_opts(
   ylim     = c(0, 100),
   flip     = TRUE
 )
+
 hd_make(spec_col, "column", opts_flip)
+```
+
+```{r colum-gg}
+#| out.width: "30%"
+
 hd_make(spec_col, "column", opts_flip, backend = "ggplot2")
 ```
+
 
 
 ## Line chart
@@ -209,6 +218,98 @@ hd_make(spec_pie, "pie", opts_pie, inner_size = "50%")
 hd_make(spec_pie, "pie", opts_pie, inner_size = "50%", backend = "ggplot2")
 ```
 
+
+
+
+## Stacked column chart
+
+Stacked column charts display multiple series grouped into named stacks.
+Each stack is a separate pile of bars; series that share the same stack
+accumulate on top of each other.
+
+The data must be in **long format** with one row per `(x, group, stack)`
+combination:
+
+- `x` — the category axis (e.g. medal type)
+- `y` — the numeric value
+- `group` — the series label shown in the legend (e.g. country)
+- `stack` — the column that assigns rows to a stack group (e.g. continent)
+
+`stack` is a **required argument** passed via `...` in `hd_make()`.
+
+```{r stacked-data}
+# Olympics all-time medal table
+olympics <- data.frame(
+  Country   = c("Norway", "Norway", "Norway",
+                "Germany", "Germany", "Germany",
+                "United States", "United States", "United States",
+                "Canada", "Canada", "Canada"),
+  Continent = c("Europe", "Europe", "Europe",
+                "Europe", "Europe", "Europe",
+                "North America", "North America", "North America",
+                "North America", "North America", "North America"),
+  Medal     = rep(c("Gold", "Silver", "Bronze"), times = 4),
+  Count     = c(148, 133, 124,
+                102,  98,  65,
+                113, 122,  95,
+                 77,  72,  80)
+)
+```
+
+```{r stacked-basic}
+spec_st <- hd_spec(olympics,
+                   x     = "Medal",
+                   y     = "Count",
+                   group = "Country")
+
+opts_st <- hd_opts(
+  title    = "Olympic Games all-time medal table, grouped by continent",
+  subtitle = "Source: Olympics",
+  ylab     = "Count medals"
+)
+
+# Interactive — stacks are separated by continent
+hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
+
+# Static ggplot2 — continents become facet panels
+hd_make(spec_st, "stacked_column", opts_st,
+        stack   = "Continent",
+        backend = "ggplot2")
+```
+
+The `stacking` argument controls how values accumulate.
+`"normal"` (default) shows absolute values; `"percent"` rescales each
+stack to 100 % so you can compare compositions across stacks:
+
+```{r stacked-percent}
+# 100% stacked — shows share within each continent, not absolute counts
+hd_make(spec_st, "stacked_column", opts_st,
+        stack    = "Continent",
+        stacking = "percent")
+
+hd_make(spec_st, "stacked_column", opts_st,
+        stack    = "Continent",
+        stacking = "percent",
+        backend  = "ggplot2")
+```
+
+The same `hd_opts()` controls — title, axis labels, colours, and theme —
+work identically for stacked columns as for every other geom:
+
+```{r stacked-opts}
+# Custom colour palette and Norwegian labels
+opts_no <- hd_opts(
+  title    = "Olympiske medaljer etter kontinent",
+  subtitle = "Kilde: OL-statistikk",
+  ylab     = "Antall medaljer",
+  colors   = c("#025169", "#7C145C", "#C68803", "#047FA4")
+)
+
+hd_make(spec_st, "stacked_column", opts_no, stack = "Continent")
+hd_make(spec_st, "stacked_column", opts_no,
+        stack   = "Continent",
+        backend = "ggplot2")
+```
 
 ## Reusing a spec across geoms
 

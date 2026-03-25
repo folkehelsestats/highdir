@@ -1,6 +1,6 @@
 #' @keywords internal
 gg_stacked_column <- function(spec, opts, geom_params) {
-
+  
   stack_col <- geom_params$stack
   grp_col   <- spec$group
 
@@ -45,6 +45,16 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
   # Enable stacking for all column series
   chart <- chart |>
     highcharter::hc_plotOptions(column = list(stacking = stacking))
+
+#   chart <- chart |>
+#   highcharter::hc_tooltip(
+#     useHTML = TRUE,
+#     format  = paste0(
+#       "<b>{key}</b><br/>",
+#       "{series.name}: {y}<br/>",
+#       "Total: {point.stackTotal}"
+#     )
+#   )
 
   # ── Key insight: iterate every unique (series, stack) combination ──────────
   # The same series name can appear in multiple stacks (as in your example).
