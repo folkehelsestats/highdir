@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://github.com/folkehelsestats/highdir/404.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/articles/accessibility.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/articles/examples.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/articles/index.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/articles/quick-start.html</loc></url>
@@ -9,6 +10,8 @@
 <url><loc>https://github.com/folkehelsestats/highdir/LICENSE-text.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/LICENSE.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/news/index.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/alco1.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/alco2.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/apply_gg_colors.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/base_fig.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/check_columns.html</loc></url>

@@ -68,7 +68,7 @@ JavaScript-related utilities (relevant for Highcharts output).
 
 Example datasets
 
-- [`hd_data1`](https://github.com/folkehelsestats/highdir/reference/hd_data1.md)
-  : Alcohol Consumption Data (hd_data1)
-- [`hd_data2`](https://github.com/folkehelsestats/highdir/reference/hd_data2.md)
-  : Alcohol Consumption by Gender (hd_data2)
+- [`alco1`](https://github.com/folkehelsestats/highdir/reference/alco1.md)
+  : Alcohol Consumption Data
+- [`alco2`](https://github.com/folkehelsestats/highdir/reference/alco2.md)
+  : Alcohol Consumption by Gender

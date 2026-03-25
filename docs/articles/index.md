@@ -2,6 +2,8 @@
 
 ### All vignettes
 
+- [Accessibility: writing descriptions for
+  figures](https://github.com/folkehelsestats/highdir/articles/accessibility.md):
 - [Geom
   examples](https://github.com/folkehelsestats/highdir/articles/examples.md):
 - [Quick

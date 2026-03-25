@@ -16,13 +16,19 @@ navbar:
   reference:
     text: References
     href: reference/index.html
+
   articles:
-    text: Articles
-    menu:
-     - text: Geom examples
-       href: articles/examples.html
-     - text: Specifications
-       href: articles/specification.html
+   - title: Building charts
+     navbar: ~
+     contents:
+       - specification
+
+   - title: Guides
+     navbar: Guides
+     contents:
+       - examples
+       - accessibility
+
   news:
     text: Updates
     href: news/index.html
@@ -74,5 +80,5 @@ reference:
     desc: >-
       Example datasets
     contents:
-      - hd_data1
-      - hd_data2
+      - alco1
+      - alco2
