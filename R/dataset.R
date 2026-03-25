@@ -1,4 +1,4 @@
-#' Alcohol Consumption Data (hd_data1)
+#' Alcohol Consumption Data
 #'
 #' Annual estimates of alcohol consumption, including adjusted mean values,
 #' standard errors, and 95% confidence intervals. Includes an alternative
@@ -11,9 +11,9 @@
 #'
 #' @usage NULL
 #' 
-"hd_data1"
+"alco1"
 
-#' Alcohol Consumption by Gender (hd_data2)
+#' Alcohol Consumption by Gender
 #'
 #' Annual estimates of alcohol consumption stratified by \enc{kjønn}{kjonn}
 #' (gender), including adjusted means, standard errors, and 95\% confidence
@@ -26,4 +26,4 @@
 #'
 #' @usage NULL
 #'
-"hd_data2"
+"alco2"

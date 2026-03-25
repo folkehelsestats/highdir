@@ -8,6 +8,7 @@ hd_opts(
   title = NULL,
   subtitle = NULL,
   caption = NULL,
+  description = NULL,
   xlab = " ",
   ylab = " ",
   ylim = NULL,
@@ -27,43 +28,64 @@ hd_opts(
 \item{subtitle}{Character or \code{NULL}. Subtitle. Highcharter default:
 \code{"Kilde: Navn av kilder"}.}
 
-\item{caption}{Character or \code{NULL}. Caption text (highcharter only).}
+\item{caption}{Character or \code{NULL}. Caption text displayed below the
+figure (highcharter only). This is a \strong{visible} footnote, distinct from
+\code{description} which is read only by assistive technology.}
 
-\item{xlab}{Character or NULL. X-axis label. \describe{ \item{\code{" "}
-(default)}{Use the \code{x} column name from \code{\link[=hd_spec]{hd_spec()}}.} \item{\code{NULL}}{Hide
-the x-axis label completely.} \item{any string}{Use that string as the
-label.} }}
+\item{description}{Character or \code{NULL}. Invisible accessibility description
+of the figure intended for screen readers and other assistive technology.
+\describe{
+\item{highcharter}{Passed to \code{hc_accessibility(description = ...)}.
+Requires the accessibility module, which highdir loads automatically.
+Screen readers announce this text when the user focuses the chart.}
+\item{ggplot2}{Set as the \code{alt} label via \code{labs(alt = ...)}, available
+since ggplot2 3.3.0.  Rendered as an HTML \code{alt} attribute when the
+plot is saved to SVG or included in an R Markdown / Quarto document
+with \code{fig.alt} support.}
+}
+Write a concise one- or two-sentence summary of what the figure shows,
+including the key trend or comparison, so the information is equally
+accessible to users who cannot see the chart.  Example:
+\code{"Bar chart showing alcohol use by age group. Use is highest in the 45-54 age group at 65\% and lowest in 18-24 at 42\%."}}
 
-\item{ylab}{Character or NULL. Y-axis label. Same rules as \code{xlab}.}
+\item{xlab}{Character or \code{NULL}. X-axis label. \describe{
+\item{\code{" "} (default)}{Use the \code{x} column name from \code{\link[=hd_spec]{hd_spec()}}.}
+\item{\code{NULL}}{Hide the x-axis label completely.}
+\item{any string}{Use that string as the label.} }}
 
-\item{ylim}{Numeric vector of length 2 or \code{NULL}. Fixed y-axis limits, e.g.
-\code{c(0, 100)}.}
+\item{ylab}{Character or \code{NULL}. Y-axis label. Same rules as \code{xlab}.}
+
+\item{ylim}{Numeric vector of length 2 or \code{NULL}. Fixed y-axis
+limits, e.g. \code{c(0, 100)}.}
 
 \item{yint}{Positive numeric. Y-axis tick interval. Default \code{10}.}
 
-\item{ysuffix}{Character string appended to y-axis tick labels, allowing
-custom units or symbols (e.g., "\%", "km"). Use NULL for no suffix.}
+\item{ysuffix}{Character or \code{NULL}. String appended to every y-axis
+tick label, e.g. \code{"\%"} or \code{" km"}. \code{NULL} shows no suffix.}
 
-\item{xtick_labels}{Column used to supply custom labels for the x-axis ticks.
-This is required when the plotting x-values are numeric but the displayed
-tick labels should come from another column. Only for highcharter backend.
-Important: Highcharts indexes categories from 0, not 1 as in R.}
+\item{xtick_labels}{Character or \code{NULL}. Column name supplying custom
+x-axis tick labels when the plotted x-values are numeric but the
+displayed labels should come from another column. Highcharter only.
+Note: Highcharts indexes categories from 0, not 1.}
 
-\item{decimals}{Number of decimal places to display. If NULL, the column is
-left unchanged. Default is NULL.}
+\item{decimals}{Integer or \code{NULL}. Number of decimal places to round
+the y-values to before rendering. Applied to the data via
+\code{check_decimals()} in \code{\link[=hd_make]{hd_make()}}. \code{NULL} leaves values unchanged.}
 
-\item{flip}{Logical. Invert axes (horizontal bars). Default \code{FALSE}.}
+\item{flip}{Logical. Invert axes (horizontal bars / inverted chart).
+Default \code{FALSE}.}
 
-\item{colors}{Character vector, palette name string, or \code{NULL}. Per-figure
-colour override; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
+\item{colors}{Character vector, palette name string, or \code{NULL}.
+Per-figure colour override; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
 
-\item{hc_theme}{Character or \code{NULL}. Per-figure highcharter theme name; takes
-precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.}
+\item{hc_theme}{Character or \code{NULL}. Per-figure highcharter theme name;
+takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}. See \code{\link[=hd_theme]{hd_theme()}} for valid names.}
 
 \item{gg_theme}{Character name string, ggplot2 theme object, or \code{NULL}.
-Per-figure ggplot2 theme; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}. Name
-strings: \code{"minimal"} (default), \code{"classic"}, \code{"bw"}, \code{"light"}, \code{"dark"},
-\code{"void"}, \code{"grey"}. Or pass a \verb{ggplot2::theme_*()} object.}
+Per-figure ggplot2 theme; takes precedence over \code{\link[=hd_set_theme]{hd_set_theme()}}.
+Name strings: \code{"classic"} (default), \code{"minimal"}, \code{"bw"}, \code{"light"},
+\code{"dark"}, \code{"void"}, \code{"grey"}. Or pass a \verb{ggplot2::theme_*()} object
+directly, e.g. \code{ggplot2::theme_bw(base_size = 14)}.}
 }
 \value{
 An S3 object of class \code{"hd_opts"}.
@@ -79,7 +101,7 @@ be rendered with multiple styles without repetition:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{spec    <- hd_spec(df, "age", "pct", group = "sex")
 opts_en <- hd_opts(title = "Health survey",    subtitle = "All ages")
-opts_no <- fig_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
+opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
 
 hd_make(spec, "column", opts_en)
 hd_make(spec, "column", opts_no)
@@ -87,12 +109,16 @@ hd_make(spec, "column", opts_no)
 }
 \examples{
 opts <- hd_opts(
-  title    = "Health survey results",
-  subtitle = "Source: FHI 2024",
-  caption  = "Tall om helse",
-  ylim     = c(0, 100),
-  yint     = 20,
-  colors   = c("#025169", "#7C145C")
+  title       = "Health survey results",
+  subtitle    = "Source: FHI 2024",
+  caption     = "Tall om helse",
+  description = paste(
+    "Grouped bar chart showing alcohol use by age group and sex.",
+    "Use is highest in the 45-54 age group at 65\% for women."
+  ),
+  ylim        = c(0, 100),
+  yint        = 20,
+  colors      = c("#025169", "#7C145C")
 )
 opts
 

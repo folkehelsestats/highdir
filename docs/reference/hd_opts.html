@@ -23,7 +23,8 @@ it to accept all defaults."><meta property="og:image" content="https://github.co
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/examples.html">Geom examples</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility: writing descriptions for figures</a></li>
+    <li><a class="dropdown-item" href="../articles/examples.html">Geom examples</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
     <li><a class="dropdown-item" href="../articles/specification.html">Specifications</a></li>
   </ul></li>
@@ -55,6 +56,7 @@ it to accept all defaults.</p>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  caption <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  description <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -83,30 +85,51 @@ it to accept all defaults.</p>
 
 
 <dt id="arg-caption">caption<a class="anchor" aria-label="anchor" href="#arg-caption"></a></dt>
-<dd><p>Character or <code>NULL</code>. Caption text (highcharter only).</p></dd>
+<dd><p>Character or <code>NULL</code>. Caption text displayed below the
+figure (highcharter only). This is a <strong>visible</strong> footnote, distinct from
+<code>description</code> which is read only by assistive technology.</p></dd>
+
+
+<dt id="arg-description">description<a class="anchor" aria-label="anchor" href="#arg-description"></a></dt>
+<dd><p>Character or <code>NULL</code>. Invisible accessibility description
+of the figure intended for screen readers and other assistive technology.</p><dl><dt>highcharter</dt>
+<dd><p>Passed to <code>hc_accessibility(description = ...)</code>.
+Requires the accessibility module, which highdir loads automatically.
+Screen readers announce this text when the user focuses the chart.</p></dd>
+
+<dt>ggplot2</dt>
+<dd><p>Set as the <code>alt</code> label via <code>labs(alt = ...)</code>, available
+since ggplot2 3.3.0.  Rendered as an HTML <code>alt</code> attribute when the
+plot is saved to SVG or included in an R Markdown / Quarto document
+with <code>fig.alt</code> support.</p></dd>
+
+
+</dl><p>Write a concise one- or two-sentence summary of what the figure shows,
+including the key trend or comparison, so the information is equally
+accessible to users who cannot see the chart.  Example:
+<code>"Bar chart showing alcohol use by age group. Use is highest in the 45-54 age group at 65% and lowest in 18-24 at 42%."</code></p></dd>
 
 
 <dt id="arg-xlab">xlab<a class="anchor" aria-label="anchor" href="#arg-xlab"></a></dt>
-<dd><p>Character or NULL. X-axis label.</p><dl><dt><code>" "</code>
-(default)</dt>
+<dd><p>Character or <code>NULL</code>. X-axis label.</p><dl><dt><code>" "</code> (default)</dt>
 <dd><p>Use the <code>x</code> column name from <code><a href="hd_spec.html">hd_spec()</a></code>.</p></dd>
- <dt><code>NULL</code></dt>
-<dd><p>Hide
-the x-axis label completely.</p></dd>
- <dt>any string</dt>
-<dd><p>Use that string as the
-label.</p></dd>
+
+<dt><code>NULL</code></dt>
+<dd><p>Hide the x-axis label completely.</p></dd>
+
+<dt>any string</dt>
+<dd><p>Use that string as the label.</p></dd>
 
 </dl></dd>
 
 
 <dt id="arg-ylab">ylab<a class="anchor" aria-label="anchor" href="#arg-ylab"></a></dt>
-<dd><p>Character or NULL. Y-axis label. Same rules as <code>xlab</code>.</p></dd>
+<dd><p>Character or <code>NULL</code>. Y-axis label. Same rules as <code>xlab</code>.</p></dd>
 
 
 <dt id="arg-ylim">ylim<a class="anchor" aria-label="anchor" href="#arg-ylim"></a></dt>
-<dd><p>Numeric vector of length 2 or <code>NULL</code>. Fixed y-axis limits, e.g.
-<code>c(0, 100)</code>.</p></dd>
+<dd><p>Numeric vector of length 2 or <code>NULL</code>. Fixed y-axis
+limits, e.g. <code>c(0, 100)</code>.</p></dd>
 
 
 <dt id="arg-yint">yint<a class="anchor" aria-label="anchor" href="#arg-yint"></a></dt>
@@ -114,41 +137,44 @@ label.</p></dd>
 
 
 <dt id="arg-ysuffix">ysuffix<a class="anchor" aria-label="anchor" href="#arg-ysuffix"></a></dt>
-<dd><p>Character string appended to y-axis tick labels, allowing
-custom units or symbols (e.g., "%", "km"). Use NULL for no suffix.</p></dd>
+<dd><p>Character or <code>NULL</code>. String appended to every y-axis
+tick label, e.g. <code>"%"</code> or <code>" km"</code>. <code>NULL</code> shows no suffix.</p></dd>
 
 
 <dt id="arg-xtick-labels">xtick_labels<a class="anchor" aria-label="anchor" href="#arg-xtick-labels"></a></dt>
-<dd><p>Column used to supply custom labels for the x-axis ticks.
-This is required when the plotting x-values are numeric but the displayed
-tick labels should come from another column. Only for highcharter backend.
-Important: Highcharts indexes categories from 0, not 1 as in R.</p></dd>
+<dd><p>Character or <code>NULL</code>. Column name supplying custom
+x-axis tick labels when the plotted x-values are numeric but the
+displayed labels should come from another column. Highcharter only.
+Note: Highcharts indexes categories from 0, not 1.</p></dd>
 
 
 <dt id="arg-decimals">decimals<a class="anchor" aria-label="anchor" href="#arg-decimals"></a></dt>
-<dd><p>Number of decimal places to display. If NULL, the column is
-left unchanged. Default is NULL.</p></dd>
+<dd><p>Integer or <code>NULL</code>. Number of decimal places to round
+the y-values to before rendering. Applied to the data via
+<code>check_decimals()</code> in <code><a href="hd_make.html">hd_make()</a></code>. <code>NULL</code> leaves values unchanged.</p></dd>
 
 
 <dt id="arg-flip">flip<a class="anchor" aria-label="anchor" href="#arg-flip"></a></dt>
-<dd><p>Logical. Invert axes (horizontal bars). Default <code>FALSE</code>.</p></dd>
+<dd><p>Logical. Invert axes (horizontal bars / inverted chart).
+Default <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-colors">colors<a class="anchor" aria-label="anchor" href="#arg-colors"></a></dt>
-<dd><p>Character vector, palette name string, or <code>NULL</code>. Per-figure
-colour override; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
+<dd><p>Character vector, palette name string, or <code>NULL</code>.
+Per-figure colour override; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
 
 
 <dt id="arg-hc-theme">hc_theme<a class="anchor" aria-label="anchor" href="#arg-hc-theme"></a></dt>
-<dd><p>Character or <code>NULL</code>. Per-figure highcharter theme name; takes
-precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.</p></dd>
+<dd><p>Character or <code>NULL</code>. Per-figure highcharter theme name;
+takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>. See <code><a href="hd_theme.html">hd_theme()</a></code> for valid names.</p></dd>
 
 
 <dt id="arg-gg-theme">gg_theme<a class="anchor" aria-label="anchor" href="#arg-gg-theme"></a></dt>
 <dd><p>Character name string, ggplot2 theme object, or <code>NULL</code>.
-Per-figure ggplot2 theme; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>. Name
-strings: <code>"minimal"</code> (default), <code>"classic"</code>, <code>"bw"</code>, <code>"light"</code>, <code>"dark"</code>,
-<code>"void"</code>, <code>"grey"</code>. Or pass a <code>ggplot2::theme_*()</code> object.</p></dd>
+Per-figure ggplot2 theme; takes precedence over <code><a href="hd_set_theme.html">hd_set_theme()</a></code>.
+Name strings: <code>"classic"</code> (default), <code>"minimal"</code>, <code>"bw"</code>, <code>"light"</code>,
+<code>"dark"</code>, <code>"void"</code>, <code>"grey"</code>. Or pass a <code>ggplot2::theme_*()</code> object
+directly, e.g. <code>ggplot2::theme_bw(base_size = 14)</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -161,7 +187,7 @@ strings: <code>"minimal"</code> (default), <code>"classic"</code>, <code>"bw"</c
 be rendered with multiple styles without repetition:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">spec</span>    <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">df</span>, <span class="st">"age"</span>, <span class="st">"pct"</span>, group <span class="op">=</span> <span class="st">"sex"</span><span class="op">)</span></span>
 <span><span class="va">opts_en</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Health survey"</span>,    subtitle <span class="op">=</span> <span class="st">"All ages"</span><span class="op">)</span></span>
-<span><span class="va">opts_no</span> <span class="op">&lt;-</span> <span class="fu">fig_opts</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Helseundersøkelse"</span>, subtitle <span class="op">=</span> <span class="st">"Alle aldre"</span><span class="op">)</span></span>
+<span><span class="va">opts_no</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Helseundersøkelse"</span>, subtitle <span class="op">=</span> <span class="st">"Alle aldre"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, <span class="va">opts_en</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, <span class="va">opts_no</span><span class="op">)</span></span></code></pre><p></p></div>
@@ -174,18 +200,23 @@ be rendered with multiple styles without repetition:</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">opts</span> <span class="op">&lt;-</span> <span class="fu">hd_opts</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  title    <span class="op">=</span> <span class="st">"Health survey results"</span>,</span></span>
-<span class="r-in"><span>  subtitle <span class="op">=</span> <span class="st">"Source: FHI 2024"</span>,</span></span>
-<span class="r-in"><span>  caption  <span class="op">=</span> <span class="st">"Tall om helse"</span>,</span></span>
-<span class="r-in"><span>  ylim     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  yint     <span class="op">=</span> <span class="fl">20</span>,</span></span>
-<span class="r-in"><span>  colors   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#025169"</span>, <span class="st">"#7C145C"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  title       <span class="op">=</span> <span class="st">"Health survey results"</span>,</span></span>
+<span class="r-in"><span>  subtitle    <span class="op">=</span> <span class="st">"Source: FHI 2024"</span>,</span></span>
+<span class="r-in"><span>  caption     <span class="op">=</span> <span class="st">"Tall om helse"</span>,</span></span>
+<span class="r-in"><span>  description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"Grouped bar chart showing alcohol use by age group and sex."</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"Use is highest in the 45-54 age group at 65% for women."</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  ylim        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  yint        <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>  colors      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#025169"</span>, <span class="st">"#7C145C"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">opts</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;hd_opts&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   title        : Health survey results </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   subtitle     : Source: FHI 2024 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   caption      : Tall om helse </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   description  : Grouped bar chart showing alcohol use by age group and sex. Use is highest in... </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   xlab         :   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ylab         :   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ylim         : 0 100 </span>

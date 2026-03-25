@@ -11,7 +11,13 @@ vignette: >
 knitr::opts_chunk$set(
   collapse  = TRUE,
   comment   = "#>",
-  eval      = FALSE   # figures require a browser; set TRUE for local preview
+  eval      = FALSE,  # figures require a browser; set TRUE for local preview
+  out.width = "60%",
+  fig.align = "center",
+  fig.width = 7,
+  fig.height = 4,
+  message = FALSE,
+  warning = FALSE   # optional
 )
 ```
 
@@ -21,20 +27,92 @@ Every example follows the same two-step workflow:
 1. **`hd_spec()`** — describe *what* the data means (columns, labels)
 2. **`hd_make()`** — decide *how* to render it (geom, backend, options)
 
+
+```{r dataset}
+#| echo: FALSE
+#| eval: TRUE
+
+alco1 <- 
+structure(list(year = 2012:2025, adj_mean = c(29.5688209339651, 
+26.3820822909097, 30.2479196947083, 24.9407936417249, 25.1552075711597, 
+27.7067665662493, 26.6906409447571, 25.4251533588897, 22.5086285695819, 
+25.7139807039743, 26.9308848055767, 26.2342670110855, 27.3435961548172, 
+26.1531628575368), SE = c(1.31401820814255, 0.898223842915541, 
+1.22017849767529, 0.957939144175014, 1.07138968311867, 0.953327936942322, 
+1.04394544742553, 0.982999807380581, 0.964926259096375, 1.06360056066082, 
+1.0789167751084, 1.04762055989223, 0.738525586449375, 0.807543719380914
+), lower_95CI = c(26.991788087279, 24.6205796839981, 27.8550502174718, 
+23.0622482786227, 23.0540848610285, 25.837246795542, 24.6434098689602, 
+23.4974198595009, 20.6163601352583, 23.62820174148, 24.8149252900896, 
+24.1797904994535, 25.8957573623531, 24.569989140382), upper_95CI = c(32.1458537806512, 
+28.1435848978212, 32.6407891719448, 26.819339004827, 27.2563302812909, 
+29.5762863369565, 28.737872020554, 27.3528868582785, 24.4008970039054, 
+27.7997596664686, 29.0468443210639, 28.2887435227175, 28.7914349472813, 
+27.7363365746917), adj_enhet = c(19.7, 17.6, 20.2, 16.6, 16.8, 
+18.5, 17.8, 17, 15, 17.1, 18, 17.5, 18.2, 17.4), SE_enhet = c(0.9, 
+0.6, 0.8, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7, 0.7, 0.5, 0.5
+), lower_enhet = c(18, 16.4, 18.6, 15.4, 15.4, 17.2, 16.4, 15.7, 
+13.7, 15.8, 16.5, 16.1, 17.3, 16.4), upper_enhet = c(21.4, 18.8, 
+21.8, 17.9, 18.2, 19.7, 19.2, 18.2, 16.3, 18.5, 19.4, 18.9, 19.2, 
+18.5)), row.names = c(NA, 14L), class = "data.frame")
+
+alco2 <- 
+structure(list(kjonn = c(1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 1L, 
+2L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 
+2L, 1L, 2L), year = c(2012L, 2012L, 2013L, 2013L, 2014L, 2014L, 
+2015L, 2015L, 2016L, 2016L, 2017L, 2017L, 2018L, 2018L, 2019L, 
+2019L, 2020L, 2020L, 2021L, 2021L, 2022L, 2022L, 2023L, 2023L, 
+2024L, 2024L, 2025L, 2025L), adj_mean = c(39.9534494013342, 19.2158069961127, 
+16.2987229537047, 36.4366085172398, 20.4071713171405, 40.1218495785968, 
+33.5071360168995, 16.3684523600791, 33.7999998752251, 16.5144875220263, 
+34.0407778185931, 21.4046942833816, 34.4416520612159, 18.8811860315978, 
+18.8902437612744, 31.9644150234791, 28.3125963087005, 16.6742604519355, 
+34.6111331093157, 16.7988662922662, 17.7598442065029, 36.0934348693515, 
+18.1477985410825, 34.3912521953532, 35.4129728498304, 19.2754560917665, 
+33.5140480551725, 18.7864609065691), SE = c(2.37961465920224, 
+1.05842075962891, 0.805528008154603, 1.58875647328087, 1.31567166848581, 
+2.0546200666149, 1.63223247158945, 1.00102712568767, 1.93202810956404, 
+0.868936995947687, 1.49238954144028, 1.18378539463991, 1.72844402301913, 
+1.13242241796748, 0.926270989221471, 1.69287641926772, 1.66628519349481, 
+0.933798980264774, 1.86851200933237, 0.99289119454813, 0.97504817595482, 
+1.91289210595667, 1.04561834491425, 1.80516167675502, 1.1224943436911, 
+0.95929056172763, 1.40593962010721, 0.812443770607349), lower_95CI = c(35.2837640271632, 
+17.1387107311799, 14.7180739832502, 33.319140066092, 17.8255902148301, 
+36.0902209662603, 30.3044984625189, 14.404369655018, 30.0088950080673, 
+14.8093609774398, 31.1124633028755, 19.0819939701495, 31.0502826663131, 
+16.6591559746196, 17.0726142656199, 28.6428742031312, 25.0431691496594, 
+14.8419870446381, 30.9448270211324, 14.8506720256205, 15.8463948865644, 
+32.3395415558719, 16.096031819571, 30.8492011715321, 33.2118342823919, 
+17.3943660331341, 30.7569565608956, 17.1932864023274), upper_95CI = c(44.6231347755053, 
+21.2929032610456, 17.8793719241591, 39.5540769683877, 22.9887524194509, 
+44.1534781909332, 36.7097735712802, 18.3325350651401, 37.591104742383, 
+18.2196140666128, 36.9690923343106, 23.7273945966137, 37.8330214561187, 
+21.1032160885759, 20.7078732569288, 35.2859558438269, 31.5820234677416, 
+18.5065338592329, 38.277439197499, 18.7470605589119, 19.6732935264414, 
+39.8473281828311, 20.1995652625939, 37.9333032191744, 37.6141114172688, 
+21.1565461503989, 36.2711395494494, 20.3796354108107), adj_enhet = c(26.6, 
+12.8, 10.9, 24.3, 13.6, 26.7, 22.3, 10.9, 22.5, 11, 22.7, 14.3, 
+23, 12.6, 12.6, 21.3, 18.9, 11.1, 23.1, 11.2, 11.8, 24.1, 12.1, 
+22.9, 23.6, 12.9, 22.3, 12.5), SE_enhet = c(1.6, 0.7, 0.5, 1.1, 
+0.9, 1.4, 1.1, 0.7, 1.3, 0.6, 1, 0.8, 1.2, 0.8, 0.6, 1.1, 1.1, 
+0.6, 1.2, 0.7, 0.7, 1.3, 0.7, 1.2, 0.7, 0.6, 0.9, 0.5), lower_enhet = c(23.5, 
+11.4, 9.8, 22.2, 11.9, 24.1, 20.2, 9.6, 20, 9.9, 20.7, 12.7, 
+20.7, 11.1, 11.4, 19.1, 16.7, 9.9, 20.6, 9.9, 10.6, 21.6, 10.7, 
+20.6, 22.1, 11.6, 20.5, 11.5), upper_enhet = c(29.7, 14.2, 11.9, 
+26.4, 15.3, 29.4, 24.5, 12.2, 25.1, 12.1, 24.6, 15.8, 25.2, 14.1, 
+13.8, 23.5, 21.1, 12.3, 25.5, 12.5, 13.1, 26.6, 13.5, 25.3, 25.1, 
+14.1, 24.2, 13.6)), row.names = c(NA, 28L), class = "data.frame")
+
+```
+
 The same `hd_spec` object can be passed to `hd_make()` multiple times with
 different geom types, backends, or `hd_opts()` objects — there is no need
 to rebuild the spec.
 
 ```{r shared-data}
+#| eval: TRUE
+
 library(highdir)
-
-# ── Time-series dataset (single group) ────────────────────────────────────────
-# Annual alcohol consumption estimate with 95 % confidence interval.
-alcohol <- highdir::hd_data1
-
-# ── Time-series dataset (kjonn groups) ──────────────────────────────────────────
-alcohol2 <- highdir::hd_data2
-
 # ── Age-group survey dataset (bars and pie) ────────────────────────────────────
 survey <- data.frame(
   age_group = rep(c("18-24", "25-34", "35-44", "45-54", "55-64"), each = 2),
@@ -43,11 +121,7 @@ survey <- data.frame(
   n         = c(120, 115, 200, 210, 180, 175, 160, 155, 140, 145)
 )
 
-# ── Category share dataset (pie) ──────────────────────────────────────────────
-drinking_freq <- data.frame(
-  category = c("Never", "Rarely", "Monthly", "Weekly", "Daily"),
-  pct      = c(18, 25, 30, 20, 7)
-)
+
 ```
 
 
@@ -58,6 +132,8 @@ ungrouped data.
 The `n` column is shown in the highcharter tooltip alongside the percentage.
 
 ```{r column-grouped}
+#| eval: TRUE
+
 spec_col <- hd_spec(survey,
                     x     = "age_group",
                     y     = "pct",
@@ -73,11 +149,31 @@ opts_col <- hd_opts(
   ylab  = "Percentage (%)"
 )
 
+```
+
+### Interactive figure 
+
+```{r hc-column1}
+#| eval: TRUE
+
 # Interactive (default)
 hd_make(spec_col, "column", opts_col)
 
+```
+
+### Static figure
+
+```{r gg-column1}
+#| eval: TRUE
+
 # Static ggplot2
 hd_make(spec_col, "column", opts_col, backend = "ggplot2")
+```
+
+### Column with groups
+
+```{r hd-column2}
+#| eval: TRUE
 
 # Horizontal bars — flip applies to both backends
 opts_flip <- hd_opts(
@@ -86,10 +182,15 @@ opts_flip <- hd_opts(
   ylim     = c(0, 100),
   flip     = TRUE
 )
+
 hd_make(spec_col, "column", opts_flip)
-hd_make(spec_col, "column", opts_flip, backend = "ggplot2")
 ```
 
+```{r gg-column}
+#| eval: TRUE
+
+hd_make(spec_col, "column", opts_flip, backend = "ggplot2")
+```
 
 ## Line chart
 
@@ -99,8 +200,17 @@ segments between points.
 `dot_size` controls the marker radius.
 
 ```{r line-single}
+#| eval: TRUE
+
+# ── Time-series dataset (single group) ────────────────────────────────────────
+# Annual alcohol consumption estimate with 95 % confidence interval.
+# data("alco1")
+
+# ── Time-series dataset (kjonn groups) ──────────────────────────────────────────
+# data("alco2")
+
 # Single series — no group column
-spec_line1 <- hd_spec(alcohol,
+spec_line1 <- hd_spec(alco1,
                       x    = "year",
                       y    = "adj_mean"
                       )
@@ -112,18 +222,33 @@ opts_line <- hd_opts(
   ylab = "Litres per capita"
 )
 
-# Spline (smooth) — default
-hd_make(spec_line1, "line", opts_line)
-hd_make(spec_line1, "line", opts_line, backend = "ggplot2")
 
 # Straight segments
 hd_make(spec_line1, "line", opts_line, smooth = FALSE)
 hd_make(spec_line1, "line", opts_line, smooth = FALSE, backend = "ggplot2")
 ```
 
+### Interactive figure
+
+```{r hc-line1}
+#| eval: TRUE
+
+# Spline (smooth) — default
+hd_make(spec_line1, "line", opts_line)
+```
+
+### Static
+
+```{r gg-line1}
+#| eval: TRUE
+
+# Spline (smooth) — default
+hd_make(spec_line1, "line", opts_line, backend = "ggplot2")
+```
+
 ```{r line-grouped}
 # Grouped by kjonn
-spec_line2 <- hd_spec(alcohol2,
+spec_line2 <- hd_spec(alco2,
                       x     = "year",
                       y     = "adj_mean",
                       group = "kjonn")
@@ -138,6 +263,123 @@ hd_make(spec_line2, "line", opts_line,
         line_symbols = c("circle", "square"))
 ```
 
+## Ranked bar chart
+
+A ranked bar chart sorts bars by value so comparisons across categories are
+immediate.
+Use `ranked_bar` when the order of categories matters more than their nominal
+labels - for example, ranking regions by a health indicator.
+
+**Automatic label placement** is one of the key features of this geom.
+In the ggplot2 backend, value labels are placed _inside_ a bar when the bar
+is long enough to fit the text, and _outside_ when the bar is too short.
+The cut-off is calculated per bar from the label character width relative to
+the axis range, so the placement is fully automatic — no manual threshold
+is needed.
+
+```{r ranked-data}
+#| eval: TRUE
+
+# Regional health indicator dataset
+regions <- data.frame(
+  region = c("Oslo", "Viken", "Vestland", "Rogaland",
+             "Trondelag", "Innlandet", "Agder",
+             "Nordland", "Troms og Finnmark"),
+  rate   = c(68.4, 71.2, 87.8, 64.5, 61.3, 6.1, 54.2, 49.8, 42.1),
+  n      = c(402, 448, 681, 318, 297, 251, 198, 177, 148)
+)
+```
+
+```{r ranked-basic}
+#| eval: TRUE
+
+spec_rb <- hd_spec(regions,
+                   x    = "region",
+                   y    = "rate",
+                   n    = "n")
+
+opts_rb <- hd_opts(
+  title    = "Health indicator by region",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylab     = "Rate per 100 000",
+  flip     = TRUE
+)
+
+# Static ggplot2 — value labels placed inside or outside bars automatically
+hd_make(spec_rb, "ranked_bar", opts_rb, backend = "ggplot2")
+```
+
+```{r ranked-basic-hc}
+# Interactive — default ascending order (lowest bar at bottom)
+hd_make(spec_rb, "ranked_bar", opts_rb)
+```
+
+Pass `ascending = FALSE` to flip the sort order so the highest-ranked
+category appears at the top:
+
+```{r ranked-descending}
+hd_make(spec_rb, "ranked_bar", opts_rb, ascending = FALSE)
+hd_make(spec_rb, "ranked_bar", opts_rb, ascending = FALSE, backend = "ggplot2")
+```
+
+Use `aim` to draw a dashed reference line at a target value.
+The line is drawn in a contrasting brand colour so it reads clearly
+against the bars:
+
+```{r gg-ranked-aim}
+# Draw a dashed target line at rate = 60
+hd_make(spec_rb, "ranked_bar", opts_rb, aim = 60, backend = "ggplot2")
+```
+
+```{r hc-ranked-aim}
+#| eval: TRUE
+
+# Draw a dashed target line at rate = 60
+hd_make(spec_rb, "ranked_bar", opts_rb, aim = 60)
+```
+
+Use `vs` to highlight one specific category with a contrasting fill colour.
+The argument accepts a partial string match against the `x` column, so
+`vs = "Oslo"` will match `"Oslo"` exactly, and `vs = "Troms"` would match
+`"Troms og Finnmark"`:
+
+```{r ranked-vs}
+# Highlight Oslo as the comparison reference
+hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo")
+hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo", backend = "ggplot2")
+
+# Combine: descending order + target line + comparison highlight
+hd_make(spec_rb, "ranked_bar", opts_rb,
+        ascending = FALSE,
+        aim       = 60,
+        vs        = "Oslo")
+```
+
+```{r ranked-vs-gg}
+#| eval: TRUE
+
+hd_make(spec_rb, "ranked_bar", opts_rb,
+        ascending = TRUE,
+        aim       = 60,
+        vs        = "Oslo",
+        backend   = "ggplot2")
+```
+
+The `n` column in `hd_spec()` appends sample sizes to category labels in
+the ggplot2 backend (`"Oslo (N=502)"`) and shows them in the highcharter
+tooltip.
+Omit `n` from `hd_spec()` if you do not want sample sizes displayed:
+
+```{r ranked-no-n}
+spec_rb_no_n <- hd_spec(regions,
+                         x    = "region",
+                         y    = "rate")
+
+# No N= labels in ggplot2; no N line in HC tooltip
+hd_make(spec_rb_no_n, "ranked_bar", opts_rb, backend = "ggplot2")
+hd_make(spec_rb_no_n, "ranked_bar", opts_rb)
+```
+
 
 ## Arearange chart
 
@@ -147,39 +389,61 @@ confidence interval or min/max band.
 lower and upper bounds of the shaded band.
 
 ```{r arearange-single}
+#| eval: TRUE
+
 # Single series
-spec_ar1 <- hd_spec(alcohol,
+spec_ar1 <- hd_spec(alco1,
                     x    = "year",
-                    y    = "adj_mean")
+                    y    = "adj_enhet")
 
 opts_ar <- hd_opts(
   title    = "Alcohol consumption with 95% CI",
   subtitle = "Source: Norwegian Directorate of Health",
-  ylim     = c(0, 10),
-  ylab = "Litres per capita"
+  ylim     = c(0, 30),
+  ylab = "Number of units alcohol"
 )
 
-hd_make(spec_ar1, "arearange", opts_ar,
-        ymin = "lower_95CI", ymax = "upper_95CI")
+```
+
+### Interactive 
+
+```{r hc-area1}
+#| eval: TRUE
 
 hd_make(spec_ar1, "arearange", opts_ar,
-        ymin = "lower_95CI", ymax = "upper_95CI", backend = "ggplot2")
+        ymin = "lower_enhet", ymax = "upper_enhet")
+
+```
+
+### Static
+
+```{r gg-area1}
+#| eval: TRUE
+
+hd_make(spec_ar1, "arearange", opts_ar,
+        ymin = "lower_enhet", ymax = "upper_enhet", backend = "ggplot2")
+
 ```
 
 ```{r arearange-grouped}
+#| eval: TRUE
+
 # Grouped by kjonn
-spec_ar2 <- hd_spec(alcohol2,
+spec_ar2 <- hd_spec(alco2,
                     x     = "year",
-                    y     = "adj_mean",
+                    y     = "adj_enhet",
                     group = "kjonn")
 
 hd_make(spec_ar2, "arearange", opts_ar,
-        ymin = "lower_95CI", ymax = "upper_95CI")
+        ymin = "lower_enhet", ymax = "upper_enhet")
+
+```
+
+```{r gg-area2}
 
 hd_make(spec_ar2, "arearange", opts_ar,
         ymin = "lower_95CI", ymax = "upper_95CI", backend = "ggplot2")
 ```
-
 
 ## Pie chart
 
@@ -190,6 +454,13 @@ The `group` column is ignored for pie charts — use `x` for labels and `y`
 for values.
 
 ```{r pie}
+#| eval: TRUE
+
+# Category share dataset (pie)
+drinking_freq <- data.frame(
+  category = c("Never", "Rarely", "Monthly", "Weekly", "Daily"),
+  pct      = c(18, 25, 30, 20, 7))
+  
 spec_pie <- hd_spec(drinking_freq,
                     x    = "category",
                     y    = "pct")
@@ -200,15 +471,130 @@ opts_pie <- hd_opts(
   ylab = "Share (%)"
 )
 
-# Solid pie
-hd_make(spec_pie, "pie", opts_pie)
-hd_make(spec_pie, "pie", opts_pie, backend = "ggplot2")
+```
 
-# Donut
+### Donut
+
+```{r hc-pie}
+#| eval: TRUE
+
+# Donut interactive
 hd_make(spec_pie, "pie", opts_pie, inner_size = "50%")
+```
+
+```{r gg-pie}
+# Donut static
 hd_make(spec_pie, "pie", opts_pie, inner_size = "50%", backend = "ggplot2")
 ```
 
+### Solid pie
+
+```{r pie-solid}
+# Solid pie
+hd_make(spec_pie, "pie", opts_pie)
+hd_make(spec_pie, "pie", opts_pie, backend = "ggplot2")
+```
+
+
+
+## Stacked column chart
+
+Stacked column charts display multiple series grouped into named stacks.
+Each stack is a separate pile of bars; series that share the same stack
+accumulate on top of each other.
+
+The data must be in **long format** with one row per `(x, group, stack)`
+combination:
+
+- `x` — the category axis (e.g. medal type)
+- `y` — the numeric value
+- `group` — the series label shown in the legend (e.g. country)
+- `stack` — the column that assigns rows to a stack group (e.g. continent)
+
+`stack` is a **required argument** passed via `...` in `hd_make()`.
+
+```{r stacked-data}
+#| eval: TRUE
+
+# Olympics all-time medal table
+olympics <- data.frame(
+  Country   = c("Norway", "Norway", "Norway",
+                "Germany", "Germany", "Germany",
+                "United States", "United States", "United States",
+                "Canada", "Canada", "Canada"),
+  Continent = c("Europe", "Europe", "Europe",
+                "Europe", "Europe", "Europe",
+                "North America", "North America", "North America",
+                "North America", "North America", "North America"),
+  Medal     = rep(c("Gold", "Silver", "Bronze"), times = 4),
+  Count     = c(148, 133, 124,
+                102,  98,  65,
+                113, 122,  95,
+                 77,  72,  80)
+)
+
+spec_st <- hd_spec(olympics,
+                   x     = "Medal",
+                   y     = "Count",
+                   group = "Country")
+
+opts_st <- hd_opts(
+  title    = "Olympic Games all-time medal table, grouped by continent",
+  subtitle = "Source: Olympics",
+  ylab     = "Count medals"
+)
+
+# Interactive — stacks are separated by continent
+hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
+
+```
+
+```{r stacked-basic}
+# Static ggplot2 — continents become facet panels
+hd_make(spec_st, "stacked_column", opts_st,
+        stack   = "Continent",
+        backend = "ggplot2")
+```
+
+The `stacking` argument controls how values accumulate.
+`"normal"` (default) shows absolute values; `"percent"` rescales each
+stack to 100 % so you can compare compositions across stacks:
+
+```{r stacked-percent}
+#| eval: TRUE
+
+# 100% stacked — shows share within each continent, not absolute counts
+hd_make(spec_st, "stacked_column", opts_st,
+        stack    = "Continent",
+        stacking = "percent")
+```
+
+```{r stacked-percent-gg}
+## Static
+hd_make(spec_st, "stacked_column", opts_st,
+        stack    = "Continent",
+        stacking = "percent",
+        backend  = "ggplot2")
+```
+
+
+The same `hd_opts()` controls — title, axis labels, colours, and theme —
+work identically for stacked columns as for every other geom:
+
+```{r stacked-opts}
+# Custom colour palette and Norwegian labels
+opts_no <- hd_opts(
+  title    = "Olympiske medaljer etter kontinent",
+  subtitle = "Kilde: OL-statistikk",
+  ylab     = "Antall medaljer",
+  colors   = c("#025169", "#7C145C", "#C68803", "#047FA4")
+)
+
+hd_make(spec_st, "stacked_column", opts_no, stack = "Continent")
+hd_make(spec_st, "stacked_column", opts_no,
+        stack   = "Continent",
+        backend = "ggplot2")
+```
 
 ## Reusing a spec across geoms
 
@@ -217,7 +603,7 @@ same data description can be rendered as any geometry — no code duplication.
 
 ```{r reuse}
 # One spec, three geoms
-spec_shared <- hd_spec(alcohol2,
+spec_shared <- hd_spec(alco2,
                        x     = "year",
                        y     = "adj_mean",
                        group = "kjonn")
@@ -256,11 +642,11 @@ opts_en <- hd_opts(
   ylim     = c(0, 50)
 )
 
-spec_ts <- hd_spec(alcohol2,
+spec_ts <- hd_spec(alco2,
                    x     = "year",
                    y     = "adj_mean",
-                   group = "kjonn",
-                   ylab  = "Litres per capita")
+                   group = "kjonn"
+                   )
 
 hd_make(spec_ts, "line", opts_no)
 hd_make(spec_ts, "line", opts_en)
