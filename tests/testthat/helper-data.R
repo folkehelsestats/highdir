@@ -34,3 +34,27 @@ spec2 <- hd_spec(df2, "x", "y", group = "grp")
   )
 }
 
+# For stacked_column
+olympics <- data.frame(
+  Country   = c("Norway", "Norway", "Norway",
+                "Germany", "Germany", "Germany",
+                "United States", "United States", "United States",
+                "Canada", "Canada", "Canada"),
+  Continent = c("Europe", "Europe", "Europe",
+                "Europe", "Europe", "Europe",
+                "North America", "North America", "North America",
+                "North America", "North America", "North America"),
+  Medal     = rep(c("Gold", "Silver", "Bronze"), times = 4),
+  Count     = c(148, 133, 124,
+                102,  98,  65,
+                113, 122,  95,
+                 77,  72,  80)
+)
+
+twostack_df <- data.frame(
+  x = c("2024", "2024", "2024", "2025", "2025", "2025"),
+  y = c(10, 20, 15, 12, 18, 22),
+  grp = c("g1", "g2", "g3", "g4", "g5", "g6"),
+  stack = c("A", "A", "A", "B", "B", "B"),
+  stringsAsFactors = FALSE
+)

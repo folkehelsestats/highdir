@@ -115,4 +115,12 @@ geom_args()           # all registered geometries
 #>   --------  --------  -------  ------------------------------
 #>   dot_size  optional  4        Numeric. Point size (ggplot2) or marker radius in px (highcharter).
 #> 
+#> 
+#> Arguments for hd_make(..., type = "stacked_column", ...):
+#> 
+#>   argument  kind      default  description
+#>   --------  --------  -------  ------------------------------
+#>   stack     required  NULL     Character. Column name that assigns rows to stack groups.
+#>   stacking  optional  normal   Character. Highcharter stacking mode: 'normal' or 'percent'.
+#> 
 ```

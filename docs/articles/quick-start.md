@@ -46,6 +46,6 @@ To list all geom features.
 
 ``` r
 list_geoms()
-#> [1] "arearange"  "column"     "line"       "pie"        "ranked_bar"
-#> [6] "scatter"
+#> [1] "arearange"      "column"         "line"           "pie"           
+#> [5] "ranked_bar"     "scatter"        "stacked_column"
 ```
