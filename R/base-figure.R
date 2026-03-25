@@ -9,14 +9,14 @@
 #' @keywords internal
 .base_constructors <- list(
 
-  # ── ggplot2 -----------------------------------------------------------------
+  # -- ggplot2 -----------------------------------------------------------------
   ggplot2 = function(spec, opts) {
     
-    # ── Coerce group column to factor so ggplot2 treats it as discrete ────────
+    # -- Coerce group column to factor so ggplot2 treats it as discrete --------
     # If the group column is numeric (1, 2, 3...) ggplot2 maps it as a
     # continuous variable. scale_color_manual is discrete-only and errors.
     # Converting to factor here fixes the aesthetic type before any layer
-    # or scale is added — the fix applies to all geoms automatically.
+    # or scale is added - the fix applies to all geoms automatically.
     plot_data <- spec$data
     grp_col   <- spec$colour %||% spec$group
     if (!is.null(grp_col) && is.numeric(plot_data[[grp_col]])) {
@@ -121,6 +121,14 @@
 
     if (!is.null(opts$caption))
       chart <- chart |> highcharter::hc_caption(text = opts$caption)
+
+    # Accessibility description - read by screen readers via the Highcharts
+    # accessibility module (loaded automatically in highcharter_engine).
+    # NULL means the module is still active (keyboard nav, ARIA roles) but
+    # no explicit figure description is announced.
+    if (!is.null(opts$description))
+      chart <- chart |>
+        highcharter::hc_accessibility(description = opts$description)
 
     chart
   }

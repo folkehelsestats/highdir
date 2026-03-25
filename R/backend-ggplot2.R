@@ -24,7 +24,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   # gt$theme  = ggplot2 theme object with font baked in
   # gt$colors = resolved colour vector used by apply_gg_colors() below
 
-  # ── Map geom: build from a blank ggplot (no axis mapping from base_fig) ──
+  # -- Map geom: build from a blank ggplot (no axis mapping from base_fig) -- 
   if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
     layers <- geom$ggplot_fun(spec, opts, geom_params)
     p <- ggplot2::ggplot() +
@@ -36,7 +36,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     for (layer in layers) p <- p + layer
     return(p)
   }
-  
+
   p <- base_fig(spec, opts, "ggplot2")
 
   # -- Colour + layers ---------------------------------------------------------
@@ -68,7 +68,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]]))
     p <- p + ggplot2::scale_y_continuous(
                expand = ggplot2::expansion(mult = c(0, .1)))
-  
+
   # -- Theme (per-figure opts$gg_theme > session default) --------------------
   # Applied last so it sits on top of every layer -- same position as
   # hd_theme() in highcharter_engine().  Font is already merged into gt$theme
@@ -82,9 +82,17 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   # default, silently undoing the element_blank() that base_fig() set earlier.
   # Applying it last guarantees NULL -> hide regardless of theme choice.
   # This also covers geoms like ranked_bar that bypass base_fig() entirely.
-  
-  p <- .apply_axis_label(p, .resolve_axis_label(opts$ylab, spec$y), "y")
-  p <- .apply_axis_label(p, .resolve_axis_label(opts$xlab, spec$x), "x")
+  if (is.null(opts$ylab))
+    p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
+  if (is.null(opts$xlab))
+    p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
+
+  # Accessibility alt text — set via labs(alt = ...) (ggplot2 >= 3.3.0).
+  # Rendered as an HTML alt attribute when the plot is included in
+  # R Markdown / Quarto documents.  NULL leaves alt text unset.
+  # But this is only when saved as SVG
+  if (!is.null(opts$description))
+    p <- p + ggplot2::labs(alt = opts$description)
 
   p
 }
