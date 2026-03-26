@@ -20,6 +20,25 @@ mod_opts_ui <- function(id) {
 
   shiny::tagList(
 
+    # Auto-resize behavior
+    shiny::tags$script(sprintf("
+      document.addEventListener('DOMContentLoaded', function() {
+        const el = document.getElementById('%s');
+        if (!el) return;
+
+        const maxHeight = 200;
+
+        function resize() {
+          el.style.height = 'auto';
+          el.style.height = Math.min(el.scrollHeight, maxHeight) + 'px';
+        }
+
+        el.addEventListener('input', resize);
+        resize();
+      });
+    ", ns("description"))),
+
+    
     shiny::tags$button(
       class         = "hd-toggle",
       `data-target` = paste0("#", ns("panel-opts")),
@@ -40,6 +59,8 @@ mod_opts_ui <- function(id) {
       shiny::textInput(ns("ysuffix"),  NULL, placeholder = "Y-tick suffix: %, km, mg ..."),
       shiny::textInput(ns("xtick_labels"),  NULL, placeholder = "x-tick labels, if different than x col"),
       shiny::textInput(ns("decimals"), NULL, placeholder = "Decimals points else as.is eg. 2"),
+      shiny::textInput(ns("description"), NULL, placeholder = "Figure description for screen readers"),
+      
 
       shiny::div(class = "hd-label", "Style"),
       shiny::textInput(ns("colors"), NULL,
@@ -104,6 +125,7 @@ mod_opts_server <- function(id) {
           else
             NULL
         },
+        description = if (nzchar(input$description  %||% "")) input$description  else NULL,
         colors   = parsed_colors(),
         hc_theme = input$hc_theme %||% NULL,
         gg_theme = input$gg_theme %||% NULL,
