@@ -42,10 +42,12 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/accessibility.html">Accessibility: writing descriptions for figures</a></li>
-    <li><a class="dropdown-item" href="articles/examples.html">Geom examples</a></li>
-    <li><a class="dropdown-item" href="articles/quick-start.html">Quick start</a></li>
+<li><a class="dropdown-item" href="articles/quick-start.html">Quick start</a></li>
     <li><a class="dropdown-item" href="articles/specification.html">Specifications</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Guides</h6></li>
+    <li><a class="dropdown-item" href="articles/examples.html">Geom examples</a></li>
+    <li><a class="dropdown-item" href="articles/accessibility.html">Accessibility: writing descriptions for figures</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -123,7 +125,7 @@
 <td align="left">column</td>
 <td align="left"><code>geom_col()</code></td>
 <td align="left">
-<code>vs</code>, <code>aim</code>
+<code>vs</code>, <code>aim</code>, <code>char_scale</code>, <code>min_frac</code>
 </td>
 </tr>
 <tr>
@@ -138,7 +140,7 @@
 <td align="left"><code>scatter</code></td>
 <td align="left">scatter</td>
 <td align="left"><code>geom_point()</code></td>
-<td align="left">—</td>
+<td align="left"><code>dot_size</code></td>
 </tr>
 <tr>
 <td align="left"><code>arearange</code></td>
@@ -154,7 +156,17 @@
 <td align="left">
 <code>geom_bar()</code>, <code>coord_polar()</code>
 </td>
-<td align="left">—</td>
+<td align="left"><code>inner_size</code></td>
+</tr>
+<tr>
+<td align="left"><code>stacked_column</code></td>
+<td align="left">column</td>
+<td align="left">
+<code>geom_bar()</code>, <code>facet_wrap()</code>
+</td>
+<td align="left">
+<code>stack</code>, <code>stacking</code>
+</td>
 </tr>
 </tbody>
 </table>

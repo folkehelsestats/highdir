@@ -48,11 +48,12 @@ The app is also available directly through ShinyApps.io at:
 | Name | highcharter type | ggplot2 equivalent | Extra args |
 |:---|:---|:---|:---|
 | `column` | column | `geom_col()` | — |
-| `ranked_bar` | column | `geom_col()` | `vs`, `aim` |
+| `ranked_bar` | column | `geom_col()` | `vs`, `aim`, `char_scale`, `min_frac` |
 | `line` | line / spline | `geom_line()` | `smooth`, `dot_size`, `line_symbols` |
-| `scatter` | scatter | `geom_point()` | — |
+| `scatter` | scatter | `geom_point()` | `dot_size` |
 | `arearange` | arearange | `geom_ribbon()` | `ymin`, `ymax` |
-| `pie` | pie | `geom_bar()`, `coord_polar()` | — |
+| `pie` | pie | `geom_bar()`, `coord_polar()` | `inner_size` |
+| `stacked_column` | column | `geom_bar()`, `facet_wrap()` | `stack`, `stacking` |
 
 ------------------------------------------------------------------------
 

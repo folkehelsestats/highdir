@@ -36,15 +36,14 @@ spec_col <- hd_spec(survey,
                     x     = "age_group",
                     y     = "pct",
                     group = "kjonn",
-                    n     = "n"
-                    )
+                    n     = "n")
 
 opts_col <- hd_opts(
   title    = "Alcohol use by age group and kjonn",
   subtitle = "Source: Norwegian Directorate of Health",
   ylim     = c(0, 100),
   yint     = 20,
-  ylab  = "Percentage (%)"
+  ylab     = "Percentage (%)"
 )
 ```
 
@@ -263,8 +262,8 @@ if you do not want sample sizes displayed:
 
 ``` r
 spec_rb_no_n <- hd_spec(regions,
-                         x    = "region",
-                         y    = "rate")
+                        x    = "region",
+                        y    = "rate")
 
 # No N= labels in ggplot2; no N line in HC tooltip
 hd_make(spec_rb_no_n, "ranked_bar", opts_rb, backend = "ggplot2")
@@ -522,8 +521,7 @@ opts_en <- hd_opts(
 spec_ts <- hd_spec(alco2,
                    x     = "year",
                    y     = "adj_mean",
-                   group = "kjonn"
-                   )
+                   group = "kjonn")
 
 hd_make(spec_ts, "line", opts_no)
 hd_make(spec_ts, "line", opts_en)

@@ -8,30 +8,29 @@ template:
 
 navbar:
   structure:
+    left: [start, reference, articles, news]
     right: [search, github]
   components:
-    intro:
+    start:
       text: Quick start
       href: articles/quick-start.html
-  reference:
-    text: References
-    href: reference/index.html
 
-  articles:
-   - title: Building charts
-     navbar: ~
-     contents:
-       - specification
+articles:
+  - title: Start
+    navbar:
+    contents:
+      - quick-start
+      - specification
 
-   - title: Guides
-     navbar: Guides
-     contents:
-       - examples
-       - accessibility
+  - title: Guides
+    navbar: Guides
+    contents:
+      - examples
+      - accessibility
 
-  news:
-    text: Updates
-    href: news/index.html
+news:
+  text: Updates
+  href: news/index.html
 
 
 reference:
