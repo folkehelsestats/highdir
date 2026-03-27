@@ -39,10 +39,12 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility: writing descriptions for figures</a></li>
-    <li><a class="dropdown-item" href="../articles/examples.html">Geom examples</a></li>
-    <li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
+<li><a class="dropdown-item" href="../articles/quick-start.html">Quick start</a></li>
     <li><a class="dropdown-item" href="../articles/specification.html">Specifications</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Guides</h6></li>
+    <li><a class="dropdown-item" href="../articles/examples.html">Geom examples</a></li>
+    <li><a class="dropdown-item" href="../articles/accessibility.html">Accessibility: writing descriptions for figures</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -108,15 +110,14 @@ tooltip alongside the percentage.</p>
 <span>                    x     <span class="op">=</span> <span class="st">"age_group"</span>,</span>
 <span>                    y     <span class="op">=</span> <span class="st">"pct"</span>,</span>
 <span>                    group <span class="op">=</span> <span class="st">"kjonn"</span>,</span>
-<span>                    n     <span class="op">=</span> <span class="st">"n"</span></span>
-<span>                    <span class="op">)</span></span>
+<span>                    n     <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">opts_col</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_opts.html">hd_opts</a></span><span class="op">(</span></span>
 <span>  title    <span class="op">=</span> <span class="st">"Alcohol use by age group and kjonn"</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="st">"Source: Norwegian Directorate of Health"</span>,</span>
 <span>  ylim     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,</span>
 <span>  yint     <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  ylab  <span class="op">=</span> <span class="st">"Percentage (%)"</span></span>
+<span>  ylab     <span class="op">=</span> <span class="st">"Percentage (%)"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="interactive-figure">Interactive figure<a class="anchor" aria-label="anchor" href="#interactive-figure"></a>
@@ -306,8 +307,8 @@ Omit <code>n</code> from <code><a href="../reference/hd_spec.html">hd_spec()</a>
 sample sizes displayed:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spec_rb_no_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">regions</span>,</span>
-<span>                         x    <span class="op">=</span> <span class="st">"region"</span>,</span>
-<span>                         y    <span class="op">=</span> <span class="st">"rate"</span><span class="op">)</span></span>
+<span>                        x    <span class="op">=</span> <span class="st">"region"</span>,</span>
+<span>                        y    <span class="op">=</span> <span class="st">"rate"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># No N= labels in ggplot2; no N line in HC tooltip</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec_rb_no_n</span>, <span class="st">"ranked_bar"</span>, <span class="va">opts_rb</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span></span>
@@ -547,8 +548,7 @@ one per language and pair it with the same spec.</p>
 <span><span class="va">spec_ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">alco2</span>,</span>
 <span>                   x     <span class="op">=</span> <span class="st">"year"</span>,</span>
 <span>                   y     <span class="op">=</span> <span class="st">"adj_mean"</span>,</span>
-<span>                   group <span class="op">=</span> <span class="st">"kjonn"</span></span>
-<span>                   <span class="op">)</span></span>
+<span>                   group <span class="op">=</span> <span class="st">"kjonn"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec_ts</span>, <span class="st">"line"</span>, <span class="va">opts_no</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec_ts</span>, <span class="st">"line"</span>, <span class="va">opts_en</span><span class="op">)</span></span></code></pre></div>
