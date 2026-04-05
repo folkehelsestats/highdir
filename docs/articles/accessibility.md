@@ -11,9 +11,9 @@ author provides an alternative text description.
 The `description` argument in
 [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md)
 is the single place to write that alternative text. It is **invisible to
-sighted users** — it does not appear on the figure — but it is announced
-by screen readers and embedded in the output file in a machine-readable
-way.
+sighted users** ie. it does not appear on the figure, but it is
+announced by screen readers and embedded in the output file in a
+machine-readable way.
 
 This is distinct from `caption`, which is a visible footnote (source
 citations, caveats) shown below the chart:
@@ -57,24 +57,24 @@ alcohol2 <- highdir::alco2  # same columns + kjonn
 
 ------------------------------------------------------------------------
 
-## Highcharter — how description is delivered
+## Highcharter: how description is delivered
 
 When `description` is set and the backend is `"highcharter"`, highdir
 calls:
 
 ``` r
-hc_accessibility(description = opts$description)
+highdir:::.hd_accessibility(chart, description = opts$description)
 ```
 
 This embeds the text in the Highcharts widget configuration. The
-accessibility module — loaded automatically by highdir — injects it as
-an `aria-label` attribute on the SVG container. When a screen reader
-user tabs to or clicks the chart, the browser announces the description
+accessibility module, loaded automatically by highdir, injects it as an
+`aria-label` attribute on the SVG container. When a screen reader user
+tabs to or clicks the chart, the browser announces the description
 before reading the interactive series data.
 
 The accessibility module also provides keyboard navigation, ARIA roles
 for series and data points, and a data table view. Setting `description`
-enhances all of these — it gives the user orientation before they
+enhances all of these and it gives the user orientation before they
 explore the chart interactively.
 
 ``` r
@@ -100,7 +100,7 @@ opts_line <- hd_opts(
 hd_make(spec_line, "line", opts_line)
 ```
 
-For grouped data, describe the comparison explicitly — which group is
+For grouped data, describe the comparison explicitly ie. which group is
 higher, and whether the gap widens or narrows over time:
 
 ``` r
@@ -145,7 +145,7 @@ hd_make(spec_line, "arearange", opts_ar,
 
 ------------------------------------------------------------------------
 
-## Saving to HTML and JSON — what is preserved
+## Saving to HTML and JSON: what is preserved
 
 ### HTML (`hd_save(fig, "file.html")`)
 
@@ -180,8 +180,8 @@ hd_save(hc_fig, "alcohol_line.html", selfcontained = TRUE)
 
 [`hd_save()`](https://github.com/folkehelsestats/highdir/reference/hd_save.md)
 writes the Highcharts configuration object (`hc$x$hc_opts`) as a JSON
-file. The `accessibility` key — including your `description` — is part
-of that configuration object and is therefore **included in the JSON
+file. The `accessibility` key including your `description` is part of
+that configuration object and is therefore **included in the JSON
 output**.
 
 ``` r
@@ -283,15 +283,15 @@ hd_make(spec_line, "line", opts_line)
 
 A good accessibility description answers three questions:
 
-1.  **What type of chart is it?** — “Line chart”, “Bar chart”, “Area
+1.  **What type of chart is it?** : “Line chart”, “Bar chart”, “Area
     range chart”
-2.  **What does it show?** — the variable, the time period or
+2.  **What does it show?** : the variable, the time period or
     categories, the grouping
-3.  **What is the key finding?** — the main trend, peak, comparison, or
+3.  **What is the key finding?** : the main trend, peak, comparison, or
     conclusion
 
 Keep descriptions to one or two sentences. Avoid repeating the title
-verbatim — the screen reader will have already announced the title.
+verbatim ie. the screen reader will have already announced the title.
 Mention specific values for the most important data points.
 
 ``` r

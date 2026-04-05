@@ -85,8 +85,8 @@ report through assistive technology, the chart is silent unless the
 author provides an alternative text description.</p>
 <p>The <code>description</code> argument in <code><a href="../reference/hd_opts.html">hd_opts()</a></code> is
 the single place to write that alternative text. It is <strong>invisible
-to sighted users</strong> — it does not appear on the figure — but it is
-announced by screen readers and embedded in the output file in a
+to sighted users</strong> ie. it does not appear on the figure, but it
+is announced by screen readers and embedded in the output file in a
 machine-readable way.</p>
 <p>This is distinct from <code>caption</code>, which is a visible
 footnote (source citations, caveats) shown below the chart:</p>
@@ -127,20 +127,20 @@ grouping column:</p>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="highcharter-how-description-is-delivered">Highcharter — how description is delivered<a class="anchor" aria-label="anchor" href="#highcharter-how-description-is-delivered"></a>
+<h2 id="highcharter-how-description-is-delivered">Highcharter: how description is delivered<a class="anchor" aria-label="anchor" href="#highcharter-how-description-is-delivered"></a>
 </h2>
 <p>When <code>description</code> is set and the backend is
 <code>"highcharter"</code>, highdir calls:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">hc_accessibility</span><span class="op">(</span>description <span class="op">=</span> <span class="va">opts</span><span class="op">$</span><span class="va">description</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">highdir</span><span class="fu">:::</span><span class="fu"><a href="../reference/dot-hd_accessibility.html">.hd_accessibility</a></span><span class="op">(</span><span class="va">chart</span>, description <span class="op">=</span> <span class="va">opts</span><span class="op">$</span><span class="va">description</span><span class="op">)</span></span></code></pre></div>
 <p>This embeds the text in the Highcharts widget configuration. The
-accessibility module — loaded automatically by highdir — injects it as
-an <code>aria-label</code> attribute on the SVG container. When a screen
+accessibility module, loaded automatically by highdir, injects it as an
+<code>aria-label</code> attribute on the SVG container. When a screen
 reader user tabs to or clicks the chart, the browser announces the
 description before reading the interactive series data.</p>
 <p>The accessibility module also provides keyboard navigation, ARIA
 roles for series and data points, and a data table view. Setting
-<code>description</code> enhances all of these — it gives the user
+<code>description</code> enhances all of these and it gives the user
 orientation before they explore the chart interactively.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spec_line</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">alcohol</span>,</span>
@@ -163,8 +163,8 @@ orientation before they explore the chart interactively.</p>
 <span><span class="co"># The description is embedded in the widget — invisible in the browser</span></span>
 <span><span class="co"># but announced by screen readers</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec_line</span>, <span class="st">"line"</span>, <span class="va">opts_line</span><span class="op">)</span></span></code></pre></div>
-<p>For grouped data, describe the comparison explicitly — which group is
-higher, and whether the gap widens or narrows over time:</p>
+<p>For grouped data, describe the comparison explicitly ie. which group
+is higher, and whether the gap widens or narrows over time:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spec_line2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">alcohol2</span>,</span>
 <span>                      x     <span class="op">=</span> <span class="st">"year"</span>,</span>
@@ -204,7 +204,7 @@ higher, and whether the gap widens or narrows over time:</p>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="saving-to-html-and-json-what-is-preserved">Saving to HTML and JSON — what is preserved<a class="anchor" aria-label="anchor" href="#saving-to-html-and-json-what-is-preserved"></a>
+<h2 id="saving-to-html-and-json-what-is-preserved">Saving to HTML and JSON: what is preserved<a class="anchor" aria-label="anchor" href="#saving-to-html-and-json-what-is-preserved"></a>
 </h2>
 <div class="section level3">
 <h3 id="html-hd_savefig-file-html">HTML (<code>hd_save(fig, "file.html")</code>)<a class="anchor" aria-label="anchor" href="#html-hd_savefig-file-html"></a>
@@ -235,8 +235,8 @@ announce the description when the user tabs to the chart.</p>
 </h3>
 <p><code><a href="../reference/hd_save.html">hd_save()</a></code> writes the Highcharts configuration object
 (<code>hc$x$hc_opts</code>) as a JSON file. The
-<code>accessibility</code> key — including your <code>description</code>
-— is part of that configuration object and is therefore <strong>included
+<code>accessibility</code> key including your <code>description</code>
+is part of that configuration object and is therefore <strong>included
 in the JSON output</strong>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The JSON file contains:</span></span>
@@ -371,17 +371,17 @@ preserved inside the iframe, so screen readers will still find it:</p>
 <p>A good accessibility description answers three questions:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>What type of chart is it?</strong> — “Line chart”, “Bar
+<strong>What type of chart is it?</strong> : “Line chart”, “Bar
 chart”, “Area range chart”</li>
 <li>
-<strong>What does it show?</strong> — the variable, the time period
+<strong>What does it show?</strong> : the variable, the time period
 or categories, the grouping</li>
 <li>
-<strong>What is the key finding?</strong> — the main trend, peak,
+<strong>What is the key finding?</strong> : the main trend, peak,
 comparison, or conclusion</li>
 </ol>
 <p>Keep descriptions to one or two sentences. Avoid repeating the title
-verbatim — the screen reader will have already announced the title.
+verbatim ie. the screen reader will have already announced the title.
 Mention specific values for the most important data points.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Too vague — does not help a non-sighted user understand the finding</span></span>

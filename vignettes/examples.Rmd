@@ -1,8 +1,6 @@
 ---
 title: "Geom examples"
-output: 
-  rmarkdown::html_vignette:
-    pandoc_args: ["--self-contained"]
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Geom examples}
   %\VignetteEngine{knitr::rmarkdown}
