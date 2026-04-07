@@ -46,6 +46,7 @@ Shiny app. It shows also codes to demonstrate how to use the package
 programmatically in R. Start the app with:
 
 ``` r
+library(highdir)
 hd_app()
 ```
 
