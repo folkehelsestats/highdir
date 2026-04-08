@@ -1,16 +1,5 @@
 # Style, theme and JavaScript configuration
 
-# -- Package-level option defaults (applied in zzz.R) ------------------------
-
-#' @keywords internal
-.hd_defaults <- list(
-  highdir.hc_theme   = "default",
-  highdir.gg_theme   = "classic",
-  highdir.colors     = NULL,
-  highdir.font       = NULL,
-  highdir.js_plugins = character(0)
-)
-
 # -- Session-wide style setter ------------------------------------------------
 
 #' Set Package-Wide Style Defaults
