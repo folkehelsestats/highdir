@@ -22,11 +22,17 @@
 <url><loc>https://github.com/folkehelsestats/highdir/reference/dot-resolve_axis_label.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/geom_args.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/get_palette.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/gg_arearange.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/gg_theme.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/hc_arearange.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/hd.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/hd_add_js.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/hd_app.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/hd_data1.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/hd_data2.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/hd_geom_arearange.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/hd_geom_stacked_column.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/hd_make.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/hd_opts.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/hd_save.html</loc></url>
@@ -38,7 +44,9 @@
 <url><loc>https://github.com/folkehelsestats/highdir/reference/list_backends.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/list_geoms.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/list_palettes.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/plus-.hd.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/point_events_or_null.html</loc></url>
+<url><loc>https://github.com/folkehelsestats/highdir/reference/print.hd.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/register_backend.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/register_geom.html</loc></url>
 <url><loc>https://github.com/folkehelsestats/highdir/reference/register_palette.html</loc></url>

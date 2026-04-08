@@ -102,6 +102,39 @@ Backend engines used to build figures.
 
 ## Geoms
 
+### Main
+
+All highdir plots begin with a call to
+[`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md),
+supply with either
+[`hd_spec()`](https://github.com/folkehelsestats/highdir/reference/hd_spec.md)
+or directly defined in
+[`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md).
+You then add geoms and options with `+`. To save a plot to disk, use
+[`hd_save()`](https://github.com/folkehelsestats/highdir/reference/hd_save.md).
+
+- [`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md) :
+  Initialise a Composable highdir Figure
+- [`` `+`( ``*`<hd>`*`)`](https://github.com/folkehelsestats/highdir/reference/plus-.hd.md)
+  : Add Layers to an hd Object
+
+### Types
+
+Geom types
+
+- [`hd_geom_arearange()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_arearange.md)
+  : Add an Arearange (Confidence Band) Layer
+- [`hd_geom_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md)
+  [`hd_geom_line()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md)
+  [`hd_geom_scatter()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md)
+  [`hd_geom_pie()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md)
+  [`hd_geom_ranked_bar()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md)
+  : Geometry Layers for hd Objects
+- [`hd_geom_stacked_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_stacked_column.md)
+  : Stacked Column Geometry Layer
+
+### Helpers
+
 Geometric layers and related functions used to construct figures.
 
 - [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md)
@@ -110,6 +143,8 @@ Geometric layers and related functions used to construct figures.
   : Show Arguments for a Geometry
 - [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)
   : Register a Geometry
+- [`print(`*`<hd>`*`)`](https://github.com/folkehelsestats/highdir/reference/print.hd.md)
+  : Render an hd Object
 
 ## Themes
 
