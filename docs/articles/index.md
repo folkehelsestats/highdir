@@ -1,6 +1,6 @@
 # Articles
 
-### Start
+### Getting started
 
 - [Quick
   start](https://github.com/folkehelsestats/highdir/articles/quick-start.md):

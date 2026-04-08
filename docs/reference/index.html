@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,90 +41,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="primary-functions">Primary functions<a class="anchor" aria-label="anchor" href="#primary-functions"></a></h2>
+      <h2 id="plot-basics">Plot basics<a class="anchor" aria-label="anchor" href="#plot-basics"></a></h2>
 
-      <div class="section-desc"><p>Core functions used to generate figures.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="hd_spec.html">hd_spec()</a></code>
-
-        </dt>
-        <dd>Create a Figure Data Specification</dd>
-
-        <dt>
-
-          <code><a href="hd_make.html">hd_make()</a></code>
-
-        </dt>
-        <dd>Build a Figure from a Specification</dd>
-      </dl></div><div class="section level2">
-      <h2 id="secondary-functions">Secondary functions<a class="anchor" aria-label="anchor" href="#secondary-functions"></a></h2>
-
-      <div class="section-desc"><p>Additional optional functions that support workflows.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="hd_opts.html">hd_opts()</a></code>
-
-        </dt>
-        <dd>Create Figure Presentation Options</dd>
-
-        <dt>
-
-          <code><a href="hd_save.html">hd_save()</a></code>
-
-        </dt>
-        <dd>Save a Figure to Disk</dd>
-
-        <dt>
-
-          <code><a href="hd_app.html">hd_app()</a></code>
-
-        </dt>
-        <dd>Launch the highdir Shiny GUI</dd>
-      </dl></div><div class="section level2">
-      <h2 id="backends">Backends<a class="anchor" aria-label="anchor" href="#backends"></a></h2>
-
-      <div class="section-desc"><p>Backend engines used to build figures.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="list_backends.html">list_backends()</a></code>
-
-        </dt>
-        <dd>List Registered Backends</dd>
-
-        <dt>
-
-          <code><a href="register_backend.html">register_backend()</a></code>
-
-        </dt>
-        <dd>Register a Rendering Backend</dd>
-      </dl></div><div class="section level2">
-      <h2 id="geoms">Geoms<a class="anchor" aria-label="anchor" href="#geoms"></a></h2>
-
-
-
-      <dl></dl></div><div class="section level2">
-
-      <h3 id="main">Main<a class="anchor" aria-label="anchor" href="#main"></a></h3>
-      <div class="section-desc"><p>All highdir plots begin with a call to <code><a href="../reference/hd.html">hd()</a></code>, supply with either <code><a href="../reference/hd_spec.html">hd_spec()</a></code> or directly defined in <code><a href="../reference/hd.html">hd()</a></code>. You then add geoms and options with <code>+</code>. To save a plot to disk, use <code><a href="../reference/hd_save.html">hd_save()</a></code>.</p></div>
+      <div class="section-desc"><p>All highdir plots begin with a call to <code><a href="../reference/hd.html">hd()</a></code>, supplying a specification via <code><a href="../reference/hd_spec.html">hd_spec()</a></code> or defined directly in <code><a href="../reference/hd.html">hd()</a></code>. You then add geoms and options with <code>+</code>. To save a plot to disk, use <code><a href="../reference/hd_save.html">hd_save()</a></code>.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -144,10 +63,36 @@
 
         </dt>
         <dd>Add Layers to an hd Object</dd>
-      </dl></div><div class="section level2">
 
-      <h3 id="types">Types<a class="anchor" aria-label="anchor" href="#types"></a></h3>
-      <div class="section-desc"><p>Geom types</p></div>
+        <dt>
+
+          <code><a href="hd_spec.html">hd_spec()</a></code>
+
+        </dt>
+        <dd>Create a Figure Data Specification</dd>
+
+        <dt>
+
+          <code><a href="hd_opts.html">hd_opts()</a></code>
+
+        </dt>
+        <dd>Create Figure Presentation Options</dd>
+
+        <dt>
+
+          <code><a href="hd_save.html">hd_save()</a></code>
+
+        </dt>
+        <dd>Save a Figure to Disk</dd>
+      </dl></div><div class="section level2">
+      <h2 id="layers">Layers<a class="anchor" aria-label="anchor" href="#layers"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+      <h3 id="geoms">Geoms<a class="anchor" aria-label="anchor" href="#geoms"></a></h3>
+      <div class="section-desc"><p>Geoms define the visual representation of your data. Each <code>hd_geom_*()</code> function adds a layer to the plot with a specific chart type.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -176,8 +121,8 @@
         <dd>Stacked Column Geometry Layer</dd>
       </dl></div><div class="section level2">
 
-      <h3 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h3>
-      <div class="section-desc"><p>Geometric layers and related functions used to construct figures.</p></div>
+      <h3 id="geom-helpers">Geom helpers<a class="anchor" aria-label="anchor" href="#geom-helpers"></a></h3>
+      <div class="section-desc"><p>Utility functions for working with geoms — listing available types, inspecting arguments, and registering custom geoms.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -204,17 +149,10 @@
 
         </dt>
         <dd>Register a Geometry</dd>
-
-        <dt>
-
-          <code><a href="print.hd.html">print(<i>&lt;hd&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Render an hd Object</dd>
       </dl></div><div class="section level2">
       <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a></h2>
 
-      <div class="section-desc"><p>Theme functions defining the visual style of figures.</p></div>
+      <div class="section-desc"><p>Themes control the visual style of figures. Use <code><a href="../reference/hd_theme.html">hd_theme()</a></code> for highcharter output, <code><a href="../reference/gg_theme.html">gg_theme()</a></code> for ggplot2 output, and <code><a href="../reference/hd_set_theme.html">hd_set_theme()</a></code> to apply a theme globally across all plots.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -241,8 +179,17 @@
 
         </dt>
         <dd>Set Package-Wide Style Defaults</dd>
+      </dl></div><div class="section level2">
 
-        <dt>
+      <h3 id="palettes">Palettes<a class="anchor" aria-label="anchor" href="#palettes"></a></h3>
+      <div class="section-desc"><p>Functions for working with colour palettes used across chart types.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="list_palettes.html">list_palettes()</a></code>
 
@@ -263,9 +210,32 @@
         </dt>
         <dd>Register a Named Colour Palette</dd>
       </dl></div><div class="section level2">
+      <h2 id="backends">Backends<a class="anchor" aria-label="anchor" href="#backends"></a></h2>
+
+      <div class="section-desc"><p>highdir is backend-agnostic and can render charts using either ggplot2 or highcharter. Use these functions to list, register, and switch between available backends.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="list_backends.html">list_backends()</a></code>
+
+        </dt>
+        <dd>List Registered Backends</dd>
+
+        <dt>
+
+          <code><a href="register_backend.html">register_backend()</a></code>
+
+        </dt>
+        <dd>Register a Rendering Backend</dd>
+      </dl></div><div class="section level2">
       <h2 id="javascript">JavaScript<a class="anchor" aria-label="anchor" href="#javascript"></a></h2>
 
-      <div class="section-desc"><p>JavaScript-related utilities (relevant for Highcharts output).</p></div>
+      <div class="section-desc"><p>JavaScript utilities for extending Highcharts output. Relevant only when using the highcharter backend.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -279,9 +249,48 @@
         </dt>
         <dd>Inject JavaScript into a Highcharts Widget</dd>
       </dl></div><div class="section level2">
+      <h2 id="applications">Applications<a class="anchor" aria-label="anchor" href="#applications"></a></h2>
+
+      <div class="section-desc"><p>Helpers for building interactive Shiny applications with highdir charts.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="hd_app.html">hd_app()</a></code>
+
+        </dt>
+        <dd>Launch the highdir Shiny GUI</dd>
+
+        <dt>
+
+          <code><a href="hd_make.html">hd_make()</a></code>
+
+        </dt>
+        <dd>Build a Figure from a Specification</dd>
+      </dl></div><div class="section level2">
+      <h2 id="printing">Printing<a class="anchor" aria-label="anchor" href="#printing"></a></h2>
+
+      <div class="section-desc"><p>Methods for rendering highdir objects in the console and interactive sessions.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="print.hd.html">print(<i>&lt;hd&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Render an hd Object</dd>
+      </dl></div><div class="section level2">
       <h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a></h2>
 
-      <div class="section-desc"><p>Example datasets</p></div>
+      <div class="section-desc"><p>Example datasets bundled with highdir, used in documentation examples and vignettes to illustrate typical use cases.</p></div>
 
       <dl></dl></div><div class="section level2">
 
