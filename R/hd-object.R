@@ -160,42 +160,6 @@ hd_geom_pie <- function(...) hd_geom("pie", ...)
 #' @export
 hd_geom_ranked_bar <- function(...) hd_geom("ranked_bar", ...)
 
-#' @rdname hd_geom_layer
-#' @export
-hd_geom_stacked_column <- function(...) hd_geom("stacked_column", ...)
-
-#' Add an Arearange (Confidence Band) Layer
-#'
-#' Geometry layer for ribbon / confidence-interval charts.  Unlike the other
-#' `hd_geom_*()` functions, `ymin` and `ymax` are **required** named arguments
-#' (they map to column names in `spec$data`) rather than optional `...` extras.
-#' This makes the contract explicit at the call site instead of burying
-#' required information inside `...`.
-#'
-#' @param ymin Character. Column name for the lower bound of the range.
-#' @param ymax Character. Column name for the upper bound of the range.
-#' @param ...  Additional optional arguments forwarded to the geom function
-#'   (e.g. `show_line = FALSE`, `single_colour = "#025169"`).
-#'   Run `geom_args("arearange")` for the full list.
-#'
-#' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
-#'
-#' @examples
-#' df <- data.frame(
-#'   age  = c("18-24", "25-34", "35-44", "45-54"),
-#'   pct  = c(42, 55, 48, 60),
-#'   lo   = c(37, 50, 43, 55),
-#'   hi   = c(47, 60, 53, 65)
-#' )
-#'
-#' hd(df, x = "age", y = "pct") +
-#'   hd_geom_arearange(ymin = "lo", ymax = "hi") +
-#'   hd_opts(title = "Estimate with 95% CI", ylim = c(30, 70))
-#'
-#' @export
-hd_geom_arearange <- function(ymin, ymax, ...) {
-  hd_geom("arearange", ymin = ymin, ymax = ymax, ...)
-}
 
 
 # ══════════════════════════════════════════════════════════════════════════════

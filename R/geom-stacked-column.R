@@ -1,7 +1,10 @@
 #' @keywords internal
 gg_stacked_column <- function(spec, opts, geom_params) {
-  
+
+  # required args --------------------------------------------------------------
   stack_col <- geom_params$stack
+
+  # optional args ----------------------------------------------------------------
   grp_col   <- spec$group
 
   if (is.null(grp_col))
@@ -28,7 +31,10 @@ gg_stacked_column <- function(spec, opts, geom_params) {
 hc_stacked_column <- function(chart, spec, opts, geom_params,
                               use_js = TRUE, ...) {
 
+  # Required args ----------------------------------------------------------------
   stack_col <- geom_params$stack
+
+  # Optional args ----------------------------------------------------------------
   stacking  <- geom_params$stacking %||% "normal"
 
   d       <- spec$data
@@ -94,4 +100,15 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
   }
 
   chart
+}
+
+
+## -----------------------------------------------------------------------------
+## Public geom constructor
+## -----------------------------------------------------------------------------
+
+#' @rdname hd_geom_layer
+#' @export
+hd_geom_stacked_column <- function(stack, stacking, ...) {
+  hd_geom("stacked_column", stack = stack, stacking = stacking, ...)
 }
