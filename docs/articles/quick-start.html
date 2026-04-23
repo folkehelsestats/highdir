@@ -75,6 +75,11 @@
 
     
     
+<p>There two ways to use <code>highdir</code>: 1. object based 2.
+ggplot2 style</p>
+<div class="section level2">
+<h2 id="object-based">Object based<a class="anchor" aria-label="anchor" href="#object-based"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://folkehelsestats.github.io/highdir/" class="external-link">highdir</a></span><span class="op">)</span></span>
@@ -110,18 +115,41 @@
 <span></span>
 <span><span class="va">gg01</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hd_save.html">hd_save</a></span><span class="op">(</span>fig <span class="op">=</span> <span class="va">gg01</span>, file <span class="op">=</span> <span class="st">"chart.png"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="ggplot2-style">ggplot2 style<a class="anchor" aria-label="anchor" href="#ggplot2-style"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Interactive</span></span>
+<span><span class="fu"><a href="../reference/hd.html">hd</a></span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span>, group <span class="op">=</span> <span class="st">"sex"</span>, n <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hd_geom_column.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Tall om Report"</span>,</span>
+<span>          subtitle <span class="op">=</span> <span class="st">"Source: Example data"</span>,</span>
+<span>          caption  <span class="op">=</span> <span class="st">"Tall om helse"</span>,</span>
+<span>          ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Static ggplot2</span></span>
+<span><span class="fu"><a href="../reference/hd.html">hd</a></span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span>, group <span class="op">=</span> <span class="st">"sex"</span>, n <span class="op">=</span> <span class="st">"n"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hd_geom_column.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Tall om Report"</span>,</span>
+<span>          subtitle <span class="op">=</span> <span class="st">"Source: Example data"</span>,</span>
+<span>          caption  <span class="op">=</span> <span class="st">"Tall om helse"</span>,</span>
+<span>          ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>For more example on how to use other geoms, please read in <a href="https://folkehelsestats.github.io/highdir/articles/examples.html" class="external-link">other
 geom examples</a></p>
+</div>
 <div class="section level2">
 <h2 id="geom">Geom<a class="anchor" aria-label="anchor" href="#geom"></a>
 </h2>
 <p>To list all geom features.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_geoms.html">list_geoms</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "arearange"      "column"         "line"           "pie"           </span></span>
 <span><span class="co">#&gt; [5] "ranked_bar"     "scatter"        "stacked_column"</span></span></code></pre></div>
 </div>
-  </main>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

@@ -1,5 +1,9 @@
 # Quick start
 
+There two ways to use `highdir`: 1. object based 2. ggplot2 style
+
+## Object based
+
 ``` r
 
 library(highdir)
@@ -35,6 +39,27 @@ hd_save(fig = hd01, file = "chart.html")
 
 gg01 <- hd_make(spec, "column", backend = "ggplot2")
 hd_save(fig = gg01, file = "chart.png")
+```
+
+## ggplot2 style
+
+``` r
+
+# Interactive
+hd(df, x = "age", y = "pct", group = "sex", n = "n") +
+  hd_geom_column() +
+  hd_opts(title = "Tall om Report",
+          subtitle = "Source: Example data",
+          caption  = "Tall om helse",
+          ylim = c(0, 80))
+
+# Static ggplot2
+hd(df, x = "age", y = "pct", group = "sex", n = "n", backend = "ggplot2") +
+  hd_geom_column() +
+  hd_opts(title = "Tall om Report",
+          subtitle = "Source: Example data",
+          caption  = "Tall om helse",
+          ylim = c(0, 80))
 ```
 
 For more example on how to use other geoms, please read in [other geom
