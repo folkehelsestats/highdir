@@ -6,6 +6,12 @@ template:
   logo: man/figures/logo.png
   favicon: man/figures/favicon.png
 
+development:
+  mode: auto
+
+pkgdown:
+  run_examples: true
+
 navbar:
   structure:
     left: [start, reference, articles, news]

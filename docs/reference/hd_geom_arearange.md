@@ -45,5 +45,13 @@ df <- data.frame(
 hd(df, x = "age", y = "pct") +
   hd_geom_arearange(ymin = "lo", ymax = "hi") +
   hd_opts(title = "Estimate with 95% CI", ylim = c(30, 70))
-#> Error in hd(df, x = "age", y = "pct"): could not find function "hd"
+
+hd(df, x = "age", y = "pct", backend = "ggplot2") +
+  hd_geom_arearange(ymin = "lo", ymax = "hi") +
+  hd_opts(title = "Estimate with 95% CI", ylim = c(30, 70))
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+
 ```

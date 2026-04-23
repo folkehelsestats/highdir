@@ -44,19 +44,26 @@ An S3 object of class `"hd_geom"` for use with `+.hd`.
 
 ``` r
 # Example data: sales of three products (A, B, C) across four
-#' # regions (North, South, East, West)
+# regions (North, South, East, West)
 df <- data.frame(
- region = rep(c("North", "South", "East", "West"),
-              each = 3),
- product = rep(c("A", "B", "C"), times = 4),
-sales   = c(10, 20, 30, 15, 25, 35, 20, 30, 40, 25, 35, 45)
+    region = rep(c("North", "South", "East", "West"),
+        each = 3
+    ),
+    product = rep(c("A", "B", "C"), times = 4),
+    sales = c(10, 20, 30, 15, 25, 35, 20, 30, 40, 25, 35, 45)
 )
-#' # Create a stacked column chart with `region` as the stack variable and
-#' # `product` as the group variable
+# Create a stacked column chart with `region` as the stack variable and
+# `product` as the group variable
 spec <- hd_spec(df, x = "region", y = "sales", group = "product")
 
 hd(spec) +
  hd_geom_stacked_column(stack = "region", stacking = "normal") +
-hd_opts(title = "Stacked Column Chart", ylim = c(0, 120))
-#> Error in hd(spec): could not find function "hd"
+ hd_opts(title = "Stacked Column Chart", ylim = c(0, 120))
+
+hd(spec, backend = "ggplot2") +
+ hd_geom_stacked_column(stack = "region", stacking = "normal") +
+ hd_opts(title = "Stacked Column Chart", ylim = c(0, 120))
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
+
 ```

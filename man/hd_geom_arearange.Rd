@@ -37,4 +37,8 @@ hd(df, x = "age", y = "pct") +
   hd_geom_arearange(ymin = "lo", ymax = "hi") +
   hd_opts(title = "Estimate with 95\% CI", ylim = c(30, 70))
 
+hd(df, x = "age", y = "pct", backend = "ggplot2") +
+  hd_geom_arearange(ymin = "lo", ymax = "hi") +
+  hd_opts(title = "Estimate with 95\% CI", ylim = c(30, 70))
+
 }

@@ -9,8 +9,6 @@ is printed.
 ## Usage
 
 ``` r
-hd_geom_column(...)
-
 hd_geom_line(...)
 
 hd_geom_scatter(...)

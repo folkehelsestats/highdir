@@ -50,13 +50,9 @@ df <- data.frame(age = c("18-24", "25-34"), pct = c(42, 55))
 p <- hd(df, x = "age", y = "pct") +
   hd_geom_column() +
   hd_opts(title = "Demo")
-#> Error in hd(df, x = "age", y = "pct"): could not find function "hd"
 
 # Reuse a partial object with different opts
 base <- hd(df, x = "age", y = "pct") + hd_geom_column()
-#> Error in hd(df, x = "age", y = "pct"): could not find function "hd"
 base + hd_opts(title = "English title")
-#> Error: object 'base' not found
 base + hd_opts(title = "Norsk tittel")
-#> Error: object 'base' not found
 ```

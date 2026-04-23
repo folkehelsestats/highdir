@@ -15,7 +15,7 @@ explicit print() / knit call)."><meta property="og:image" content="https://githu
 
     <a class="navbar-brand me-2" href="../index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,7 +138,7 @@ constructs specs separately (e.g. in Shiny or a reporting pipeline).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="hd_geom_layer.html">hd_geom_column()</a></code>, <code><a href="hd_geom_layer.html">hd_geom_line()</a></code>, <code><a href="hd_geom_arearange.html">hd_geom_arearange()</a></code>,
+    <div class="dont-index"><p><code><a href="hd_geom_column.html">hd_geom_column()</a></code>, <code><a href="hd_geom_layer.html">hd_geom_line()</a></code>, <code><a href="hd_geom_arearange.html">hd_geom_arearange()</a></code>,
 <code><a href="hd_opts.html">hd_opts()</a></code>, <code><a href="hd_make.html">hd_make()</a></code></p></div>
     </div>
 
@@ -153,22 +153,23 @@ constructs specs separately (e.g. in Shiny or a reporting pipeline).</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Composable style</span></span></span>
 <span class="r-in"><span><span class="fu">hd</span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span>, group <span class="op">=</span> <span class="st">"sex"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hd_geom_layer.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hd_geom_column.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Health survey"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in hd(df, x = "age", y = "pct", group = "sex"):</span> could not find function "hd"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'quantmod':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method            from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   as.zoo.data.frame zoo </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Pass an existing hd_spec</span></span></span>
 <span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span>, group <span class="op">=</span> <span class="st">"sex"</span>, n <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">hd</span><span class="op">(</span><span class="va">spec</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hd_geom_layer.html">hd_geom_line</a></span><span class="op">(</span>smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Trend"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in hd(spec):</span> could not find function "hd"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Switch backend per figure</span></span></span>
 <span class="r-in"><span><span class="fu">hd</span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hd_geom_layer.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hd_geom_column.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Static version"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in hd(df, x = "age", y = "pct", backend = "ggplot2"):</span> could not find function "hd"</span>
+<span class="r-plt img"><img src="hd-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

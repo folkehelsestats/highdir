@@ -97,7 +97,7 @@ pipeline).
 
 ## See also
 
-[`hd_geom_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md),
+[`hd_geom_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_column.md),
 [`hd_geom_line()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md),
 [`hd_geom_arearange()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_arearange.md),
 [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md),
@@ -117,18 +117,19 @@ df <- data.frame(
 hd(df, x = "age", y = "pct", group = "sex") +
   hd_geom_column() +
   hd_opts(title = "Health survey", ylim = c(0, 80))
-#> Error in hd(df, x = "age", y = "pct", group = "sex"): could not find function "hd"
+#> Registered S3 method overwritten by 'quantmod':
+#>   method            from
+#>   as.zoo.data.frame zoo 
 
 # Pass an existing hd_spec
 spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n")
 hd(spec) +
   hd_geom_line(smooth = TRUE) +
   hd_opts(title = "Trend")
-#> Error in hd(spec): could not find function "hd"
 
 # Switch backend per figure
 hd(df, x = "age", y = "pct", backend = "ggplot2") +
   hd_geom_column() +
   hd_opts(title = "Static version")
-#> Error in hd(df, x = "age", y = "pct", backend = "ggplot2"): could not find function "hd"
+
 ```

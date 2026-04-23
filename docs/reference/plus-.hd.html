@@ -9,7 +9,7 @@ builds plots incrementally.  Recognised right-hand sides:"><meta property="og:im
 
     <a class="navbar-brand me-2" href="../index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,17 +94,13 @@ being ignored.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Chain layers</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="hd.html">hd</a></span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hd_geom_layer.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hd_geom_column.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Demo"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in hd(df, x = "age", y = "pct"):</span> could not find function "hd"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Reuse a partial object with different opts</span></span></span>
-<span class="r-in"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu"><a href="hd.html">hd</a></span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="hd_geom_layer.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in hd(df, x = "age", y = "pct"):</span> could not find function "hd"</span>
+<span class="r-in"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu"><a href="hd.html">hd</a></span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="hd_geom_column.html">hd_geom_column</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">base</span> <span class="op">+</span> <span class="fu"><a href="hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"English title"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'base' not found</span>
 <span class="r-in"><span><span class="va">base</span> <span class="op">+</span> <span class="fu"><a href="hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Norsk tittel"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'base' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
