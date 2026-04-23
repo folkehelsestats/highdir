@@ -142,10 +142,6 @@ NULL
 
 #' @rdname hd_geom_layer
 #' @export
-hd_geom_column <- function(...) hd_geom("column", ...)
-
-#' @rdname hd_geom_layer
-#' @export
 hd_geom_line <- function(...) hd_geom("line", ...)
 
 #' @rdname hd_geom_layer
