@@ -16,7 +16,7 @@
 
 #' @keywords internal
 ggplot_engine <- function(spec, geom, opts, geom_params,
-                           use_js = TRUE, ...) {
+                          use_js = TRUE, ...) {
 
   # -- Resolve theme + colors + font in one step (mirrors hd_theme() call) ---
   # Priority for each: explicit opts > getOption("highdir.*") > default

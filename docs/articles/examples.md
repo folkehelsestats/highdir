@@ -45,6 +45,15 @@ opts_col <- hd_opts(
   yint     = 20,
   ylab     = "Percentage (%)"
 )
+
+## Alternatively using ggplot2 syntax
+# hd(survey, x = "age_group", y = "pct", group = "kjonn", n = "n") +
+#  hd_opts(title = "Alcohol use by age group and kjonn",
+#       subtitle = "Source: Norwegian Directorate of Health",
+#       ylim = c(0, 100),
+#       yint = 20,
+#       ylab = "Percentage (%)") +
+#       hd_geom_column()
 ```
 
 ### Interactive figure
@@ -52,6 +61,12 @@ opts_col <- hd_opts(
 ``` r
 # Interactive (default)
 hd_make(spec_col, "column", opts_col)
+```
+
+``` r
+
+# alternatively
+# hd(spec_col) + hd_geom_column() + hd_opts(opts_col)
 ```
 
 ### Static figure

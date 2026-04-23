@@ -6,6 +6,12 @@ template:
   logo: man/figures/logo.png
   favicon: man/figures/favicon.png
 
+development:
+  mode: auto
+
+pkgdown:
+  run_examples: true
+
 navbar:
   structure:
     left: [start, reference, articles, news]
@@ -35,7 +41,7 @@ news:
 
 reference:
   - title: Primary functions
-    desc: >
+    desc: >-
       Core functions used to generate figures.
     contents:
       - hd_spec
@@ -53,13 +59,30 @@ reference:
     contents:
       - list_backends
       - register_backend
+
   - title: Geoms
+
+  - subtitle: Main
+    desc: >-
+      All highdir plots begin with a call to `hd()`, supply with either `hd_spec()`
+      or directly defined in `hd()`. You then add geoms and options with `+`.
+      To save a plot to disk, use `hd_save()`.
+    contents:
+     - hd
+     - +.hd
+  - subtitle: Types
+    desc: >-
+      Geom types
+    contents:
+      - starts_with("hd_geom_")
+  - subtitle: Helpers
     desc: >-
       Geometric layers and related functions used to construct figures.
     contents:
       - list_geoms
       - geom_args
       - register_geom
+      - print.hd
   - title: Themes
     desc: >-
       Theme functions defining the visual style of figures.
