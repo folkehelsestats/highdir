@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">highdir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -119,6 +119,71 @@
       </dl></div><div class="section level2">
       <h2 id="geoms">Geoms<a class="anchor" aria-label="anchor" href="#geoms"></a></h2>
 
+
+
+      <dl></dl></div><div class="section level2">
+
+      <h3 id="main">Main<a class="anchor" aria-label="anchor" href="#main"></a></h3>
+      <div class="section-desc"><p>All highdir plots begin with a call to <code><a href="../reference/hd.html">hd()</a></code>, supply with either <code><a href="../reference/hd_spec.html">hd_spec()</a></code> or directly defined in <code><a href="../reference/hd.html">hd()</a></code>. You then add geoms and options with <code>+</code>. To save a plot to disk, use <code><a href="../reference/hd_save.html">hd_save()</a></code>.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="hd.html">hd()</a></code>
+
+        </dt>
+        <dd>Initialise a Composable highdir Figure</dd>
+
+        <dt>
+
+          <code><a href="plus-.hd.html">`+`(<i>&lt;hd&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Add Layers to an hd Object</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="types">Types<a class="anchor" aria-label="anchor" href="#types"></a></h3>
+      <div class="section-desc"><p>Geom types</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="hd_geom_arearange.html">hd_geom_arearange()</a></code>
+
+        </dt>
+        <dd>Add an Arearange (Confidence Band) Layer</dd>
+
+        <dt>
+
+          <code><a href="hd_geom_column.html">hd_geom_column()</a></code>
+
+        </dt>
+        <dd>Column Geometry Layer for hd Objects</dd>
+
+        <dt>
+
+          <code><a href="hd_geom_layer.html">hd_geom_line()</a></code> <code><a href="hd_geom_layer.html">hd_geom_scatter()</a></code> <code><a href="hd_geom_layer.html">hd_geom_pie()</a></code> <code><a href="hd_geom_layer.html">hd_geom_ranked_bar()</a></code>
+
+        </dt>
+        <dd>Geometry Layers for hd Objects</dd>
+
+        <dt>
+
+          <code><a href="hd_geom_stacked_column.html">hd_geom_stacked_column()</a></code>
+
+        </dt>
+        <dd>Stacked Column Geometry Layer</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h3>
       <div class="section-desc"><p>Geometric layers and related functions used to construct figures.</p></div>
 
       <dl></dl></div><div class="section level2">
@@ -146,6 +211,13 @@
 
         </dt>
         <dd>Register a Geometry</dd>
+
+        <dt>
+
+          <code><a href="print.hd.html">print(<i>&lt;hd&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Render an hd Object</dd>
       </dl></div><div class="section level2">
       <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a></h2>
 
