@@ -101,7 +101,7 @@ hd_make <- function(spec,
                     opts        = NULL,
                     backend     = "highcharter",
                     use_js      = TRUE,
-                    module      = TRUE,
+                    module      = FALSE,
                     ...) {
 
   opts <- opts %||% default_opts()

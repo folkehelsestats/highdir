@@ -189,8 +189,7 @@ check_decimals <- function(spec, opts, type, extra_args){
 #' Version-safe highcharter accessibility description setter
 #'
 #' highcharter 0.9.4 does not export hc_accessibility().
-#' This wrapper tries the exported function first, then falls back to
-#' patching chart$x$hc_opts$accessibility directly, which works across
+#' This wrapper patches chart$x$hc_opts$accessibility directly, which works across
 #' all highcharter versions because hc_opts is the raw Highcharts config.
 #'
 #' @param chart A highchart object.
@@ -198,11 +197,6 @@ check_decimals <- function(spec, opts, type, extra_args){
 #' @return The modified highchart object.
 #' @keywords internal
 .hd_accessibility <- function(chart, description) {
-#   tryCatch(
-#     # Works if a future highcharter version exports hc_accessibility()
-#     highcharter::hc_accessibility(chart, description = description),
-#     error = function(e) {
-      # Fallback for highcharter 0.9.x: patch the raw Highcharts config list.
       # chart$x$hc_opts is the plain list serialised to JSON by htmlwidgets.
       # Setting accessibility$description here is equivalent to:
       #   Highcharts.chart({ accessibility: { description: "..." } })
@@ -211,6 +205,4 @@ check_decimals <- function(spec, opts, type, extra_args){
         list(accessibility = list(description = description))
       )
       chart
-#     }
-#   )
 }

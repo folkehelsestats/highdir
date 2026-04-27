@@ -12,7 +12,7 @@
 
 #' @keywords internal
 highcharter_engine <- function(spec, geom, opts, geom_params,
-                               use_js = TRUE, module = TRUE, ...) {
+                               use_js = TRUE, module = FALSE, ...) {
 
   chart <- base_fig(spec, opts, "highcharter")
   
