@@ -16,8 +16,7 @@ The modified highchart object.
 }
 \description{
 highcharter 0.9.4 does not export hc_accessibility().
-This wrapper tries the exported function first, then falls back to
-patching chart$x$hc_opts$accessibility directly, which works across
+This wrapper patches chart$x$hc_opts$accessibility directly, which works across
 all highcharter versions because hc_opts is the raw Highcharts config.
 }
 \keyword{internal}
