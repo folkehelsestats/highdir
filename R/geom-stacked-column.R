@@ -7,6 +7,14 @@ gg_stacked_column <- function(spec, opts, geom_params) {
   # optional args ----------------------------------------------------------------
   grp_col   <- spec$group
 
+  #   stacking <- geom_params$stacking
+  #   if (stacking == "percent") {
+  #     warning("Percent stacking isn't implemented in static figure yet.",
+  #       call. = FALSE
+  #     )
+  #     stacking <- "normal"
+  #   }
+
   if (is.null(grp_col))
     stop("stacked_column requires a group column in hd_spec().", call. = FALSE)
 
@@ -65,7 +73,7 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
     #   )
 
     # ── Key insight: iterate every unique (series, stack) combination ──────────
-    # The same series name can appear in multiple stacks (as in your example).
+    # The same series name can appear in multiple stacks.
     # Each unique pair produces one hc_add_series() call with its own stack id.
     # Highcharts separates the stacks visually; the legend shows unique names.
     combos <- unique(d[, c(grp_col, stack_col), drop = FALSE])
@@ -129,28 +137,43 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 #'
 #' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
 #' @examples
-#' # Example data: sales of three products (A, B, C) across four
-#' # regions (North, South, East, West)
-#' df <- data.frame(
-#'     region = rep(c("North", "South", "East", "West"),
-#'         each = 3
-#'     ),
-#'     product = rep(c("A", "B", "C"), times = 4),
-#'     sales = c(10, 20, 30, 15, 25, 35, 20, 30, 40, 25, 35, 45)
-#' )
-#' # Create a stacked column chart with `region` as the stack variable and
-#' # `product` as the group variable
-#' spec <- hd_spec(df, x = "region", y = "sales", group = "product")
 #'
-#' hd(spec) +
-#'  hd_geom_stacked_column(stack = "region", stacking = "normal") +
-#'  hd_opts(title = "Stacked Column Chart", ylim = c(0, 120))
-#' 
-#' hd(spec, backend = "ggplot2") +
-#'  hd_geom_stacked_column(stack = "region", stacking = "normal") +
-#'  hd_opts(title = "Stacked Column Chart", ylim = c(0, 120))
-#' 
+#' # Example data: medal counts for four countries across three medal types
+#' olympics <- data.frame(
+#'     Country   = rep(c("Norway", "Germany", "United States", "Canada"), each = 3),
+#'     Continent = rep(c("Europe", "Europe", "North America", "North America"), each = 3),
+#'     Medal     = rep(c("Gold", "Silver", "Bronze"), times = 4),
+#'     Count     = c(148, 133, 124, 102, 98, 65, 113, 122, 95, 77, 72, 80)
+#' )
+#'
+#' # Define Specification and Options
+#' spec_st <- hd_spec(olympics,
+#'     x     = "Medal",
+#'     y     = "Count",
+#'     group = "Country"
+#' )
+#'
+#' opts_st <- hd_opts(
+#'     title    = "Olympic Games all-time medal table, grouped by continent",
+#'     subtitle = "Source: Olympics",
+#'     ylab     = "Count medals"
+#' )
+#'
+#' # Interactive — stacks are separated by continent
+#' hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
+#'
+#' # Static ggplot2 — stacks are separated by continent
+#' hd(spec_st, backend = "ggplot2") +
+#'   hd_geom_stacked_column(stack = "Continent") +
+#'   hd_opts(title = "Olympic Games all-time medal table, grouped by continent", ylab = "Count medals")
+#'
 #' @export
-hd_geom_stacked_column <- function(stack, stacking, ...) {
+hd_geom_stacked_column <- function(stack, stacking = c("normal", "percent"), ...) {
+  # for now, we ignore the `stacking` argument in ggplot2 since it requires more
+  # complex data manipulation to implement percent stacking. The Highcharts
+  # version supports both modes. So stacking below is mainly for future-proofing
+  # and consistency with the Highcharts API and avoid erroring if users specify
+  # it in ggplot2 backend.
+  stacking <- match.arg(stacking)
   hd_geom("stacked_column", stack = stack, stacking = stacking, ...)
 }
