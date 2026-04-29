@@ -1,6 +1,9 @@
 # Quick start
 
-There two ways to use `highdir`: 1. object based 2. ggplot2 style
+There two ways to use `highdir`:
+
+1.  object based
+2.  ggplot2 style
 
 ## Object based
 

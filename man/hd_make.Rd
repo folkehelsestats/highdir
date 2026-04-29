@@ -10,7 +10,7 @@ hd_make(
   opts = NULL,
   backend = "highcharter",
   use_js = TRUE,
-  module = TRUE,
+  module = FALSE,
   ...
 )
 }

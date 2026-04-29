@@ -4,7 +4,7 @@
 \alias{hd_geom_stacked_column}
 \title{Stacked Column Geometry Layer}
 \usage{
-hd_geom_stacked_column(stack, stacking, ...)
+hd_geom_stacked_column(stack, stacking = c("normal", "percent"), ...)
 }
 \arguments{
 \item{stack}{Character. Column name for the stack variable.  Each unique value
@@ -32,25 +32,34 @@ on top of each other, while \code{"percent"} stacks values as percentages of the
 stack height.
 }
 \examples{
-# Example data: sales of three products (A, B, C) across four
-# regions (North, South, East, West)
-df <- data.frame(
-    region = rep(c("North", "South", "East", "West"),
-        each = 3
-    ),
-    product = rep(c("A", "B", "C"), times = 4),
-    sales = c(10, 20, 30, 15, 25, 35, 20, 30, 40, 25, 35, 45)
+
+# Example data: medal counts for four countries across three medal types
+olympics <- data.frame(
+    Country   = rep(c("Norway", "Germany", "United States", "Canada"), each = 3),
+    Continent = rep(c("Europe", "Europe", "North America", "North America"), each = 3),
+    Medal     = rep(c("Gold", "Silver", "Bronze"), times = 4),
+    Count     = c(148, 133, 124, 102, 98, 65, 113, 122, 95, 77, 72, 80)
 )
-# Create a stacked column chart with `region` as the stack variable and
-# `product` as the group variable
-spec <- hd_spec(df, x = "region", y = "sales", group = "product")
 
-hd(spec) +
- hd_geom_stacked_column(stack = "region", stacking = "normal") +
- hd_opts(title = "Stacked Column Chart", ylim = c(0, 120))
+# Define Specification and Options
+spec_st <- hd_spec(olympics,
+    x     = "Medal",
+    y     = "Count",
+    group = "Country"
+)
 
-hd(spec, backend = "ggplot2") +
- hd_geom_stacked_column(stack = "region", stacking = "normal") +
- hd_opts(title = "Stacked Column Chart", ylim = c(0, 120))
+opts_st <- hd_opts(
+    title    = "Olympic Games all-time medal table, grouped by continent",
+    subtitle = "Source: Olympics",
+    ylab     = "Count medals"
+)
+
+# Interactive — stacks are separated by continent
+hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
+
+# Static ggplot2 — stacks are separated by continent
+hd(spec_st, backend = "ggplot2") +
+  hd_geom_stacked_column(stack = "Continent") +
+  hd_opts(title = "Olympic Games all-time medal table, grouped by continent", ylab = "Count medals")
 
 }
