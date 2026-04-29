@@ -26,19 +26,34 @@ This makes the contract explicit at the call site instead of burying
 required information inside \code{...}.
 }
 \examples{
-df <- data.frame(
-  age  = c("18-24", "25-34", "35-44", "45-54"),
-  pct  = c(42, 55, 48, 60),
-  lo   = c(37, 50, 43, 55),
-  hi   = c(47, 60, 53, 65)
+
+# Single series
+spec_ar1 <- hd_spec(alco1,
+                    x    = "year",
+                    y    = "adj_enhet")
+
+opts_ar <- hd_opts(
+  title    = "Alcohol consumption with 95\% CI",
+  subtitle = "Source: Norwegian Directorate of Health",
+  ylim     = c(0, 30),
+  ylab = "Number of units alcohol"
 )
 
-hd(df, x = "age", y = "pct") +
-  hd_geom_arearange(ymin = "lo", ymax = "hi") +
-  hd_opts(title = "Estimate with 95\% CI", ylim = c(30, 70))
+hd_make(spec_ar1, "arearange", opts_ar,
+       ymin = "lower_enhet", ymax = "upper_enhet")
 
-hd(df, x = "age", y = "pct", backend = "ggplot2") +
-  hd_geom_arearange(ymin = "lo", ymax = "hi") +
-  hd_opts(title = "Estimate with 95\% CI", ylim = c(30, 70))
+# Static ggplot2 version
+hd_make(spec_ar1, "arearange", opts_ar,
+       ymin = "lower_enhet", ymax = "upper_enhet", backend = "ggplot2")
+
+#' # Multi-series with group column
+# Grouped by kjonn
+spec_ar2 <- hd_spec(alco2,
+                    x     = "year",
+                    y     = "adj_enhet",
+                    group = "kjonn")
+
+hd_make(spec_ar2, "arearange", opts_ar,
+        ymin = "lower_enhet", ymax = "upper_enhet")
 
 }
