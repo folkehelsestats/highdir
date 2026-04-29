@@ -100,9 +100,11 @@ hc_column <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' hd_make(spec_col, "column", opts_col, backend = "ggplot2")
 #'
 #' # Composable style
-#' hd(survey, x = "age_group", y = "pct", group = "kjonn") +
-#'  hd_geom_column() +
-#'  hd_opts(title = "Health survey", ylim = c(0, 80))
+#' p <- hd(survey, x = "age_group", y = "pct", group = "kjonn")
+#' p2 <- p + hd_geom_column()
+#'
+#' # More options
+#' p2 + hd_opts(title = "Health survey", ylim = c(0, 100))
 #'
 #' # Pass an existing hd_spec
 #' spec <- hd_spec(survey, x = "age_group", y = "pct", group = "kjonn", n = "n")
