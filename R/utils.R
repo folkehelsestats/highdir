@@ -206,3 +206,73 @@ check_decimals <- function(spec, opts, type, extra_args){
       )
       chart
 }
+
+
+# Validate that the geometry-specific arguments in hd_geom are compatible with
+# the current backend. If any arguments are marked as backend-specific and the
+# current backend doesn't match, issue a warning. This function is called
+# immediately after adding a geom layer to an hd object, so that users get early
+# feedback if they accidentally use a ggplot2-only argument while the backend is
+# set to highcharter (or vice versa). The function looks up the geom type in the
+# registry to find all its arguments, checks if any are marked as
+# backend-specific, and if so, compares the current backend with the required
+# one. If there's a mismatch and the user supplied a non-default value for that
+# argument, it issues a warning that the argument will be ignored. This
+# validation helps prevent silent failures where a user might set an argument
+# that only applies to ggplot2 while using the highcharter backend, and then
+# wonder why it has no effect. By warning them immediately, they can correct
+# their code before proceeding further. The function does not stop execution; it
+# only issues warnings for incompatible arguments. The actual rendering
+# functions for each backend should also be designed to ignore any arguments
+# that don't apply to them, so this validation is an additional user-friendly
+# check rather than a strict enforcement mechanism. The function assumes that
+# the geom registry entries have a structure where each argument's metadata
+# includes a `backend_only` field that specifies if the argument is exclusive to
+# a particular backend. It also assumes that the `hd_geom` object has a `type`
+# field that identifies the geom type, and a `params` list that contains the
+# user-supplied values for the geom arguments.
+# 
+#' @keywords internal
+.validate_geom_backend <- function(hd_obj) {
+  geom   <- hd_obj$geom
+  be     <- hd_obj$backend
+  params <- geom$params
+  type   <- geom$type
+
+  # Use .get_geom() — note the leading dot, matching registry.R line 109
+  reg <- .get_geom(type)
+  if (is.null(reg)) return(invisible(NULL))   # unknown geom — skip silently
+
+  all_args <- c(
+    reg$required_args %||% list(),
+    reg$optional_args %||% list()
+  )
+
+  for (arg_name in names(all_args)) {
+    arg_meta     <- all_args[[arg_name]]
+    backend_only <- arg_meta$backend_only     # NULL if not set
+    user_value   <- params[[arg_name]]
+    def          <- arg_meta$default
+
+    # Only warn when ALL of these are true:
+    #   1. the arg declares a backend restriction
+    #   2. the current backend is not that backend
+    #   3. the user actually supplied a value for this arg
+    #   4. the supplied value differs from the default (so default pass-through
+    #      from the constructor does not trigger a spurious warning)
+    if (!is.null(backend_only) &&
+        be != backend_only &&
+        !is.null(user_value) &&
+        !identical(user_value, def)) {
+
+      warning(
+        "`", arg_name, " = \"", user_value, "\"` is only supported by the ",
+        backend_only, " backend and will be ignored.\n",
+        "Current backend is '", be, "'.",
+        call. = FALSE
+      )
+    }
+  }
+
+  invisible(NULL)
+}

@@ -98,7 +98,7 @@ pipeline).
 ## See also
 
 [`hd_geom_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_column.md),
-[`hd_geom_line()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md),
+[`hd_geom_line()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_line.md),
 [`hd_geom_arearange()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_arearange.md),
 [`hd_opts()`](https://github.com/folkehelsestats/highdir/reference/hd_opts.md),
 [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md)

@@ -59,7 +59,8 @@
     optional_args   = list(
       dot_size = list(
         default = 4L,
-        desc    = "Numeric. Point size (ggplot2) or marker radius in px (highcharter)."
+        desc    = "Numeric. Point size (ggplot2) or marker radius in px (highcharter).",
+        backend_only = NULL # both backends support this argument
       )
     )
   ),
@@ -88,7 +89,8 @@
     optional_args   = list(
       inner_size = list(
         default = "0%",
-        desc    = "Character. Inner radius as CSS %, e.g. '50%' for a donut. Both backends."
+        desc    = "Character. Inner radius as CSS %, e.g. '50%' for a donut",
+        backend_only = "highcharter"
       )
     )
   ),
@@ -131,13 +133,15 @@
     required_args   = list(
       stack = list(
         default = NULL,
-        desc    = "Character. Column name that assigns rows to stack groups."
+        desc    = "Character. Column name that assigns rows to stack groups.",
+        backend_only = NULL # both backends require this argument
       )
     ),
     optional_args   = list(
       stacking = list(
         default = "normal",
-        desc    = "Character. Highcharter stacking mode: 'normal' or 'percent'."
+        desc    = "Character. Highcharter stacking mode: 'normal' or 'percent'.",
+        backend_only = "highcharter"
       )
     )
   )

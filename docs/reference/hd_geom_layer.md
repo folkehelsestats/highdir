@@ -9,11 +9,7 @@ is printed.
 ## Usage
 
 ``` r
-hd_geom_line(...)
-
 hd_geom_scatter(...)
-
-hd_geom_pie(...)
 
 hd_geom_ranked_bar(...)
 ```

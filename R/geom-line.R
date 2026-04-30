@@ -76,38 +76,85 @@ gg_line <- function(spec, opts, geom_params) {
 
 #' @keywords internal
 hc_line <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
+    # Read optional args from geom_params with fallback defaults.
+    # Defaults must match zzz.R optional_args for geom_args("line") accuracy.
+    smooth <- geom_params$smooth %||% TRUE
+    dot_size <- geom_params$dot_size %||% 4
+    symbols <- geom_params$line_symbols # NULL → resolve_symbols() picks automatically
 
-  # Read optional args from geom_params with fallback defaults.
-  # Defaults must match zzz.R optional_args for geom_args("line") accuracy.
-  smooth   <- geom_params$smooth       %||% TRUE
-  dot_size <- geom_params$dot_size     %||% 4
-  symbols  <- geom_params$line_symbols          # NULL → resolve_symbols() picks automatically
+    groups <- .group_split(spec)
+    palette <- resolve_colors(length(groups), opts$colors)
+    syms <- resolve_symbols(length(groups), symbols)
+    point_ev <- point_events_or_null(use_js)
+    xmap <- .hc_x_map(spec)
 
-  groups   <- .group_split(spec)
-  palette  <- resolve_colors(length(groups), opts$colors)
-  syms     <- resolve_symbols(length(groups), symbols)
-  point_ev <- point_events_or_null(use_js)
-  xmap     <- .hc_x_map(spec)
+    # smooth = TRUE  → Highcharts "spline" type (cubic interpolation)
+    # smooth = FALSE → Highcharts "line"   type (straight segments)
+    ctype <- if (smooth) "spline" else "line"
 
-  # smooth = TRUE  → Highcharts "spline" type (cubic interpolation)
-  # smooth = FALSE → Highcharts "line"   type (straight segments)
-  ctype <- if (smooth) "spline" else "line"
+    for (i in seq_along(groups)) {
+        grp <- groups[[i]]
+        args <- list(
+            chart,
+            data      = xmap$data[grp$rows, ],
+            type      = ctype,
+            name      = grp$name,
+            xmap$mapping,
+            color     = palette[i],
+            lineWidth = 2,
+            marker    = list(symbol = syms[i], enabled = TRUE, radius = dot_size),
+            states    = list(hover = list(lineWidth = 3))
+        )
+        if (!is.null(point_ev)) args$point <- point_ev
+        chart <- do.call(highcharter::hc_add_series, args)
+    }
+    chart
+}
 
-  for (i in seq_along(groups)) {
-    grp  <- groups[[i]]
-    args <- list(
-      chart,
-      data      = xmap$data[grp$rows, ],
-      type      = ctype,
-      name      = grp$name,
-      xmap$mapping,
-      color     = palette[i],
-      lineWidth = 2,
-      marker    = list(symbol = syms[i], enabled = TRUE, radius = dot_size),
-      states    = list(hover = list(lineWidth = 3))
-    )
-    if (!is.null(point_ev)) args$point <- point_ev
-    chart <- do.call(highcharter::hc_add_series, args)
-  }
-  chart
+
+## -----------------------------------------------------------------------------
+## Public constructor
+## -----------------------------------------------------------------------------
+##
+
+#' Line Geometry Layer for hd Objects
+#'
+#' `hd_geom_line()` creates a line geometry layer that is added to an [hd()]
+#' object via `+`.  The layer records the geometry type and any geometry-specific arguments;
+#' rendering only happens when the `hd` object is printed.
+#'
+#' @param smooth Logical. TRUE = spline curves, FALSE = straight segments. Both backends.
+#' @param dot_size Numeric. Marker radius in pixels. Both backends.
+#' @param line_symbols Character vector. Highcharter only. Per-group marker shapes:
+#'  "circle", "square", "diamond", "triangle", "triangle-down".
+#' @param ... Geometry-specific arguments forwarded to [hd_make()].
+#'
+#' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
+#'
+#' @examples
+#' # Single series - no group column
+#' spec_line1 <- hd_spec(alco1,
+#'     x    = "year",
+#'     y    = "adj_mean"
+#' )
+#'
+#' opts_line <- hd_opts(
+#'     title = "Alcohol consumption over time",
+#'     subtitle = "Source: Norwegian Directorate of Health",
+#'     ylim = c(0, 50),
+#'     ylab = "Litres per capita"
+#' )
+#'
+#'
+#' # Straight segments
+#' hd_make(spec_line1, "line", opts_line, smooth = FALSE)
+#'
+#' # Composite example with multiple geoms and custom line symbols
+#' hd(alco2, x = "year", y = "adj_mean", group = "kjonn", backend = "ggplot2") +
+#'   hd_geom_line(smooth = TRUE, dot_size = 3) +
+#'   hd_opts(title = "Alcohol consumption over time by kjonn", subtitle = "Source: Norwegian Directorate of Health")
+#'
+#' @export
+hd_geom_line <- function(smooth, dot_size, line_symbols,...) {
+  hd_geom("line", smooth = smooth, dot_size = dot_size, line_symbols = line_symbols, ...)
 }

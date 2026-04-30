@@ -59,27 +59,82 @@ gg_pie <- function(spec, opts, geom_params, ...) {
 
 #' @keywords internal
 hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
-  inner_size <- geom_params$inner_size %||% "0%"   # "50%" = donut
-  df      <- spec$data
-  labels  <- df[[spec$x]]
-  values  <- df[[spec$y]]
-  palette <- resolve_colors(length(labels), opts$colors)
+    inner_size <- geom_params$inner_size %||% "0%" # "50%" = donut
+    df <- spec$data
+    labels <- df[[spec$x]]
+    values <- df[[spec$y]]
+    palette <- resolve_colors(length(labels), opts$colors)
 
-  # Build the data list Highcharts expects for a pie series
-  pie_data <- lapply(seq_len(nrow(df)), function(i)
-    list(name  = as.character(labels[i]),
-         y     = values[i],
-         color = palette[i]))
+    # Build the data list Highcharts expects for a pie series
+    pie_data <- lapply(seq_len(nrow(df)), function(i) {
+        list(
+            name = as.character(labels[i]),
+            y = values[i],
+            color = palette[i]
+        )
+    })
 
-  chart |>
-    highcharter::hc_add_series(
-      type      = "pie",
-      name      = spec$ylab,
-      data      = pie_data,
-      innerSize = inner_size,
-      dataLabels = list(
-        enabled = TRUE,
-        format  = "<b>{point.name}</b>: {point.percentage:.1f}%"
-      )
-    )
+    chart |>
+        highcharter::hc_add_series(
+            type = "pie",
+            name = spec$ylab,
+            data = pie_data,
+            innerSize = inner_size,
+            dataLabels = list(
+                enabled = TRUE,
+                format  = "<b>{point.name}</b>: {point.percentage:.1f}%"
+            )
+        )
+}
+
+
+# ------------------------------------------------------------------------------
+# Public constructor for pie geometry layer.  See ?hd for usage.
+# ------------------------------------------------------------------------------
+#' Pie Geometry Layer for hd Objects
+#'
+#' `hd_geom_pie()` creates a pie geometry layer that is added to an [hd()]
+#' object via `+`.  The layer records the geometry type and any geometry-specific
+#' arguments; rendering only happens when the `hd` object is printed.
+#'
+#' @param inner_size A string specifying the inner radius of the pie as a percentage
+#'   of the total radius.  For example, "50%" creates a donut chart
+#'   with a hole in the middle.  The default "0%" creates a standard pie chart.
+#'   This argument is only applicable to the Highcharts backend; it is ignored
+#'   by ggplot2 since it does not support donut charts.
+#' @param ... Geometry-specific arguments forwarded to [hd_make()].
+#' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
+#'
+#' @examples
+#' # Category share dataset (pie)
+#' drinking_freq <- data.frame(
+#'     category = c("Never", "Rarely", "Monthly", "Weekly", "Daily"),
+#'     pct      = c(18, 25, 30, 20, 7)
+#' )
+#'
+#' spec_pie <- hd_spec(drinking_freq,
+#'     x    = "category",
+#'     y    = "pct"
+#' )
+#'
+#' opts_pie <- hd_opts(
+#'     title = "Drinking frequency",
+#'     subtitle = "Source: Norwegian Directorate of Health",
+#'     ylab = "Share (%)"
+#' )
+#'
+#' # Donut interactive
+#' hd_make(spec_pie, "pie", opts_pie, inner_size = "50%")
+#'
+#' # Composable API style (ggplot2 ignores inner_size)
+#' hd(drinking_freq, x = "category", y = "pct", backend = "ggplot2") +
+#'     hd_geom_pie() +
+#'     hd_opts(
+#'         title = "Drinking frequency",
+#'         subtitle = "Source: Norwegian Directorate of Health"
+#'     )
+#' 
+#' @export
+hd_geom_pie <- function(inner_size = "0%", ...) {
+ hd_geom("pie", inner_size = inner_size, ...)
 }
