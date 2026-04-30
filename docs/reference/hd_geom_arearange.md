@@ -9,7 +9,7 @@ of burying required information inside `...`.
 ## Usage
 
 ``` r
-hd_geom_arearange(ymin, ymax, ...)
+hd_geom_arearange(ymin = NULL, ymax = NULL, ...)
 ```
 
 ## Arguments

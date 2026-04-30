@@ -276,7 +276,7 @@ hc_arearange <- function(chart, spec, opts, geom_params,
 #'         ymin = "lower_enhet", ymax = "upper_enhet")
 #' 
 #' @export
-hd_geom_arearange <- function(ymin, ymax, ...) {
+hd_geom_arearange <- function(ymin = NULL, ymax = NULL, ...) {
   hd_geom("arearange", ymin = ymin, ymax = ymax, ...)
 }
 

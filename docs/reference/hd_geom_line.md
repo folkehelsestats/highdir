@@ -9,7 +9,7 @@ is printed.
 ## Usage
 
 ``` r
-hd_geom_line(smooth, dot_size, line_symbols, ...)
+hd_geom_line(smooth = TRUE, dot_size = 4, line_symbols = NULL, ...)
 ```
 
 ## Arguments
@@ -61,6 +61,7 @@ hd_make(spec_line1, "line", opts_line, smooth = FALSE)
 # Composite example with multiple geoms and custom line symbols
 hd(alco2, x = "year", y = "adj_mean", group = "kjonn", backend = "ggplot2") +
   hd_geom_line(smooth = TRUE, dot_size = 3) +
-  hd_opts(title = "Alcohol consumption over time by kjonn", subtitle = "Source: Norwegian Directorate of Health")
+  hd_opts(title = "Alcohol consumption over time by kjonn",
+  subtitle = "Source: Norwegian Directorate of Health")
 
 ```

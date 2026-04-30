@@ -152,9 +152,10 @@ hc_line <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' # Composite example with multiple geoms and custom line symbols
 #' hd(alco2, x = "year", y = "adj_mean", group = "kjonn", backend = "ggplot2") +
 #'   hd_geom_line(smooth = TRUE, dot_size = 3) +
-#'   hd_opts(title = "Alcohol consumption over time by kjonn", subtitle = "Source: Norwegian Directorate of Health")
+#'   hd_opts(title = "Alcohol consumption over time by kjonn",
+#'   subtitle = "Source: Norwegian Directorate of Health")
 #'
 #' @export
-hd_geom_line <- function(smooth, dot_size, line_symbols,...) {
+hd_geom_line <- function(smooth = TRUE, dot_size = 4, line_symbols = NULL,...) {
   hd_geom("line", smooth = smooth, dot_size = dot_size, line_symbols = line_symbols, ...)
 }

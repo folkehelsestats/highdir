@@ -37,17 +37,20 @@
     optional_args   = list(
       smooth = list(
         default = TRUE,
-        desc    = "Logical. TRUE = spline curves, FALSE = straight segments. Both backends."
+        desc    = "Logical. TRUE = spline curves, FALSE = straight segments. Both backends.",
+        backend_only = NULL # both backends support this argument
       ),
       dot_size = list(
         default = 4L,
-        desc    = "Numeric. Marker radius in pixels. Both backends."
+        desc    = "Numeric. Marker radius in pixels. Both backends.",
+        backend_only = NULL # both backends support this argument
       ),
       # line_symbols is highcharter-only; gg_line silently ignores it.
       line_symbols = list(
         default = NULL,
         desc    = paste0("Character vector. Highcharter only. Per-group marker shapes: ",
-                         "'circle','square','diamond','triangle','triangle-down'.")
+                         "'circle','square','diamond','triangle','triangle-down'."),
+        backend_only = "highcharter"
       )
     )
   ),
