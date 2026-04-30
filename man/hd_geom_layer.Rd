@@ -3,13 +3,10 @@
 \name{hd_geom_layer}
 \alias{hd_geom_layer}
 \alias{hd_geom_scatter}
-\alias{hd_geom_pie}
 \alias{hd_geom_ranked_bar}
 \title{Geometry Layers for hd Objects}
 \usage{
 hd_geom_scatter(...)
-
-hd_geom_pie(...)
 
 hd_geom_ranked_bar(...)
 }
