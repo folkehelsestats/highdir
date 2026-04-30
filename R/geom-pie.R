@@ -59,29 +59,32 @@ gg_pie <- function(spec, opts, geom_params, ...) {
 
 #' @keywords internal
 hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
-  inner_size <- geom_params$inner_size %||% "0%"   # "50%" = donut
-  df      <- spec$data
-  labels  <- df[[spec$x]]
-  values  <- df[[spec$y]]
-  palette <- resolve_colors(length(labels), opts$colors)
+    inner_size <- geom_params$inner_size %||% "0%" # "50%" = donut
+    df <- spec$data
+    labels <- df[[spec$x]]
+    values <- df[[spec$y]]
+    palette <- resolve_colors(length(labels), opts$colors)
 
-  # Build the data list Highcharts expects for a pie series
-  pie_data <- lapply(seq_len(nrow(df)), function(i)
-    list(name  = as.character(labels[i]),
-         y     = values[i],
-         color = palette[i]))
+    # Build the data list Highcharts expects for a pie series
+    pie_data <- lapply(seq_len(nrow(df)), function(i) {
+        list(
+            name = as.character(labels[i]),
+            y = values[i],
+            color = palette[i]
+        )
+    })
 
-  chart |>
-    highcharter::hc_add_series(
-      type      = "pie",
-      name      = spec$ylab,
-      data      = pie_data,
-      innerSize = inner_size,
-      dataLabels = list(
-        enabled = TRUE,
-        format  = "<b>{point.name}</b>: {point.percentage:.1f}%"
-      )
-    )
+    chart |>
+        highcharter::hc_add_series(
+            type = "pie",
+            name = spec$ylab,
+            data = pie_data,
+            innerSize = inner_size,
+            dataLabels = list(
+                enabled = TRUE,
+                format  = "<b>{point.name}</b>: {point.percentage:.1f}%"
+            )
+        )
 }
 
 
@@ -105,28 +108,31 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' @examples
 #' # Category share dataset (pie)
 #' drinking_freq <- data.frame(
-#'   category = c("Never", "Rarely", "Monthly", "Weekly", "Daily"),
-#'   pct      = c(18, 25, 30, 20, 7))
-#'   
+#'     category = c("Never", "Rarely", "Monthly", "Weekly", "Daily"),
+#'     pct      = c(18, 25, 30, 20, 7)
+#' )
+#'
 #' spec_pie <- hd_spec(drinking_freq,
-#'                     x    = "category",
-#'                     y    = "pct")
-#' 
+#'     x    = "category",
+#'     y    = "pct"
+#' )
+#'
 #' opts_pie <- hd_opts(
-#'   title    = "Drinking frequency",
-#'   subtitle = "Source: Norwegian Directorate of Health",
-#'   ylab = "Share (%)"
+#'     title = "Drinking frequency",
+#'     subtitle = "Source: Norwegian Directorate of Health",
+#'     ylab = "Share (%)"
 #' )
 #'
 #' # Donut interactive
 #' hd_make(spec_pie, "pie", opts_pie, inner_size = "50%")
 #'
-#' # Composable API style (ggplot2 ignores inner_size) 
+#' # Composable API style (ggplot2 ignores inner_size)
 #' hd(drinking_freq, x = "category", y = "pct", backend = "ggplot2") +
-#'  hd_geom_pie() +
-#'  hd_opts(title = "Drinking frequency",
-#'          subtitle = "Source: Norwegian Directorate of Health",
-#'          ylab = "Share (%)")
+#'     hd_geom_pie() +
+#'     hd_opts(
+#'         title = "Drinking frequency",
+#'         subtitle = "Source: Norwegian Directorate of Health"
+#'     )
 #' 
 #' @export
 hd_geom_pie <- function(inner_size = "0%", ...) {
