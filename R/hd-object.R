@@ -146,10 +146,6 @@ hd_geom_scatter <- function(...) hd_geom("scatter", ...)
 
 #' @rdname hd_geom_layer
 #' @export
-hd_geom_pie <- function(...) hd_geom("pie", ...)
-
-#' @rdname hd_geom_layer
-#' @export
 hd_geom_ranked_bar <- function(...) hd_geom("ranked_bar", ...)
 
 
@@ -196,6 +192,7 @@ hd_geom_ranked_bar <- function(...) hd_geom("ranked_bar", ...)
 `+.hd` <- function(e1, e2) {
   if (inherits(e2, "hd_geom")) {
     e1$geom <- e2
+    .validate_geom_backend(e1)   # ← check immediately after attaching
   } else if (inherits(e2, "hd_opts")) {
     e1$opts <- e2
   } else {
