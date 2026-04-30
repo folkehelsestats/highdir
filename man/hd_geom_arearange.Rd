@@ -4,7 +4,7 @@
 \alias{hd_geom_arearange}
 \title{Add an Arearange (Confidence Band) Layer}
 \usage{
-hd_geom_arearange(ymin, ymax, ...)
+hd_geom_arearange(ymin = NULL, ymax = NULL, ...)
 }
 \arguments{
 \item{ymin}{Character. Column name for the lower bound of the range.}
