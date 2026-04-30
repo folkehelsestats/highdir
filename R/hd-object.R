@@ -142,10 +142,6 @@ NULL
 
 #' @rdname hd_geom_layer
 #' @export
-hd_geom_line <- function(...) hd_geom("line", ...)
-
-#' @rdname hd_geom_layer
-#' @export
 hd_geom_scatter <- function(...) hd_geom("scatter", ...)
 
 #' @rdname hd_geom_layer
