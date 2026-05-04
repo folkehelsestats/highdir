@@ -1,6 +1,8 @@
 # Package index
 
-## Primary functions
+## Declarative API
+
+### Primary functions
 
 Core functions used to generate figures.
 
@@ -9,7 +11,7 @@ Core functions used to generate figures.
 - [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md)
   : Build a Figure from a Specification
 
-## Secondary functions
+### Secondary functions
 
 Additional optional functions that support workflows.
 
@@ -20,18 +22,9 @@ Additional optional functions that support workflows.
 - [`hd_app()`](https://github.com/folkehelsestats/highdir/reference/hd_app.md)
   : Launch the highdir Shiny GUI
 
-## Backends
+## Layered API
 
-Backend engines used to build figures.
-
-- [`list_backends()`](https://github.com/folkehelsestats/highdir/reference/list_backends.md)
-  : List Registered Backends
-- [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
-  : Register a Rendering Backend
-
-## Geoms
-
-### Main
+### Primary functions
 
 All highdir plots begin with a call to
 [`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md),
@@ -47,7 +40,7 @@ You then add geoms and options with `+`. To save a plot to disk, use
 - [`` `+`( ``*`<hd>`*`)`](https://github.com/folkehelsestats/highdir/reference/plus-.hd.md)
   : Add Layers to an hd Object
 
-### Types
+### Secondary functions
 
 Geom types
 
@@ -65,18 +58,14 @@ Geom types
 - [`hd_geom_stacked_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_stacked_column.md)
   : Stacked Column Geometry Layer
 
-### Helpers
+## Backends
 
-Geometric layers and related functions used to construct figures.
+Backend engines used to build figures.
 
-- [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md)
-  : List Registered Geometries
-- [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md)
-  : Show Arguments for a Geometry
-- [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)
-  : Register a Geometry
-- [`print(`*`<hd>`*`)`](https://github.com/folkehelsestats/highdir/reference/print.hd.md)
-  : Render an hd Object
+- [`list_backends()`](https://github.com/folkehelsestats/highdir/reference/list_backends.md)
+  : List Registered Backends
+- [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
+  : Register a Rendering Backend
 
 ## Themes
 
@@ -94,6 +83,19 @@ Theme functions defining the visual style of figures.
   : Retrieve a Named Palette
 - [`register_palette()`](https://github.com/folkehelsestats/highdir/reference/register_palette.md)
   : Register a Named Colour Palette
+
+## Helpers
+
+Geometric layers and related functions used to construct figures.
+
+- [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md)
+  : List Registered Geometries
+- [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md)
+  : Show Arguments for a Geometry
+- [`register_geom()`](https://github.com/folkehelsestats/highdir/reference/register_geom.md)
+  : Register a Geometry
+- [`print(`*`<hd>`*`)`](https://github.com/folkehelsestats/highdir/reference/print.hd.md)
+  : Render an hd Object
 
 ## JavaScript
 

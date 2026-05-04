@@ -5,13 +5,32 @@ API for building figures with either
 [**highcharter**](https://jkunst.com/highcharter/) (interactive) or
 [**ggplot2**](https://ggplot2.tidyverse.org/) (static).
 
-A figure is described once as a `hd_spec` object and rendered to any
-supported backend without changing the calling code. Additional
-presentation settings can be defined through `hc_opts` object prior to
-rendering. The package ships with the default to use [The Norwegian
-Directorate of Health](https://www.helsedirektoratet.no)
-(*Helsedirektoratet*) colour palette, styling and theme. To enhance
-usability, a Shiny graphical user interface is also included.
+The package provides two complementary yet fully interoperable APIs for
+creating figures:
+
+1.  **Declarative API** - define all components of a figure up front and
+    render it in a single step.
+2.  **Layered API** - incrementally compose a figure by adding layers,
+    similar to the *grammar of graphics*.
+
+Both APIs produce equivalent visual output and can target any supported
+backend without changes to the calling code.
+
+With the declarative API, a figure is specified once as an `hd_spec`
+object and can later be rendered to different backends. Backend-specific
+presentation options (such as interactivity or styling tweaks) can be
+supplied separately via an `hc_opts` object prior to rendering.
+
+The layered API supports an exploratory, iterative workflow. Figures are
+built step by step using `+` similar to **ggplot2** style, making this
+approach particularly well suited for interactive analysis and rapid
+prototyping, while remaining backend-independent.
+
+By default, **highdir** ships with colour palette, theme, and visual
+identity of [The Norwegian Directorate of
+Health](https://www.helsedirektoratet.no) (*Helsedirektoratet*). To
+further enhance usability, a Shiny graphical user interfacef for
+building and previewing figures is also included as part of the package.
 
 ------------------------------------------------------------------------
 
@@ -30,7 +49,7 @@ remotes::install_github("folkehelsestats/highdir@dev")
 
 ## Get started
 
-The simplest way to get started with *highdir* is by using the built‑in
+The simplest way to get started with *highdir* is by using the built-in
 Shiny app. It shows also codes to demonstrate how to use the package
 programmatically in R. Start the app with:
 
@@ -58,7 +77,9 @@ The app is also available directly through ShinyApps.io at:
 
 ------------------------------------------------------------------------
 
-To see complete list of extra arguments for specify geoms use:
+To see complete list of extra arguments for specify geoms use
+[`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md)
+function:
 
 ``` r
 geom_args("ranked_bar")

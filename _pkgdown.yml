@@ -1,3 +1,8 @@
+home:
+  links:
+  - text: Helsedirektoratet
+    href: https://www.hdir.no
+
 url: https://github.com/folkehelsestats/highdir
 
 template:
@@ -26,13 +31,13 @@ articles:
     navbar:
     contents:
       - quick-start
-      - specification
-
-  - title: Guides
-    navbar: Guides
-    contents:
-      - examples
       - accessibility
+
+  - title: Declarative
+    navbar: Declarative
+    contents:
+      - specification
+      - examples
 
 news:
   text: Updates
@@ -40,29 +45,24 @@ news:
 
 
 reference:
-  - title: Primary functions
+  - title: Declarative API
+  - subtitle: Primary functions
     desc: >-
       Core functions used to generate figures.
     contents:
       - hd_spec
       - hd_make
-  - title: Secondary functions
+  - subtitle: Secondary functions
     desc: >-
       Additional optional functions that support workflows.
     contents:
       - hd_opts
       - hd_save
       - hd_app
-  - title: Backends
-    desc: >-
-      Backend engines used to build figures.
-    contents:
-      - list_backends
-      - register_backend
 
-  - title: Geoms
+  - title: Layered API
 
-  - subtitle: Main
+  - subtitle: Primary functions
     desc: >-
       All highdir plots begin with a call to `hd()`, supply with either `hd_spec()`
       or directly defined in `hd()`. You then add geoms and options with `+`.
@@ -70,19 +70,19 @@ reference:
     contents:
      - hd
      - +.hd
-  - subtitle: Types
+  - subtitle: Secondary functions
     desc: >-
       Geom types
     contents:
       - starts_with("hd_geom_")
-  - subtitle: Helpers
+
+  - title: Backends
     desc: >-
-      Geometric layers and related functions used to construct figures.
+      Backend engines used to build figures.
     contents:
-      - list_geoms
-      - geom_args
-      - register_geom
-      - print.hd
+      - list_backends
+      - register_backend
+
   - title: Themes
     desc: >-
       Theme functions defining the visual style of figures.
@@ -93,11 +93,22 @@ reference:
       - list_palettes
       - get_palette
       - register_palette
+
+  - title: Helpers
+    desc: >-
+      Geometric layers and related functions used to construct figures.
+    contents:
+      - list_geoms
+      - geom_args
+      - register_geom
+      - print.hd
+
   - title: JavaScript
     desc: >-
       JavaScript-related utilities (relevant for Highcharts output).
     contents:
       - hd_add_js
+
   - title: Datasets
     desc: >-
       Example datasets
