@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 library(highdir)
 ```
 
-There two ways to use `highdir`:
+There are two ways to use `highdir`:
 
 1. Declarative API approach 
 2. Layered API approach

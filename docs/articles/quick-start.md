@@ -1,11 +1,11 @@
 # Quick start
 
-There two ways to use `highdir`:
+There are two ways to use `highdir`:
 
-1.  object based
-2.  ggplot2 style
+1.  Declarative API approach
+2.  Layered API approach
 
-## Object based
+## Declarative API
 
 ``` r
 
@@ -44,7 +44,7 @@ gg01 <- hd_make(spec, "column", backend = "ggplot2")
 hd_save(fig = gg01, file = "chart.png")
 ```
 
-## ggplot2 style
+## Layered API
 
 ``` r
 

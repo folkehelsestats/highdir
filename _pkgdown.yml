@@ -1,3 +1,8 @@
+home:
+  links:
+  - text: Helsedirektoratet
+    href: https://www.hdir.no
+
 url: https://github.com/folkehelsestats/highdir
 
 template:
@@ -26,12 +31,12 @@ articles:
     navbar:
     contents:
       - quick-start
+      - accessibility
 
   - title: Declarative
     navbar: Declarative
     contents:
       - specification
-      - accessibility
       - examples
 
 news:
@@ -55,13 +60,6 @@ reference:
       - hd_save
       - hd_app
 
-  - title: Backends
-    desc: >-
-      Backend engines used to build figures.
-    contents:
-      - list_backends
-      - register_backend
-
   - title: Layered API
 
   - subtitle: Primary functions
@@ -77,6 +75,13 @@ reference:
       Geom types
     contents:
       - starts_with("hd_geom_")
+
+  - title: Backends
+    desc: >-
+      Backend engines used to build figures.
+    contents:
+      - list_backends
+      - register_backend
 
   - title: Themes
     desc: >-

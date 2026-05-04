@@ -8,7 +8,8 @@
 [![R-CMD-check](https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg)](https://app.codecov.io/gh/folkehelsestats/highdir)
-
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 **highdir** is an R package that provides a unified, backend-agnostic
@@ -37,11 +38,11 @@ built step by step using `+` similar to **ggplot2** style, making this
 approach particularly well suited for interactive analysis and rapid
 prototyping, while remaining backend-independent.
 
-By default, **highdir** ships with colur palette, theme, and visual
-identity ofe [The Norwegian Directorate of
+By default, **highdir** ships with colour palette, theme, and visual
+identity of [The Norwegian Directorate of
 Health](https://www.helsedirektoratet.no) (*Helsedirektoratet*). To
 further enhance usability, a Shiny graphical user interfacef for
-building and previewing figures is also included.
+building and previewing figures is also included as part of the package.
 
 ------------------------------------------------------------------------
 
@@ -60,7 +61,7 @@ remotes::install_github("folkehelsestats/highdir@dev")
 
 ## Get started
 
-The simplest way to get started with *highdir* is by using the built‑in
+The simplest way to get started with *highdir* is by using the built-in
 Shiny app. It shows also codes to demonstrate how to use the package
 programmatically in R. Start the app with:
 

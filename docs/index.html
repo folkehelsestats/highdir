@@ -43,11 +43,11 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/quick-start.html">Quick start</a></li>
-    <li><a class="dropdown-item" href="articles/specification.html">Specifications</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Guides</h6></li>
-    <li><a class="dropdown-item" href="articles/examples.html">Geom examples</a></li>
     <li><a class="dropdown-item" href="articles/accessibility.html">Accessibility: writing descriptions for figures</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Declarative</h6></li>
+    <li><a class="dropdown-item" href="articles/specification.html">Specifications</a></li>
+    <li><a class="dropdown-item" href="articles/examples.html">Geom examples</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -72,9 +72,18 @@
 </div>
 <!-- badges: start -->
 
-<!-- badges: end -->
 <p><strong>highdir</strong> is an R package that provides a unified, backend-agnostic API for building figures with either <a href="https://jkunst.com/highcharter/" class="external-link"><strong>highcharter</strong></a> (interactive) or <a href="https://ggplot2.tidyverse.org/" class="external-link"><strong>ggplot2</strong></a> (static).</p>
-<p>A figure is described once as a <code>hd_spec</code> object and rendered to any supported backend without changing the calling code. Additional presentation settings can be defined through <code>hc_opts</code> object prior to rendering. The package ships with the default to use <a href="https://www.helsedirektoratet.no" class="external-link">The Norwegian Directorate of Health</a> (<em>Helsedirektoratet</em>) colour palette, styling and theme. To enhance usability, a Shiny graphical user interface is also included.</p>
+<p>The package provides two complementary yet fully interoperable APIs for creating figures:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Declarative API</strong> - define all components of a figure up front and render it in a single step.</li>
+<li>
+<strong>Layered API</strong> - incrementally compose a figure by adding layers, similar to the <em>grammar of graphics</em>.</li>
+</ol>
+<p>Both APIs produce equivalent visual output and can target any supported backend without changes to the calling code.</p>
+<p>With the declarative API, a figure is specified once as an <code>hd_spec</code> object and can later be rendered to different backends. Backend-specific presentation options (such as interactivity or styling tweaks) can be supplied separately via an <code>hc_opts</code> object prior to rendering.</p>
+<p>The layered API supports an exploratory, iterative workflow. Figures are built step by step using <code>+</code> similar to <strong>ggplot2</strong> style, making this approach particularly well suited for interactive analysis and rapid prototyping, while remaining backend-independent.</p>
+<p>By default, <strong>highdir</strong> ships with colour palette, theme, and visual identity of <a href="https://www.helsedirektoratet.no" class="external-link">The Norwegian Directorate of Health</a> (<em>Helsedirektoratet</em>). To further enhance usability, a Shiny graphical user interfacef for building and previewing figures is also included as part of the package.</p>
 <hr>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -91,7 +100,7 @@
 <div class="section level2">
 <h2 id="get-started">Get started<a class="anchor" aria-label="anchor" href="#get-started"></a>
 </h2>
-<p>The simplest way to get started with <em>highdir</em> is by using the built‑in Shiny app. It shows also codes to demonstrate how to use the package programmatically in R. Start the app with:</p>
+<p>The simplest way to get started with <em>highdir</em> is by using the built-in Shiny app. It shows also codes to demonstrate how to use the package programmatically in R. Start the app with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://folkehelsestats.github.io/highdir/" class="external-link">highdir</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/hd_app.html">hd_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -172,7 +181,7 @@
 </tbody>
 </table>
 <hr>
-<p>To see complete list of extra arguments for specify geoms use:</p>
+<p>To see complete list of extra arguments for specify geoms use <code><a href="reference/geom_args.html">geom_args()</a></code> function:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/geom_args.html">geom_args</a></span><span class="op">(</span><span class="st">"ranked_bar"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/geom_args.html">geom_args</a></span><span class="op">(</span><span class="st">"arearange"</span><span class="op">)</span></span></code></pre></div>
@@ -188,6 +197,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/folkehelsestats/highdir/">Browse source code</a></li>
 <li><a href="https://github.com/folkehelsestats/highdir/issues">Report a bug</a></li>
+<li><a href="https://www.hdir.no" class="external-link">Helsedirektoratet</a></li>
 </ul>
 </div>
 

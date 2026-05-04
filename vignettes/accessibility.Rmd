@@ -59,7 +59,7 @@ The examples below use the built-in alcohol consumption datasets.
 `hd_data1` contains a single time series with 95 % confidence interval
 bounds; `hd_data2` adds a `kjonn` grouping column:
 
-```{r data}
+```{r data, eval = TRUE}
 library(highdir)
 
 # Single series — annual adjusted mean with 95% CI
@@ -91,7 +91,7 @@ series and data points, and a data table view.
 Setting `description` enhances all of these and it gives the user orientation
 before they explore the chart interactively.
 
-```{r hc-line-description}
+```{r hc-line-description, eval = TRUE}
 spec_line <- hd_spec(alcohol,
                      x    = "year",
                      y    = "adj_mean")
@@ -100,7 +100,7 @@ opts_line <- hd_opts(
   title       = "Alcohol consumption in Norway",
   subtitle    = "Source: Norwegian Directorate of Health",
   ylab        = "Litres per capita",
-  ylim        = c(0, 10),
+  ylim        = c(0, 40),
   description = paste(
     "Line chart showing adjusted mean alcohol consumption per capita in",
     "Norway from 2010 to 2023.",
@@ -111,13 +111,20 @@ opts_line <- hd_opts(
 
 # The description is embedded in the widget — invisible in the browser
 # but announced by screen readers
+# ------------------------------------------------------------------------------
+# Layered approach
+hd(spec_line) +
+  hd_geom_line() +
+  opts_line
+
+# Declarative approach
 hd_make(spec_line, "line", opts_line)
 ```
 
 For grouped data, describe the comparison explicitly ie. which group is
 higher, and whether the gap widens or narrows over time:
 
-```{r hc-line-grouped}
+```{r hc-line-grouped, eval = TRUE}
 spec_line2 <- hd_spec(alcohol2,
                       x     = "year",
                       y     = "adj_mean",
@@ -127,7 +134,7 @@ opts_line2 <- hd_opts(
   title       = "Alcohol consumption by sex",
   subtitle    = "Source: Norwegian Directorate of Health",
   ylab        = "Litres per capita",
-  ylim        = c(0, 15),
+  ylim        = c(0, 50),
   description = paste(
     "Line chart comparing adjusted mean alcohol consumption per capita",
     "between men and women in Norway, 2010 to 2023.",
@@ -139,12 +146,12 @@ opts_line2 <- hd_opts(
 hd_make(spec_line2, "line", opts_line2)
 ```
 
-```{r hc-arearange}
+```{r hc-arearange, eval=TRUE}
 opts_ar <- hd_opts(
   title       = "Alcohol consumption with 95% confidence interval",
   subtitle    = "Source: Norwegian Directorate of Health",
   ylab        = "Litres per capita",
-  ylim        = c(0, 10),
+  ylim        = c(0, 40),
   description = paste(
     "Area range chart showing adjusted mean alcohol consumption in Norway",
     "with 95 percent confidence intervals, 2010 to 2023.",
@@ -153,6 +160,12 @@ opts_ar <- hd_opts(
   )
 )
 
+# Layered approach
+hd(spec_line) +
+  hd_geom_arearange(ymin = "lower_95CI", ymax = "upper_95CI") +
+  opts_ar
+
+# Declarative approach
 hd_make(spec_line, "arearange", opts_ar,
         ymin = "lower_95CI", ymax = "upper_95CI")
 ```

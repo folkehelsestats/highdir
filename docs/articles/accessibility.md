@@ -86,7 +86,7 @@ opts_line <- hd_opts(
   title       = "Alcohol consumption in Norway",
   subtitle    = "Source: Norwegian Directorate of Health",
   ylab        = "Litres per capita",
-  ylim        = c(0, 10),
+  ylim        = c(0, 40),
   description = paste(
     "Line chart showing adjusted mean alcohol consumption per capita in",
     "Norway from 2010 to 2023.",
@@ -97,6 +97,16 @@ opts_line <- hd_opts(
 
 # The description is embedded in the widget — invisible in the browser
 # but announced by screen readers
+# ------------------------------------------------------------------------------
+# Layered approach
+hd(spec_line) +
+  hd_geom_line() +
+  opts_line
+#> Registered S3 method overwritten by 'quantmod':
+#>   method            from
+#>   as.zoo.data.frame zoo
+
+# Declarative approach
 hd_make(spec_line, "line", opts_line)
 ```
 
@@ -113,7 +123,7 @@ opts_line2 <- hd_opts(
   title       = "Alcohol consumption by sex",
   subtitle    = "Source: Norwegian Directorate of Health",
   ylab        = "Litres per capita",
-  ylim        = c(0, 15),
+  ylim        = c(0, 50),
   description = paste(
     "Line chart comparing adjusted mean alcohol consumption per capita",
     "between men and women in Norway, 2010 to 2023.",
@@ -130,7 +140,7 @@ opts_ar <- hd_opts(
   title       = "Alcohol consumption with 95% confidence interval",
   subtitle    = "Source: Norwegian Directorate of Health",
   ylab        = "Litres per capita",
-  ylim        = c(0, 10),
+  ylim        = c(0, 40),
   description = paste(
     "Area range chart showing adjusted mean alcohol consumption in Norway",
     "with 95 percent confidence intervals, 2010 to 2023.",
@@ -139,6 +149,12 @@ opts_ar <- hd_opts(
   )
 )
 
+# Layered approach
+hd(spec_line) +
+  hd_geom_arearange(ymin = "lower_95CI", ymax = "upper_95CI") +
+  opts_ar
+
+# Declarative approach
 hd_make(spec_line, "arearange", opts_ar,
         ymin = "lower_95CI", ymax = "upper_95CI")
 ```
