@@ -1,5 +1,11 @@
 # highdir
 
+[![R-CMD-check](https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg)](https://app.codecov.io/gh/folkehelsestats/highdir)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
 **highdir** is an R package that provides a unified, backend-agnostic
 API for building figures with either
 [**highcharter**](https://jkunst.com/highcharter/) (interactive) or
