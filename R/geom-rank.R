@@ -323,23 +323,24 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #' highlighted with a contrasting fill colour, and an optional horizontal line
 #' can be added to indicate a target or benchmark value.
 #'
-#' @param ascending Logical. If \code{TRUE} (default) bars are sorted in
-#'  ascending order of \code{y}.
+#' @param ascending Logical. If `TRUE` (default) bars are sorted in
+#'  ascending order of `y`.
 #' @param vs Character string (partial match) identifying one category to
-#' highlight with a contrasting fill colour. If omitted all bars use the same
-#' colour.
+#'  highlight with a contrasting fill colour. If omitted all bars use the same
+#'  colour.
 #' @param aim Numeric. Optional horizontal line indicating a target or benchmark
-#' value.  If \code{NULL} (default) no line is drawn.
+#'  value.  If `NULL` (default) no line is drawn.
 #' @param char_scale Numeric scaling factor that converts label character-count
-#' into axis-range units. Controls how generously space is estimated for each
-#' character. Defaults to \code{0.045}; increase (e.g. \
-#' code{0.06}) for larger text sizes, decrease (e.g. \code{0.03}) for smaller ones.
+#'  into axis-range units. Controls how generously space is estimated for each
+#'  character. Defaults to `0.045`; increase (e.g. `0.06`0.06)
+#'  for larger text sizes, decrease (e.g. `0.03`) for smaller ones.
 #' @param min_frac  Numeric. Minimum fraction of the axis range that a bar must
-#' span before its label is considered to fit inside. Acts as a safety floor
-#' for very short labels. Defaults to \code{0.08} (8 \%).
-#' @inheritParams hd_column
+#'  span before its label is considered to fit inside. Acts as a safety floor
+#'  for very short labels. Defaults to `0.08` (8%).
+#' @inheritParams hd_geom_column
 #'
 #' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
+#'
 #' @examples
 #' # Regional health indicator dataset
 #' regions <- data.frame(
@@ -362,27 +363,32 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #'  flip     = TRUE
 #' )
 #'
-#' hd(spec_rb) +
+#' hd_make(spec_rb, "ranked_bar", opts_rb, ascending = TRUE, vs = "Oslo", aim = 63)
+#'
+#' hd(spec_rb, backend = "ggplot2") +
 #'  hd_geom_ranked_bar(
 #'   ascending  = TRUE,
-#'  vs         = "Oslo",
-#'  aim        = 63,
-#'  char_scale = 0.045,
-#'  min_frac   = 0.08
-#' )
+#'   vs         = "Oslo",
+#'   aim        = 63,
+#'   char_scale = 0.045,
+#'   min_frac   = 0.08) +
+#'  opts_rb
+#'
 #'
 #' @family Geoms
 #' @seealso [hd_geom_column()], [hd_geom_line()], [hd_geom_arearange()],
 #'  [hd_opts()], [hd_make()]
-#' @inheritParams hd
 #'
 #' @export
-hd_geom_ranked_bar <- function(ascending = TRUE, vs = NULL, aim = NULL, char_scale = 0.045, min_frac = 0.08, ...) {
+hd_geom_ranked_bar <- function(ascending = TRUE,
+                               vs = NULL,
+                               aim = NULL,
+                               char_scale = 0.045,
+                               min_frac = 0.08, ...) {
   hd_geom("ranked_bar",
           ascending = ascending,
           vs = vs,
           aim = aim,
           char_scale = char_scale,
-          min_frac = min_frac,
-          ...)
+          min_frac = min_frac, ...)
 }
