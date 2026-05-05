@@ -56,6 +56,8 @@ Geom types
   : Pie Geometry Layer for hd Objects
 - [`hd_geom_ranked_bar()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_ranked_bar.md)
   : Ranked bar geometry
+- [`hd_geom_scatter()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_scatter.md)
+  : Scatter Geometry Layer for hd Objects
 - [`hd_geom_stacked_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_stacked_column.md)
   : Stacked Column Geometry Layer
 
