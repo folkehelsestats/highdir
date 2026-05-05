@@ -10,8 +10,6 @@ is printed.
 
 ``` r
 hd_geom_scatter(...)
-
-hd_geom_ranked_bar(...)
 ```
 
 ## Arguments

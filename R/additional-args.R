@@ -119,13 +119,15 @@
         default = 0.045,
         desc    = paste0("Numeric. Scaling factor converting label character-count into ",
                          "axis-range units. Increase (e.g. 0.06) for larger text, ",
-                         "decrease (e.g. 0.03) for smaller text. Default 0.045.")
+                         "decrease (e.g. 0.03) for smaller text. Default 0.045."),
+        backend_only = "ggplot2"
       ),
       min_frac = list(
         default = 0.08,
         desc    = paste0("Numeric. Minimum fraction of the axis range a bar must span ",
                          "before its label fits inside. Safety floor for short labels. ",
-                         "Default 0.08 (8%).")
+                         "Default 0.08 (8%)."),
+        backend_only = "ggplot2"
       )
     )
   ),

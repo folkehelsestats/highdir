@@ -144,9 +144,6 @@ NULL
 #' @export
 hd_geom_scatter <- function(...) hd_geom("scatter", ...)
 
-#' @rdname hd_geom_layer
-#' @export
-hd_geom_ranked_bar <- function(...) hd_geom("ranked_bar", ...)
 
 
 
