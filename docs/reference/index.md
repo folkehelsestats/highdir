@@ -4,7 +4,9 @@
 
 ### Primary functions
 
-Core functions used to generate figures.
+Core functions used to generate figures. See the
+[examples](https://folkehelsestats.github.io/highdir/articles/examples.html)
+for practical usage.
 
 - [`hd_spec()`](https://github.com/folkehelsestats/highdir/reference/hd_spec.md)
   : Create a Figure Data Specification
@@ -26,19 +28,17 @@ Additional optional functions that support workflows.
 
 ### Primary functions
 
-All highdir plots begin with a call to
+All highdir plots start with a call to
 [`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md),
-supply with either
+either using a specification created with
 [`hd_spec()`](https://github.com/folkehelsestats/highdir/reference/hd_spec.md)
-or directly defined in
+or defined directly inside
 [`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md).
-You then add geoms and options with `+`. To save a plot to disk, use
-[`hd_save()`](https://github.com/folkehelsestats/highdir/reference/hd_save.md).
+You then layer geoms and options using `+`. See the examples under each
+geom below for concrete usage patterns.
 
 - [`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md) :
   Initialise a Composable highdir Figure
-- [`` `+`( ``*`<hd>`*`)`](https://github.com/folkehelsestats/highdir/reference/plus-.hd.md)
-  : Add Layers to an hd Object
 
 ### Secondary functions
 
@@ -91,6 +91,8 @@ Theme functions defining the visual style of figures.
 
 Geometric layers and related functions used to construct figures.
 
+- [`` `+`( ``*`<hd>`*`)`](https://github.com/folkehelsestats/highdir/reference/plus-.hd.md)
+  : Add Layers to an hd Object
 - [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md)
   : List Registered Geometries
 - [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md)

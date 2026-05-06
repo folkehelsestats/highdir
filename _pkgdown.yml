@@ -49,6 +49,8 @@ reference:
   - subtitle: Primary functions
     desc: >-
       Core functions used to generate figures.
+      See the [examples](https://folkehelsestats.github.io/highdir/articles/examples.html)
+      for practical usage.
     contents:
       - hd_spec
       - hd_make
@@ -64,12 +66,12 @@ reference:
 
   - subtitle: Primary functions
     desc: >-
-      All highdir plots begin with a call to `hd()`, supply with either `hd_spec()`
-      or directly defined in `hd()`. You then add geoms and options with `+`.
-      To save a plot to disk, use `hd_save()`.
+      All highdir plots start with a call to `hd()`, either using a specification
+      created with `hd_spec()` or defined directly inside `hd()`. You then layer
+      geoms and options using `+`. See the examples under each geom below for
+      concrete usage patterns.
     contents:
      - hd
-     - +.hd
   - subtitle: Secondary functions
     desc: >-
       Geom types
@@ -98,6 +100,7 @@ reference:
     desc: >-
       Geometric layers and related functions used to construct figures.
     contents:
+      - +.hd
       - list_geoms
       - geom_args
       - register_geom
