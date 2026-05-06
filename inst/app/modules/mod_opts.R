@@ -50,12 +50,15 @@ mod_opts_ui <- function(id) {
       id    = ns("panel-opts"),
       class = "hd-collapse",
 
+      # Use of textInput to be able to describe the functions
       shiny::div(class = "hd-label", style = "margin-top:4px;", "Labels"),
       shiny::textInput(ns("title"),    NULL, placeholder = "Title"),
       shiny::textInput(ns("subtitle"), NULL, placeholder = "Subtitle"),
       shiny::textInput(ns("caption"),  NULL, placeholder = "Caption"),
       shiny::textInput(ns("xlab"),     NULL, placeholder = "X-axis label"),
       shiny::textInput(ns("ylab"),     NULL, placeholder = "Y-axis label"),
+      shiny::textInput(ns("ylim"),     NULL, placeholder = "Y-axis limits eg. c(10, 80)"),
+      shiny::textInput(ns("yint"),     NULL, placeholder = "Y-axis interval"),
       shiny::textInput(ns("ysuffix"),  NULL, placeholder = "Y-tick suffix: %, km, mg ..."),
       shiny::textInput(ns("xtick_labels"),  NULL, placeholder = "x-tick labels, if different than x col"),
       shiny::textInput(ns("decimals"), NULL, placeholder = "Decimals points else as.is eg. 2"),
@@ -116,6 +119,8 @@ mod_opts_server <- function(id) {
         caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
         xlab     = input_labs(input$xlab),
         ylab     = input_labs(input$ylab),
+        ylim = parse_ylim(input$ylim),
+        yint = parse_yint(input$yint, default = 10),
         ysuffix  = if (nzchar(input$ysuffix  %||% "")) input$ysuffix  else NULL,
         xtick_labels  = if (nzchar(input$xtick_labels  %||% "")) input$xtick_labels  else NULL,
         decimals = {
@@ -137,21 +142,45 @@ mod_opts_server <- function(id) {
 }
 
 
-input_labs <- function(input){
-          x <- input %||% ""  # x is always a character now ("" if NULL)
+input_labs <- function(input) {
+    x <- input %||% "" # x is always a character now ("" if NULL)
 
-          # Case: user wants to hide (accept "NULL" in any case, with optional surrounding space)
-          is_hide    <- is.character(x) && length(x) == 1 &&
-            grepl("^\\s*NULL\\s*$", x, ignore.case = TRUE)
+    # Case: user wants to hide (accept "NULL" in any case, with optional surrounding space)
+    is_hide <- is.character(x) && length(x) == 1 &&
+        grepl("^\\s*NULL\\s*$", x, ignore.case = TRUE)
 
-          # Case: default sentinel (" ") OR the user cleared the box to empty ""
-          is_default <- identical(x, " ") || identical(x, "")
+    # Case: default sentinel (" ") OR the user cleared the box to empty ""
+    is_default <- identical(x, " ") || identical(x, "")
 
-          if (is_hide) {
-            NULL                  # pass NULL to labs() to remove the title
-          } else if (is_default) {
-            " "                   # keep sentinel so you can detect "default" upstream if needed
-          } else {
-            x                     # use the entered text as-is
-          }
+    if (is_hide) {
+        NULL # pass NULL to labs() to remove the title
+    } else if (is_default) {
+        " " # keep sentinel so you can detect "default" upstream if needed
+    } else {
+        x # use the entered text as-is
+    }
+}
+
+# Able to write eg. c(10, 60)
+parse_ylim <- function(x) {
+  x <- x %||% ""
+  if (!nzchar(x)) return(NULL)
+
+  x <- gsub("\\s+", "", x)
+
+  # Accept only c(num, num)
+  if (!grepl("^c\\(-?[0-9.]+,-?[0-9.]+\\)$", x)) return(NULL)
+
+  out <- tryCatch(eval(parse(text = x)), error = function(e) NULL)
+
+  if (is.numeric(out) && length(out) == 2) out else NULL
+}
+
+# For numberic value
+parse_yint <- function(x, default = 10) {
+  x <- x %||% ""
+  if (!nzchar(x)) return(default)
+
+  val <- suppressWarnings(as.numeric(x))
+  if (is.na(val)) default else val
 }
