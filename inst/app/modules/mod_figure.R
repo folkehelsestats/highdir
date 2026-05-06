@@ -185,10 +185,10 @@ mod_figure_server <- function(id,
         L("title",    o$title),
         L("subtitle", o$subtitle),
         L("caption",  o$caption),
-        print_label("xlab", o$xlab),
-        print_label("ylab", o$ylab),
-        print_values("ylim", o$ylim),
-        print_label("yint", o$yint),
+        print_opt("xlab", o$xlab),
+        print_opt("ylab", o$ylab),
+        print_val("ylim", o$ylim),
+        L("yint", o$yint, quote = FALSE),
         L("ysuffix",  o$ysuffix),
         L("xtick_labels",  o$xtick_labels),
         L("decimals", o$decimals, quote = FALSE),
@@ -214,18 +214,15 @@ mod_figure_server <- function(id,
 }
 
 
-print_label <- function(name, val) {
+print_opt <- function(name, val) {
   if (is.null(val)) {
-    paste0("  ", name, " = NULL, \n")
-  } else {
-    paste0("  ", name, ' = "', val, '", \n')
+    paste0("  ", name, " = NULL,\n")
+  } else if (is.character(val)) {
+    paste0("  ", name, ' = "', val, '",\n')
   }
 }
 
-print_values <- function(name, val) {
-  if (is.null(val)) {
-    paste0("  ", name, " = NULL, \n")
-  } else {
-    paste0("  ", name, ' = "', deparse(val), '", \n')
-  }
+print_val <- function(name, val){
+  if (is.null(val)) return("")
+  paste0("  ", name, " = ", deparse(val), ",\n")
 }
