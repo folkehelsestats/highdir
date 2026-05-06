@@ -6,12 +6,6 @@ object via `+`. The layer records the geometry type and any
 geometry-specific arguments; rendering only happens when the `hd` object
 is printed.
 
-## Usage
-
-``` r
-hd_geom_scatter(...)
-```
-
 ## Arguments
 
 - ...:
@@ -31,11 +25,13 @@ An S3 object of class `"hd_geom"` for use with `+.hd`.
 
 Geometry-specific arguments (`...`) are forwarded to
 [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md)
-as the `...` pass-through — they are the same arguments documented by
+as the `...` pass-through which they are the same arguments documented
+by
 [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md).
 
 ## See also
 
 [`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md),
+[`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md),
 [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md),
 [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md)

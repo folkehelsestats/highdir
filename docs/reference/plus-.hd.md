@@ -31,7 +31,7 @@ The updated `hd` object (invisibly, so the chain prints once).
 - `hd_geom` object:
 
   Sets the geometry (from any `hd_geom_*()` call). Adding a second geom
-  replaces the first — highdir renders one geometry per figure.
+  replaces the first where highdir renders one geometry per figure.
 
 - `hd_opts` object:
 
