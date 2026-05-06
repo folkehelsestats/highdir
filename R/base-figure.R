@@ -122,14 +122,14 @@
     if (!is.null(opts$caption))
       chart <- chart |> highcharter::hc_caption(text = opts$caption)
 
-    # Accessibility description — read by screen readers via the Highcharts
+    # Accessibility description - read by screen readers via the Highcharts
     # accessibility module (loaded automatically in highcharter_engine).
     # NULL means the module is still active (keyboard nav, ARIA roles) but
     # no explicit figure description is announced.
     # .hd_accessibility() is used instead of highcharter::hc_accessibility()
     # because hc_accessibility() is not exported in highcharter 0.9.4.
     # The wrapper tries the exported function first and falls back to patching
-    # chart$x$hc_opts directly — see utils.R.
+    # chart$x$hc_opts directly - see utils.R.
     if (!is.null(opts$description))
       chart <- .hd_accessibility(chart, opts$description)
 
