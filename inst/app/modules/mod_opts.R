@@ -50,12 +50,21 @@ mod_opts_ui <- function(id) {
       id    = ns("panel-opts"),
       class = "hd-collapse",
 
+      # Use of textInput to be able to describe the functions
       shiny::div(class = "hd-label", style = "margin-top:4px;", "Labels"),
       shiny::textInput(ns("title"),    NULL, placeholder = "Title"),
       shiny::textInput(ns("subtitle"), NULL, placeholder = "Subtitle"),
       shiny::textInput(ns("caption"),  NULL, placeholder = "Caption"),
+
       shiny::textInput(ns("xlab"),     NULL, placeholder = "X-axis label"),
       shiny::textInput(ns("ylab"),     NULL, placeholder = "Y-axis label"),
+
+      shiny::textInput(ns("ylim"), NULL, placeholder = "Y-axis limits eg. c(10, 80)"),
+      shiny::uiOutput(ns("ylim_warn")),
+
+      shiny::textInput(ns("yint"), NULL, placeholder = "Y-axis interval"),
+      shiny::uiOutput(ns("yint_warn")),
+
       shiny::textInput(ns("ysuffix"),  NULL, placeholder = "Y-tick suffix: %, km, mg ..."),
       shiny::textInput(ns("xtick_labels"),  NULL, placeholder = "x-tick labels, if different than x col"),
       shiny::textInput(ns("decimals"), NULL, placeholder = "Decimals points else as.is eg. 2"),
@@ -102,30 +111,61 @@ mod_opts_server <- function(id) {
 
   shiny::moduleServer(id, function(input, output, session) {
 
+    ## -------- live validation messages --------
+    output$ylim_warn <- shiny::renderUI({
+      x <- input$ylim %||% ""
+      if (!nzchar(x)) return(NULL)
+
+      if (!is_valid_ylim(x)) {
+        shiny::div(
+          class = "text-danger small",
+          "Invalid format. Use: c(min, max), e.g. c(10, 80)"
+        )
+      }
+    })
+
+    output$yint_warn <- shiny::renderUI({
+      x <- input$yint %||% ""
+      if (!nzchar(x)) return(NULL)
+
+      if (!is_valid_yint(x)) {
+        shiny::div(
+          class = "text-danger small",
+          "Must be a numeric value (e.g. 5 or 10)"
+        )
+      }
+    })
+
+    # --- colors
     parsed_colors <- shiny::reactive({
       raw <- trimws(input$colors %||% "")
       if (!nzchar(raw)) return(NULL)
-      unname(strsplit(raw, "\\s*,\\s*")[[1]])
+      strsplit(raw, "\\s*,\\s*")[[1]]
     })
 
-    # Return only hd_opts() arguments + use_js separately (it goes to hd_make)
     list(
       opts_r = shiny::reactive(list(
-        title    = if (nzchar(input$title    %||% "")) input$title    else NULL,
-        subtitle = if (nzchar(input$subtitle %||% "")) input$subtitle else NULL,
-        caption  = if (nzchar(input$caption  %||% "")) input$caption  else NULL,
-        xlab     = input_labs(input$xlab),
-        ylab     = input_labs(input$ylab),
-        ysuffix  = if (nzchar(input$ysuffix  %||% "")) input$ysuffix  else NULL,
-        xtick_labels  = if (nzchar(input$xtick_labels  %||% "")) input$xtick_labels  else NULL,
-        decimals = {
-          raw <- suppressWarnings(as.numeric(input$decimals))
-          if (!is.null(raw) && !is.na(raw) && is.numeric(raw))
-            as.integer(raw)
-          else
-            NULL
-        },
-        description = if (nzchar(input$description  %||% "")) input$description  else NULL,
+        title    = parse_input(input$title),
+        subtitle = parse_input(input$subtitle),
+        caption  = parse_input(input$caption),
+
+        xlab = input_labs(input$xlab),
+        ylab = input_labs(input$ylab),
+
+        ylim = parse_ylim(input$ylim),
+        yint = parse_yint(input$yint, default = 10),
+
+        ysuffix = parse_input(input$ysuffix),
+        xtick_labels = parse_input(input$xtick_labels),
+
+        decimals = parse_input(
+          input$decimals,
+          coerce  = coerce_numeric,
+          default = NULL
+        ),
+
+        description = parse_input(input$description),
+
         colors   = parsed_colors(),
         hc_theme = input$hc_theme %||% NULL,
         gg_theme = input$gg_theme %||% NULL,
@@ -136,22 +176,94 @@ mod_opts_server <- function(id) {
   })
 }
 
+# Helper -----------------------------------------------------------------------
 
-input_labs <- function(input){
-          x <- input %||% ""  # x is always a character now ("" if NULL)
+parse_input <- function(
+  x,
+  coerce       = identity,
+  default      = NULL,
+  empty_is     = NULL,
+  allow_null   = TRUE,
+  sentinel     = NULL
+) {
+  x <- x %||% ""
 
-          # Case: user wants to hide (accept "NULL" in any case, with optional surrounding space)
-          is_hide    <- is.character(x) && length(x) == 1 &&
-            grepl("^\\s*NULL\\s*$", x, ignore.case = TRUE)
+  # Hide value explicitly requested
+  if (allow_null && grepl("^\\s*NULL\\s*$", x, ignore.case = TRUE))
+    return(NULL)
 
-          # Case: default sentinel (" ") OR the user cleared the box to empty ""
-          is_default <- identical(x, " ") || identical(x, "")
+  # Empty input
+  if (!nzchar(x))
+    return(empty_is)
 
-          if (is_hide) {
-            NULL                  # pass NULL to labs() to remove the title
-          } else if (is_default) {
-            " "                   # keep sentinel so you can detect "default" upstream if needed
-          } else {
-            x                     # use the entered text as-is
-          }
+  # Sentinel (e.g. " ")
+  if (!is.null(sentinel) && identical(x, sentinel))
+    return(sentinel)
+
+  # Try coercion
+  out <- tryCatch(coerce(x), error = function(e) default)
+
+  if (is.null(out) || (is.atomic(out) && anyNA(out)))
+    default
+  else
+    out
+}
+
+# logic
+coerce_label <- function(x) x
+
+coerce_numeric <- function(x)
+  suppressWarnings(as.numeric(x))
+
+coerce_ylim <- function(x) {
+  x <- gsub("\\s+", "", x)
+  if (!grepl("^c\\(-?[0-9.]+,-?[0-9.]+\\)$", x))
+    stop("Invalid ylim")
+
+  y <- eval(parse(text = x))
+  if (!is.numeric(y) || length(y) != 2)
+    stop("ylim must be length 2")
+
+  y
+}
+
+# Validator
+is_valid_ylim <- function(x) {
+  !is.null(parse_ylim(x))
+}
+
+is_valid_yint <- function(x) {
+  val <- suppressWarnings(as.numeric(x))
+  nzchar(x) && !is.na(val)
+}
+
+
+# Functions
+input_labs <- function(x) {
+  parse_input(
+    x,
+    coerce     = coerce_label,
+    empty_is   = " ",
+    sentinel   = " ",
+    allow_null = TRUE
+  )
+}
+
+parse_ylim <- function(x) {
+  parse_input(
+    x,
+    coerce     = coerce_ylim,
+    empty_is   = NULL,
+    allow_null = TRUE
+  )
+}
+
+parse_yint <- function(x, default = 10) {
+  parse_input(
+    x,
+    coerce     = coerce_numeric,
+    default    = default,
+    empty_is   = default,
+    allow_null = FALSE
+  )
 }
