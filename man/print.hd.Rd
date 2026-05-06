@@ -23,7 +23,7 @@ presentation options from the \code{hd_opts} layer; the backend from the
 the actual rendering via the registered engine.
 }
 \details{
-You rarely need to call \code{print.hd()} directly — R calls it automatically
+You rarely need to call \code{print.hd()} directly since R calls it automatically
 when the object appears at the top level, in knitr/Quarto chunks, or in
 Shiny \code{renderHighchart()} / \code{renderPlot()} blocks.
 }

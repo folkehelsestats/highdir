@@ -127,7 +127,7 @@ hd_geom <- function(type, ...) {
 #' printed.
 #'
 #' Geometry-specific arguments (`...`) are forwarded to [hd_make()] as the
-#' `...` pass-through — they are the same arguments documented by
+#' `...` pass-through which they are the same arguments documented by
 #' [geom_args()].
 #'
 #' @param ... Geometry-specific arguments forwarded to [hd_make()].
@@ -137,13 +137,8 @@ hd_geom <- function(type, ...) {
 #' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
 #'
 #' @name hd_geom_layer
-#' @seealso [hd()], [geom_args()], [hd_make()]
+#' @seealso [hd()], [list_geoms()], [geom_args()], [hd_make()]
 NULL
-
-#' @rdname hd_geom_layer
-#' @export
-hd_geom_scatter <- function(...) hd_geom("scatter", ...)
-
 
 
 
@@ -158,7 +153,7 @@ hd_geom_scatter <- function(...) hd_geom("scatter", ...)
 #'
 #' \describe{
 #'   \item{`hd_geom` object}{Sets the geometry (from any `hd_geom_*()` call).
-#'     Adding a second geom replaces the first — highdir renders one geometry
+#'     Adding a second geom replaces the first where highdir renders one geometry
 #'     per figure.}
 #'   \item{`hd_opts` object}{Sets presentation options.  Adding a second
 #'     `hd_opts` replaces the first.}
@@ -216,7 +211,7 @@ hd_geom_scatter <- function(...) hd_geom("scatter", ...)
 #' `$backend` slot.  All of these are forwarded to [hd_make()], which performs
 #' the actual rendering via the registered engine.
 #'
-#' You rarely need to call `print.hd()` directly — R calls it automatically
+#' You rarely need to call `print.hd()` directly since R calls it automatically
 #' when the object appears at the top level, in knitr/Quarto chunks, or in
 #' Shiny `renderHighchart()` / `renderPlot()` blocks.
 #'
@@ -229,7 +224,7 @@ hd_geom_scatter <- function(...) hd_geom("scatter", ...)
 #' @export
 print.hd <- function(x, ...) {
 
-  # Resolve geom — default to "column" if no hd_geom_*() was added
+  # Resolve geom - default to "column" if no hd_geom_*() was added
   type        <- x$geom$type   %||% "column"
   geom_params <- x$geom$params %||% list()
 

@@ -1,7 +1,6 @@
 # Scatter Geometry Layer for hd Objects
 
-[`hd_geom_scatter()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.html)
-creates a scatter geometry layer that is added to an
+`hd_geom_scatter()` creates a scatter geometry layer that is added to an
 [`hd()`](https://github.com/folkehelsestats/highdir/reference/hd.md)
 object via `+`. Use
 [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md)
@@ -11,20 +10,20 @@ to discover available arguments per geometry, e.g.
 ## Usage
 
 ``` r
-hd_geom_scatter(...)
+hd_geom_scatter(dot_size = 4, ...)
 ```
 
 ## Arguments
+
+- dot_size:
+
+  Numeric. Size of the points in the scatter plot. Default is 4.
 
 - ...:
 
   Geometry-specific arguments forwarded to
   [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md).
   ' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
-
-- dot_size:
-
-  Numeric. Size of the points in the scatter plot. Default is 4.
 
 ## Examples
 

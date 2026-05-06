@@ -4,13 +4,13 @@
 \alias{hd_geom_scatter}
 \title{Scatter Geometry Layer for hd Objects}
 \usage{
-hd_geom_scatter(...)
+hd_geom_scatter(dot_size = 4, ...)
 }
 \arguments{
+\item{dot_size}{Numeric. Size of the points in the scatter plot. Default is 4.}
+
 \item{...}{Geometry-specific arguments forwarded to \code{\link[=hd_make]{hd_make()}}.
 ' @return An S3 object of class \code{"hd_geom"} for use with \code{+.hd}.}
-
-\item{dot_size}{Numeric. Size of the points in the scatter plot. Default is 4.}
 }
 \description{
 \code{hd_geom_scatter()} creates a scatter geometry layer that is added to an

@@ -2,11 +2,7 @@
 % Please edit documentation in R/hd-object.R
 \name{hd_geom_layer}
 \alias{hd_geom_layer}
-\alias{hd_geom_scatter}
 \title{Geometry Layers for hd Objects}
-\usage{
-hd_geom_scatter(...)
-}
 \arguments{
 \item{...}{Geometry-specific arguments forwarded to \code{\link[=hd_make]{hd_make()}}.
 Use \code{\link[=geom_args]{geom_args()}} to discover available arguments per geometry, e.g.
@@ -23,9 +19,9 @@ printed.
 }
 \details{
 Geometry-specific arguments (\code{...}) are forwarded to \code{\link[=hd_make]{hd_make()}} as the
-\code{...} pass-through — they are the same arguments documented by
+\code{...} pass-through which they are the same arguments documented by
 \code{\link[=geom_args]{geom_args()}}.
 }
 \seealso{
-\code{\link[=hd]{hd()}}, \code{\link[=geom_args]{geom_args()}}, \code{\link[=hd_make]{hd_make()}}
+\code{\link[=hd]{hd()}}, \code{\link[=list_geoms]{list_geoms()}}, \code{\link[=geom_args]{geom_args()}}, \code{\link[=hd_make]{hd_make()}}
 }

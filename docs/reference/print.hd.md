@@ -33,6 +33,6 @@ invisibly.
 
 ## Details
 
-You rarely need to call `print.hd()` directly — R calls it automatically
-when the object appears at the top level, in knitr/Quarto chunks, or in
-Shiny `renderHighchart()` / `renderPlot()` blocks.
+You rarely need to call `print.hd()` directly since R calls it
+automatically when the object appears at the top level, in knitr/Quarto
+chunks, or in Shiny `renderHighchart()` / `renderPlot()` blocks.

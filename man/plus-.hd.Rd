@@ -21,7 +21,7 @@ builds plots incrementally.  Recognised right-hand sides:
 \details{
 \describe{
 \item{\code{hd_geom} object}{Sets the geometry (from any \verb{hd_geom_*()} call).
-Adding a second geom replaces the first — highdir renders one geometry
+Adding a second geom replaces the first where highdir renders one geometry
 per figure.}
 \item{\code{hd_opts} object}{Sets presentation options.  Adding a second
 \code{hd_opts} replaces the first.}

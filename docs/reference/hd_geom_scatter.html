@@ -47,27 +47,27 @@ geometry, e.g. geom_args("scatter") lists dot_size.'><meta property="og:image" c
     </div>
 
     <div class="ref-description section level2">
-    <p><code><a href="https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.html">hd_geom_scatter()</a></code> creates a scatter geometry layer that is added to an
+    <p><code>hd_geom_scatter()</code> creates a scatter geometry layer that is added to an
 <code><a href="hd.html">hd()</a></code> object via <code>+</code>. Use <code><a href="geom_args.html">geom_args()</a></code> to discover available arguments per
 geometry, e.g. <code>geom_args("scatter")</code> lists <code>dot_size</code>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.html">hd_geom_scatter</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hd_geom_scatter</span><span class="op">(</span>dot_size <span class="op">=</span> <span class="fl">4</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dl><dt id="arg-dot-size">dot_size<a class="anchor" aria-label="anchor" href="#arg-dot-size"></a></dt>
+<dd><p>Numeric. Size of the points in the scatter plot. Default is 4.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Geometry-specific arguments forwarded to <code><a href="hd_make.html">hd_make()</a></code>.
 ' @return An S3 object of class <code>"hd_geom"</code> for use with <code>+.hd</code>.</p></dd>
-
-
-<dt id="arg-dot-size">dot_size<a class="anchor" aria-label="anchor" href="#arg-dot-size"></a></dt>
-<dd><p>Numeric. Size of the points in the scatter plot. Default is 4.</p></dd>
 
 </dl></div>
 
@@ -75,7 +75,7 @@ geometry, e.g. <code>geom_args("scatter")</code> lists <code>dot_size</code>.</p
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Basic scatter plot - layered API</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="hd.html">hd</a></span><span class="op">(</span><span class="va">mtcars</span>, x <span class="op">=</span> <span class="st">"wt"</span>, y <span class="op">=</span> <span class="st">"mpg"</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span> <span class="fu"><a href="https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.html">hd_geom_scatter</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span> <span class="fu">hd_geom_scatter</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span> <span class="fu"><a href="hd_opts.html">hd_opts</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Scatter Plot of mtcars"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hd_geom_scatter-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
