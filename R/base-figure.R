@@ -9,10 +9,10 @@
 #' @keywords internal
 .base_constructors <- list(
 
-  # ── ggplot2 -----------------------------------------------------------------
+  # -- ggplot2 -----------------------------------------------------------------
   ggplot2 = function(spec, opts) {
 
-    # ── Coerce group column to factor so ggplot2 treats it as discrete ────────
+    # -- Coerce group column to factor so ggplot2 treats it as discrete --------
     # If the group column is numeric (1, 2, 3...) ggplot2 maps it as a
     # continuous variable. scale_color_manual is discrete-only and errors.
     # Converting to factor here fixes the aesthetic type before any layer
@@ -33,7 +33,8 @@
       ))
     }
 
-    p <- ggplot2::ggplot(plot_data, mapping) + # ← use plot_data not spec$data
+    # use plot_data not spec$data incase factoring to grp_col
+    p <- ggplot2::ggplot(plot_data, mapping) + 
         ggplot2::labs(
             x        = opts$xlab,
             y        = opts$ylab,
@@ -62,7 +63,7 @@
     p
   },
 
-  # ── highcharter -------------------------------------------------------------
+  # -- highcharter -------------------------------------------------------------
   highcharter = function(spec, opts) {
     
     # --- percent % symbol ---

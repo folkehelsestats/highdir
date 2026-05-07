@@ -1,13 +1,12 @@
-#
 # Both registries use a plain environment as a mutable named store.
 # Backends and geoms are registered in .onLoad() (zzz.R).
 
-# ── Backend registry ----------------------------------------------------------
+# -- Backend registry ----------------------------------------------------------
 
 #' @keywords internal
 .backend_registry <- new.env(parent = emptyenv())
 
-#' Register a Rendering Backend
+#' Register a Rendering Backend and used when loding in zzz.R file
 #' @param name   Character. Unique backend identifier (e.g. `"ggplot2"`).
 #' @param engine Function.
 #' @return `name`, invisibly.

@@ -146,15 +146,15 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
 #'
 #' Built-in name strings and their ggplot2 equivalents:
 #'
-#' | Name | ggplot2 function |
-#' |:-----|:----------------|
-#' | `"classic"` (default) | `theme_classic()` |
-#' | `"minimal"` | `theme_minimal()` |
-#' | `"bw"` | `theme_bw()` |
-#' | `"light"` | `theme_light()` |
-#' | `"dark"` | `theme_dark()` |
-#' | `"void"` | `theme_void()` |
-#' | `"grey"` / `"gray"` | `theme_grey()` |
+#' | Name                  | ggplot2 function |
+#' |:----------------------|:-----------------|
+#' | `"classic"` (default) | `theme_classic()`|
+#' | `"minimal"`           | `theme_minimal()`|
+#' | `"bw"`                | `theme_bw()`     |
+#' | `"light"`             | `theme_light()`  |
+#' | `"dark"`              | `theme_dark()`   |
+#' | `"void"`              | `theme_void()`   |
+#' | `"grey"` / `"gray"`   | `theme_grey()`   |
 #'
 #' @param theme  Character name string, ggplot2 theme object, or `NULL`.
 #'   `NULL` reads from `getOption("highdir.gg_theme")`.
@@ -166,7 +166,7 @@ hd_theme <- function(name = NULL, colors = NULL, ...) {
 #'   via `theme(text = element_text(family = font))`. `NULL` reads from
 #'   `getOption("highdir.font")`.
 #'
-#' @return An object of class `"hd_gg_theme"` — a list with two fields:
+#' @return An object of class `"hd_gg_theme"` - a list with two fields:
 #'   `$theme` (a ggplot2 `theme` object with font baked in) and `$colors`
 #'   (a resolved character vector or `NULL`).  `ggplot_engine()` unpacks
 #'   both.  The object can also be added directly to a ggplot with `+`
