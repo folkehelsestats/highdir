@@ -47,14 +47,15 @@
     # regardless of which ggplot2 theme was chosen.  Applying it here and
     # then adding a theme on top would silently undo the hiding.
 
+    # if (!is.null(opts$ylim))
+    #   p <- p + ggplot2::scale_y_continuous(limits = opts$ylim)
 
-    if (!is.null(opts$ylim))
-      p <- p + ggplot2::scale_y_continuous(limits = opts$ylim)
     if (!is.null(opts$yint))
       p <- p + ggplot2::geom_hline(
         yintercept = opts$yint,
         linetype   = "dashed",
         colour     = "#AAAAAA")
+
     if (isTRUE(opts$flip))
       p <- p + ggplot2::coord_flip()
 

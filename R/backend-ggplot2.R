@@ -24,9 +24,32 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   # gt$theme  = ggplot2 theme object with font baked in
   # gt$colors = resolved colour vector used by apply_gg_colors() below
 
-  # -- Map geom: build from a blank ggplot (no axis mapping from base_fig) -- 
-  if (!is.null(geom$is_map_geom) && isTRUE(geom$is_map_geom)) {
+  # -- Self-contained geoms: bypass base_fig() entirely -----------------------
+  #
+  # Some geoms own their complete ggplot — they supply their own aes(),
+  # scales, coord, and labs from scratch.  Passing them through base_fig()
+  # would produce a phantom axis mapping (spec$x / spec$y) underneath the
+  # geom's own mapping, leaving an artefact axis line visible after
+  # coord_flip().
+  #
+  # Geoms in this category:
+  #   is_map_geom  — registered flag in the registry (e.g. choropleth maps)
+  #   ranked_bar   — uses .xname (sorted factor) not spec$x; manages its own
+  #                  coord_flip(), scale_x_discrete(), scale_y_continuous()
+  #                  and labs() internally via the layer list it returns.
+  #
+  # These geoms receive single_colour via geom_params (same as standard path)
+  # so colour resolution is consistent.  Theme, axis label hiding, and
+  # accessibility alt text are still applied below after the early return.
+  .self_contained <- isTRUE(geom$is_map_geom) || geom$name == "ranked_bar"
+
+  if (.self_contained) {
+    # Inject single_colour so the geom can use the resolved brand colour
+    single_colour              <- resolve_colors(1L, gt$colors)[1]
+    geom_params$single_colour  <- single_colour
+
     layers <- geom$ggplot_fun(spec, opts, geom_params)
+
     p <- ggplot2::ggplot() +
       ggplot2::labs(
         title    = opts$title,
@@ -34,9 +57,20 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
         caption  = opts$caption
       )
     for (layer in layers) p <- p + layer
+
+    # Apply theme + axis hiding + accessibility then return — no scale block
+    p <- p + gt$theme
+    if (is.null(opts$ylab))
+      p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
+    if (is.null(opts$xlab))
+      p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
+    if (!is.null(opts$description))
+      p <- p + ggplot2::labs(alt = opts$description)
+
     return(p)
   }
 
+  # -- Standard path: base_fig() builds canvas, engine adds layers ------------
   p <- base_fig(spec, opts, "ggplot2")
 
   # -- Colour + layers ---------------------------------------------------------
@@ -46,7 +80,6 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     # Multi-series: resolve palette from gt$colors (already priority-resolved)
     n_groups     <- length(unique(spec$data[[grp_col]]))
     group_levels <- as.character(unique(spec$data[[grp_col]]))
-    single_colour <- NULL
 
     layers <- geom$ggplot_fun(spec, opts, geom_params)
     for (layer in layers) p <- p + layer
@@ -57,17 +90,22 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
 
   } else {
     # Single series: one brand colour injected as a fixed aesthetic
-    single_colour          <- resolve_colors(1L, gt$colors)[1]
-    geom_params$single_colour <- single_colour
+    single_colour              <- resolve_colors(1L, gt$colors)[1]
+    geom_params$single_colour  <- single_colour
 
     layers <- geom$ggplot_fun(spec, opts, geom_params)
     for (layer in layers) p <- p + layer
   }
 
-  # No space below bars, 10% breathing room above
-  if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]]))
+  # Single scale_y_continuous — owns both limits and expansion.
+  # No space below bars (mult[1] = 0), 10% breathing room above (mult[2] = 0.1)
+  # so outside labels are never clipped.
+  if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]])) {
     p <- p + ggplot2::scale_y_continuous(
-               expand = ggplot2::expansion(mult = c(0, .1)))
+      limits = opts$ylim,
+      expand = ggplot2::expansion(mult = c(0, .1))
+    )
+  }
 
   # -- Theme (per-figure opts$gg_theme > session default) --------------------
   # Applied last so it sits on top of every layer -- same position as

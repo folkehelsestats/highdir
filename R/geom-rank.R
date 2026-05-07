@@ -167,18 +167,33 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   if (!is.null(fill_scale))
     layers <- c(layers, list(fill_scale))
 
-  # x remapping — replace spec$x with .xname in the plot
-  # base_fig maps aes(x = spec$x) but we want the sorted factor .xname.
-  # Override via scale_x_discrete.
+  # ── Scales, coord, labels ────────────────────────────────────────────────────
+  # ranked_bar bypasses base_fig() entirely (engine detects geom$name ==
+  # "ranked_bar" and skips base_fig).  Therefore it owns ALL ggplot2
+  # infrastructure: scales, coord_flip, and labs.
+
+  # Discrete x scale for the sorted .xname factor
   layers <- c(layers, list(
-    ggplot2::scale_x_discrete(),
-    ggplot2::scale_y_continuous(expand = c(0, 0))
+    ggplot2::scale_x_discrete()
   ))
 
-  # Axis labels — ranked_bar overrides the x aesthetic with .xname so
-  # base_fig's labs() uses the wrong column name.  Re-apply here with the
-  # already-resolved opts$xlab / opts$ylab (NULL means hide, set via
-  # element_blank() in ggplot_engine after the theme is applied).
+  # Continuous y scale — flush at origin (no lower expansion), space above
+  # for outside labels. opts$ylim respected when set.
+  layers <- c(layers, list(
+    ggplot2::scale_y_continuous(
+      limits = opts$ylim,
+      expand = ggplot2::expansion(mult = c(0, 0.12))
+    )
+  ))
+
+  # coord_flip — ranked_bar is always horizontal (bars grow rightward).
+  # Owned here, not in base_fig, so no phantom axis artefact at the origin.
+  layers <- c(layers, list(
+    ggplot2::coord_flip()
+  ))
+
+  # Axis labels — opts$xlab / opts$ylab used directly (NULL -> element_blank
+  # applied by the engine after theme is set).
   layers <- c(layers, list(
     ggplot2::labs(
       x = opts$xlab,
