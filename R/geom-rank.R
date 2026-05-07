@@ -186,11 +186,15 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     )
   ))
 
-  # coord_flip — ranked_bar is always horizontal (bars grow rightward).
+  # coord_flip — controlled by opts$flip (default TRUE for ranked_bar).
   # Owned here, not in base_fig, so no phantom axis artefact at the origin.
-  layers <- c(layers, list(
-    ggplot2::coord_flip()
-  ))
+  # flip = TRUE  → horizontal bars (standard ranked bar orientation)
+  # flip = FALSE → vertical bars (unusual but valid)
+  if (isTRUE(opts$flip %||% TRUE)) {
+    layers <- c(layers, list(
+      ggplot2::coord_flip()
+    ))
+  }
 
   # Axis labels — opts$xlab / opts$ylab used directly (NULL -> element_blank
   # applied by the engine after theme is set).
@@ -314,9 +318,21 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
   # Add series
   # DataLabels disabled entirely. Value and N both live in
   # the tooltip which is always readable regardless of bar length.
+  #
+  # Highcharts series type vs flip:
+  #   type = "bar"    is natively horizontal — ignores hc_chart(inverted).
+  #   type = "column" is natively vertical   — respects hc_chart(inverted).
+  #
+  # base_fig() sets hc_chart(inverted = isTRUE(opts$flip)).
+  # For ranked_bar we always use type = "column" and rely on inverted to
+  # control orientation — this makes flip = TRUE/FALSE work correctly.
+  #
+  #   flip = TRUE  (default) -> inverted = TRUE  -> horizontal bars
+  #   flip = FALSE           -> inverted = FALSE -> vertical bars
   chart <- chart |>
+    highcharter::hc_chart(inverted = isTRUE(opts$flip %||% TRUE)) |>
     highcharter::hc_add_series(
-      type         = "bar",
+      type         = "column",
       name         = opts$ylab %||% y_col,
       data         = point_data,
       showInLegend = FALSE,
