@@ -7,25 +7,26 @@
 # resolve_colors() is the *single* function every geom calls to obtain a
 # colour vector — it respects both explicit overrides and session defaults.
 
-# ── Registry environment ─────────────────────────────────────────────────────
+# -- Registry environment ------------------------------------------------------
 
 #' @keywords internal
 .palette_registry <- new.env(parent = emptyenv())
 
-# ── Public API ───────────────────────────────────────────────────────────────
+# -- Public API ----------------------------------------------------------------
 
 #' Register a Named Colour Palette
 #'
 #' Adds a named palette to the highdir palette registry so it can be
 #' referenced by name wherever colours are accepted
-#' (e.g. `hd_opts(colors = "my_palette")`).
+#' (e.g. `hd_opts(colors = "my_palette")`). This function is evaluated
+#' when loading a file in zzz.R file.
 #'
 #' Built-in palettes registered at package load time:
 #'
-#' | Name     | Description |
-#' |:---------|:------------|
+#' | Name     | Description                               |
+#' |:---------|:------------------------------------------|
 #' | `"hdir"` | Helsedirektoratet 10-colour brand palette |
-#' | `"hdir2"`| 2-colour teal / purple pair |
+#' | `"hdir2"`| 2-colour teal / purple pair               |
 #'
 #' @param name   Character. Unique palette identifier.
 #' @param colors Non-empty character vector of CSS/hex colour strings.
@@ -61,7 +62,7 @@ list_palettes <- function() sort(ls(.palette_registry))
 #' @export
 get_palette <- function(name) .palette_registry[[name]]
 
-# ── Colour resolution (internal) ─────────────────────────────────────────────
+# -- Colour resolution (internal) ----------------------------------------------
 # R/palettes.R
 
 #' Resolve a Colour Vector for n Groups
@@ -81,7 +82,7 @@ get_palette <- function(name) .palette_registry[[name]]
 #' @keywords internal
 resolve_colors <- function(n, colors = NULL) {
 
-  # ── Priority 1 + 2: explicit or session-level override ───────────────────
+  # -- Priority 1 + 2: explicit or session-level override ----------------------
   candidate <- colors %||% getOption("highdir.colors", default = NULL)
 
   if (!is.null(candidate)) {
@@ -100,7 +101,7 @@ resolve_colors <- function(n, colors = NULL) {
     )
   }
 
-  # ── Priority 3: built-in n-aware rules ───────────────────────────────────
+  # -- Priority 3: built-in n-aware rules --------------------------------------
 
   # Rule A — exactly 2 groups: dedicated high-contrast pair
   if (n == 2) {

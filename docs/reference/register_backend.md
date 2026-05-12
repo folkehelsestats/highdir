@@ -1,6 +1,6 @@
-# Register a Rendering Backend
+# Register a Rendering Backend and used when loding in zzz.R file
 
-Register a Rendering Backend
+Register a Rendering Backend and used when loding in zzz.R file
 
 ## Usage
 

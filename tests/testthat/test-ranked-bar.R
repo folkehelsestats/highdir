@@ -267,8 +267,15 @@ test_that("hc: produces exactly one series", {
 })
 
 test_that("hc: series type is bar", {
+  opts    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000", flip = FALSE)
   fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
-  expect_equal(.hc_series(fig)[[1]]$type, "bar")
+  expect_equal(.hc_series(fig)[[1]]$type, "column")
+})
+
+test_that("hc: series type is bar", {
+  opts    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000", flip = TRUE)
+  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  expect_equal(.hc_series(fig)[[1]]$type, "column")
 })
 
 test_that("hc: series has one data point per row", {

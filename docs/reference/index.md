@@ -68,7 +68,7 @@ Backend engines used to build figures.
 - [`list_backends()`](https://github.com/folkehelsestats/highdir/reference/list_backends.md)
   : List Registered Backends
 - [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md)
-  : Register a Rendering Backend
+  : Register a Rendering Backend and used when loding in zzz.R file
 
 ## Themes
 

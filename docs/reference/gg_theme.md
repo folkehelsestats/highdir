@@ -33,7 +33,7 @@ gg_theme(theme = NULL, colors = NULL, font = NULL)
 
 ## Value
 
-An object of class `"hd_gg_theme"` — a list with two fields: `$theme` (a
+An object of class `"hd_gg_theme"` - a list with two fields: `$theme` (a
 ggplot2 `theme` object with font baked in) and `$colors` (a resolved
 character vector or `NULL`). `ggplot_engine()` unpacks both. The object
 can also be added directly to a ggplot with `+` via the `+.gg` method

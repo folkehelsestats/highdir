@@ -2,7 +2,7 @@
 % Please edit documentation in R/registry.R
 \name{register_backend}
 \alias{register_backend}
-\title{Register a Rendering Backend}
+\title{Register a Rendering Backend and used when loding in zzz.R file}
 \usage{
 register_backend(name, engine)
 }
@@ -15,5 +15,5 @@ register_backend(name, engine)
 \code{name}, invisibly.
 }
 \description{
-Register a Rendering Backend
+Register a Rendering Backend and used when loding in zzz.R file
 }
