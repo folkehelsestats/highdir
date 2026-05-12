@@ -17,7 +17,8 @@ register_palette(name, colors)
 \description{
 Adds a named palette to the highdir palette registry so it can be
 referenced by name wherever colours are accepted
-(e.g. \code{hd_opts(colors = "my_palette")}).
+(e.g. \code{hd_opts(colors = "my_palette")}). This function is evaluated
+when loading a file in zzz.R file.
 }
 \details{
 Built-in palettes registered at package load time:\tabular{ll}{

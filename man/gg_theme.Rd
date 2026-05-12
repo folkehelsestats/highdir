@@ -20,7 +20,7 @@ via \code{theme(text = element_text(family = font))}. \code{NULL} reads from
 \code{getOption("highdir.font")}.}
 }
 \value{
-An object of class \code{"hd_gg_theme"} — a list with two fields:
+An object of class \code{"hd_gg_theme"} - a list with two fields:
 \verb{$theme} (a ggplot2 \code{theme} object with font baked in) and \verb{$colors}
 (a resolved character vector or \code{NULL}).  \code{ggplot_engine()} unpacks
 both.  The object can also be added directly to a ggplot with \code{+}
