@@ -54,8 +54,6 @@ hd_make(spec_ar1, "arearange", opts_ar,
 # Static ggplot2 version
 hd_make(spec_ar1, "arearange", opts_ar,
        ymin = "lower_enhet", ymax = "upper_enhet", backend = "ggplot2")
-#> Scale for y is already present.
-#> Adding another scale for y, which will replace the existing scale.
 
 
 #' # Multi-series with group column
