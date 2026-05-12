@@ -382,6 +382,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #'   n      = c(402, 448, 681, 318, 297, 251, 198, 177, 148)
 #' )
 #'
+#' # Declarative API ----
 #' spec_rb <- hd_spec(regions,
 #'                   x    = "region",
 #'                   y    = "rate",
@@ -396,7 +397,8 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #'
 #' hd_make(spec_rb, "ranked_bar", opts_rb, ascending = TRUE, vs = "Oslo", aim = 63)
 #'
-#' hd(spec_rb, backend = "ggplot2") +
+#' # Layered API ----
+#' hd(regions, x = "region", y = "rate", n = "n", backend = "ggplot2") +
 #'  hd_geom_ranked_bar(
 #'   ascending  = TRUE,
 #'   vs         = "Oslo",
