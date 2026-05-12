@@ -95,7 +95,7 @@ geom_args()           # all registered geometries
 #> 
 #>   argument    kind      default  description
 #>   ----------  --------  -------  ------------------------------
-#>   inner_size  optional  0%       Character. Inner radius as CSS %, e.g. '50%' for a donut. Both backends.
+#>   inner_size  optional  0%       Character. Inner radius as CSS %, e.g. '50%' for a donut
 #> 
 #> 
 #> Arguments for hd_make(..., type = "ranked_bar", ...):

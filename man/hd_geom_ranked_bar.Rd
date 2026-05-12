@@ -78,8 +78,12 @@ hd(regions, x = "region", y = "rate", n = "n", backend = "ggplot2") +
   aim        = 63,
   char_scale = 0.045,
   min_frac   = 0.08) +
- opts_rb
-
+ hd_opts(
+ title    = "Health indicator by region",
+ subtitle = "Source: Norwegian Directorate of Health",
+ ylab     = "Rate per 100 000",
+ flip     = TRUE
+)
 
 }
 \seealso{
