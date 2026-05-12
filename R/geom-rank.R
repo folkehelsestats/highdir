@@ -405,8 +405,12 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #'   aim        = 63,
 #'   char_scale = 0.045,
 #'   min_frac   = 0.08) +
-#'  opts_rb
-#'
+#'  hd_opts(
+#'  title    = "Health indicator by region",
+#'  subtitle = "Source: Norwegian Directorate of Health",
+#'  ylab     = "Rate per 100 000",
+#'  flip     = TRUE
+#' )
 #'
 #' @family Geoms
 #' @seealso [hd_geom_column()], [hd_geom_line()], [hd_geom_arearange()],
