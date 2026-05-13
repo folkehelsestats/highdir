@@ -113,9 +113,8 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   #   drawn.  Bars are drawn from their true origin and then clipped at
   #   the viewport edge — this is always what users expect from ylim.
   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]])) {
-    y_lower_expand <- if (geom$name == "stacked_column") 0.02 else 0
     p <- p + ggplot2::scale_y_continuous(
-      expand = ggplot2::expansion(mult = c(y_lower_expand, .1))
+      expand = ggplot2::expansion(mult = c(0, .1))
     )
     if (!is.null(opts$ylim))
       p <- p + ggplot2::coord_cartesian(ylim = opts$ylim)
