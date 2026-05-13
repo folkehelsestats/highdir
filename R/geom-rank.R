@@ -18,12 +18,12 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
 
   # ── Extract params ──────────────────────────────────────────────────────────
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  vs       <- geom_params$vs        %||% NULL   # character or NULL: vsarison group name
+  vs         <- geom_params$vs        %||% NULL   # character or NULL: vsarison group name
   aim        <- geom_params$aim         %||% NULL   # numeric or NULL: target line
   char_scale <- geom_params$char_scale  %||% 0.045
   min_frac   <- geom_params$min_frac    %||% 0.08
   sc         <- geom_params$single_colour  # verdien settes i engine
-
+  
   # ── Resolve colours ─────────────────────────────────────────────────────────
   # col1: default bar colour (single series or non-highlighted bars)
   # col2: highlighted comparison bar colour
@@ -81,7 +81,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     bar_fill_aes <- NULL
     fill_scale   <- NULL
   }
-
+  
   # ── Split data for inside / outside labels ──────────────────────────────────
   inside  <- d[d$ypos == 1L, , drop = FALSE]
   outside <- d[d$ypos == 0L, , drop = FALSE]
@@ -177,25 +177,47 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     ggplot2::scale_x_discrete()
   ))
 
-  # Continuous y scale — flush at origin (no lower expansion), space above
-  # for outside labels. opts$ylim respected when set.
+  # Continuous y scale — padding only, no limits.
+  #
+  # IMPORTANT: limits = ... is intentionally NOT set here.
+  # scale_y_continuous(limits) removes data outside the range BEFORE
+  # geoms draw.  For bar charts this drops entire rows because the bar
+  # baseline (y = 0) is outside the user's range, making bars disappear.
+  # ylim is handled by the coord object below (zooms after drawing).
   layers <- c(layers, list(
     ggplot2::scale_y_continuous(
-      limits = opts$ylim,
       expand = ggplot2::expansion(mult = c(0, 0.12))
     )
   ))
-
-  # coord_flip — controlled by opts$flip (default TRUE for ranked_bar).
-  # Owned here, not in base_fig, so no phantom axis artefact at the origin.
-  # flip = TRUE  → horizontal bars (standard ranked bar orientation)
-  # flip = FALSE → vertical bars (unusual but valid)
-  if (isTRUE(opts$flip %||% TRUE)) {
-    layers <- c(layers, list(
-      ggplot2::coord_flip()
-    ))
+ 
+  # Coord — ONE object handles both flip and ylim zoom.
+  #
+  # ggplot2 allows only one coord per plot.  Adding coord_cartesian() and
+  # coord_flip() as separate layers triggers:
+  #   "Coordinate system already present. Adding new coordinate system,
+  #    which will replace the existing one."
+  # and the second coord silently replaces the first — flip is lost when
+  # ylim is set, or the ylim zoom is lost when flip replaces cartesian.
+  #
+  # Solution: coord_flip(ylim = ...) collapses both into one object.
+  #   flip=TRUE  + ylim set  → coord_flip(ylim = opts$ylim)
+  #   flip=TRUE  + no ylim   → coord_flip()           [ylim=NULL is safe]
+  #   flip=FALSE + ylim set  → coord_cartesian(ylim = opts$ylim)
+  #   flip=FALSE + no ylim   → NULL (ggplot2 uses default CartesianCoord)
+  do_flip  <- isTRUE(opts$flip %||% TRUE)
+  has_ylim <- !is.null(opts$ylim)
+ 
+  coord_layer <- if (do_flip) {
+    ggplot2::coord_flip(ylim = opts$ylim)      # ylim=NULL is safe here
+  } else if (has_ylim) {
+    ggplot2::coord_cartesian(ylim = opts$ylim)
+  } else {
+    NULL
   }
-
+ 
+  if (!is.null(coord_layer))
+    layers <- c(layers, list(coord_layer))
+ 
   # Axis labels — opts$xlab / opts$ylab used directly (NULL -> element_blank
   # applied by the engine after theme is set).
   layers <- c(layers, list(
