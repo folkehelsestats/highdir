@@ -250,7 +250,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
   d$.xname <- as.character(d[[x_col]])
 
   # Sort by value
-  ord <- order(d[[y_col]], decreasing = !ascending)
+  ord <- order(d[[y_col]], decreasing = ascending)
   d   <- d[ord, ]
 
   # Colours
@@ -400,7 +400,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #'   region = c("Oslo", "Viken", "Vestland", "Rogaland",
 #'              "Trondelag", "Innlandet", "Agder",
 #'              "Nordland", "Troms og Finnmark"),
-#'   rate   = c(68.4, 71.2, 87.8, 64.5, 61.3, 6.1, 54.2, 49.8, 42.1),
+#'   rate   = c(68.4, 71.2, 87.8, 10.5, 61.3, 6.1, 54.2, 49.8, 42.1),
 #'   n      = c(402, 448, 681, 318, 297, 251, 198, 177, 148)
 #' )
 #'
@@ -417,7 +417,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #'  flip     = TRUE
 #' )
 #'
-#' hd_make(spec_rb, "ranked_bar", opts_rb, ascending = TRUE, vs = "Oslo", aim = 63)
+#' hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo", aim = 63)
 #'
 #' # Layered API ----
 #' hd(regions, x = "region", y = "rate", n = "n", backend = "ggplot2") +
