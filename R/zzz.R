@@ -70,3 +70,13 @@
 
   invisible()
 }
+
+
+.onAttach <- function(libname = find.package("highdir"),
+                      pkgname = "highdir") {
+  if (stats::runif(1) <= 1 / 3) {
+    packageStartupMessage("NB! Highcharts (www.highcharts.com) is a Highsoft software product which is")
+
+    packageStartupMessage("not free for commercial and Governmental use")
+  }
+}
