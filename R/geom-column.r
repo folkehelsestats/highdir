@@ -1,6 +1,5 @@
-# ════════════════════════════════════════════════════════════════════════════
 # COLUMN
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 # Each geometry is a pair:
 #   gg_<name>  → returns a ggplot2 layer (or list of layers)
 #   hc_<name>  → adds series to a highchart object, returns the updated chart
@@ -26,7 +25,7 @@ gg_column <- function(spec, opts, geom_params) {
         colour = sc
       )
     } else {
-      # Multi-series: no fixed colour — inherits from mapped aesthetic
+      # Multi-series: no fixed colour - inherits from mapped aesthetic
       ggplot2::geom_col(position = "dodge")
     }
   )
