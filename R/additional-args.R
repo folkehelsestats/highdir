@@ -1,22 +1,22 @@
 #
 # Defines the full contract for every registered geometry:
-#   required_args — columns the user MUST supply (e.g. ymin/ymax for arearange)
-#   optional_args — arguments with sensible defaults (e.g. smooth, dot_size)
+#   required_args - columns the user MUST supply (e.g. ymin/ymax for arearange)
+#   optional_args - arguments with sensible defaults (e.g. smooth, dot_size)
 #
 # HOW THIS FILE IS USED
 #   .onLoad() in zzz.R iterates .geom_registry_defs and calls register_geom()
 #   for each entry.  Because all R/*.R files are loaded into the package
-#   namespace together, .onLoad() can reference .geom_registry_defs directly —
+#   namespace together, .onLoad() can reference .geom_registry_defs directly -
 #   no source(), no file path, no environment tricks needed.
 #
 # ADDING A NEW GEOM
 #   1. Add a new entry to .geom_registry_defs below.
 #   2. Write gg_<name> and hc_<name> functions in their own R file.
-#   3. That is all — zzz.R needs no changes.
+#   3. That is all - zzz.R needs no changes.
 #
 # RULE OF THUMB: required vs optional
-#   required  — geom cannot render at all without it  (e.g. ymin/ymax)
-#   optional  — geom works fine with a built-in default (e.g. smooth = TRUE)
+#   required  - geom cannot render at all without it  (e.g. ymin/ymax)
+#   optional  - geom works fine with a built-in default (e.g. smooth = TRUE)
 
 #' @keywords internal
 .geom_registry_defs <- list(

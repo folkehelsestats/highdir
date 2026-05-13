@@ -35,7 +35,7 @@ Tooltips, accessibility module, and all other Highcharts declarative
 features are \strong{always} present.  Set \code{FALSE} for clean, no-custom-JS
 widgets.  Ignored by the ggplot2 backend.}
 
-\item{module}{Use available modules js from CDN \url{https://api.highcharts.com/highcharts}}
+\item{module}{Use available modules js from CDN \url{https://api.highcharts.com/highcharts/}}
 
 \item{...}{Extra arguments forwarded to the geometry function.
 Required arguments (e.g. \code{ymin}, \code{ymax} for \code{"arearange"}) \strong{must}
@@ -79,7 +79,7 @@ opts <- hd_opts(title    = "Health survey results",
                  ylim     = c(0, 80))
 
 \dontrun{
-# ── Interactive charts (highcharter) --------------------------------------
+# -- Interactive charts (highcharter) --------------------------------------
 hd_make(spec, "column", opts)
 hd_make(spec, "line",   opts, smooth = TRUE)
 hd_make(spec, "line",   opts, smooth = FALSE, dot_size = 6)
@@ -98,20 +98,20 @@ df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
 spec2 <- hd_spec(df2, "age", "pct", group = "sex")
 hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 
-# ── Disable JS hover band -------------------------------------------------
+# -- Disable JS hover band -------------------------------------------------
 hd_make(spec, "column", opts, use_js = FALSE)
 
-# ── Static ggplot2 versions -----------------------------------------------
+# -- Static ggplot2 versions -----------------------------------------------
 hd_make(spec, "column",  opts, backend = "ggplot2")
 hd_make(spec, "line",    opts, backend = "ggplot2")
 hd_make(spec, "scatter", opts, backend = "ggplot2")
 hd_make(pie_spec, "pie", pie_opts, backend = "ggplot2")
 
-# ── Reuse spec with different presentation --------------------------------
+# -- Reuse spec with different presentation --------------------------------
 opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
 hd_make(spec, "column", opts_no)
 
-# ── Save outputs ----------------------------------------------------------
+# -- Save outputs ----------------------------------------------------------
 hd_save(hd_make(spec, "column", opts),               "column.html")
 hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "column.png")
 }

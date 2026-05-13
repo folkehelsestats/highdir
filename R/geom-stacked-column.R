@@ -72,7 +72,7 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
     #     )
     #   )
 
-    # ── Key insight: iterate every unique (series, stack) combination ──────────
+    # -- Key insight: iterate every unique (series, stack) combination --- 
     # The same series name can appear in multiple stacks.
     # Each unique pair produces one hc_add_series() call with its own stack id.
     # Highcharts separates the stacks visually; the legend shows unique names.

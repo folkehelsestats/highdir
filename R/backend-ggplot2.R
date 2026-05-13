@@ -26,15 +26,15 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
 
   # -- Self-contained geoms: bypass base_fig() entirely -----------------------
   #
-  # Some geoms own their complete ggplot — they supply their own aes(),
+  # Some geoms own their complete ggplot - they supply their own aes(),
   # scales, coord, and labs from scratch.  Passing them through base_fig()
   # would produce a phantom axis mapping (spec$x / spec$y) underneath the
   # geom's own mapping, leaving an artefact axis line visible after
   # coord_flip().
   #
   # Geoms in this category:
-  #   is_map_geom  — registered flag in the registry (e.g. choropleth maps)
-  #   ranked_bar   — uses .xname (sorted factor) not spec$x; manages its own
+  #   is_map_geom  - registered flag in the registry (e.g. choropleth maps)
+  #   ranked_bar   - uses .xname (sorted factor) not spec$x; manages its own
   #                  coord_flip(), scale_x_discrete(), scale_y_continuous()
   #                  and labs() internally via the layer list it returns.
   #
@@ -58,7 +58,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
       )
     for (layer in layers) p <- p + layer
 
-    # Apply theme + axis hiding + accessibility then return — no scale block
+    # Apply theme + axis hiding + accessibility then return - no scale block
     p <- p + gt$theme
     if (is.null(opts$ylab))
       p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
@@ -98,7 +98,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   }
 
 
-  # scale_y_continuous + coord_cartesian — two separate jobs:
+  # scale_y_continuous + coord_cartesian - two separate jobs:
   #
   #   scale_y_continuous(expand = ...) controls axis padding only.
   #   limits = ... is intentionally NOT set here.
@@ -111,7 +111,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   #
   #   coord_cartesian(ylim = ...) ZOOMS the viewport AFTER the geom has
   #   drawn.  Bars are drawn from their true origin and then clipped at
-  #   the viewport edge — this is always what users expect from ylim.
+  #   the viewport edge - this is always what users expect from ylim.
   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]])) {
     p <- p + ggplot2::scale_y_continuous(
       expand = ggplot2::expansion(mult = c(0, .1))
@@ -139,7 +139,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   if (is.null(opts$xlab))
     p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
 
-  # Accessibility alt text — set via labs(alt = ...) (ggplot2 >= 3.3.0).
+  # Accessibility alt text - set via labs(alt = ...) (ggplot2 >= 3.3.0).
   # Rendered as an HTML alt attribute when the plot is included in
   # R Markdown / Quarto documents.  NULL leaves alt text unset.
   # But this is only when saved as SVG

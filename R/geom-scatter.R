@@ -1,7 +1,6 @@
 
-# ════════════════════════════════════════════════════════════════════════════
 # SCATTER
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 # Each geometry is a pair:
 #   gg_<name>  → returns a ggplot2 layer (or list of layers)
 #   hc_<name>  → adds series to a highchart object, returns the updated chart

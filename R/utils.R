@@ -239,9 +239,9 @@ check_decimals <- function(spec, opts, type, extra_args){
   params <- geom$params
   type   <- geom$type
 
-  # Use .get_geom() — note the leading dot, matching registry.R line 109
+  # Use .get_geom() - note the leading dot, matching registry.R line 109
   reg <- .get_geom(type)
-  if (is.null(reg)) return(invisible(NULL))   # unknown geom — skip silently
+  if (is.null(reg)) return(invisible(NULL))   # unknown geom - skip silently
 
   all_args <- c(
     reg$required_args %||% list(),
