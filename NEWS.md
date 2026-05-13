@@ -1,4 +1,8 @@
-# highdir 0.3.2
+# highdir 0.5
+
+- First release version.
+
+# highdir 0.3
 
 - Replace the Highdir logo to reflect its historical origin.
 - Add option to hide x‑ and y‑axis labels (#13).
@@ -6,9 +10,6 @@
 - Include standard ggplot2 themes.
 - Implement bar figure with no space below the bars but 10% above them in ggplot2 engine.
 - Deploy to shinyapps.io <https://bit.ly/highdir> 
-
-# highdir 0.3.1
-
 - `DESCRIPTION` version bumped to 0.3.1.
 - Added option to deactivate CDN-loaded modules available from <https://api.highcharts.com/highcharts>. (#2)
 - Fixed Shiny app GUI issues related to downloading and axis labels.
@@ -22,10 +23,6 @@
 - Add arg `xtick` to `hd_opts` to select column for custom x‑axis tick labels
   when these differ from the numeric x values. Note that Highcharts uses
   zero-based indexing, while R uses one-based indexing.
-
-
-# highdir 0.3.0
-
 - `DESCRIPTION` version bumped to 0.3.0.
 - Fix `hd_save()` #3
 - Renaming some functions to be consistence

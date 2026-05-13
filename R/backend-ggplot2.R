@@ -17,7 +17,7 @@
 #' @keywords internal
 ggplot_engine <- function(spec, geom, opts, geom_params,
                           use_js = TRUE, ...) {
-
+  
   # -- Resolve theme + colors + font in one step (mirrors hd_theme() call) ---
   # Priority for each: explicit opts > getOption("highdir.*") > default
   gt <- gg_theme(opts$gg_theme, colors = opts$colors)
@@ -47,7 +47,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     # Inject single_colour so the geom can use the resolved brand colour
     single_colour              <- resolve_colors(1L, gt$colors)[1]
     geom_params$single_colour  <- single_colour
-
+    
     layers <- geom$ggplot_fun(spec, opts, geom_params)
 
     p <- ggplot2::ggplot() +
@@ -97,15 +97,29 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     for (layer in layers) p <- p + layer
   }
 
-  # Single scale_y_continuous — owns both limits and expansion.
-  # No space below bars (mult[1] = 0), 10% breathing room above (mult[2] = 0.1)
-  # so outside labels are never clipped.
+
+  # scale_y_continuous + coord_cartesian — two separate jobs:
+  #
+  #   scale_y_continuous(expand = ...) controls axis padding only.
+  #   limits = ... is intentionally NOT set here.
+  #
+  #   Why: scale limits REMOVE data outside the range before geoms draw.
+  #   A bar chart draws from y=0 (the baseline) up to the value.  If
+  #   limits = c(25, 100) is set, the baseline y=0 is outside the range
+  #   and ggplot2 drops the entire bar row silently, making columns
+  #   disappear.  This is ggplot2's oob_censor default behaviour.
+  #
+  #   coord_cartesian(ylim = ...) ZOOMS the viewport AFTER the geom has
+  #   drawn.  Bars are drawn from their true origin and then clipped at
+  #   the viewport edge — this is always what users expect from ylim.
   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]])) {
     p <- p + ggplot2::scale_y_continuous(
-      limits = opts$ylim,
       expand = ggplot2::expansion(mult = c(0, .1))
     )
+    if (!is.null(opts$ylim))
+      p <- p + ggplot2::coord_cartesian(ylim = opts$ylim)
   }
+  
 
   # -- Theme (per-figure opts$gg_theme > session default) --------------------
   # Applied last so it sits on top of every layer -- same position as

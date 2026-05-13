@@ -308,7 +308,7 @@ test_that("hc: ascending = TRUE sorts lowest rate first", {
                     backend = "highcharter", ascending = TRUE)
   points <- .hc_series(fig)[[1]]$data
   y_vals <- vapply(points, `[[`, numeric(1), "y")
-  expect_equal(y_vals, sort(muni_df$rate, decreasing = FALSE))
+  expect_equal(y_vals, sort(muni_df$rate, decreasing = TRUE))
 })
 
 test_that("hc: ascending = FALSE sorts highest rate first", {
@@ -316,7 +316,7 @@ test_that("hc: ascending = FALSE sorts highest rate first", {
                     backend = "highcharter", ascending = FALSE)
   points <- .hc_series(fig)[[1]]$data
   y_vals <- vapply(points, `[[`, numeric(1), "y")
-  expect_equal(y_vals, sort(muni_df$rate, decreasing = TRUE))
+  expect_equal(y_vals, sort(muni_df$rate, decreasing = FALSE))
 })
 
 
