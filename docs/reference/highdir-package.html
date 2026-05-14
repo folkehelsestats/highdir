@@ -9,7 +9,7 @@ Core workflow
 
 library(highdir)
 
-# ── 1. Sample data ────────────────────────────────────────────────────────
+# -- 1. Sample data --------------------------------------------------------
 df &amp;lt;- data.frame(
   age = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
   sex = rep(c("Male", "Female"), 4),
@@ -17,17 +17,17 @@ df &amp;lt;- data.frame(
   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-# ── 2. Describe the data mapping (once) ──────────────────────────────────
+# -- 2. Describe the data mapping (once) ----------------------------------
 spec &amp;lt;- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
                  ylab = "Percentage (%)")
 
-# ── 3. Describe the presentation (reusable across specs) ─────────────────
+# -- 3. Describe the presentation (reusable across specs) -----------------
 opts &amp;lt;- hd_opts(title    = "Health survey results",
                  subtitle = "Source: FHI 2024",
                  caption  = "Tall om helse",
                  ylim     = c(0, 80))
 
-# ── 4. Render — swap backend without touching spec or opts ────────────────
+# -- 4. Render — swap backend without touching spec or opts ----------------
 hd_make(spec, "column", opts)                        # interactive HC
 hd_make(spec, "column", opts, backend = "ggplot2")   # static ggplot2
 hd_make(spec, "line",   opts, smooth = TRUE)         # HC spline
@@ -37,20 +37,20 @@ hd_make(spec, "scatter")                             # HC scatter
 # Donut chart
 hd_make(pie_spec, "pie", pie_opts, inner_size = "50%")
 
-# ── 5. Arearange (confidence intervals) ──────────────────────────────────
+# -- 5. Arearange (confidence intervals) ----------------------------------
 df2   &amp;lt;- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
 spec2 &amp;lt;- hd_spec(df2, "age", "pct", group = "sex")
 hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 
-# ── 6. Save to disk ───────────────────────────────────────────────────────
+# -- 6. Save to disk -------------------------------------------------------
 hd_save(hd_make(spec, "column", opts),               "chart.html")
 hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "chart.png")
 
-# ── 7. Session-wide styling ───────────────────────────────────────────────
+# -- 7. Session-wide styling -----------------------------------------------
 hd_set_theme(hc_theme = "economist",
              colors   = c("#025169","#7C145C","#C68803"))
 
-# ── 8. Launch the Shiny GUI ───────────────────────────────────────────────
+# -- 8. Launch the Shiny GUI -----------------------------------------------
 hd_app()
 
 
@@ -88,7 +88,7 @@ Core workflow
 
 library(highdir)
 
-# ── 1. Sample data ────────────────────────────────────────────────────────
+# -- 1. Sample data --------------------------------------------------------
 df &amp;lt;- data.frame(
   age = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
   sex = rep(c("Male", "Female"), 4),
@@ -96,17 +96,17 @@ df &amp;lt;- data.frame(
   n   = c(120, 115, 200, 210, 180, 175, 160, 155)
 )
 
-# ── 2. Describe the data mapping (once) ──────────────────────────────────
+# -- 2. Describe the data mapping (once) ----------------------------------
 spec &amp;lt;- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
                  ylab = "Percentage (%)")
 
-# ── 3. Describe the presentation (reusable across specs) ─────────────────
+# -- 3. Describe the presentation (reusable across specs) -----------------
 opts &amp;lt;- hd_opts(title    = "Health survey results",
                  subtitle = "Source: FHI 2024",
                  caption  = "Tall om helse",
                  ylim     = c(0, 80))
 
-# ── 4. Render — swap backend without touching spec or opts ────────────────
+# -- 4. Render — swap backend without touching spec or opts ----------------
 hd_make(spec, "column", opts)                        # interactive HC
 hd_make(spec, "column", opts, backend = "ggplot2")   # static ggplot2
 hd_make(spec, "line",   opts, smooth = TRUE)         # HC spline
@@ -116,20 +116,20 @@ hd_make(spec, "scatter")                             # HC scatter
 # Donut chart
 hd_make(pie_spec, "pie", pie_opts, inner_size = "50%")
 
-# ── 5. Arearange (confidence intervals) ──────────────────────────────────
+# -- 5. Arearange (confidence intervals) ----------------------------------
 df2   &amp;lt;- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
 spec2 &amp;lt;- hd_spec(df2, "age", "pct", group = "sex")
 hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 
-# ── 6. Save to disk ───────────────────────────────────────────────────────
+# -- 6. Save to disk -------------------------------------------------------
 hd_save(hd_make(spec, "column", opts),               "chart.html")
 hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "chart.png")
 
-# ── 7. Session-wide styling ───────────────────────────────────────────────
+# -- 7. Session-wide styling -----------------------------------------------
 hd_set_theme(hc_theme = "economist",
              colors   = c("#025169","#7C145C","#C68803"))
 
-# ── 8. Launch the Shiny GUI ───────────────────────────────────────────────
+# -- 8. Launch the Shiny GUI -----------------------------------------------
 hd_app()
 
 
@@ -211,7 +211,7 @@ calling code.</p><div class="section">
 
 <p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://folkehelsestats.github.io/highdir/" class="external-link">highdir</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 1. Sample data ────────────────────────────────────────────────────────</span></span>
+<span><span class="co"># -- 1. Sample data --------------------------------------------------------</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"18-24"</span>, <span class="st">"25-34"</span>, <span class="st">"35-44"</span>, <span class="st">"45-54"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Male"</span>, <span class="st">"Female"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>,</span>
@@ -219,17 +219,17 @@ calling code.</p><div class="section">
 <span>  n   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">115</span>, <span class="fl">200</span>, <span class="fl">210</span>, <span class="fl">180</span>, <span class="fl">175</span>, <span class="fl">160</span>, <span class="fl">155</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 2. Describe the data mapping (once) ──────────────────────────────────</span></span>
+<span><span class="co"># -- 2. Describe the data mapping (once) ----------------------------------</span></span>
 <span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">df</span>, x <span class="op">=</span> <span class="st">"age"</span>, y <span class="op">=</span> <span class="st">"pct"</span>, group <span class="op">=</span> <span class="st">"sex"</span>, n <span class="op">=</span> <span class="st">"n"</span>,</span>
 <span>                 ylab <span class="op">=</span> <span class="st">"Percentage (%)"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 3. Describe the presentation (reusable across specs) ─────────────────</span></span>
+<span><span class="co"># -- 3. Describe the presentation (reusable across specs) -----------------</span></span>
 <span><span class="va">opts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_opts.html">hd_opts</a></span><span class="op">(</span>title    <span class="op">=</span> <span class="st">"Health survey results"</span>,</span>
 <span>                 subtitle <span class="op">=</span> <span class="st">"Source: FHI 2024"</span>,</span>
 <span>                 caption  <span class="op">=</span> <span class="st">"Tall om helse"</span>,</span>
 <span>                 ylim     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 4. Render — swap backend without touching spec or opts ────────────────</span></span>
+<span><span class="co"># -- 4. Render — swap backend without touching spec or opts ----------------</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, <span class="va">opts</span><span class="op">)</span>                        <span class="co"># interactive HC</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, <span class="va">opts</span>, backend <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span>   <span class="co"># static ggplot2</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"line"</span>,   <span class="va">opts</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>         <span class="co"># HC spline</span></span>
@@ -239,20 +239,20 @@ calling code.</p><div class="section">
 <span><span class="co"># Donut chart</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">pie_spec</span>, <span class="st">"pie"</span>, <span class="va">pie_opts</span>, inner_size <span class="op">=</span> <span class="st">"50%"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 5. Arearange (confidence intervals) ──────────────────────────────────</span></span>
+<span><span class="co"># -- 5. Arearange (confidence intervals) ----------------------------------</span></span>
 <span><span class="va">df2</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">df</span>, lo <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">pct</span> <span class="op">-</span> <span class="fl">5</span>, hi <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">pct</span> <span class="op">+</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">spec2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hd_spec.html">hd_spec</a></span><span class="op">(</span><span class="va">df2</span>, <span class="st">"age"</span>, <span class="st">"pct"</span>, group <span class="op">=</span> <span class="st">"sex"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec2</span>, <span class="st">"arearange"</span>, <span class="va">opts</span>, ymin <span class="op">=</span> <span class="st">"lo"</span>, ymax <span class="op">=</span> <span class="st">"hi"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 6. Save to disk ───────────────────────────────────────────────────────</span></span>
+<span><span class="co"># -- 6. Save to disk -------------------------------------------------------</span></span>
 <span><span class="fu"><a href="../reference/hd_save.html">hd_save</a></span><span class="op">(</span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, <span class="va">opts</span><span class="op">)</span>,               <span class="st">"chart.html"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hd_save.html">hd_save</a></span><span class="op">(</span><span class="fu"><a href="../reference/hd_make.html">hd_make</a></span><span class="op">(</span><span class="va">spec</span>, <span class="st">"column"</span>, <span class="va">opts</span>, backend<span class="op">=</span><span class="st">"ggplot2"</span><span class="op">)</span>, <span class="st">"chart.png"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 7. Session-wide styling ───────────────────────────────────────────────</span></span>
+<span><span class="co"># -- 7. Session-wide styling -----------------------------------------------</span></span>
 <span><span class="fu"><a href="../reference/hd_set_theme.html">hd_set_theme</a></span><span class="op">(</span>hc_theme <span class="op">=</span> <span class="st">"economist"</span>,</span>
 <span>             colors   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#025169"</span>,<span class="st">"#7C145C"</span>,<span class="st">"#C68803"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ── 8. Launch the Shiny GUI ───────────────────────────────────────────────</span></span>
+<span><span class="co"># -- 8. Launch the Shiny GUI -----------------------------------------------</span></span>
 <span><span class="fu"><a href="../reference/hd_app.html">hd_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
 </div>
 

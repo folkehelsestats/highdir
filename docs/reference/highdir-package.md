@@ -12,7 +12,7 @@ then rendered to either backend without changing the calling code.
 
     library(highdir)
 
-    # ── 1. Sample data ────────────────────────────────────────────────────────
+    # -- 1. Sample data --------------------------------------------------------
     df <- data.frame(
       age = rep(c("18-24", "25-34", "35-44", "45-54"), each = 2),
       sex = rep(c("Male", "Female"), 4),
@@ -20,17 +20,17 @@ then rendered to either backend without changing the calling code.
       n   = c(120, 115, 200, 210, 180, 175, 160, 155)
     )
 
-    # ── 2. Describe the data mapping (once) ──────────────────────────────────
+    # -- 2. Describe the data mapping (once) ----------------------------------
     spec <- hd_spec(df, x = "age", y = "pct", group = "sex", n = "n",
                      ylab = "Percentage (%)")
 
-    # ── 3. Describe the presentation (reusable across specs) ─────────────────
+    # -- 3. Describe the presentation (reusable across specs) -----------------
     opts <- hd_opts(title    = "Health survey results",
                      subtitle = "Source: FHI 2024",
                      caption  = "Tall om helse",
                      ylim     = c(0, 80))
 
-    # ── 4. Render — swap backend without touching spec or opts ────────────────
+    # -- 4. Render — swap backend without touching spec or opts ----------------
     hd_make(spec, "column", opts)                        # interactive HC
     hd_make(spec, "column", opts, backend = "ggplot2")   # static ggplot2
     hd_make(spec, "line",   opts, smooth = TRUE)         # HC spline
@@ -40,20 +40,20 @@ then rendered to either backend without changing the calling code.
     # Donut chart
     hd_make(pie_spec, "pie", pie_opts, inner_size = "50%")
 
-    # ── 5. Arearange (confidence intervals) ──────────────────────────────────
+    # -- 5. Arearange (confidence intervals) ----------------------------------
     df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
     spec2 <- hd_spec(df2, "age", "pct", group = "sex")
     hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 
-    # ── 6. Save to disk ───────────────────────────────────────────────────────
+    # -- 6. Save to disk -------------------------------------------------------
     hd_save(hd_make(spec, "column", opts),               "chart.html")
     hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "chart.png")
 
-    # ── 7. Session-wide styling ───────────────────────────────────────────────
+    # -- 7. Session-wide styling -----------------------------------------------
     hd_set_theme(hc_theme = "economist",
                  colors   = c("#025169","#7C145C","#C68803"))
 
-    # ── 8. Launch the Shiny GUI ───────────────────────────────────────────────
+    # -- 8. Launch the Shiny GUI -----------------------------------------------
     hd_app()
 
 ### Key functions

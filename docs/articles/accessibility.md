@@ -47,6 +47,8 @@ bounds; `hd_data2` adds a `kjonn` grouping column:
 
 ``` r
 library(highdir)
+#> NB! Highcharts (www.highcharts.com) is a Highsoft software product which is
+#> not free for commercial and Governmental use
 
 # Single series — annual adjusted mean with 95% CI
 alcohol <- highdir::alco1   # columns: year, adj_mean, lower_95CI, upper_95CI

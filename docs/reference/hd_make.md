@@ -5,7 +5,7 @@ Renders a
 and
 [hd_opts](https://github.com/folkehelsestats/highdir/reference/hd_opts.md)
 pair using the selected backend and geometry. This is the central
-function of the package — everything else feeds into or flows out of
+function of the package - everything else feeds into or flows out of
 `hd_make()`.
 
 ## Usage
@@ -33,7 +33,7 @@ hd_make(
 
 - type:
 
-  Character. Geometry name — one of
+  Character. Geometry name - one of
   [`list_geoms()`](https://github.com/folkehelsestats/highdir/reference/list_geoms.md):
   `"column"`, `"line"`, `"scatter"`, `"arearange"`, `"pie"`, or any
   custom geometry added with
@@ -48,7 +48,7 @@ hd_make(
 
 - backend:
 
-  Character. Rendering engine — `"highcharter"` (default, interactive)
+  Character. Rendering engine - `"highcharter"` (default, interactive)
   or `"ggplot2"` (static), or any engine added with
   [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md).
 
@@ -64,7 +64,7 @@ hd_make(
 - module:
 
   Use available modules js from CDN
-  <https://api.highcharts.com/highcharts>
+  <https://api.highcharts.com/highcharts/>
 
 - ...:
 
@@ -113,13 +113,13 @@ opts <- hd_opts(title    = "Health survey results",
                  ylim     = c(0, 80))
 
 if (FALSE) { # \dontrun{
-# ── Interactive charts (highcharter) --------------------------------------
+# -- Interactive charts (highcharter) --------------------------------------
 hd_make(spec, "column", opts)
 hd_make(spec, "line",   opts, smooth = TRUE)
 hd_make(spec, "line",   opts, smooth = FALSE, dot_size = 6)
 hd_make(spec, "scatter")
 
-# Pie chart — group is ignored; x = label, y = value
+# Pie chart - group is ignored; x = label, y = value
 pie_df   <- data.frame(category = c("A","B","C","D"),
                         value    = c(35, 25, 20, 20))
 pie_spec <- hd_spec(pie_df, x = "category", y = "value")
@@ -127,25 +127,25 @@ pie_opts <- hd_opts(title = "Share by category")
 hd_make(pie_spec, "pie", pie_opts)
 hd_make(pie_spec, "pie", pie_opts, inner_size = "50%")  # donut
 
-# Arearange — requires ymin + ymax in ...
+# Arearange - requires ymin + ymax in ...
 df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
 spec2 <- hd_spec(df2, "age", "pct", group = "sex")
 hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 
-# ── Disable JS hover band -------------------------------------------------
+# -- Disable JS hover band -------------------------------------------------
 hd_make(spec, "column", opts, use_js = FALSE)
 
-# ── Static ggplot2 versions -----------------------------------------------
+# -- Static ggplot2 versions -----------------------------------------------
 hd_make(spec, "column",  opts, backend = "ggplot2")
 hd_make(spec, "line",    opts, backend = "ggplot2")
 hd_make(spec, "scatter", opts, backend = "ggplot2")
 hd_make(pie_spec, "pie", pie_opts, backend = "ggplot2")
 
-# ── Reuse spec with different presentation --------------------------------
+# -- Reuse spec with different presentation --------------------------------
 opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
 hd_make(spec, "column", opts_no)
 
-# ── Save outputs ----------------------------------------------------------
+# -- Save outputs ----------------------------------------------------------
 hd_save(hd_make(spec, "column", opts),               "column.html")
 hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "column.png")
 } # }

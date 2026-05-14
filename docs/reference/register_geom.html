@@ -91,7 +91,7 @@ can harvest without parsing source code.</p>
 <dt id="arg-optional-args">optional_args<a class="anchor" aria-label="anchor" href="#arg-optional-args"></a></dt>
 <dd><p>Named list of <code>list(default, desc)</code>. Args that MAY
 be supplied and have a sensible default when omitted.  These are purely
-informational from the registry's perspective — the geom function applies
+informational from the registry's perspective - the geom function applies
 the defaults itself via <code>geom_params$key %||% default</code>.</p></dd>
 
 
@@ -107,8 +107,8 @@ the defaults itself via <code>geom_params$key %||% default</code>.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Structure of <code>optional_args</code>:
 A named list where each element is itself a list with two fields:
-<code>default</code> — the value used when the arg is not supplied (may be <code>NULL</code>)
-<code>desc</code>    — a short human-readable description (shown by <code><a href="geom_args.html">geom_args()</a></code>)</p>
+<code>default</code> - the value used when the arg is not supplied (may be <code>NULL</code>)
+<code>desc</code>    - a short human-readable description (shown by <code><a href="geom_args.html">geom_args()</a></code>)</p>
 <p>Example:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">optional_args</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  smooth   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>default <span class="op">=</span> <span class="cn">TRUE</span>,  desc <span class="op">=</span> <span class="st">"Spline smoothing (logical)"</span><span class="op">)</span>,</span>

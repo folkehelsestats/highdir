@@ -2,9 +2,9 @@
 
 When `use_js = TRUE` returns a Highcharts `point.events` list that draws
 a translucent highlight band behind the hovered category. When `FALSE`
-returns `NULL` so the key is omitted entirely from the serialised config
-— an empty [`list()`](https://rdrr.io/r/base/list.html) would break
-shared tooltips.
+returns `NULL` so the key is omitted entirely from the serialised
+config - an empty [`list()`](https://rdrr.io/r/base/list.html) would
+break shared tooltips.
 
 ## Usage
 

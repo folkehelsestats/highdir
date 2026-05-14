@@ -24,15 +24,15 @@ Character vector of exactly length `n`.
 
 ## Details
 
-1.  Explicit `colors` argument — vector or palette name string.
+1.  Explicit `colors` argument - vector or palette name string.
 
-2.  `getOption("highdir.colors")` — set via
+2.  `getOption("highdir.colors")` - set via
     [`hd_set_theme()`](https://github.com/folkehelsestats/highdir/reference/hd_set_theme.md).
 
 3.  Built-in hdir rules:
 
-    - n == 2 → `"hdir2"` two-colour teal/purple pair
+    - n == 2 -\> `"hdir2"` two-colour teal/purple pair
 
-    - n \<= 10 → `"hdir"` 10-colour brand palette
+    - n \<= 10 -\> `"hdir"` 10-colour brand palette
 
-    - n \> 10 → viridis continuous scale
+    - n \> 10 -\> viridis continuous scale
