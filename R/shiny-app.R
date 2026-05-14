@@ -1,4 +1,4 @@
-# R/shiny-app.R ── Shiny GUI launcher
+# R/shiny-app.R -- Shiny GUI launcher
 
 #' Launch the highdir Shiny GUI
 #'

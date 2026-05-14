@@ -31,7 +31,7 @@ get_backend <- function(name) .backend_registry[[name]]
 #' @export
 list_backends <- function() sort(ls(.backend_registry))
 
-# ── Geometry registry ---------------------------------------------------------
+# -- Geometry registry ---------------------------------------------------------
 
 #' @keywords internal
 .geom_registry <- new.env(parent = emptyenv())
@@ -45,8 +45,8 @@ list_backends <- function() sort(ls(.backend_registry))
 #'
 #' Structure of `optional_args`:
 #' A named list where each element is itself a list with two fields:
-#'   `default` — the value used when the arg is not supplied (may be `NULL`)
-#'   `desc`    — a short human-readable description (shown by `geom_args()`)
+#'   `default` - the value used when the arg is not supplied (may be `NULL`)
+#'   `desc`    - a short human-readable description (shown by `geom_args()`)
 #'
 #' Example:
 #' ```r
@@ -63,7 +63,7 @@ list_backends <- function() sort(ls(.backend_registry))
 #'   `...` in `hd_make()`. Validation fails if any are missing.
 #' @param optional_args   Named list of `list(default, desc)`. Args that MAY
 #'   be supplied and have a sensible default when omitted.  These are purely
-#'   informational from the registry's perspective — the geom function applies
+#'   informational from the registry's perspective - the geom function applies
 #'   the defaults itself via `geom_params$key %||% default`.
 #' @param is_map_geom     Logical. Bypasses `base_fig()` in both engines.
 #'
@@ -112,7 +112,7 @@ register_geom <- function(name,
 #' @export
 list_geoms <- function() sort(ls(.geom_registry))
 
-# ── geom_args(): user-facing discoverability helper ---------------------------
+# -- geom_args(): user-facing discoverability helper ---------------------------
 
 #' Show Arguments for a Geometry
 #'
@@ -155,7 +155,7 @@ geom_args <- function(type = NULL) {
   if (is.null(geom))
     stop("Unknown geometry '", type, "'. See list_geoms().", call. = FALSE)
 
-  # ── Build a data frame with one row per argument ----------------------------
+  # -- Build a data frame with one row per argument ----------------------------
   rows <- list()
 
   # Required args: have a default, may be omitted
@@ -193,7 +193,7 @@ geom_args <- function(type = NULL) {
 
   out <- do.call(rbind, rows)
 
-  # ── Print a readable table --------------------------------------------------
+  # -- Print a readable table --------------------------------------------------
   cat(sprintf("\nArguments for hd_make(..., type = \"%s\", ...):\n\n", type))
 
   # Compute column widths for alignment

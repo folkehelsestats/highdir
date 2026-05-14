@@ -1,10 +1,10 @@
 
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 # PIE
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 # Each geometry is a pair:
-#   gg_<name>  → returns a ggplot2 layer (or list of layers)
-#   hc_<name>  → adds series to a highchart object, returns the updated chart
+#   gg_<name>  -> returns a ggplot2 layer (or list of layers)
+#   hc_<name>  -> adds series to a highchart object, returns the updated chart
 #
 # Calling convention (enforced by the registry):
 #   gg_*:  function(spec, opts, geom_params, ...)
@@ -15,11 +15,11 @@
 # hc_add_series() via bare `...`.
 
 # For a pie chart:
-#   spec$x → slice label column
-#   spec$y → slice value column
+#   spec$x ->  slice label column
+#   spec$y ->  slice value column
 #   spec$group is ignored (a pie shows one series)
 #
-# ggplot2: geom_col() + coord_polar("y") — the classic polar-bar pie.
+# ggplot2: geom_col() + coord_polar("y") - the classic polar-bar pie.
 # highcharter: a single "pie" type series where each slice name comes from x.
 
 #' @keywords internal

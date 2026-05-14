@@ -29,7 +29,7 @@ gg_stacked_column <- function(spec, opts, geom_params) {
       nrow   = 1,
       scales = "free_x"
     ),
-    # Remove the x-axis tick labels inside facets — the facet strip
+    # Remove the x-axis tick labels inside facets - the facet strip
     # title already labels each stack group
     ggplot2::theme(axis.text.x = ggplot2::element_blank())
   )
@@ -104,7 +104,7 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
                 stack = stack_id,
                 color = color_by_name[[series_name]],
                 # Suppress duplicate legend entries for series that appear in
-                # multiple stacks — Highcharts shows the name once per unique name
+                # multiple stacks - Highcharts shows the name once per unique name
                 showInLegend = !duplicated(combos[[grp_col]])[i]
             )
     }
@@ -159,10 +159,10 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 #'     ylab     = "Count medals"
 #' )
 #'
-#' # Interactive — stacks are separated by continent
+#' # Interactive - stacks are separated by continent
 #' hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
 #'
-#' # Static ggplot2 — stacks are separated by continent
+#' # Static ggplot2 - stacks are separated by continent
 #' hd(spec_st, backend = "ggplot2") +
 #'   hd_geom_stacked_column(stack = "Continent") +
 #'   hd_opts(title = "Olympic Games all-time medal table, grouped by continent", ylab = "Count medals")

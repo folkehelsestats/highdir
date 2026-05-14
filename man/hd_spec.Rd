@@ -27,8 +27,8 @@ Defaults to \code{group} when \code{NULL} and \code{group} is set.}
 An S3 object of class \code{"hd_spec"}.
 }
 \description{
-Defines the \strong{data mapping} for a figure — which columns map to x, y,
-group, and count — independently of any visual presentation choices.
+Defines the \strong{data mapping} for a figure - which columns map to x, y,
+group, and count - independently of any visual presentation choices.
 Pass the result to \code{\link[=hd_make]{hd_make()}} together with an optional \code{\link[=hd_opts]{hd_opts()}}
 object.
 }

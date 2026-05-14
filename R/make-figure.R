@@ -2,7 +2,7 @@
 #' Build a Figure from a Specification
 #'
 #' Renders a [hd_spec] and [hd_opts] pair using the selected backend and
-#' geometry.  This is the central function of the package — everything else
+#' geometry.  This is the central function of the package - everything else
 #' feeds into or flows out of `hd_make()`.
 #'
 #' @section Workflow:
@@ -17,13 +17,13 @@
 #' ```
 #'
 #' @param spec      A [hd_spec] object from [hd_spec()].
-#' @param type      Character.  Geometry name — one of [list_geoms()]:
+#' @param type      Character.  Geometry name - one of [list_geoms()]:
 #'   `"column"`, `"line"`, `"scatter"`, `"arearange"`, `"pie"`, or any
 #'   custom geometry added with [register_geom()].
 #' @param opts      A [hd_opts] object or `NULL` (uses all defaults).
 #'   Controls title, subtitle, caption, ylim, yint, flip, per-figure
 #'   colours, and highcharter theme.
-#' @param backend   Character.  Rendering engine — `"highcharter"` (default,
+#' @param backend   Character.  Rendering engine - `"highcharter"` (default,
 #'   interactive) or `"ggplot2"` (static), or any engine added with
 #'   [register_backend()].
 #' @param use_js    Logical.  When `TRUE` (default) injects a hover-band
@@ -64,7 +64,7 @@
 #' hd_make(spec, "line",   opts, smooth = FALSE, dot_size = 6)
 #' hd_make(spec, "scatter")
 #'
-#' # Pie chart — group is ignored; x = label, y = value
+#' # Pie chart - group is ignored; x = label, y = value
 #' pie_df   <- data.frame(category = c("A","B","C","D"),
 #'                         value    = c(35, 25, 20, 20))
 #' pie_spec <- hd_spec(pie_df, x = "category", y = "value")
@@ -72,7 +72,7 @@
 #' hd_make(pie_spec, "pie", pie_opts)
 #' hd_make(pie_spec, "pie", pie_opts, inner_size = "50%")  # donut
 #'
-#' # Arearange — requires ymin + ymax in ...
+#' # Arearange - requires ymin + ymax in ...
 #' df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
 #' spec2 <- hd_spec(df2, "age", "pct", group = "sex")
 #' hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")

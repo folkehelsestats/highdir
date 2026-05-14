@@ -3,7 +3,7 @@
 #   function(spec, geom, opts, geom_params, use_js, filename, ...)
 #
 # `geom_params` is a named list built by hd_make() that carries *all*
-# geom-specific arguments (smooth, dot_size, line_symbols, ymin, ymax, …).
+# geom-specific arguments (smooth, dot_size, line_symbols, ymin, ymax, ...).
 # Passing them as an explicit list instead of bare `...` means:
 #   1. The engine signature is stable regardless of how many geoms exist.
 #   2. Nothing unexpected leaks into hc_add_series() causing tibble errors.
@@ -75,7 +75,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
   chart <- geom$highcharter_fun(chart, spec, opts, geom_params,
                                 use_js = use_js, ...)
 
-  # ── Theme (per-figure opts$hc_theme overrides session default) --------------
+  # -- Theme (per-figure opts$hc_theme overrides session default) --------------
   # hd_theme() resolves name, colors, and font in one call -- same priority
   # chain as gg_theme() in ggplot_engine():
   #   explicit opts > getOption("highdir.*") > package default
@@ -86,7 +86,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
                colors = opts$colors)
     )
 
-  # ── Session-level JS plugins ------------------------------------------------
+  # -- Session-level JS plugins ------------------------------------------------
   for (plugin in getOption("highdir.js_plugins", default = character(0)))
     chart <- hd_add_js(chart, plugin = plugin)
 

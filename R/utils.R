@@ -8,7 +8,7 @@
 #' @keywords internal
 `%||%` <- function(a, b) if (is.null(a)) b else a
 
-# ── Type predicates -----------------------------------------------------------
+# -- Type predicates -----------------------------------------------------------
 
 #' @keywords internal
 is_highchart <- function(x) inherits(x, "highchart")
@@ -16,7 +16,7 @@ is_highchart <- function(x) inherits(x, "highchart")
 #' @keywords internal
 is_ggplot <- function(x) inherits(x, c("gg", "ggplot"))
 
-# ── Validation helpers --------------------------------------------------------
+# -- Validation helpers --------------------------------------------------------
 
 #' Stop with a tidy message when columns are absent from a data frame
 #' @keywords internal
@@ -49,7 +49,7 @@ check_ylim <- function(ylim) {
 
 #' Resolve and validate line symbols for n groups
 #'
-#' @param n   Integer. Number of groups.
+#' @param n Integer. Number of groups.
 #' @param symbols Character vector or `NULL` supplied by the user.
 #' @return Character vector of length `n`.
 #' @keywords internal
@@ -88,9 +88,9 @@ resolve_symbols <- function(n, symbols = NULL) {
 #' Resolve an axis label from opts and spec
 #'
 #' Three-way logic:
-#'   NULL   → hide the axis label entirely
-#'   " "    → use the column name from spec as the fallback
-#'   string → use the string as-is
+#'   NULL   -> hide the axis label entirely
+#'   " "    -> use the column name from spec as the fallback
+#'   string -> use the string as-is
 #'
 #' @param opts_label The value from hd_opts()$ylab or $xlab.
 #' @param spec_col   The column name from hd_spec()$y or $x.
@@ -99,12 +99,12 @@ resolve_symbols <- function(n, symbols = NULL) {
 .resolve_axis_label <- function(opts_label, spec_col) {
 
   if (is.null(opts_label))
-    return(NULL)          # explicit NULL → hide
+    return(NULL)          # explicit NULL -> hide
 
   if (identical(opts_label, " "))
-    return(spec_col)      # sentinel → use column name
+    return(spec_col)      # sentinel -> use column name
 
-  opts_label              # any other string → use as-is
+  opts_label              # any other string -> use as-is
 }
 
 

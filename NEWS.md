@@ -11,7 +11,7 @@
 - Implement bar figure with no space below the bars but 10% above them in ggplot2 engine.
 - Deploy to shinyapps.io <https://bit.ly/highdir> 
 - `DESCRIPTION` version bumped to 0.3.1.
-- Added option to deactivate CDN-loaded modules available from <https://api.highcharts.com/highcharts>. (#2)
+- Added option to deactivate CDN-loaded modules available from <https://api.highcharts.com/highcharts/>. (#2)
 - Fixed Shiny app GUI issues related to downloading and axis labels.
 - Moved `xlab` and `ylab` arguments to `hd_opts()`, since they relate to figure presentation rather than data specification. Use NULL to hide axis labels. (#5)
 - Corrected ggplot2 color palette selection to follow the standard rules defined by `resolve_colors()`.

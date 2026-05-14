@@ -19,13 +19,13 @@ Returns exactly \code{n} colours. Priority order:
 }
 \details{
 \enumerate{
-\item Explicit \code{colors} argument — vector or palette name string.
-\item \code{getOption("highdir.colors")} — set via \code{\link[=hd_set_theme]{hd_set_theme()}}.
+\item Explicit \code{colors} argument - vector or palette name string.
+\item \code{getOption("highdir.colors")} - set via \code{\link[=hd_set_theme]{hd_set_theme()}}.
 \item Built-in hdir rules:
 \itemize{
-\item n == 2  → \code{"hdir2"} two-colour teal/purple pair
-\item n <= 10 → \code{"hdir"} 10-colour brand palette
-\item n > 10  → viridis continuous scale
+\item n == 2  -> \code{"hdir2"} two-colour teal/purple pair
+\item n <= 10 -> \code{"hdir"} 10-colour brand palette
+\item n > 10  -> viridis continuous scale
 }
 }
 }

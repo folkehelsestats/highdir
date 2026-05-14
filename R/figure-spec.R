@@ -1,9 +1,9 @@
-# R/figure-spec.R ── Figure specification objects
+# R/figure-spec.R - Figure specification objects
 #
 # Two complementary constructors are provided:
 #
-#   hd_spec()  — *what* the data means  (x, y, group, n)
-#   hd_opts()  — *how* it should look   (title, ylab, ylim, flip, colours, theme)
+#   hd_spec()  - *what* the data means  (x, y, group, n)
+#   hd_opts()  - *how* it should look   (title, ylab, ylim, flip, colours, theme)
 #
 # Keeping them separate means:
 #   * The same hd_spec can be rendered with different opts (e.g. EN vs NO
@@ -11,14 +11,14 @@
 #   * hd_opts objects are reusable across multiple specs.
 #   * Validation errors are localised to the object they belong to.
 
-# ════════════════════════════════════════════════════════════════════════════
-# hd_spec ── data mapping and structure
-# ════════════════════════════════════════════════════════════════════════════
-
+# ------------------------------------------------------------------------------
+# hd_spec  data mapping and structure
+# ------------------------------------------------------------------------------
+# 
 #' Create a Figure Data Specification
 #'
-#' Defines the **data mapping** for a figure — which columns map to x, y,
-#' group, and count — independently of any visual presentation choices.
+#' Defines the **data mapping** for a figure - which columns map to x, y,
+#' group, and count - independently of any visual presentation choices.
 #' Pass the result to [hd_make()] together with an optional [hd_opts()]
 #' object.
 #'
@@ -77,7 +77,7 @@ hd_spec <- function(data,
   )
 }
 
-# ── S3 methods ───────────────────────────────────────────────────────────────
+# -- S3 methods ----------------------------------------------------------------
 
 #' @export
 print.hd_spec <- function(x, ...) {

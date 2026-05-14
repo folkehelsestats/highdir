@@ -25,7 +25,7 @@ register_geom(
 
 \item{optional_args}{Named list of \code{list(default, desc)}. Args that MAY
 be supplied and have a sensible default when omitted.  These are purely
-informational from the registry's perspective — the geom function applies
+informational from the registry's perspective - the geom function applies
 the defaults itself via \code{geom_params$key \%||\% default}.}
 
 \item{is_map_geom}{Logical. Bypasses \code{base_fig()} in both engines.}
@@ -42,8 +42,8 @@ can harvest without parsing source code.
 \details{
 Structure of \code{optional_args}:
 A named list where each element is itself a list with two fields:
-\code{default} — the value used when the arg is not supplied (may be \code{NULL})
-\code{desc}    — a short human-readable description (shown by \code{geom_args()})
+\code{default} - the value used when the arg is not supplied (may be \code{NULL})
+\code{desc}    - a short human-readable description (shown by \code{geom_args()})
 
 Example:
 
