@@ -44,7 +44,7 @@ register_geom(
 
   Named list of `list(default, desc)`. Args that MAY be supplied and
   have a sensible default when omitted. These are purely informational
-  from the registry's perspective — the geom function applies the
+  from the registry's perspective - the geom function applies the
   defaults itself via `geom_params$key %||% default`.
 
 - is_map_geom:
@@ -60,8 +60,8 @@ register_geom(
 ## Details
 
 Structure of `optional_args`: A named list where each element is itself
-a list with two fields: `default` — the value used when the arg is not
-supplied (may be `NULL`) `desc` — a short human-readable description
+a list with two fields: `default` - the value used when the arg is not
+supplied (may be `NULL`) `desc` - a short human-readable description
 (shown by
 [`geom_args()`](https://github.com/folkehelsestats/highdir/reference/geom_args.md))
 

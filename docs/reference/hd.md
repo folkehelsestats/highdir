@@ -28,7 +28,7 @@ hd(
   A `data.frame` **or** an
   [`hd_spec()`](https://github.com/folkehelsestats/highdir/reference/hd_spec.md)
   object. When an `hd_spec` is supplied every other mapping argument
-  (`x`, `y`, …) is ignored — the spec carries them already.
+  (`x`, `y`, …) is ignored - the spec carries them already.
 
 - x:
 
@@ -58,7 +58,7 @@ hd(
 
 - backend:
 
-  Character. Rendering engine — `"highcharter"` (default, interactive)
+  Character. Rendering engine - `"highcharter"` (default, interactive)
   or `"ggplot2"` (static), or any engine added with
   [`register_backend()`](https://github.com/folkehelsestats/highdir/reference/register_backend.md).
   Falls back to `getOption("highdir.backend", "highcharter")`.

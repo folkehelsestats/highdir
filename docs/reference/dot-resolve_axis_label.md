@@ -1,7 +1,7 @@
 # Resolve an axis label from opts and spec
 
-Three-way logic: NULL → hide the axis label entirely " " → use the
-column name from spec as the fallback string → use the string as-is
+Three-way logic: NULL -\> hide the axis label entirely " " -\> use the
+column name from spec as the fallback string -\> use the string as-is
 
 ## Usage
 

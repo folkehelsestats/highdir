@@ -1,7 +1,7 @@
 # Create a Figure Data Specification
 
-Defines the **data mapping** for a figure — which columns map to x, y,
-group, and count — independently of any visual presentation choices.
+Defines the **data mapping** for a figure - which columns map to x, y,
+group, and count - independently of any visual presentation choices.
 Pass the result to
 [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md)
 together with an optional

@@ -17,7 +17,7 @@
 - Deploy to shinyapps.io <https://bit.ly/highdir>
 - `DESCRIPTION` version bumped to 0.3.1.
 - Added option to deactivate CDN-loaded modules available from
-  <https://api.highcharts.com/highcharts>.
+  <https://api.highcharts.com/highcharts/>.
   ([\#2](https://github.com/folkehelsestats/highdir/issues/2))
 - Fixed Shiny app GUI issues related to downloading and axis labels.
 - Moved `xlab` and `ylab` arguments to
