@@ -1,5 +1,5 @@
 Package: highdir
-Title: Backend-Agnostic Figure Builder for Highcharter and ggplot2
+Title: Backend-Agnostic Figure Builder for `Highcharter` and `ggplot2`
 Version: 0.5.0
 Authors@R:
   person(

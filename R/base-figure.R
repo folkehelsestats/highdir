@@ -16,7 +16,7 @@
     # If the group column is numeric (1, 2, 3...) ggplot2 maps it as a
     # continuous variable. scale_color_manual is discrete-only and errors.
     # Converting to factor here fixes the aesthetic type before any layer
-    # or scale is added — the fix applies to all geoms automatically.
+    # or scale is added - the fix applies to all geoms automatically.
     plot_data <- spec$data
     grp_col   <- spec$colour %||% spec$group
     if (!is.null(grp_col) && is.numeric(plot_data[[grp_col]])) {

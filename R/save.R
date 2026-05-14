@@ -55,7 +55,7 @@ hd_save <- function(fig,
   invisible(file)
 }
 
-# ── Internals -----------------------------------------------------------------
+# -- Internals -----------------------------------------------------------------
 
 #' @keywords internal
 .resolve_type <- function(type, file) {
@@ -73,7 +73,7 @@ hd_save <- function(fig,
 #' @keywords internal
 .sanitise_hc_config <- function(x) {
   # Recursively convert JS_EVAL objects to plain character strings.
-  # highcharter stores raw JavaScript (formatters, callbacks) as JS_EVAL —
+  # highcharter stores raw JavaScript (formatters, callbacks) as JS_EVAL -
   # a character vector with class attribute "JS_EVAL". jsonlite has no
   # asJSON method for this class and errors without this conversion.
   # The JS string content is preserved; only the class wrapper is removed.
@@ -85,7 +85,7 @@ hd_save <- function(fig,
 #' @keywords internal
 .save_highchart <- function(hc, file, type, width, height, selfcontained) {
 
-  # ── Format gate -------------------------------------------------------------
+  # -- Format gate -------------------------------------------------------------
   hc_formats <- c("html", "json")
 
   if (!type %in% hc_formats)

@@ -1,6 +1,6 @@
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 # LINE / SPLINE
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 #
 # Optional arguments (all via geom_params, never hard-coded in hd_make):
 #
@@ -9,12 +9,12 @@
 #   dot_size     Numeric.  Marker radius (px for HC, ggplot size / 3 for gg).
 #                Default 4.  Both backends.
 #   line_symbols Character vector.  Per-group Highcharts marker shapes.
-#                Default NULL (uses resolve_symbols()).  Highcharter only —
+#                Default NULL (uses resolve_symbols()).  Highcharter only -
 #                gg_line silently ignores it.
 #
 # These three are documented in the registry (zzz.R) under optional_args so
 # that geom_args("line") shows them to users.  The geom functions themselves
-# apply the defaults via `geom_params$key %||% default` — the registry entry
+# apply the defaults via `geom_params$key %||% default` - the registry entry
 # is for discoverability only, not enforcement.
 #
 # Why smooth and dot_size are NOT named params of hd_make():
@@ -24,9 +24,9 @@
 #   keeps hd_make() closed for modification when new geoms are added.
 #
 # Why line_symbols IS still accepted via `...` and not a hard-coded param:
-#   Same reason — it is geom-specific.  It was previously a named param of
+#   Same reason - it is geom-specific.  It was previously a named param of
 #   hd_make() but has been moved to `...` alongside smooth and dot_size.
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 
 #' @keywords internal
 gg_line <- function(spec, opts, geom_params) {
@@ -38,7 +38,7 @@ gg_line <- function(spec, opts, geom_params) {
   smooth   <- geom_params$smooth   %||% TRUE
   size     <- geom_params$dot_size  %||% 4L
 
-  # line_symbols is intentionally NOT read here — it is a Highcharts concept
+  # line_symbols is intentionally NOT read here - it is a Highcharts concept
   # (named marker shapes like "circle", "square").  ggplot2 uses shape
   # integers via scale_shape, which is handled by apply_gg_colors().
   # Passing line_symbols to the ggplot2 backend is therefore silently ignored,
@@ -80,7 +80,7 @@ hc_line <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
     # Defaults must match zzz.R optional_args for geom_args("line") accuracy.
     smooth <- geom_params$smooth %||% TRUE
     dot_size <- geom_params$dot_size %||% 4
-    symbols <- geom_params$line_symbols # NULL → resolve_symbols() picks automatically
+    symbols <- geom_params$line_symbols # NULL -> resolve_symbols() picks automatically
 
     groups <- .group_split(spec)
     palette <- resolve_colors(length(groups), opts$colors)
@@ -88,8 +88,8 @@ hc_line <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
     point_ev <- point_events_or_null(use_js)
     xmap <- .hc_x_map(spec)
 
-    # smooth = TRUE  → Highcharts "spline" type (cubic interpolation)
-    # smooth = FALSE → Highcharts "line"   type (straight segments)
+    # smooth = TRUE  -> Highcharts "spline" type (cubic interpolation)
+    # smooth = FALSE -> Highcharts "line"   type (straight segments)
     ctype <- if (smooth) "spline" else "line"
 
     for (i in seq_along(groups)) {

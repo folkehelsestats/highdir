@@ -6,11 +6,11 @@
 # The optional_args field is what eg. geom_args("line") prints for the user.
 # Each entry is list(default = <value>, desc = "<short string>").
 # The geom function itself applies the default via `geom_params$key %||%
-# default` — the registry entry is informational only, not enforced.
+# default` - the registry entry is informational only, not enforced.
 #
 # Rule of thumb for what goes in optional_args vs required_args:
-#   required  — the geom cannot render at all without it (e.g. ymin/ymax)
-#   optional  — the geom works fine with a built-in default (e.g. smooth)
+#   required  - the geom cannot render at all without it (e.g. ymin/ymax)
+#   optional  - the geom works fine with a built-in default (e.g. smooth)
 
 #' @keywords internal
 .onLoad <- function(libname, pkgname) {

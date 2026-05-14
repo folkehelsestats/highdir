@@ -1,7 +1,7 @@
 
-# ══════════════════════════════════════════════════════════════════════════════
-# hd()  ── constructor
-# ══════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
+# hd()  -- constructor
+# ------------------------------------------------------------------------------
 
 #' Initialise a Composable highdir Figure
 #'
@@ -17,7 +17,7 @@
 #'
 #' @param data   A `data.frame` **or** an [hd_spec()] object.  When an
 #'   `hd_spec` is supplied every other mapping argument (`x`, `y`, …) is
-#'   ignored — the spec carries them already.
+#'   ignored - the spec carries them already.
 #' @param x      Character. Column name for the x-axis variable.
 #'   Ignored when `data` is an `hd_spec`.
 #' @param y      Character. Column name for the y-axis variable.
@@ -30,7 +30,7 @@
 #' @param colour Character or `NULL`. ggplot2 colour aesthetic column.
 #'   Defaults to `group` when `NULL` and `group` is set.
 #'   Ignored when `data` is an `hd_spec`.
-#' @param backend Character. Rendering engine — `"highcharter"` (default,
+#' @param backend Character. Rendering engine - `"highcharter"` (default,
 #'   interactive) or `"ggplot2"` (static), or any engine added with
 #'   [register_backend()].  Falls back to `getOption("highdir.backend",
 #'   "highcharter")`.
@@ -80,7 +80,7 @@ hd <- function(data,
                backend = getOption("highdir.backend", "highcharter")) {
 
   spec <- if (inherits(data, "hd_spec")) {
-    data  # already a spec — use as-is
+    data  # already a spec - use as-is
   } else {
     hd_spec(data,
             x      = x,
@@ -102,9 +102,9 @@ hd <- function(data,
 }
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# hd_geom()  ── internal geom-layer constructor
-# ══════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
+# hd_geom()  -- internal geom-layer constructor
+# ------------------------------------------------------------------------------
 
 #' @keywords internal
 hd_geom <- function(type, ...) {
@@ -115,9 +115,9 @@ hd_geom <- function(type, ...) {
 }
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# hd_geom_*()  ── public geom constructors  (one per registered geometry)
-# ══════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
+# hd_geom_*()  -- public geom constructors  (one per registered geometry)
+# ------------------------------------------------------------------------------
 
 #' Geometry Layers for hd Objects
 #'
@@ -142,9 +142,9 @@ NULL
 
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# +.hd  ── accumulate layers
-# ══════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
+# +.hd  -- accumulate layers
+# ------------------------------------------------------------------------------
 
 #' Add Layers to an hd Object
 #'
@@ -199,9 +199,9 @@ NULL
 }
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# print.hd  ── render by delegating to hd_make()
-# ══════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
+# print.hd  -- render by delegating to hd_make()
+# ------------------------------------------------------------------------------
 
 #' Render an hd Object
 #'
@@ -246,9 +246,9 @@ print.hd <- function(x, ...) {
 }
 
 
-# ══════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 # S3 helpers
-# ══════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 
 #' @export
 print.hd_geom <- function(x, ...) {

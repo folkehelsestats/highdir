@@ -16,7 +16,7 @@
 #' @keywords internal
 gg_ranked_bar <- function(spec, opts, geom_params) {
 
-  # ── Extract params ──────────────────────────────────────────────────────────
+  # -- Extract params ----------------------------------------------------------
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
   vs         <- geom_params$vs        %||% NULL   # character or NULL: vsarison group name
   aim        <- geom_params$aim         %||% NULL   # numeric or NULL: target line
@@ -24,7 +24,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   min_frac   <- geom_params$min_frac    %||% 0.08
   sc         <- geom_params$single_colour  # verdien settes i engine
   
-  # ── Resolve colours ─────────────────────────────────────────────────────────
+  # -- Resolve colours ---------------------------------------------------------
   # col1: default bar colour (single series or non-highlighted bars)
   # col2: highlighted comparison bar colour
   # Both come from the hdir palette so they stay on-brand.
@@ -32,8 +32,8 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   col1 <- sc %||% pal[1]            # single_colour overrides if set
   col2 <- pal[2]
 
-  # ── Build working data ──────────────────────────────────────────────────────
-  # Work on a copy — do not mutate spec$data
+  # -- Build working data ------------------------------------------------------
+  # Work on a copy - do not mutate spec$data
   d        <- spec$data
   x_col    <- spec$x
   y_col    <- spec$y
@@ -46,17 +46,17 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     d$.xname <- as.character(d[[x_col]])
   }
 
-  # ── Smart label placement ───────────────────────────────────────────────────
+  # -- Smart label placement ---------------------------------------------------
   # Mirrors the original regbar logic exactly.
-  # ypos = 1 → label inside bar (bar is long enough)
-  # ypos = 0 → label outside bar (bar too short)
+  # ypos = 1 -> label inside bar (bar is long enough)
+  # ypos = 0 -> label outside bar (bar too short)
   y_range     <- max(d[[y_col]]) - min(0, min(d[[y_col]]))
   label_chars <- nchar(as.character(d[[y_col]]))
   label_width <- label_chars * char_scale * y_range
   threshold   <- pmax(label_width, min_frac * y_range)
   d$ypos      <- ifelse(d[[y_col]] > threshold, 1L, 0L)
 
-  # ── Sort bars ───────────────────────────────────────────────────────────────
+  # -- Sort bars ---------------------------------------------------------------
   if (ascending) {
     d$.xname <- factor(d$.xname,
                         levels = d$.xname[order(d[[y_col]])])
@@ -65,7 +65,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
                         levels = d$.xname[order(d[[y_col]], decreasing = TRUE)])
   }
 
-  # ── Resolve comparison highlight ────────────────────────────────────────────
+  # -- Resolve comparison highlight --------------------------------------------
   # vs matches against the original x column (before N= appending)
   # so the user passes the raw category name e.g. vs = "Oslo"
   use_vs <- !is.null(vs) && nzchar(vs)
@@ -82,11 +82,11 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     fill_scale   <- NULL
   }
   
-  # ── Split data for inside / outside labels ──────────────────────────────────
+  # -- Split data for inside / outside labels ----------------------------------
   inside  <- d[d$ypos == 1L, , drop = FALSE]
   outside <- d[d$ypos == 0L, , drop = FALSE]
 
-  # ── Build layer list ────────────────────────────────────────────────────────
+  # -- Build layer list --------------------------------------------------------
   pos  <- ggplot2::position_dodge(width = 0.80)
   wdth <- 0.80
 
@@ -167,7 +167,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   if (!is.null(fill_scale))
     layers <- c(layers, list(fill_scale))
 
-  # ── Scales, coord, labels ────────────────────────────────────────────────────
+  # -- Scales, coord, labels ----------------------------------------------------
   # ranked_bar bypasses base_fig() entirely (engine detects geom$name ==
   # "ranked_bar" and skips base_fig).  Therefore it owns ALL ggplot2
   # infrastructure: scales, coord_flip, and labs.
@@ -177,7 +177,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     ggplot2::scale_x_discrete()
   ))
 
-  # Continuous y scale — padding only, no limits.
+  # Continuous y scale - padding only, no limits.
   #
   # IMPORTANT: limits = ... is intentionally NOT set here.
   # scale_y_continuous(limits) removes data outside the range BEFORE
@@ -190,20 +190,20 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     )
   ))
  
-  # Coord — ONE object handles both flip and ylim zoom.
+  # Coord - ONE object handles both flip and ylim zoom.
   #
   # ggplot2 allows only one coord per plot.  Adding coord_cartesian() and
   # coord_flip() as separate layers triggers:
   #   "Coordinate system already present. Adding new coordinate system,
   #    which will replace the existing one."
-  # and the second coord silently replaces the first — flip is lost when
+  # and the second coord silently replaces the first - flip is lost when
   # ylim is set, or the ylim zoom is lost when flip replaces cartesian.
   #
   # Solution: coord_flip(ylim = ...) collapses both into one object.
-  #   flip=TRUE  + ylim set  → coord_flip(ylim = opts$ylim)
-  #   flip=TRUE  + no ylim   → coord_flip()           [ylim=NULL is safe]
-  #   flip=FALSE + ylim set  → coord_cartesian(ylim = opts$ylim)
-  #   flip=FALSE + no ylim   → NULL (ggplot2 uses default CartesianCoord)
+  #   flip=TRUE  + ylim set  -> coord_flip(ylim = opts$ylim)
+  #   flip=TRUE  + no ylim   -> coord_flip()           [ylim=NULL is safe]
+  #   flip=FALSE + ylim set  -> coord_cartesian(ylim = opts$ylim)
+  #   flip=FALSE + no ylim   -> NULL (ggplot2 uses default CartesianCoord)
   do_flip  <- isTRUE(opts$flip %||% TRUE)
   has_ylim <- !is.null(opts$ylim)
  
@@ -218,7 +218,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   if (!is.null(coord_layer))
     layers <- c(layers, list(coord_layer))
  
-  # Axis labels — opts$xlab / opts$ylab used directly (NULL -> element_blank
+  # Axis labels - opts$xlab / opts$ylab used directly (NULL -> element_blank
   # applied by the engine after theme is set).
   layers <- c(layers, list(
     ggplot2::labs(
@@ -258,11 +258,11 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
   col1 <- pal[1]
   col2 <- pal[2]
 
-  # ── Highlight comparison bar ------------------------------------------------
+  # -- Highlight comparison bar ------------------------------------------------
   # grepl must only be called when vs is a non-NULL non-empty string.
   # The & operator in ifelse() does NOT short-circuit, so
   # ifelse(use_vs & grepl(vs, ...), ...) evaluates grepl(NULL, ...)
-  # when comp is NULL → "invalid 'pattern' argument" error.
+  # when comp is NULL -> "invalid 'pattern' argument" error.
   use_vs <- !is.null(vs) && nzchar(vs)
 
   if (use_vs) {
@@ -274,7 +274,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 
   # Each point carries separate fields for name, y, and n_obs.
   # The tooltip pointFormat references {point.name}, {point.y},
-  # and {point.n_obs} individually — Highcharts renders them cleanly
+  # and {point.n_obs} individually - Highcharts renders them cleanly
   # without cluttering the axis label.
   # n_obs is only added to the point when spec$n is set.
   point_data <- lapply(seq_len(nrow(d)), function(i) {
@@ -312,7 +312,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 
   # Ranked_bar sets its own tooltip via hc_tooltip() here.
   # This overrides the engine-level tooltip for this geom only.
-  # pointFormat shows value and — when spec$n is set — N on a
+  # pointFormat shows value and - when spec$n is set - N on a
   # second line. When spec$n is NULL the N line is omitted entirely.
   point_fmt <- if (!is.null(spec$n)) {
     paste0(
@@ -342,12 +342,12 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
   # the tooltip which is always readable regardless of bar length.
   #
   # Highcharts series type vs flip:
-  #   type = "bar"    is natively horizontal — ignores hc_chart(inverted).
-  #   type = "column" is natively vertical   — respects hc_chart(inverted).
+  #   type = "bar"    is natively horizontal - ignores hc_chart(inverted).
+  #   type = "column" is natively vertical   - respects hc_chart(inverted).
   #
   # base_fig() sets hc_chart(inverted = isTRUE(opts$flip)).
   # For ranked_bar we always use type = "column" and rely on inverted to
-  # control orientation — this makes flip = TRUE/FALSE work correctly.
+  # control orientation - this makes flip = TRUE/FALSE work correctly.
   #
   #   flip = TRUE  (default) -> inverted = TRUE  -> horizontal bars
   #   flip = FALSE           -> inverted = FALSE -> vertical bars

@@ -1,7 +1,7 @@
-# ════════════════════════════════════════════════════════════════════════════
+# ------------------------------------------------------------------------------
 # AREARANGE
-# ════════════════════════════════════════════════════════════════════════════
- 
+# ------------------------------------------------------------------------------
+# 
 #' ggplot2 Arearange Geom Function
 #'
 #' Returns a list of ggplot2 layers (ribbon + optional centre line + points)
@@ -98,10 +98,10 @@ gg_arearange <- function(spec, opts, geom_params) {
 }
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# hc_arearange  ── highcharter geom function
-# ══════════════════════════════════════════════════════════════════════════════
- 
+# ------------------------------------------------------------------------------
+# hc_arearange -- highcharter geom function
+# ------------------------------------------------------------------------------
+# 
 #' Highcharter Arearange Geom Function
 #'
 #' Adds an arearange series (and optionally a linked centre-line series) to a
@@ -169,7 +169,7 @@ hc_arearange <- function(chart, spec, opts, geom_params,
     # Without a per-group id all arearanges would link to the same line.
     line_id <- paste0("line_series_", i)
  
-    # ── 1. Centre-line series ─────────────────────────────────────────────────
+    # -- 1. Centre-line series ------------------------------------------------- 
     # Added BEFORE the arearange so Highcharts renders it on top (z-order).
     # showInLegend = TRUE: this series owns the legend entry for the group.
     if (show_line) {
@@ -197,7 +197,7 @@ hc_arearange <- function(chart, spec, opts, geom_params,
       chart <- do.call(highcharter::hc_add_series, line_args)
     }
  
-    # ── 2. Confidence-band (arearange) series ─────────────────────────────────
+    # -- 2. Confidence-band (arearange) series --------------------------------- 
     # linkedTo ties the ribbon to the line series above so both hide/show
     # together when the user clicks the legend entry.
     # showInLegend = FALSE when show_line is TRUE (line owns the legend entry).

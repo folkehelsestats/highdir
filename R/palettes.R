@@ -1,11 +1,11 @@
-# R/palettes.R ── Named colour palette registry
+# R/palettes.R -- Named colour palette registry
 #
 # Palettes are stored in a plain environment (.palette_registry).  Built-in
 # palettes are registered in .onLoad() (see zzz.R).  Users and extension
 # packages can add their own with register_palette().
 #
 # resolve_colors() is the *single* function every geom calls to obtain a
-# colour vector — it respects both explicit overrides and session defaults.
+# colour vector - it respects both explicit overrides and session defaults.
 
 # -- Registry environment ------------------------------------------------------
 
@@ -69,12 +69,12 @@ get_palette <- function(name) .palette_registry[[name]]
 #'
 #' Returns exactly `n` colours. Priority order:
 #'
-#' 1. Explicit `colors` argument — vector or palette name string.
-#' 2. `getOption("highdir.colors")` — set via [hd_set_theme()].
+#' 1. Explicit `colors` argument - vector or palette name string.
+#' 2. `getOption("highdir.colors")` - set via [hd_set_theme()].
 #' 3. Built-in hdir rules:
-#'    * n == 2  → `"hdir2"` two-colour teal/purple pair
-#'    * n <= 10 → `"hdir"` 10-colour brand palette
-#'    * n > 10  → viridis continuous scale
+#'    * n == 2  -> `"hdir2"` two-colour teal/purple pair
+#'    * n <= 10 -> `"hdir"` 10-colour brand palette
+#'    * n > 10  -> viridis continuous scale
 #'
 #' @param n      Integer. Number of colours required.
 #' @param colors Character vector, palette name, or `NULL`.
@@ -86,7 +86,7 @@ resolve_colors <- function(n, colors = NULL) {
   candidate <- colors %||% getOption("highdir.colors", default = NULL)
 
   if (!is.null(candidate)) {
-    # Resolve palette name string → colour vector
+    # Resolve palette name string -> colour vector
     if (is.character(candidate) && length(candidate) == 1 &&
         candidate %in% list_palettes()) {
       candidate <- get_palette(candidate)
@@ -103,19 +103,19 @@ resolve_colors <- function(n, colors = NULL) {
 
   # -- Priority 3: built-in n-aware rules --------------------------------------
 
-  # Rule A — exactly 2 groups: dedicated high-contrast pair
+  # Rule A - exactly 2 groups: dedicated high-contrast pair
   if (n == 2) {
     pal2 <- get_palette("hdir2")
     if (!is.null(pal2) && length(pal2) >= 2)
       return(pal2[seq_len(n)])
   }
 
-  # Rule B — up to 10 groups: first n from hdir
+  # Rule B - up to 10 groups: first n from hdir
   hdir_pal <- get_palette("hdir")
   if (!is.null(hdir_pal) && n <= length(hdir_pal))
     return(hdir_pal[seq_len(n)])
 
-  # Rule C — more than 10 groups: viridis continuous interpolation
+  # Rule C - more than 10 groups: viridis continuous interpolation
   if (!requireNamespace("viridis", quietly = TRUE))
     stop(
       n, " colours requested but hdir only has 10 and {viridis} is not ",

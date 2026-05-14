@@ -5,7 +5,7 @@
 #'
 #' When `use_js = TRUE` returns a Highcharts `point.events` list that draws a
 #' translucent highlight band behind the hovered category.  When `FALSE`
-#' returns `NULL` so the key is omitted entirely from the serialised config —
+#' returns `NULL` so the key is omitted entirely from the serialised config -
 #' an empty `list()` would break shared tooltips.
 #'
 #' @param use_js    Logical.
@@ -29,10 +29,10 @@ point_events_or_null <- function(use_js,
   ))
 }
 
-# ── Shared x-mapping (category index vs numeric) ------------------------------
+# -- Shared x-mapping (category index vs numeric) ------------------------------
 ## Highcharts draws axes in two fundamentally different ways:
-## Categorical axis (e.g. "18-24", "Oslo", "Male") — Highcharts expects 0-based integer positions: 0, 1, 2, 3… and a separate categories array for the labels
-## Numeric axis (e.g. 1990, 1995, 2000) — Highcharts reads the raw numbers directly as x-positions
+## Categorical axis (e.g. "18-24", "Oslo", "Male") - Highcharts expects 0-based integer positions: 0, 1, 2, 3… and a separate categories array for the labels
+## Numeric axis (e.g. 1990, 1995, 2000) - Highcharts reads the raw numbers directly as x-positions
 ##
 ## rlang::sym() converts it to a symbol and !! unquotes it so hcaes() sees y = pct rather than y = "pct"
 ##
@@ -59,7 +59,7 @@ point_events_or_null <- function(use_js,
   }
 }
 
-# ── Group-splitting helper ----------------------------------------------------
+# -- Group-splitting helper ----------------------------------------------------
 ## Draws each group when exists as a separate series
 ## Example:
 ## groups  <- .group_split(spec)
