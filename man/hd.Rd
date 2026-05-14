@@ -17,7 +17,7 @@ hd(
 \arguments{
 \item{data}{A \code{data.frame} \strong{or} an \code{\link[=hd_spec]{hd_spec()}} object.  When an
 \code{hd_spec} is supplied every other mapping argument (\code{x}, \code{y}, …) is
-ignored — the spec carries them already.}
+ignored - the spec carries them already.}
 
 \item{x}{Character. Column name for the x-axis variable.
 Ignored when \code{data} is an \code{hd_spec}.}
@@ -36,7 +36,7 @@ Ignored when \code{data} is an \code{hd_spec}.}
 Defaults to \code{group} when \code{NULL} and \code{group} is set.
 Ignored when \code{data} is an \code{hd_spec}.}
 
-\item{backend}{Character. Rendering engine — \code{"highcharter"} (default,
+\item{backend}{Character. Rendering engine - \code{"highcharter"} (default,
 interactive) or \code{"ggplot2"} (static), or any engine added with
 \code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "highcharter")}.}
 }

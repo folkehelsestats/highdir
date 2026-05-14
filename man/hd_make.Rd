@@ -17,7 +17,7 @@ hd_make(
 \arguments{
 \item{spec}{A \link{hd_spec} object from \code{\link[=hd_spec]{hd_spec()}}.}
 
-\item{type}{Character.  Geometry name — one of \code{\link[=list_geoms]{list_geoms()}}:
+\item{type}{Character.  Geometry name - one of \code{\link[=list_geoms]{list_geoms()}}:
 \code{"column"}, \code{"line"}, \code{"scatter"}, \code{"arearange"}, \code{"pie"}, or any
 custom geometry added with \code{\link[=register_geom]{register_geom()}}.}
 
@@ -25,7 +25,7 @@ custom geometry added with \code{\link[=register_geom]{register_geom()}}.}
 Controls title, subtitle, caption, ylim, yint, flip, per-figure
 colours, and highcharter theme.}
 
-\item{backend}{Character.  Rendering engine — \code{"highcharter"} (default,
+\item{backend}{Character.  Rendering engine - \code{"highcharter"} (default,
 interactive) or \code{"ggplot2"} (static), or any engine added with
 \code{\link[=register_backend]{register_backend()}}.}
 
@@ -48,7 +48,7 @@ automatically.
 }
 \description{
 Renders a \link{hd_spec} and \link{hd_opts} pair using the selected backend and
-geometry.  This is the central function of the package — everything else
+geometry.  This is the central function of the package - everything else
 feeds into or flows out of \code{hd_make()}.
 }
 \section{Workflow}{
@@ -85,7 +85,7 @@ hd_make(spec, "line",   opts, smooth = TRUE)
 hd_make(spec, "line",   opts, smooth = FALSE, dot_size = 6)
 hd_make(spec, "scatter")
 
-# Pie chart — group is ignored; x = label, y = value
+# Pie chart - group is ignored; x = label, y = value
 pie_df   <- data.frame(category = c("A","B","C","D"),
                         value    = c(35, 25, 20, 20))
 pie_spec <- hd_spec(pie_df, x = "category", y = "value")
@@ -93,7 +93,7 @@ pie_opts <- hd_opts(title = "Share by category")
 hd_make(pie_spec, "pie", pie_opts)
 hd_make(pie_spec, "pie", pie_opts, inner_size = "50\%")  # donut
 
-# Arearange — requires ymin + ymax in ...
+# Arearange - requires ymin + ymax in ...
 df2   <- cbind(df, lo = df$pct - 5, hi = df$pct + 5)
 spec2 <- hd_spec(df2, "age", "pct", group = "sex")
 hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")

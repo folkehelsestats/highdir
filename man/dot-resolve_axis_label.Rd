@@ -16,8 +16,8 @@ Character string or NULL.
 }
 \description{
 Three-way logic:
-NULL   → hide the axis label entirely
-" "    → use the column name from spec as the fallback
-string → use the string as-is
+NULL   -> hide the axis label entirely
+" "    -> use the column name from spec as the fallback
+string -> use the string as-is
 }
 \keyword{internal}

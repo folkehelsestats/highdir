@@ -20,7 +20,7 @@ point_events_or_null(
 \description{
 When \code{use_js = TRUE} returns a Highcharts \code{point.events} list that draws a
 translucent highlight band behind the hovered category.  When \code{FALSE}
-returns \code{NULL} so the key is omitted entirely from the serialised config —
+returns \code{NULL} so the key is omitted entirely from the serialised config -
 an empty \code{list()} would break shared tooltips.
 }
 \keyword{internal}
