@@ -1,5 +1,5 @@
 Package: highdir
-Title: Backend-Agnostic Figure Builder for `Highcharter` and `ggplot2`
+Title: Backend-Agnostic Figure Builder for 'highcharter' and 'ggplot2'
 Version: 0.5.0
 Authors@R:
   person(
@@ -15,7 +15,7 @@ Description: Provides a backend-agnostic API for creating data visualizations
     backend without modifying the calling code. Supports both declarative
     and layered workflows, flexible theming and colour palettes, optional
     JavaScript enhancements, and tools for exporting figures and interactive
-    exploration via a Shiny interface.
+    exploration via a Shiny app.
 URL: https://folkehelsestats.github.io/highdir/, https://github.com/folkehelsestats/highdir
 BugReports: https://github.com/folkehelsestats/highdir/issues
 License: MIT + file LICENSE
