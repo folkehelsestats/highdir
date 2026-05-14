@@ -9,12 +9,13 @@ Authors@R:
     role = c("aut", "cre"),
     comment = c(ORCID = "0000-0001-5014-3665")
   )
-Description: Provides a unified, backend-agnostic API for building interactive
-    figures with 'highcharter' or static figures with 'ggplot2'. A figure is
-    described once via a spec object and rendered to either backend without
-    changing the calling code. Includes a Norwegian health-survey colour palette,
-    flexible theme/style configuration, optional JavaScript injection for hover
-    effects and accessibility, and both standalone save helpers and a Shiny GUI.
+Description: Provides a backend-agnostic API for creating data visualizations
+    using 'highcharter' (interactive) or 'ggplot2' (static). Figures are
+    defined once via a specification object and can be rendered to either
+    backend without modifying the calling code. Supports both declarative
+    and layered workflows, flexible theming and colour palettes, optional
+    JavaScript enhancements, and tools for exporting figures and interactive
+    exploration via a Shiny interface.
 URL: https://folkehelsestats.github.io/highdir/, https://github.com/folkehelsestats/highdir
 BugReports: https://github.com/folkehelsestats/highdir/issues
 License: MIT + file LICENSE
