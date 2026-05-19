@@ -28,7 +28,7 @@ Called automatically inside the highcharter engine; useful when you want to
 apply a theme to a highchart built outside highdir.
 }
 \examples{
-\dontrun{
+if(interactive()) {
 t <- hd_theme("darkunica")
 highcharter::highchart() |> highcharter::hc_add_theme(t)
 }
