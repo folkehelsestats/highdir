@@ -48,8 +48,6 @@ Geom types
   : Add an Arearange (Confidence Band) Layer
 - [`hd_geom_column()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_column.md)
   : Column Geometry Layer for hd Objects
-- [`hd_geom_layer`](https://github.com/folkehelsestats/highdir/reference/hd_geom_layer.md)
-  : Geometry Layers for hd Objects
 - [`hd_geom_line()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_line.md)
   : Line Geometry Layer for hd Objects
 - [`hd_geom_pie()`](https://github.com/folkehelsestats/highdir/reference/hd_geom_pie.md)
