@@ -78,7 +78,7 @@ opts <- hd_opts(title    = "Health survey results",
                  subtitle = "Source: FHI 2024",
                  ylim     = c(0, 80))
 
-\dontrun{
+\donttest{
 # -- Interactive charts (highcharter) --------------------------------------
 hd_make(spec, "column", opts)
 hd_make(spec, "line",   opts, smooth = TRUE)

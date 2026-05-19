@@ -75,6 +75,7 @@ hc_scatter <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' opt <- hd_opts(title = "Scatter Plot of mtcars")
 #' hd_make(car, type = "scatter")
 #'
+#' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
 #' @export
 hd_geom_scatter <- function(dot_size = 4, ...) {
   hd_geom("scatter", dot_size = dot_size, ...)

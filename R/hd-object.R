@@ -115,32 +115,6 @@ hd_geom <- function(type, ...) {
 }
 
 
-# ------------------------------------------------------------------------------
-# hd_geom_*()  -- public geom constructors  (one per registered geometry)
-# ------------------------------------------------------------------------------
-
-#' Geometry Layers for hd Objects
-#'
-#' Each `hd_geom_*()` function creates a geometry layer that is added to an
-#' [hd()] object via `+`.  The layer records the geometry type and any
-#' geometry-specific arguments; rendering only happens when the `hd` object is
-#' printed.
-#'
-#' Geometry-specific arguments (`...`) are forwarded to [hd_make()] as the
-#' `...` pass-through which they are the same arguments documented by
-#' [geom_args()].
-#'
-#' @param ... Geometry-specific arguments forwarded to [hd_make()].
-#'   Use [geom_args()] to discover available arguments per geometry, e.g.
-#'   `geom_args("line")` lists `smooth`, `dot_size`, `line_symbols`.
-#'
-#' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
-#'
-#' @name hd_geom_layer
-#' @seealso [hd()], [list_geoms()], [geom_args()], [hd_make()]
-NULL
-
-
 
 # ------------------------------------------------------------------------------
 # +.hd  -- accumulate layers

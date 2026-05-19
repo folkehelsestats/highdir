@@ -9,20 +9,19 @@ Authors@R:
     role = c("aut", "cre"),
     comment = c(ORCID = "0000-0001-5014-3665")
   )
-Description: Provides a backend-agnostic API for creating data visualizations
+Description: Provides a backend-agnostic 'API' for creating data visualizations
     using 'highcharter' (interactive) or 'ggplot2' (static). Figures are
     defined once via a specification object and can be rendered to either
     backend without modifying the calling code. Supports both declarative
     and layered workflows, flexible theming and colour palettes, optional
-    JavaScript enhancements, and tools for exporting figures and interactive
-    exploration via a Shiny app.
+    'JavaScript' enhancements, and tools for exporting figures and interactive
+    exploration via a 'shiny' app.
 URL: https://folkehelsestats.github.io/highdir/, https://github.com/folkehelsestats/highdir
 BugReports: https://github.com/folkehelsestats/highdir/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Depends:
     R (>= 4.1.0)
 Imports:
@@ -49,3 +48,4 @@ Suggests:
     tibble
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

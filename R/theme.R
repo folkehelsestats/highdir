@@ -87,7 +87,7 @@ hd_set_theme <- function(hc_theme   = NULL,
 #' @return A highcharter theme object (`hc_theme`).
 #'
 #' @examples
-#' \dontrun{
+#' if(interactive()) {
 #' t <- hd_theme("darkunica")
 #' highcharter::highchart() |> highcharter::hc_add_theme(t)
 #' }
@@ -314,7 +314,7 @@ apply_gg_colors <- function(p,
 #' @return The `highchart` object with JS injected.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' spec <- hd_spec(mtcars, "wt", "mpg")
 #' fig  <- hd_make(spec, "scatter")
 #' fig  <- hd_add_js(fig, code = "console.log('chart loaded');")

@@ -90,3 +90,8 @@ Useful links:
 
 **Maintainer**: Yusman Kamaleri <ybkamaleri@gmail.com>
 ([ORCID](https://orcid.org/0000-0001-5014-3665))
+
+Authors:
+
+- Yusman Kamaleri <ybkamaleri@gmail.com>
+  ([ORCID](https://orcid.org/0000-0001-5014-3665))

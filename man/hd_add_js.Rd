@@ -36,7 +36,7 @@ For Highcharts built-in modules (accessibility, exporting, etc.) use
 Exactly one of \code{code}, \code{file}, or \code{plugin} must be supplied.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 spec <- hd_spec(mtcars, "wt", "mpg")
 fig  <- hd_make(spec, "scatter")
 fig  <- hd_add_js(fig, code = "console.log('chart loaded');")

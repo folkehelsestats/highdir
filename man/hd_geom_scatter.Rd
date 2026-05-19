@@ -12,6 +12,9 @@ hd_geom_scatter(dot_size = 4, ...)
 \item{...}{Geometry-specific arguments forwarded to \code{\link[=hd_make]{hd_make()}}.
 ' @return An S3 object of class \code{"hd_geom"} for use with \code{+.hd}.}
 }
+\value{
+An S3 object of class \code{"hd_geom"} for use with \code{+.hd}.
+}
 \description{
 \code{hd_geom_scatter()} creates a scatter geometry layer that is added to an
 \code{\link[=hd]{hd()}} object via \code{+}. Use \code{\link[=geom_args]{geom_args()}} to discover available arguments per
