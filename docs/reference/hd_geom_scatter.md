@@ -25,6 +25,10 @@ hd_geom_scatter(dot_size = 4, ...)
   [`hd_make()`](https://github.com/folkehelsestats/highdir/reference/hd_make.md).
   ' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
 
+## Value
+
+An S3 object of class `"hd_geom"` for use with `+.hd`.
+
 ## Examples
 
 ``` r

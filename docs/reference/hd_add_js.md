@@ -51,9 +51,9 @@ Exactly one of `code`, `file`, or `plugin` must be supplied.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (interactive()) {
 spec <- hd_spec(mtcars, "wt", "mpg")
 fig  <- hd_make(spec, "scatter")
 fig  <- hd_add_js(fig, code = "console.log('chart loaded');")
-} # }
+}
 ```

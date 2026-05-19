@@ -40,8 +40,8 @@ to apply a theme to a highchart built outside highdir.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if(interactive()) {
 t <- hd_theme("darkunica")
 highcharter::highchart() |> highcharter::hc_add_theme(t)
-} # }
+}
 ```

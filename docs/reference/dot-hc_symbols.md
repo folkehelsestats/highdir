@@ -7,7 +7,3 @@ Valid Highcharts marker symbol names
 ``` r
 .hc_symbols
 ```
-
-## Format
-
-An object of class `character` of length 5.
