@@ -149,7 +149,59 @@
         backend_only = "highcharter"
       )
     )
+  ),
+
+  # venn -----------------------------------------------------------------------
+  # Venn / Euler diagrams require a different data contract from all other geoms.
+  # Instead of spec$x / spec$y columns, the user supplies a pre-built list of
+  # set entries via the `sets` argument in hd_geom_venn().  spec$data is not
+  # used by hc_venn / gg_venn; it may be NULL or an empty data frame.
+  #
+  # Each entry in `sets` is a named list:
+  #   list(sets = list("A"),        name = "Animals", value = 5)
+  #   list(sets = list("A", "B"),                     value = 2)  # intersection
+  #
+  # ggplot2 backend: rendered via the ggVennDiagram or eulerr package
+  #   (must be in Suggests).  Falls back to a text message if neither is
+  #   installed, so the package does not gain a hard dependency.
+  # highcharter backend: native hc_chart(type = "venn") series.
+  venn = list(
+    ggplot_fun      = NULL,
+    highcharter_fun = NULL,
+    skip_base_fig   = TRUE,   # bypasses base_fig() — no x/y axis canvas needed
+    required_args   = list(
+      sets = list(
+        default = NULL,
+        desc    = paste0(
+          "List. Each element is a named list with slots:",
+          "  sets  — character vector of set names for this entry",
+          "         (length 1 = single set, length > 1 = intersection)",
+          "  value — numeric size of this region",
+          "  name  — optional character label shown in the diagram",
+          "Example: list(",
+          "  list(sets = list('A'), name = 'Animals', value = 5),",
+          "  list(sets = list('B'), name = 'Four legs', value = 3),",
+          "  list(sets = list('A','B'), value = 2)",
+          ")"
+        ),
+        backend_only = NULL
+      )
+    ),
+    optional_args = list(
+      series_name = list(
+        default      = "Venn Diagram",
+        desc         = "Character. Series name shown in the chart title area. Highcharter only.",
+        backend_only = "highcharter"
+      ),
+      label_font_size = list(
+        default      = "14px",
+        desc         = "Character. CSS font-size for set labels. Highcharter only.",
+        backend_only = "highcharter"
+      )
+    )
   )
+
+
 
   # map ------------------------------------------------------------------------
   # map = list(                                                                       #
