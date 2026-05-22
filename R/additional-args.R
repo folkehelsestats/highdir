@@ -102,6 +102,7 @@
   ranked_bar = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
+    skip_base_fig   = TRUE,   # bypasses base_fig() — geom manages its own axes and labels
     optional_args   = list(
       ascending = list(
         default = TRUE,
