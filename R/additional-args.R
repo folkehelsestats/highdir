@@ -25,6 +25,7 @@
   column = list(
     ggplot_fun      = NULL,   # filled in .onLoad() after namespace is ready
     highcharter_fun = NULL,
+    skip_base_fig   = FALSE, 
     required_args   = character(),
     optional_args   = list()
     # No optional_args: column has no extra knobs beyond spec / opts
@@ -34,6 +35,7 @@
   line = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
+    skip_base_fig   = FALSE, 
     optional_args   = list(
       smooth = list(
         default = TRUE,
@@ -59,6 +61,7 @@
   scatter = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
+    skip_base_fig   = FALSE, 
     optional_args   = list(
       dot_size = list(
         default = 4L,
@@ -72,6 +75,7 @@
   arearange = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
+    skip_base_fig   = FALSE, 
     required_args   = list(
       ymin = list(
         default = NULL,
@@ -89,6 +93,7 @@
   pie = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
+    skip_base_fig   = FALSE, 
     optional_args   = list(
       inner_size = list(
         default = "0%",
@@ -136,6 +141,7 @@
   stacked_column = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
+    skip_base_fig   = FALSE, 
     required_args   = list(
       stack = list(
         default = NULL,
