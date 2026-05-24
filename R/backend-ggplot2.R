@@ -50,6 +50,16 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     
     layers <- geom$ggplot_fun(spec, opts, geom_params)
 
+    # Special case: geom returned a complete ggplot object (e.g. ggVennDiagram).
+    # Detect via the sentinel key "__ggplot__" and return it directly after
+    # applying theme and accessibility.  No layer-by-layer assembly needed.
+    if (!is.null(layers[["__ggplot__"]])) {
+      p <- layers[["__ggplot__"]] + gt$theme
+      if (!is.null(opts$description))
+        p <- p + ggplot2::labs(alt = opts$description)
+      return(p)
+    }
+
     p <- ggplot2::ggplot() +
       ggplot2::labs(
         title    = opts$title,

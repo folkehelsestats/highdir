@@ -13,9 +13,36 @@
 #' @keywords internal
 highcharter_engine <- function(spec, geom, opts, geom_params,
                                use_js = TRUE, module = FALSE, ...) {
-  
+
+  # -- Skip base_fig() for self-contained geoms --------------------------------
+  # Some geoms (venn, ranked_bar, map) have no x/y axes and build their own
+  # chart from scratch.  skip_base_fig = TRUE in additional-args.R signals
+  # this.  These geoms receive a blank highchart() instead of the axis canvas
+  # that base_fig() would build from spec$x / spec$y.
+  if (isTRUE(geom$skip_base_fig)) {
+    chart <- highcharter::highchart()
+
+    # Still apply title/subtitle so the geom does not have to handle them
+    if (!is.null(opts$title))
+      chart <- chart |> highcharter::hc_title(text = opts$title)
+    chart <- chart |>
+      highcharter::hc_subtitle(text = opts$subtitle %||% "")
+
+    # Delegate entirely to the geom function then apply theme + plugins
+    chart <- geom$highcharter_fun(chart, spec, opts, geom_params,
+                                  use_js = use_js, ...)
+    chart <- chart |>
+      highcharter::hc_add_theme(
+        hd_theme(name = opts$hc_theme, colors = opts$colors)
+      )
+    for (plugin in getOption("highdir.js_plugins", default = character(0)))
+      chart <- hd_add_js(chart, plugin = plugin)
+
+    return(chart)
+  }
+
   chart <- base_fig(spec, opts, "highcharter")
-  
+
   # -- Tooltip -----------------------------------------------------------------
   ysuffix <- opts$ysuffix %||% ""
   has_suffix <- nzchar(ysuffix)
