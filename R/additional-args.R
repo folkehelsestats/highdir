@@ -176,7 +176,8 @@
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
     skip_base_fig   = TRUE,   # bypasses base_fig() — no x/y axis canvas needed
-    required_args   = list(
+    required_args   = list(),
+    optional_args = list(
       sets = list(
         default = NULL,
         desc    = paste0(
@@ -192,9 +193,7 @@
           ")"
         ),
         backend_only = NULL
-      )
-    ),
-    optional_args = list(
+      ),
       series_name = list(
         default      = "Venn Diagram",
         desc         = "Character. Series name shown in the chart title area. Highcharter only.",

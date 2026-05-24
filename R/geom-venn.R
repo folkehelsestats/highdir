@@ -96,7 +96,19 @@
 #' @keywords internal
 gg_venn <- function(spec, opts, geom_params, ...) {
 
-  sets <- geom_params$sets
+  # Sets resolution: two paths depending on calling API.
+  #
+  # Composable API (hd() + hd_geom_venn(sets = ...)):
+  #   sets live in geom_params$sets -- supplied by the user directly.
+  #
+  # Declarative API (hd_spec_venn() + hd_make(spec, "venn", opts, sets = ...)):
+  #   sets are passed via ... into geom_params by hd_make(), same pattern
+  #   as ymin/ymax for arearange.  But as a convenience, if geom_params$sets
+  #   is NULL and spec is an hd_spec_venn, extract sets from spec automatically
+  #   so hd_make(spec_v, "venn", opts) works without repeating the sets.
+  sets <- geom_params$sets %||%
+    if (inherits(spec, "hd_spec_venn")) hd_venn_sets_from_spec(spec) else NULL
+
   .validate_venn_sets(sets)
 
   # -- eulerr path (preferred) -------------------------------------------------
@@ -208,7 +220,11 @@ gg_venn <- function(spec, opts, geom_params, ...) {
 #' @keywords internal
 hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 
-  sets            <- geom_params$sets
+  # Sets resolution: same dual-path logic as gg_venn.
+  # geom_params$sets is preferred (composable API or explicit hd_make call).
+  # Falls back to spec when spec is an hd_spec_venn (declarative API shortcut).
+  sets            <- geom_params$sets %||%
+    if (inherits(spec, "hd_spec_venn")) hd_venn_sets_from_spec(spec) else NULL
   series_name     <- geom_params$series_name     %||% "Venn Diagram"
   label_font_size <- geom_params$label_font_size %||% "14px"
 

@@ -17,7 +17,8 @@
 #'
 #' @param data   A `data.frame` **or** an [hd_spec()] object.  When an
 #'   `hd_spec` is supplied every other mapping argument (`x`, `y`, …) is
-#'   ignored - the spec carries them already.
+#'   ignored - the spec carries them already. Default is `NULL`, which
+#'   creates an empty data.frame.
 #' @param x      Character. Column name for the x-axis variable.
 #'   Ignored when `data` is an `hd_spec`.
 #' @param y      Character. Column name for the y-axis variable.
