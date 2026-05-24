@@ -71,7 +71,7 @@
 #'   hd_opts(title = "Static version")
 #'
 #' @export
-hd <- function(data,
+hd <- function(data    = NULL,
                x       = NULL,
                y       = NULL,
                group   = NULL,
@@ -79,6 +79,14 @@ hd <- function(data,
                colour  = NULL,
                backend = getOption("highdir.backend", "highcharter")) {
 
+  if (is.null(data)) {
+    data <- data.frame()
+  } else {
+    if (!is.data.frame(data) && !inherits(data, "hd_spec")) {
+      stop("`data` must be a data.frame or an hd_spec object.", call. = FALSE)
+    }
+  }
+  
   spec <- if (inherits(data, "hd_spec")) {
     data  # already a spec - use as-is
   } else {

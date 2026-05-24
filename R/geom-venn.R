@@ -33,7 +33,7 @@
 #   extended <- c(base_sets, list(
 #     list(sets = list("A", "B"), value = 4)
 #   ))
-#   hd(data.frame(), backend = "highcharter") +
+#   hd(backend = "highcharter") +
 #     hd_geom_venn(sets = extended) +
 #     hd_opts(title = "Overlap")
 #
@@ -272,7 +272,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   hd_venn_set("B", "Four legs", 4)
 #' )
 #' extended <- c(base, list(hd_venn_intersect(c("A","B"), 3)))
-#' hd(data.frame(), backend = "highcharter") +
+#' hd(backend = "highcharter") +
 #'   hd_geom_venn(sets = extended)
 #' ```
 #'
@@ -299,7 +299,6 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' @seealso [hd_venn_set()], [hd_venn_intersect()]
 #'
 #' @examples
-#' \donttest{
 #' # Build the set list with helper constructors
 #' my_sets <- list(
 #'   hd_venn_set("A", "Animals",    value = 5),
@@ -309,12 +308,12 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' )
 #'
 #' # Highcharter (interactive)
-#' hd(data.frame(), backend = "highcharter") +
+#' hd(backend = "highcharter") +
 #'   hd_geom_venn(sets = my_sets) +
 #'   hd_opts(title = "Animals and Minerals")
 #'
 #' # ggplot2 (static) - requires eulerr or ggVennDiagram
-#' hd(data.frame(), backend = "ggplot2") +
+#' hd(backend = "ggplot2") +
 #'   hd_geom_venn(sets = my_sets) +
 #'   hd_opts(title = "Animals and Minerals")
 #'
@@ -324,18 +323,17 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   hd_venn_set("B", "Bergen", value = 95)
 #' )
 #' extended <- c(base_sets, list(
-#'   hd_venn_intersect(c("A", "B"), value = 40)
+#'   hd_venn_intersect(c("A", "B"), "Both", value = 40)
 #' ))
-#' hd(data.frame(), backend = "highcharter") +
+#' hd(backend = "highcharter") +
 #'   hd_geom_venn(sets = extended) +
 #'   hd_opts(title = "City overlap")
-#' }
 #'
 #' @export
 hd_geom_venn <- function(sets,
-                          series_name     = "Venn Diagram",
-                          label_font_size = "14px",
-                          ...) {
+                         series_name     = "Venn Diagram",
+                         label_font_size = "14px",
+                         ...) {
   # Validate at construction time - fail early before the object is even stored
   .validate_venn_sets(sets, "hd_geom_venn")
 
