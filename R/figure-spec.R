@@ -196,6 +196,7 @@ get_src_data <- function(obj) {
 #'
 #' hd_make(spec_v, "venn", opts_v)
 #' hd_make(spec_v, "venn", opts_v, backend = "ggplot2")
+#' hd_make(hd_spec_venn(sets), "venn", hd_opts(title = "City overlap"))
 #' }
 #'
 #' @export
@@ -208,7 +209,7 @@ hd_spec_venn <- function(sets) {
   # $data slot as every other hd_spec, without requiring x/y columns.
   # I(list(sets)) uses AsIs to prevent data.frame() from unlisting.
   wrapper_df <- data.frame(.venn_sets = I(list(sets)),
-                            .value     = NA_real_)
+                           .value     = NA_real_)
 
   structure(
     list(

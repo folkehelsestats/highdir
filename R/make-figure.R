@@ -91,7 +91,7 @@
 #' hd_make(spec, "column", opts_no)
 #'
 #' # -- Save outputs ----------------------------------------------------------
-#' hd_save(hd_make(spec, "column", opts),               "column.html")
+#' hd_save(hd_make(spec, "column", opts), "column.html")
 #' hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "column.png")
 #' }
 #'
