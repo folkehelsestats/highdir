@@ -11,7 +11,8 @@
 #
 # This list is supplied directly in hd_geom_venn(sets = ...) rather than
 # via hd_spec().  hd_spec() is still required by hd() but its $data slot
-# is unused by both gg_venn and hc_venn.
+# is unused by both gg_venn and hc_venn. Else use hd_spec_venn() to wrap
+# the sets list in a spec object for use with hd_make().
 #
 # Why skip_base_fig = TRUE?
 # -----------------------
@@ -425,4 +426,220 @@ hd_venn_intersect <- function(ids, value, name = NULL) {
   entry <- list(sets = as.list(ids), value = as.numeric(value))
   if (!is.null(name)) entry$name <- name
   entry
+}
+
+
+# =============================================================================
+# venn_df_to_list()  -- data.frame to venn set list converter
+# =============================================================================
+
+#' Convert a Data Frame to a Venn Set List
+#'
+#' Converts a tidy data frame with columns `id`, `name`, `value`, and `type`
+#' into the nested list format required by [hd_geom_venn()] and
+#' [hd_spec_venn()].  This is the recommended way to build venn data from
+#' a spreadsheet, CSV, or database query without calling [hd_venn_set()] and
+#' [hd_venn_intersect()] row by row.
+#'
+#' @section Data frame format:
+#' The input data frame must have these four columns:
+#' \describe{
+#'   \item{`id`}{Character. For `type = "set"`: a single identifier such as
+#'     `"A"`.  For `type = "intersect"`: a comma-separated list of the set ids
+#'     that overlap, such as `"A,B"` or `"A,B,C"`.  Spaces around commas are
+#'     trimmed automatically.}
+#'   \item{`name`}{Character. Human-readable label shown in the diagram.
+#'     For intersections this is optional — supply `NA` or `""` to omit it.}
+#'   \item{`value`}{Numeric. Area or size of this region.}
+#'   \item{`type`}{Character. Either `"set"` (a single circle) or
+#'     `"intersect"` (an overlap region between two or more circles).}
+#' }
+#'
+#' @section Relationship to hd_venn_set / hd_venn_intersect:
+#' Each row is converted by the corresponding constructor:
+#' \itemize{
+#'   \item `type = "set"`      calls [hd_venn_set(id, name, value)]
+#'   \item `type = "intersect"` calls [hd_venn_intersect(ids, value, name)]
+#'     where `ids` is the comma-split vector from `id`.
+#' }
+#' The result is identical to building the list by hand with those functions.
+#'
+#' @param df  A data frame with columns `id`, `name`, `value`, `type`.
+#'   Can be a plain `data.frame`, `data.table`, or `tibble`.
+#'
+#' @return A list of set entries suitable for [hd_geom_venn()],
+#'   [hd_spec_venn()], and [hd_venn_df()].
+#'
+#' @seealso [hd_venn_df()], [hd_spec_venn()], [hd_geom_venn()]
+#'
+#' @examples
+#' venn_df <- data.frame(
+#'   type  = c("set", "set", "intersect"),
+#'   id    = c("A",   "B",   "A,B"),
+#'   name  = c("Oslo", "Bergen", "Both"),
+#'   value = c(120, 95, 40)
+#' )
+#'
+#' sets <- venn_df_to_list(venn_df)
+#' # Equivalent to:
+#' # list(
+#' #   hd_venn_set("A", "Oslo",   120),
+#' #   hd_venn_set("B", "Bergen", 95),
+#' #   hd_venn_intersect(c("A", "B"), 40, name = "Both")
+#' # )
+#'
+#' @export
+venn_df_to_list <- function(df) {
+
+  # -- Input validation --------------------------------------------------------
+  if (!is.data.frame(df))
+    stop("venn_df_to_list(): `df` must be a data.frame.", call. = FALSE)
+
+  required_cols <- c("id", "name", "value", "type")
+  missing_cols  <- setdiff(required_cols, names(df))
+  if (length(missing_cols))
+    stop("venn_df_to_list(): `df` is missing column(s): ",
+         paste(missing_cols, collapse = ", "), ".", call. = FALSE)
+
+  if (nrow(df) == 0L)
+    stop("venn_df_to_list(): `df` has no rows.", call. = FALSE)
+
+  valid_types <- c("set", "intersect")
+  bad_types   <- setdiff(unique(as.character(df$type)), valid_types)
+  if (length(bad_types))
+    stop("venn_df_to_list(): `type` column contains unknown value(s): ",
+         paste(bad_types, collapse = ", "),
+         ".  Use \"set\" or \"intersect\".", call. = FALSE)
+
+  # -- Row-by-row conversion ---------------------------------------------------
+  # Work on a plain data.frame copy so the function accepts data.table and
+  # tibble inputs without requiring those packages.
+  df <- as.data.frame(df, stringsAsFactors = FALSE)
+
+  lapply(seq_len(nrow(df)), function(i) {
+    row  <- df[i, , drop = FALSE]
+    type <- trimws(as.character(row$type))
+    id   <- as.character(row$id)
+    nm   <- as.character(row$name)
+    val  <- as.numeric(row$value)
+
+    if (type == "set") {
+      # Single-set row: id is a plain identifier, name is required
+      hd_venn_set(id = trimws(id), name = nm, value = val)
+
+    } else {
+      # Intersect row: id is comma-separated, e.g. "A,B" or "A, B, C"
+      ids <- trimws(strsplit(id, ",", fixed = TRUE)[[1L]])
+      if (length(ids) < 2L)
+        stop("venn_df_to_list(): row ", i,
+             " has type \"intersect\" but `id` contains only one value (\"",
+             id, "\").  Supply comma-separated ids, e.g. \"A,B\".",
+             call. = FALSE)
+
+      # name is optional for intersections — omit when NA or empty string
+      nm_clean <- if (is.na(nm) || nchar(trimws(nm)) == 0L) NULL else nm
+      hd_venn_intersect(ids = ids, value = val, name = nm_clean)
+    }
+  })
+}
+
+
+# =============================================================================
+# hd_venn_df()  -- convenience wrappers for both APIs
+# =============================================================================
+
+#' Create a Venn Diagram Directly from a Data Frame
+#'
+#' A single-call convenience wrapper that accepts the same tidy data frame as
+#' [venn_df_to_list()] and returns either an `hd_spec_venn` object (for the
+#' declarative API) or an `hd_geom` layer (for the composable `+` API),
+#' depending on the `output` argument.
+#'
+#' This means you never need to call [venn_df_to_list()], [hd_spec_venn()],
+#' or [hd_geom_venn()] directly when starting from a data frame.
+#'
+#' @section Which output to use:
+#' \describe{
+#'   \item{`output = "spec"` (default)}{Returns an `hd_spec_venn` object.
+#'     Pass to [hd_make()] just like any other spec.  Best for reporting
+#'     pipelines and scripts that separate data from presentation.}
+#'   \item{`output = "geom"`}{Returns an `hd_geom` layer.  Add to an [hd()]
+#'     object with `+`.  Best for interactive exploration and inline charts.}
+#' }
+#'
+#' @section Declarative API (output = "spec"):
+#' ```r
+#' df <- data.frame(
+#'   type  = c("set", "set", "intersect"),
+#'   id    = c("A",   "B",   "A,B"),
+#'   name  = c("Oslo", "Bergen", "Both"),
+#'   value = c(120, 95, 40)
+#' )
+#'
+#' spec_v <- hd_venn_df(df)
+#' hd_make(spec_v, "venn", hd_opts(title = "City overlap"))
+#' ```
+#'
+#' @section Composable API (output = "geom"):
+#' ```r
+#' hd(backend = "highcharter") +
+#'   hd_venn_df(df, output = "geom") +
+#'   hd_opts(title = "City overlap")
+#' ```
+#'
+#' @param df            A data frame with columns `id`, `name`, `value`,
+#'   `type`.  See [venn_df_to_list()] for the full format description.
+#' @param output        Character. `"spec"` (default) returns an
+#'   `hd_spec_venn`; `"geom"` returns an `hd_geom` layer for use with `+`.
+#' @param series_name   Character. Passed to [hd_geom_venn()] when
+#'   `output = "geom"`.  Default `"Venn Diagram"`.
+#' @param label_font_size Character. Passed to [hd_geom_venn()] when
+#'   `output = "geom"`.  Default `"14px"`.
+#'
+#' @return An `hd_spec_venn` object when `output = "spec"`, or an `hd_geom`
+#'   object when `output = "geom"`.
+#'
+#' @seealso [venn_df_to_list()], [hd_spec_venn()], [hd_geom_venn()],
+#'   [hd_make()], [hd()]
+#'
+#' @examples
+#' \donttest{
+#' df <- data.frame(
+#'   type  = c("set", "set", "intersect"),
+#'   id    = c("A",   "B",   "A,B"),
+#'   name  = c("Oslo", "Bergen", "Both"),
+#'   value = c(120, 95, 40)
+#' )
+#'
+#' # Declarative API
+#' spec_v <- hd_venn_df(df)
+#' hd_make(spec_v, "venn", hd_opts(title = "City overlap"))
+#'
+#' # Composable API
+#' hd(backend = "highcharter") +
+#'   hd_venn_df(df, output = "geom") +
+#'   hd_opts(title = "City overlap")
+#'
+#' # ggplot2 backend
+#' hd(backend = "ggplot2") +
+#'   hd_venn_df(df, output = "geom") +
+#'   hd_opts(title = "City overlap")
+#' }
+#'
+#' @export
+hd_venn_df <- function(df,
+                        output          = c("spec", "geom"),
+                        series_name     = "Venn Diagram",
+                        label_font_size = "14px") {
+
+  output <- match.arg(output)
+  sets   <- venn_df_to_list(df)
+
+  if (output == "spec") {
+    hd_spec_venn(sets)
+  } else {
+    hd_geom_venn(sets            = sets,
+                 series_name     = series_name,
+                 label_font_size = label_font_size)
+  }
 }
