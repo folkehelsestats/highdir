@@ -4,10 +4,12 @@
 \alias{hd_spec}
 \title{Create a Figure Data Specification}
 \usage{
-hd_spec(data, x, y, group = NULL, n = NULL, colour = NULL)
+hd_spec(data = NULL, x, y, group = NULL, n = NULL, colour = NULL)
 }
 \arguments{
-\item{data}{A \code{data.frame} containing all referenced columns.}
+\item{data}{A \code{data.frame} containing all referenced columns. Default is \code{NULL},
+which creates an empty data.frame.  The original data source is recorded
+in the \code{"src_data"} attribute for printing and debugging purposes.}
 
 \item{x}{Character. Column name for the x-axis variable.}
 
