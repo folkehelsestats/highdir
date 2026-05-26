@@ -107,7 +107,7 @@ gg_venn <- function(spec, opts, geom_params, ...) {
   #   as ymin/ymax for arearange.  But as a convenience, if geom_params$sets
   #   is NULL and spec is an hd_spec_venn, extract sets from spec automatically
   #   so hd_make(spec_v, "venn", opts) works without repeating the sets.
-  sets <- geom_params$sets %||%
+  sets         <- geom_params$sets %||%
     if (inherits(spec, "hd_spec_venn")) hd_venn_sets_from_spec(spec) else NULL
 
   .validate_venn_sets(sets)
@@ -124,21 +124,42 @@ gg_venn <- function(spec, opts, geom_params, ...) {
     }, character(1))
     names(named_vals) <- set_keys
 
-    fit  <- eulerr::euler(named_vals)
+    fit          <- eulerr::euler(named_vals)
+    value_suffix <- geom_params$value_suffix %||% ""
 
-    # plot.euler() returns an eulergram (a gTree / grob), NOT a ggplot.
-    # ggplot2::ggplotGrob() only accepts ggplot objects and errors on grobs.
-    # The correct way to embed any grob into a ggplot layer is
-    # annotation_custom(), which wraps it in an Annotation layer that the
-    # engine can attach with `+` like any other layer.
-    # Inf/-Inf extents make it fill the entire plot panel.
-    euler_grob <- plot(fit, quantities = TRUE)
+    # Build per-region label text:
+    #   default:                 "42"
+    #   with value_suffix "%":   "42%"
+    #   with extra column n:     "42%(n=312)"
+    # eulerr accepts a named character vector for `quantities` where names
+    # match the region keys (e.g. "A", "A&B").
+    quantities_labels <- vapply(sets, function(e) {
+      key     <- paste(unlist(e$sets), collapse = "&")
+      val_str <- paste0(e$value, value_suffix)
+
+      # Append extra columns as (key=value) pairs after the value
+      extra_str <- ""
+      if (!is.null(e$extra) && length(e$extra) > 0L) {
+        parts     <- paste(names(e$extra), unlist(e$extra), sep = "=")
+        extra_str <- paste0("(", paste(parts, collapse = ", "), ")")
+      }
+      stats::setNames(paste0(val_str, extra_str), key)
+    }, character(1))
+
+    # plot.euler() returns an eulergram grob — embed via annotation_custom()
+    euler_grob <- plot(
+      fit,
+      quantities = list(
+        labels = quantities_labels,
+        cex    = 1
+      )
+    )
 
     return(list(
       ggplot2::annotation_custom(
-        grob   = euler_grob,
-        xmin   = -Inf, xmax = Inf,
-        ymin   = -Inf, ymax = Inf
+        grob = euler_grob,
+        xmin = -Inf, xmax = Inf,
+        ymin = -Inf, ymax = Inf
       )
     ))
 
@@ -221,33 +242,101 @@ gg_venn <- function(spec, opts, geom_params, ...) {
 #' @keywords internal
 hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 
-  # Sets resolution: same dual-path logic as gg_venn.
-  # geom_params$sets is preferred (composable API or explicit hd_make call).
-  # Falls back to spec when spec is an hd_spec_venn (declarative API shortcut).
+  # Sets resolution: geom_params$sets preferred; fallback to hd_spec_venn.
   sets            <- geom_params$sets %||%
     if (inherits(spec, "hd_spec_venn")) hd_venn_sets_from_spec(spec) else NULL
   series_name     <- geom_params$series_name     %||% "Venn Diagram"
   label_font_size <- geom_params$label_font_size %||% "14px"
+  value_suffix    <- geom_params$value_suffix    %||% ""
 
   .validate_venn_sets(sets)
 
-  # Highcharts expects each entry as a plain list - our sets list already
-  # matches this format exactly, so no transformation needed.
-  # We only ensure `value` is numeric (not integer) to avoid JSON issues.
+  # -- Build the Highcharts data array -----------------------------------------
+  # Each entry is a plain list matching the Highcharts venn data contract.
+  # Extra fields ($extra) are merged in as custom properties so Highcharts
+  # can access them in tooltip formatters.
   hc_data <- lapply(sets, function(entry) {
-    entry$value <- as.numeric(entry$value)
-    entry
+    out        <- entry
+    out$value  <- as.numeric(entry$value)
+
+    # Attach extra columns as top-level custom properties.
+    # e.g. entry$extra = list(n = 312) -> out$n = 312
+    # Highcharts tooltip formatters access these via this.n etc.
+    if (!is.null(entry$extra)) {
+      for (nm in names(entry$extra))
+        out[[nm]] <- entry$extra[[nm]]
+    }
+    out$extra <- NULL   # remove the wrapper slot; fields are now top-level
+    out
   })
 
-  chart |>
-    highcharter::hc_chart(type = "venn") |>
-    highcharter::hc_add_series(
-      name       = series_name,
-      data       = hc_data,
-      dataLabels = list(
-        style = list(fontSize = label_font_size)
-      )
-    )
+  # -- Tooltip formatter -------------------------------------------------------
+  # Build a JS formatter that:
+  #   1. Appends value_suffix to the value  (e.g. "42%")
+  #   2. Adds one line per extra column     (e.g. "n = 312")
+  # The formatter is injected only when there is something non-default to show
+  # (suffix is non-empty OR any entry has extra fields).
+  has_suffix <- nchar(value_suffix) > 0L
+  extra_keys <- unique(unlist(lapply(sets, function(e) names(e$extra))))
+  has_extras <- length(extra_keys) > 0L
+
+  tooltip_js <- if (has_suffix || has_extras) {
+
+    # Extra lines: one "key = value" line per extra column
+    extra_lines_js <- if (has_extras) {
+      lines <- vapply(extra_keys, function(k) {
+        sprintf(
+          "if (this.%s !== undefined) rows.push('%s = ' + this.%s);",
+          k, k, k
+        )
+      }, character(1))
+      paste(lines, collapse = "
+      ")
+    } else ""
+
+    highcharter::JS(sprintf(
+      "function() {
+        var suffix = '%s';
+        var val    = this.point.value;
+        var rows   = [this.point.name + ': ' + val + suffix];
+        %s
+        return rows.join('<br/>');
+      }",
+      value_suffix,
+      extra_lines_js
+    ))
+  } else NULL
+
+  # -- dataLabels formatter ---------------------------------------------------
+  # Appends value_suffix to the region label shown inside each circle.
+  dl_formatter <- if (has_suffix) {
+    highcharter::JS(sprintf(
+      "function() {
+        return this.point.name + '<br/>' + this.point.value + '%s';
+      }",
+      value_suffix
+    ))
+  } else NULL
+
+  data_labels <- list(style = list(fontSize = label_font_size))
+  if (!is.null(dl_formatter))
+    data_labels$formatter <- dl_formatter
+
+  hc_series_args <- list(
+    chart,
+    name       = series_name,
+    data       = hc_data,
+    dataLabels = data_labels
+  )
+
+  chart <- do.call(highcharter::hc_add_series, hc_series_args)
+  chart <- chart |> highcharter::hc_chart(type = "venn")
+
+  if (!is.null(tooltip_js))
+    chart <- chart |>
+      highcharter::hc_tooltip(formatter = tooltip_js, useHTML = TRUE)
+
+  chart
 }
 
 
@@ -350,6 +439,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 hd_geom_venn <- function(sets,
                          series_name     = "Venn Diagram",
                          label_font_size = "14px",
+                         value_suffix    = "",
                          ...) {
   # Validate at construction time - fail early before the object is even stored
   .validate_venn_sets(sets, "hd_geom_venn")
@@ -358,6 +448,7 @@ hd_geom_venn <- function(sets,
           sets            = sets,
           series_name     = series_name,
           label_font_size = label_font_size,
+          value_suffix    = value_suffix,
           ...)
 }
 
@@ -511,6 +602,14 @@ venn_df_to_list <- function(df) {
          paste(bad_types, collapse = ", "),
          ".  Use \"set\" or \"intersect\".", call. = FALSE)
 
+  # -- Detect extra columns ----------------------------------------------------
+  # Any column beyond the four required ones is treated as an "extra" column.
+  # Extra columns are stored per-entry in entry$extra = list(col = value).
+  # They are rendered as tooltip rows in highcharter and appended to region
+  # labels in ggplot2.  Typical use: n = sample count shown alongside %.
+  reserved_cols <- c("id", "name", "value", "type")
+  extra_cols    <- setdiff(names(df), reserved_cols)
+
   # -- Row-by-row conversion ---------------------------------------------------
   # Work on a plain data.frame copy so the function accepts data.table and
   # tibble inputs without requiring those packages.
@@ -525,7 +624,7 @@ venn_df_to_list <- function(df) {
 
     if (type == "set") {
       # Single-set row: id is a plain identifier, name is required
-      hd_venn_set(id = trimws(id), name = nm, value = val)
+      entry <- hd_venn_set(id = trimws(id), name = nm, value = val)
 
     } else {
       # Intersect row: id is comma-separated, e.g. "A,B" or "A, B, C"
@@ -536,10 +635,22 @@ venn_df_to_list <- function(df) {
              id, "\").  Supply comma-separated ids, e.g. \"A,B\".",
              call. = FALSE)
 
-      # name is optional for intersections — omit when NA or empty string
+      # name is optional for intersections -- omit when NA or empty string
       nm_clean <- if (is.na(nm) || nchar(trimws(nm)) == 0L) NULL else nm
-      hd_venn_intersect(ids = ids, value = val, name = nm_clean)
+      entry    <- hd_venn_intersect(ids = ids, value = val, name = nm_clean)
     }
+
+    # Attach extra columns as entry$extra = list(col1 = val1, col2 = val2)
+    # This is a named list of scalar values, one element per extra column.
+    # Both hc_venn and gg_venn read entry$extra to enrich tooltips/labels.
+    if (length(extra_cols) > 0L) {
+      entry$extra <- setNames(
+        lapply(extra_cols, function(col) row[[col]]),
+        extra_cols
+      )
+    }
+
+    entry
   })
 }
 
@@ -630,16 +741,23 @@ venn_df_to_list <- function(df) {
 hd_venn_df <- function(df,
                         output          = c("spec", "geom"),
                         series_name     = "Venn Diagram",
-                        label_font_size = "14px") {
+                        label_font_size = "14px",
+                        value_suffix    = "") {
 
   output <- match.arg(output)
   sets   <- venn_df_to_list(df)
 
   if (output == "spec") {
-    hd_spec_venn(sets)
+    # For the declarative API, value_suffix is passed via hd_make() ...
+    # Store it as an attribute on the spec so it travels with the object
+    # and can be extracted by hd_make() and passed through to the geom.
+    sv <- hd_spec_venn(sets)
+    attr(sv, "value_suffix") <- value_suffix
+    sv
   } else {
     hd_geom_venn(sets            = sets,
                  series_name     = series_name,
-                 label_font_size = label_font_size)
+                 label_font_size = label_font_size,
+                 value_suffix    = value_suffix)
   }
 }

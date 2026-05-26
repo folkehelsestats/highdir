@@ -203,6 +203,16 @@
         default      = "14px",
         desc         = "Character. CSS font-size for set labels. Highcharter only.",
         backend_only = "highcharter"
+      ),
+      value_suffix = list(
+        default      = "",
+        desc         = paste0(
+          "Character. Symbol appended to displayed values. ",
+          "E.g. '%' renders '42%' instead of '42'. ",
+          "Applied in tooltips (highcharter) and region labels (ggplot2). ",
+          "Both backends."
+        ),
+        backend_only = NULL
       )
     )
   )
