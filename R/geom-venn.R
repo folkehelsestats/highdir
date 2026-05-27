@@ -185,9 +185,37 @@ gg_venn <- function(spec, opts, geom_params, ...) {
     } else FALSE
 
     # -- Render ---------------------------------------------------------------
-    # plot.euler() returns an eulergram grob — embed via annotation_custom()
+    # plot.euler() returns an eulergram grob - embed via annotation_custom()
     # which is the correct way to place any grob inside a ggplot panel.
-    euler_grob <- plot(
+#     euler_grob <- plot(
+#       fit,
+#       quantities = list(labels = quantities_labels, cex = 1),
+#       fills      = list(fill = pal, alpha = 0.7),
+#       edges      = list(col = "grey40", lwd = 1.2),
+#       legend     = legend_arg
+#     )
+
+#     return(list(
+#       ggplot2::annotation_custom(
+#         grob = euler_grob,
+#         xmin = -Inf, xmax = Inf,
+#         ymin = -Inf, ymax = Inf
+#       )
+#     ))
+
+    
+    # --- New: configurable legend layout controls -------------------------
+#     legend_offset_y <- geom_params$legend_offset_y %||% 0.56
+#     legend_height   <- geom_params$legend_height   %||% 0.88
+
+    legend_offset_y <- geom_params$legend_offset_y %||%
+      if (n_sets <= 3) 0.55 else 0.60
+
+    legend_height <- geom_params$legend_height %||%
+      if (n_sets <= 3) 0.90 else 0.82
+
+    # --- Render raw eulerr grob -------------------------------------------
+    raw_grob <- plot(
       fit,
       quantities = list(labels = quantities_labels, cex = 1),
       fills      = list(fill = pal, alpha = 0.7),
@@ -195,13 +223,27 @@ gg_venn <- function(spec, opts, geom_params, ...) {
       legend     = legend_arg
     )
 
+    # --- Fix: shrink + lift viewport so legend fits ------------------------
+    euler_grob <- grid::grobTree(
+      raw_grob,
+      vp = grid::viewport(
+        x = 0.5,
+        y = legend_offset_y,
+        width  = 1,
+        height = legend_height,
+        just   = c("center", "center")
+      )
+    )
+
+    # --- Embed in ggplot ---------------------------------------------------
     return(list(
       ggplot2::annotation_custom(
-        grob = euler_grob,
-        xmin = -Inf, xmax = Inf,
-        ymin = -Inf, ymax = Inf
+        grob  = euler_grob,
+        xmin  = -Inf, xmax = Inf,
+        ymin  = -Inf, ymax = Inf
       )
     ))
+
   }
 
   # -- ggVennDiagram fallback --------------------------------------------------
@@ -324,7 +366,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
     out$value <- as.numeric(entry$value)
 
     # Assign color to single-set entries from the highdir palette.
-    # Intersection entries get no explicit color — Highcharts blends
+    # Intersection entries get no explicit color - Highcharts blends
     # the colors of the overlapping sets automatically.
     if (length(entry$sets) == 1L) {
       sid <- entry$sets[[1L]]
@@ -349,7 +391,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 
   # -- Tooltip formatter -------------------------------------------------------
   # Always build a formatter so we control the exact layout:
-  #   Name: value%        (first line — name + value + optional suffix)
+  #   Name: value%        (first line - name + value + optional suffix)
   #   n = 312             (one line per extra column)
   #
   # FIX 1: extra fields accessed as this.point.n not this.n
@@ -506,6 +548,10 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   chart.  Default `"Venn Diagram"`.  Highcharter only.
 #' @param label_font_size Character. CSS font-size for set labels.
 #'   Default `"14px"`.  Highcharter only.
+#' @param legend_offset_y Numeric (0–1). Vertical shift of the venn grob.
+#'   Increase to move diagram upward and create more space for legend.
+#' @param legend_height Numeric (0–1). Relative height of the venn grob.
+#'   Decrease to allocate more space for legend.
 #' @param ...           Additional arguments forwarded to [hd_make()].
 #'
 #' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
@@ -550,6 +596,8 @@ hd_geom_venn <- function(sets,
                          value_suffix    = "",
                          use_names       = FALSE,
                          show_legend     = FALSE,
+                         legend_offset_y = 0.60,
+                         legend_height   = 0.85,
                          ...) {
   # Validate at construction time - fail early before the object is even stored
   .validate_venn_sets(sets, "hd_geom_venn")
@@ -561,6 +609,8 @@ hd_geom_venn <- function(sets,
           value_suffix    = value_suffix,
           use_names       = use_names,
           show_legend     = show_legend,
+          legend_offset_y = 0.60,
+          legend_height   = 0.85,
           ...)
 }
 
@@ -652,7 +702,7 @@ hd_venn_intersect <- function(ids, value, name = NULL) {
 #'     that overlap, such as `"A,B"` or `"A,B,C"`.  Spaces around commas are
 #'     trimmed automatically.}
 #'   \item{`name`}{Character. Human-readable label shown in the diagram.
-#'     For intersections this is optional — supply `NA` or `""` to omit it.}
+#'     For intersections this is optional - supply `NA` or `""` to omit it.}
 #'   \item{`value`}{Numeric. Area or size of this region.}
 #'   \item{`type`}{Character. Either `"set"` (a single circle) or
 #'     `"intersect"` (an overlap region between two or more circles).}
