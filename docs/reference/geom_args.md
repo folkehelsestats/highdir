@@ -123,4 +123,14 @@ geom_args()           # all registered geometries
 #>   stack     required  NULL     Character. Column name that assigns rows to stack groups.
 #>   stacking  optional  normal   Character. Highcharter stacking mode: 'normal' or 'percent'.
 #> 
+#> 
+#> Arguments for hd_make(..., type = "venn", ...):
+#> 
+#>   argument         kind      default       description
+#>   ---------------  --------  ------------  ------------------------------
+#>   sets             optional  NULL          List. Each element is a named list with slots:  sets  — character vector of set names for this entry         (length 1 = single set, length > 1 = intersection)  value — numeric size of this region  name  — optional character label shown in the diagramExample: list(  list(sets = list('A'), name = 'Animals', value = 5),  list(sets = list('B'), name = 'Four legs', value = 3),  list(sets = list('A','B'), value = 2))
+#>   series_name      optional  Venn Diagram  Character. Series name shown in the chart title area. Highcharter only.
+#>   label_font_size  optional  14px          Character. CSS font-size for set labels. Highcharter only.
+#>   value_suffix     optional                Character. Symbol appended to displayed values. E.g. '%' renders '42%' instead of '42'. Applied in tooltips (highcharter) and region labels (ggplot2). Both backends.
+#> 
 ```
