@@ -96,7 +96,7 @@
 #' @return A list of ggplot2 layers / grob wrapped in a list for the engine.
 #' @keywords internal
 gg_venn <- function(spec, opts, geom_params, ...) {
-
+  
   # Sets resolution: two paths depending on calling API.
   #
   # Composable API (hd() + hd_geom_venn(sets = ...)):
@@ -127,6 +127,12 @@ gg_venn <- function(spec, opts, geom_params, ...) {
     fit          <- eulerr::euler(named_vals)
     value_suffix <- geom_params$value_suffix %||% ""
 
+    # Resolve colours ----------------------------------------------------------
+    setv <- set_keys[grep("&", set_keys, invert = TRUE)]  # single sets only
+    pal <- resolve_colors(length(setv), NULL)
+
+    
+    
     # Build per-region label text:
     #   default:                 "42"
     #   with value_suffix "%":   "42%"
@@ -152,7 +158,8 @@ gg_venn <- function(spec, opts, geom_params, ...) {
       quantities = list(
         labels = quantities_labels,
         cex    = 1
-      )
+      ),
+      fills  = pal,
     )
 
     return(list(
