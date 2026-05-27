@@ -213,6 +213,23 @@
           "Both backends."
         ),
         backend_only = NULL
+      ),
+      use_names = list(
+        default      = FALSE,
+        desc         = paste0(
+          "Logical. When TRUE, the human-readable 'name' field from each set ",
+          "entry is used as the circle label instead of the short id. ",
+          "E.g. 'esig' instead of 'A'. ggplot2 only."
+        ),
+        backend_only = "ggplot2"
+      ),
+      show_legend = list(
+        default      = FALSE,
+        desc         = paste0(
+          "Logical. When TRUE, adds a legend mapping circle colours to set ",
+          "labels. ggplot2 only (eulerr and ggVennDiagram paths)."
+        ),
+        backend_only = "ggplot2"
       )
     )
   )

@@ -39,7 +39,8 @@
 #     hd_opts(title = "Overlap")
 #
 # hd_venn_set() and hd_venn_intersect() are helper constructors that make
-# building the list less error-prone (see bottom of this file).
+# building the list less error-prone. Else use hd_venn_df() to create the list
+# from a data.frame (see bottom of this file).
 
 
 # =============================================================================
@@ -96,70 +97,102 @@
 #' @return A list of ggplot2 layers / grob wrapped in a list for the engine.
 #' @keywords internal
 gg_venn <- function(spec, opts, geom_params, ...) {
-  
-  # Sets resolution: two paths depending on calling API.
-  #
-  # Composable API (hd() + hd_geom_venn(sets = ...)):
-  #   sets live in geom_params$sets -- supplied by the user directly.
-  #
-  # Declarative API (hd_spec_venn() + hd_make(spec, "venn", opts, sets = ...)):
-  #   sets are passed via ... into geom_params by hd_make(), same pattern
-  #   as ymin/ymax for arearange.  But as a convenience, if geom_params$sets
-  #   is NULL and spec is an hd_spec_venn, extract sets from spec automatically
-  #   so hd_make(spec_v, "venn", opts) works without repeating the sets.
-  sets         <- geom_params$sets %||%
+
+  sets <- geom_params$sets %||%
     if (inherits(spec, "hd_spec_venn")) hd_venn_sets_from_spec(spec) else NULL
 
   .validate_venn_sets(sets)
 
+  # Shared params across both rendering paths
+  value_suffix <- geom_params$value_suffix %||% ""
+  use_names    <- isTRUE(geom_params$use_names   %||% FALSE)
+  show_legend  <- isTRUE(geom_params$show_legend %||% FALSE)
+
   # -- eulerr path (preferred) -------------------------------------------------
   if (requireNamespace("eulerr", quietly = TRUE)) {
 
-    # Convert the highdir sets list -> named numeric vector for eulerr::euler()
-    # Single sets:      list(sets=list("A"), value=5) -> c(A = 5)
-    # Intersections:    list(sets=list("A","B"), value=2) -> c("A&B" = 2)
-    named_vals <- vapply(sets, function(e) e$value, numeric(1))
-    set_keys   <- vapply(sets, function(e) {
+    # -- id -> name lookup table -----------------------------------------------
+    # Each single-set entry has an id (e.g. "A") and an optional human-readable
+    # name (e.g. "esig").  When use_names = TRUE we rename the eulerr fit keys
+    # so labels and legend show names instead of ids.
+    single_entries <- Filter(function(e) length(e$sets) == 1L, sets)
+    id_to_name     <- stats::setNames(
+      vapply(single_entries, function(e)
+        if (!is.null(e$name) && nzchar(e$name)) e$name else e$sets[[1L]],
+        character(1)
+      ),
+      vapply(single_entries, function(e) e$sets[[1L]], character(1))
+    )
+
+    # -- Build eulerr named vector ---------------------------------------------
+    # Keys: single sets use the id; intersections join ids with "&"
+    # e.g. c(A = 6, B = 28, "A&B" = 3)
+    set_keys <- vapply(sets, function(e) {
       paste(unlist(e$sets), collapse = "&")
     }, character(1))
+    named_vals        <- vapply(sets, function(e) e$value, numeric(1))
     names(named_vals) <- set_keys
 
-    fit          <- eulerr::euler(named_vals)
-    value_suffix <- geom_params$value_suffix %||% ""
+    # When use_names = TRUE rename keys: "A" -> "esig", "A&B" -> "esig&royk"
+    # eulerr uses these keys as the circle labels directly.
+    if (use_names) {
+      display_keys <- vapply(set_keys, function(k) {
+        ids <- strsplit(k, "&", fixed = TRUE)[[1L]]
+        paste(vapply(ids, function(i) id_to_name[[i]] %||% i, character(1)),
+              collapse = "&")
+      }, character(1))
+      names(named_vals) <- display_keys
+    } else {
+      display_keys <- set_keys
+    }
 
-    # Resolve colours ----------------------------------------------------------
-    setv <- set_keys[grep("&", set_keys, invert = TRUE)]  # single sets only
-    pal <- resolve_colors(length(setv), NULL)
+    fit <- eulerr::euler(named_vals)
 
-    
-    
-    # Build per-region label text:
-    #   default:                 "42"
-    #   with value_suffix "%":   "42%"
-    #   with extra column n:     "42%(n=312)"
-    # eulerr accepts a named character vector for `quantities` where names
-    # match the region keys (e.g. "A", "A&B").
-    quantities_labels <- vapply(sets, function(e) {
-      key     <- paste(unlist(e$sets), collapse = "&")
-      val_str <- paste0(e$value, value_suffix)
+    # -- Resolve colours via the shared priority chain -------------------------
+    # FIX: previously passed NULL, ignoring opts$colors, hd_set_theme() colors,
+    # and any custom palette.  Now passes opts$colors so the full priority chain
+    # fires: opts$colors -> getOption("highdir.colors") -> built-in hdir rules.
+    n_sets <- length(single_entries)
+    pal    <- resolve_colors(n_sets, opts$colors)
 
-      # Append extra columns as (key=value) pairs after the value
-      extra_str <- ""
-      if (!is.null(e$extra) && length(e$extra) > 0L) {
-        parts     <- paste(names(e$extra), unlist(e$extra), sep = "=")
-        extra_str <- paste0("(", paste(parts, collapse = ", "), ")")
-      }
-      stats::setNames(paste0(val_str, extra_str), key)
-    }, character(1))
+    # -- Per-region quantity labels --------------------------------------------
+    # Format: "42%"  or  "42%(n=312)"
+    # Named by display_keys so eulerr places each label in the right region.
+    quantities_labels <- stats::setNames(
+      vapply(seq_along(sets), function(i) {
+        e         <- sets[[i]]
+        val_str   <- paste0(e$value, value_suffix)
+        extra_str <- ""
+        if (!is.null(e$extra) && length(e$extra) > 0L) {
+          parts     <- paste(names(e$extra), unlist(e$extra), sep = "=")
+          extra_str <- paste0("\n(", paste(parts, collapse = ", "), ")")
+        }
+        paste0(val_str, extra_str)
+      }, character(1)),
+      display_keys
+    )
 
+    # -- Legend ----------------------------------------------------------------
+    # show_legend = TRUE: pass legend to eulerr plot() showing name -> colour.
+    # show_legend = FALSE: pass FALSE to suppress the legend entirely.
+    legend_arg <- if (show_legend) {
+      list(
+        labels = if (use_names) unname(id_to_name) else names(id_to_name),
+        side   = "bottom",
+        nrow   = if (n_sets <= 3) 1 else 2,
+        ncol   = if (n_sets <= 3) n_sets else ceiling(n_sets / 2)
+      )
+    } else FALSE
+
+    # -- Render ---------------------------------------------------------------
     # plot.euler() returns an eulergram grob — embed via annotation_custom()
+    # which is the correct way to place any grob inside a ggplot panel.
     euler_grob <- plot(
       fit,
-      quantities = list(
-        labels = quantities_labels,
-        cex    = 1
-      ),
-      fills  = pal,
+      quantities = list(labels = quantities_labels, cex = 1),
+      fills      = list(fill = pal, alpha = 0.7),
+      edges      = list(col = "grey40", lwd = 1.2),
+      legend     = legend_arg
     )
 
     return(list(
@@ -169,20 +202,24 @@ gg_venn <- function(spec, opts, geom_params, ...) {
         ymin = -Inf, ymax = Inf
       )
     ))
-
   }
 
   # -- ggVennDiagram fallback --------------------------------------------------
   if (requireNamespace("ggVennDiagram", quietly = TRUE)) {
 
-    # ggVennDiagram expects a named list of character vectors (set members).
-    # We recover member-level data from single-set entries using seq_len(value).
     single_sets <- Filter(function(e) length(e$sets) == 1L, sets)
+
+    # Label function: id or name depending on use_names
+    label_fn <- if (use_names) {
+      function(e)
+        if (!is.null(e$name) && nzchar(e$name)) e$name else e$sets[[1L]]
+    } else {
+      function(e) e$sets[[1L]]
+    }
+
     set_members <- setNames(
-      lapply(single_sets, function(e)
-        as.character(seq_len(e$value))
-      ),
-      vapply(single_sets, function(e) e$sets[[1L]], character(1))
+      lapply(single_sets, function(e) as.character(seq_len(e$value))),
+      vapply(single_sets, label_fn, character(1))
     )
 
     # Apply intersections by sharing member ids between sets
@@ -191,20 +228,23 @@ gg_venn <- function(spec, opts, geom_params, ...) {
       n_shared <- as.integer(entry$value)
       grp_a    <- entry$sets[[1L]]
       grp_b    <- entry$sets[[2L]]
-      if (!is.null(set_members[[grp_a]]) && !is.null(set_members[[grp_b]])) {
-        shared_ids <- paste0("shared_", grp_a, "_", grp_b, "_",
+      e_a      <- Filter(function(e) e$sets[[1L]] == grp_a, single_sets)[[1L]]
+      e_b      <- Filter(function(e) e$sets[[1L]] == grp_b, single_sets)[[1L]]
+      key_a    <- label_fn(e_a)
+      key_b    <- label_fn(e_b)
+      if (!is.null(set_members[[key_a]]) && !is.null(set_members[[key_b]])) {
+        shared_ids <- paste0("shared_", key_a, "_", key_b, "_",
                              seq_len(n_shared))
-        set_members[[grp_a]] <- c(set_members[[grp_a]], shared_ids)
-        set_members[[grp_b]] <- c(set_members[[grp_b]], shared_ids)
+        set_members[[key_a]] <- c(set_members[[key_a]], shared_ids)
+        set_members[[key_b]] <- c(set_members[[key_b]], shared_ids)
       }
     }
 
-    # ggVennDiagram returns a proper ggplot object, so ggplotGrob() is
-    # not needed.  Return it directly as a complete ggplot — the engine
-    # will print it rather than try to add it as a layer.
     p <- ggVennDiagram::ggVennDiagram(set_members) +
-      ggplot2::labs(title    = opts$title,
-                    subtitle = opts$subtitle)
+      ggplot2::labs(title = opts$title, subtitle = opts$subtitle)
+
+    if (!show_legend)
+      p <- p + ggplot2::theme(legend.position = "none")
 
     return(list("__ggplot__" = p))
   }
@@ -237,15 +277,6 @@ gg_venn <- function(spec, opts, geom_params, ...) {
 #' `name` is optional for intersections but required for single sets if you
 #' want a label in the diagram.
 #'
-#' @section Venn vs Euler:
-#' Supply only the intersections that actually exist in
-#' your data. Highcharts will separate circles that share no intersection
-#' entry, producing an Euler diagram automatically. No separate geom is
-#' needed. Note: mathematically impossible layouts (e.g. three pairs all
-#' intersect but the triple intersection is zero) cannot be rendered and will
-#' error. If chart fails to display as intended, it might be due to the
-#' intersection is larger than the single sets that contain them.
-#' 
 #' @param chart       A `highchart` object (from base_fig() bypass path).
 #' @param spec        An [hd_spec()] object.  `$data` is unused.
 #' @param opts        An [hd_opts()] object.
@@ -417,6 +448,16 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' via `+`.  The diagram is described by a list of set entries supplied via
 #' the `sets` argument.
 #'
+#' @section Venn vs Euler:
+#' Supply only the intersections that actually exist in
+#' your data. Highcharts will separate circles that share no intersection
+#' entry, producing an Euler diagram automatically. No separate geom is
+#' needed. Note: mathematically impossible layouts (e.g. three pairs all
+#' intersect but the triple intersection is zero) cannot be rendered and will
+#' error. If chart fails to display as intended, it might be due to the
+#' intersection is larger than the single sets that contain them.
+#' 
+#' 
 #' @section Data format:
 #' `sets` is a list of named lists.  Each element describes either a single
 #' set or an intersection between sets:
@@ -507,6 +548,8 @@ hd_geom_venn <- function(sets,
                          series_name     = "Venn Diagram",
                          label_font_size = "14px",
                          value_suffix    = "",
+                         use_names       = FALSE,
+                         show_legend     = FALSE,
                          ...) {
   # Validate at construction time - fail early before the object is even stored
   .validate_venn_sets(sets, "hd_geom_venn")
@@ -516,6 +559,8 @@ hd_geom_venn <- function(sets,
           series_name     = series_name,
           label_font_size = label_font_size,
           value_suffix    = value_suffix,
+          use_names       = use_names,
+          show_legend     = show_legend,
           ...)
 }
 
@@ -806,25 +851,28 @@ venn_df_to_list <- function(df) {
 #'
 #' @export
 hd_venn_df <- function(df,
-                        output          = c("spec", "geom"),
-                        series_name     = "Venn Diagram",
-                        label_font_size = "14px",
-                        value_suffix    = "") {
+                       output          = c("spec", "geom"),
+                       series_name     = "Venn Diagram",
+                       label_font_size = "14px",
+                       value_suffix    = "",
+                       use_names       = FALSE,
+                       show_legend     = FALSE) {
 
   output <- match.arg(output)
   sets   <- venn_df_to_list(df)
 
   if (output == "spec") {
-    # For the declarative API, value_suffix is passed via hd_make() ...
-    # Store it as an attribute on the spec so it travels with the object
-    # and can be extracted by hd_make() and passed through to the geom.
     sv <- hd_spec_venn(sets)
     attr(sv, "value_suffix") <- value_suffix
+    attr(sv, "use_names")    <- use_names
+    attr(sv, "show_legend")  <- show_legend
     sv
   } else {
     hd_geom_venn(sets            = sets,
                  series_name     = series_name,
                  label_font_size = label_font_size,
-                 value_suffix    = value_suffix)
+                 value_suffix    = value_suffix,
+                 use_names       = use_names,
+                 show_legend     = show_legend)
   }
 }
