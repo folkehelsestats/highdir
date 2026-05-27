@@ -230,6 +230,15 @@ gg_venn <- function(spec, opts, geom_params, ...) {
 #' `name` is optional for intersections but required for single sets if you
 #' want a label in the diagram.
 #'
+#' @section Venn vs Euler:
+#' Supply only the intersections that actually exist in
+#' your data. Highcharts will separate circles that share no intersection
+#' entry, producing an Euler diagram automatically. No separate geom is
+#' needed. Note: mathematically impossible layouts (e.g. three pairs all
+#' intersect but the triple intersection is zero) cannot be rendered and will
+#' error. If chart fails to display as intended, it might be due to the
+#' intersection is larger than the single sets that contain them.
+#' 
 #' @param chart       A `highchart` object (from base_fig() bypass path).
 #' @param spec        An [hd_spec()] object.  `$data` is unused.
 #' @param opts        An [hd_opts()] object.
@@ -251,90 +260,141 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 
   .validate_venn_sets(sets)
 
-  # -- Build the Highcharts data array -----------------------------------------
-  # Each entry is a plain list matching the Highcharts venn data contract.
-  # Extra fields ($extra) are merged in as custom properties so Highcharts
-  # can access them in tooltip formatters.
-  hc_data <- lapply(sets, function(entry) {
-    out        <- entry
-    out$value  <- as.numeric(entry$value)
+  # -- Resolve highdir palette -------------------------------------------------
+  # The skip_base_fig path in backend-highcharter.R applies hd_theme() AFTER
+  # hc_venn returns, so colors from opts are available here already.
+  # We resolve the palette and assign one color per single-set entry.
+  # Intersection regions are left uncolored (Highcharts blends them).
+  single_set_entries <- Filter(function(e) length(e$sets) == 1L, sets)
+  n_sets             <- length(single_set_entries)
+  palette            <- resolve_colors(n_sets, opts$colors)
 
-    # Attach extra columns as top-level custom properties.
-    # e.g. entry$extra = list(n = 312) -> out$n = 312
-    # Highcharts tooltip formatters access these via this.n etc.
+  # Map set id -> color so we can assign color per single-set entry
+  set_ids     <- vapply(single_set_entries, function(e) e$sets[[1L]], character(1))
+  color_map   <- stats::setNames(palette, set_ids)
+
+  # -- Build the Highcharts data array -----------------------------------------
+  # Each entry matches the Highcharts venn data contract:
+  #   { sets: ["A"], name: "Oslo", value: 120, color: "#025169" }
+  # Extra fields from entry$extra are promoted to top-level properties so
+  # they are accessible inside tooltip formatters as this.point.n etc.
+  #
+  # BUG FIXED: previously extra fields were accessed as this.n in JS but
+  # Highcharts tooltip formatters require this.point.n for custom properties.
+  hc_data <- lapply(sets, function(entry) {
+    out       <- entry
+    out$value <- as.numeric(entry$value)
+
+    # Assign color to single-set entries from the highdir palette.
+    # Intersection entries get no explicit color — Highcharts blends
+    # the colors of the overlapping sets automatically.
+    if (length(entry$sets) == 1L) {
+      sid <- entry$sets[[1L]]
+      if (!is.null(color_map[[sid]]))
+        out$color <- color_map[[sid]]
+    }
+
+    # Promote extra columns to top-level so Highcharts can access them.
+    # Access pattern in JS: this.point.n  (NOT this.n)
     if (!is.null(entry$extra)) {
       for (nm in names(entry$extra))
         out[[nm]] <- entry$extra[[nm]]
     }
-    out$extra <- NULL   # remove the wrapper slot; fields are now top-level
+    out$extra <- NULL
     out
   })
 
-  # -- Tooltip formatter -------------------------------------------------------
-  # Build a JS formatter that:
-  #   1. Appends value_suffix to the value  (e.g. "42%")
-  #   2. Adds one line per extra column     (e.g. "n = 312")
-  # The formatter is injected only when there is something non-default to show
-  # (suffix is non-empty OR any entry has extra fields).
+  # -- Detect what the tooltip needs to show -----------------------------------
   has_suffix <- nchar(value_suffix) > 0L
   extra_keys <- unique(unlist(lapply(sets, function(e) names(e$extra))))
   has_extras <- length(extra_keys) > 0L
 
-  tooltip_js <- if (has_suffix || has_extras) {
+  # -- Tooltip formatter -------------------------------------------------------
+  # Always build a formatter so we control the exact layout:
+  #   Name: value%        (first line — name + value + optional suffix)
+  #   n = 312             (one line per extra column)
+  #
+  # FIX 1: extra fields accessed as this.point.n not this.n
+  # FIX 2: formatter always injected so the default Highcharts tooltip
+  #         (which ignores custom properties) does not show instead
+  extra_lines_js <- if (has_extras) {
+    lines <- vapply(extra_keys, function(k) {
+      sprintf(
+        "if (typeof this.point.%s !== 'undefined') rows.push('%s = ' + this.point.%s);",
+        k, k, k
+      )
+    }, character(1))
+    paste(lines, collapse = "
+        ")
+  } else ""
 
-    # Extra lines: one "key = value" line per extra column
-    extra_lines_js <- if (has_extras) {
-      lines <- vapply(extra_keys, function(k) {
-        sprintf(
-          "if (this.%s !== undefined) rows.push('%s = ' + this.%s);",
-          k, k, k
-        )
-      }, character(1))
-      paste(lines, collapse = "
-      ")
-    } else ""
+  tooltip_js <- highcharter::JS(sprintf(
+    "function() {
+      var suffix = '%s';
+      var val    = this.point.value;
+      var name   = this.point.name || this.point.sets.join(' + ');
+      var rows   = ['<b>' + name + '</b>: ' + val + suffix];
+      %s
+      return rows.join('<br/>');
+    }",
+    value_suffix,
+    extra_lines_js
+  ))
 
-    highcharter::JS(sprintf(
-      "function() {
-        var suffix = '%s';
-        var val    = this.point.value;
-        var rows   = [this.point.name + ': ' + val + suffix];
-        %s
-        return rows.join('<br/>');
-      }",
-      value_suffix,
-      extra_lines_js
-    ))
-  } else NULL
+  # -- dataLabels formatter ----------------------------------------------------
+  # Region label shown inside each circle / intersection area.
+  # Format:  value%          (no extra)
+  #          value%(n=312)   (with extra columns)
+  #
+  # Extra columns appended inline: value%(n=312, pct=0.15)
+  # Uses this.point.n to access custom properties (same fix as tooltip).
+  dl_extra_js <- if (has_extras) {
+    parts <- vapply(extra_keys, function(k) {
+      sprintf("(typeof this.point.%s !== 'undefined' ? '%s=' + this.point.%s : '')", k, k, k)
+    }, character(1))
+    # Join non-empty parts with comma separator
+    paste0(
+      "
+      var extras = [", paste(parts, collapse = ", "), "].filter(function(s){return s !== '';});
+",
+      "      var extra_str = extras.length > 0 ? '(' + extras.join(', ') + ')' : '';"
+    )
+  } else "
+      var extra_str = '';"
 
-  # -- dataLabels formatter ---------------------------------------------------
-  # Appends value_suffix to the region label shown inside each circle.
-  dl_formatter <- if (has_suffix) {
-    highcharter::JS(sprintf(
-      "function() {
-        return this.point.name + '<br/>' + this.point.value + '%s';
-      }",
-      value_suffix
-    ))
-  } else NULL
+  dl_formatter <- highcharter::JS(sprintf(
+    "function() {
+      var suffix = '%s';
+      var val    = this.point.value;
+      var name   = this.point.name || this.point.sets.join('+');
+      %s
+      return '<b>' + name + '</b><br/>' + val + suffix + extra_str;
+    }",
+    value_suffix,
+    dl_extra_js
+  ))
 
-  data_labels <- list(style = list(fontSize = label_font_size))
-  if (!is.null(dl_formatter))
-    data_labels$formatter <- dl_formatter
-
-  hc_series_args <- list(
-    chart,
-    name       = series_name,
-    data       = hc_data,
-    dataLabels = data_labels
+  data_labels <- list(
+    enabled   = TRUE,
+    style     = list(fontSize = label_font_size),
+    formatter = dl_formatter
   )
 
-  chart <- do.call(highcharter::hc_add_series, hc_series_args)
-  chart <- chart |> highcharter::hc_chart(type = "venn")
-
-  if (!is.null(tooltip_js))
-    chart <- chart |>
-      highcharter::hc_tooltip(formatter = tooltip_js, useHTML = TRUE)
+  # -- Add series with type = "venn" on the series itself ----------------------
+  # FIX: hc_chart(type = "venn") does not work after hc_add_series because
+  # Highcharts uses the series-level type, not the chart-level type for venn.
+  # Setting type directly on hc_add_series is the correct approach.
+  chart <- chart |>
+    highcharter::hc_add_series(
+      type       = "venn",
+      name       = series_name,
+      data       = hc_data,
+      dataLabels = data_labels
+    ) |>
+    highcharter::hc_tooltip(
+      formatter = tooltip_js,
+      useHTML   = TRUE
+    )
 
   chart
 }
