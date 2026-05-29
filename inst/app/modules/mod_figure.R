@@ -1,5 +1,5 @@
 # inst/app/modules/mod_figure.R
-# ── Figure module ─────────────────────────────────────────────────────────────
+# -- Figure module -------------------------------------------------------------
 #
 # Responsibilities:
 #   • Build hd_spec() and hd_opts() from reactive inputs
@@ -12,7 +12,7 @@
 # the registry.  mod_figure passes this directly to hd_make() via do.call.
 # There is no need to know which args belong to which geom here.
 
-# ── UI ────────────────────────────────────────────────────────────────────────
+# -- UI ------------------------------------------------------------------------
 
 #' @keywords internal
 mod_figure_ui <- function(id) {
@@ -21,6 +21,12 @@ mod_figure_ui <- function(id) {
   shiny::tabsetPanel(
     id   = "out_tabs",
     type = "tabs",
+
+    shiny::tabPanel("Data",
+      shiny::br(),
+      # "data-tbl_head" = module id "data" + output id "tbl_head"
+      DT::DTOutput("data-tbl_head")
+    ),
 
     shiny::tabPanel("Figure",
       shiny::br(),
@@ -34,12 +40,6 @@ mod_figure_ui <- function(id) {
       )
     ),
 
-    shiny::tabPanel("Data",
-      shiny::br(),
-      # "data-tbl_head" = module id "data" + output id "tbl_head"
-      DT::DTOutput("data-tbl_head")
-    ),
-
     shiny::tabPanel("R code",
       shiny::br(),
       shiny::verbatimTextOutput(ns("code_preview"))
@@ -47,17 +47,17 @@ mod_figure_ui <- function(id) {
   )
 }
 
-# ── Server ────────────────────────────────────────────────────────────────────
+# -- Server --------------------------------------------------------------------
 
 #' @keywords internal
 #' @param id            Module id.
-#' @param run_r         Reactive integer — input$run click counter.
+#' @param run_r         Reactive integer - input$run click counter.
 #' @param data_r        Named list from mod_data_server().
 #' @param opts_r        Reactive list of hd_opts() arguments (no use_js).
-#' @param use_js_r      Reactive logical — JS hover band (hd_make arg).
-#' @param geom_r        Reactive string — selected geometry name.
-#' @param backend_r     Reactive string — "highcharter" or "ggplot2".
-#' @param geom_inputs_r Reactive named list — ALL optional + required args for
+#' @param use_js_r      Reactive logical - JS hover band (hd_make arg).
+#' @param geom_r        Reactive string - selected geometry name.
+#' @param backend_r     Reactive string - "highcharter" or "ggplot2".
+#' @param geom_inputs_r Reactive named list - ALL optional + required args for
 #'                      the current geometry, keyed by arg name as they appear
 #'                      in optional_args / required_args in the registry.
 #'                      Assembled in server.R from input$ values.
@@ -72,7 +72,7 @@ mod_figure_server <- function(id,
 
   shiny::moduleServer(id, function(input, output, session) {
 
-    # ── hd_spec ───────────────────────────────────────────────────────────────
+    # -- hd_spec ---------------------------------------------------------------
     the_spec <- shiny::eventReactive(run_r(), {
       shiny::req(data_r$dataset(), data_r$x(), data_r$y())
       hd_spec(
@@ -84,18 +84,18 @@ mod_figure_server <- function(id,
       )
     })
 
-    # ── hd_opts ───────────────────────────────────────────────────────────────
+    # -- hd_opts ---------------------------------------------------------------
     the_opts <- shiny::eventReactive(run_r(), {
       do.call(hd_opts, opts_r())
     })
 
-    # ── Build extra args for hd_make() ──────────────────────────────────────
+    # -- Build extra args for hd_make() --------------------------------------
     # Merges two sources:
-    #   • geom_inputs_r() — optional args read from top-level input$ in server.R
+    #   • geom_inputs_r() - optional args read from top-level input$ in server.R
     #                        keyed by names(optional_args) from the registry
-    #   • data_r$req_args() — required args (e.g. ymin/ymax) read inside the
+    #   • data_r$req_args() - required args (e.g. ymin/ymax) read inside the
     #                          data module with the correct "data-" namespace
-    # .sanitise() converts empty strings → NULL and NA numerics → NULL so
+    # .sanitise() converts empty strings -> NULL and NA numerics -> NULL so
     # hd_make() never receives a blank textInput value as a real argument.
     .sanitise <- function(args) {
       lapply(args, function(v) {
@@ -114,8 +114,8 @@ mod_figure_server <- function(id,
       c(opt, req)
     }
 
-    # ── Highcharter figure ────────────────────────────────────────────────────
-    # .build_extra() merges optional + required geom args → hd_make() via ...
+    # -- Highcharter figure ----------------------------------------------------
+    # .build_extra() merges optional + required geom args -> hd_make() via ...
     # do.call() splices extra as named args, so hd_make receives e.g.:
     #   hd_make(spec, type, opts, backend, use_js, smooth=TRUE, dot_size=4,
     #           ymin="lo_col", ymax="hi_col")
@@ -127,12 +127,12 @@ mod_figure_server <- function(id,
              opts    = the_opts(),
              backend = "highcharter",
              use_js  = use_js_r()),
-        .build_extra()   # ← optional + required geom args → hd_make(...)
+        .build_extra()   # <- optional + required geom args -> hd_make(...)
       ))
     })
 
-    # ── ggplot2 figure ────────────────────────────────────────────────────────
-    # Same flow: .build_extra() → hd_make(...)
+    # -- ggplot2 figure --------------------------------------------------------
+    # Same flow: .build_extra() -> hd_make(...)
     gg_fig <- shiny::eventReactive(run_r(), {
       shiny::req(backend_r() == "ggplot2", the_spec())
       do.call(hd_make, c(
@@ -140,14 +140,14 @@ mod_figure_server <- function(id,
              type    = geom_r(),
              opts    = the_opts(),
              backend = "ggplot2"),
-        .build_extra()   # ← optional + required geom args → hd_make(...)
+        .build_extra()   # <- optional + required geom args -> hd_make(...)
       ))
     })
 
     output$hc_out <- highcharter::renderHighchart(hc_fig())
     output$gg_out <- shiny::renderPlot(gg_fig())
 
-    # ── R code preview ────────────────────────────────────────────────────────
+    # -- R code preview --------------------------------------------------------
     # Renders live (not only on Draw) so the code box reflects the current UI.
     output$code_preview <- shiny::renderText({
       shiny::req(data_r$x(), data_r$y(), geom_r(), backend_r())
