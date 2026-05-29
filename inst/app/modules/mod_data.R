@@ -1,5 +1,5 @@
 # inst/app/modules/mod_data.R
-# ── Data module ───────────────────────────────────────────────────────────────
+# -- Data module ---------------------------------------------------------------
 #
 # Responsibilities:
 #   • File upload and parsing (via rio)
@@ -7,23 +7,23 @@
 #   • Required-arg dropdowns    (ymin / ymax for arearange)
 #   • Data-preview table        (tbl_head)
 #
-# ── SPEED PRINCIPLE: updateSelectInput everywhere, renderUI nowhere ────────────
+# -- SPEED PRINCIPLE: updateSelectInput everywhere, renderUI nowhere ------------
 #
 # renderUI() rebuilds DOM nodes from scratch on every trigger:
-#   serialize HTML → transmit → browser destroys nodes → recreates → rebinds
+#   serialize HTML -> transmit -> browser destroys nodes -> recreates -> rebinds
 #   = 300–800 ms perceived lag
 #
 # updateSelectInput() sends a tiny JSON patch (~200 bytes) that replaces
-# only the <option> list in an existing node — no DOM destruction, no
+# only the <option> list in an existing node - no DOM destruction, no
 # rebinding, < 30 ms.
 #
 # Applied consistently here:
-#   x / y / group / n_col  — static in UI, updated via updateSelectInput
-#   ymin / ymax            — static in UI, shown via conditionalPanel,
+#   x / y / group / n_col  - static in UI, updated via updateSelectInput
+#   ymin / ymax            - static in UI, shown via conditionalPanel,
 #                            updated via updateSelectInput
 #
 
-# ── UI ────────────────────────────────────────────────────────────────────────
+# -- UI ------------------------------------------------------------------------
 
 #' @keywords internal
 mod_data_ui <- function(id) {
@@ -50,8 +50,8 @@ mod_data_ui <- function(id) {
       id    = ns("panel-spec"),
       class = "hd-collapse",
 
-      # ── Standard column-mapping inputs (always visible) ───────────────────
-      # All declared statically — choices populated by updateSelectInput()
+      # -- Standard column-mapping inputs (always visible) -------------------
+      # All declared statically - choices populated by updateSelectInput()
       # in observeEvent(cols()).  Zero lag on upload.
       shiny::selectInput(ns("x"),
                          label   = "X variable",
@@ -72,7 +72,7 @@ mod_data_ui <- function(id) {
                          label   = "Count column",
                          choices = c("(none)" = "")),
 
-      # ── Required-arg inputs — static, shown/hidden by conditionalPanel ────
+      # -- Required-arg inputs - static, shown/hidden by conditionalPanel ----
       # arearange: ymin + ymax
       shiny::conditionalPanel(
         condition = "input.geom == 'arearange'",
@@ -87,31 +87,31 @@ mod_data_ui <- function(id) {
   )
 }
 
-# ── Server ────────────────────────────────────────────────────────────────────
+# -- Server --------------------------------------------------------------------
 
 #' @keywords internal
 #' @param id     Module id.
-#' @param geom_r Reactive string — currently selected geometry name.
+#' @param geom_r Reactive string - currently selected geometry name.
 mod_data_server <- function(id, geom_r) {
 
   shiny::moduleServer(id, function(input, output, session) {
 
-    # ── Parse uploaded file ──────────────────────────────────────────────────
+    # -- Parse uploaded file --------------------------------------------------
     dataset <- shiny::reactive({
       shiny::req(input$file)
       rio::import(input$file$datapath)
     })
 
-    # ── Cache column names ────────────────────────────────────────────────────
+    # -- Cache column names ----------------------------------------------------
     cols <- shiny::reactive({
       shiny::req(dataset())
       names(dataset())
     })
 
-    # ── Populate ALL column dropdowns in one observer ─────────────────────────
+    # -- Populate ALL column dropdowns in one observer -------------------------
     # Fires once when cols() becomes available (upload) and again if a new
     # file is uploaded.  Covers x/y/group/n_col AND the required-arg inputs
-    # (ymin/ymax) in a single round-trip — no renderUI involved.
+    # (ymin/ymax) in a single round-trip - no renderUI involved.
     shiny::observeEvent(cols(), {
       ch <- cols()
       # Standard mapping inputs
@@ -128,7 +128,7 @@ mod_data_server <- function(id, geom_r) {
         choices  = c("(none)" = "", ch),
         selected = "")
 
-      # Required-arg inputs — updated here, shown/hidden by conditionalPanel
+      # Required-arg inputs - updated here, shown/hidden by conditionalPanel
       # arearange: ymin defaults to 3rd col if available, ymax to 4th
       shiny::updateSelectInput(session, "ymin",
         choices  = ch,
@@ -138,7 +138,7 @@ mod_data_server <- function(id, geom_r) {
         selected = ch[min(4, length(ch))])
     }, ignoreNULL = TRUE)
 
-    # ── Data preview ──────────────────────────────────────────────────────────
+    # -- Data preview ----------------------------------------------------------
     output$tbl_head <- DT::renderDT({
       shiny::req(dataset())
       dat <- dataset()
@@ -149,7 +149,7 @@ mod_data_server <- function(id, geom_r) {
                     rownames = FALSE)
     }, server = TRUE)
 
-    # ── Return values to parent ───────────────────────────────────────────────
+    # -- Return values to parent -----------------------------------------------
     list(
       dataset  = dataset,
       x        = shiny::reactive(input$x),
@@ -157,7 +157,7 @@ mod_data_server <- function(id, geom_r) {
       group    = shiny::reactive(input$group),
       n_col    = shiny::reactive(input$n_col),
       # req_args: named list of required-arg column selections for the current
-      # geom.  Read from input$ directly — IDs match names(required_args)
+      # geom.  Read from input$ directly - IDs match names(required_args)
       # because the static inputs above use ns("ymin"), ns("ymax") etc.
       # req_args reads required_args as a NAMED LIST (same structure as
       # optional_args).  names(ra) gives the arg names (e.g. 'ymin', 'ymax');
