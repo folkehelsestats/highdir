@@ -1,8 +1,8 @@
-# highdir 0.5
+# highdir 0.5.0
 
-- First release version.
+- First CRAN release version.
 
-# highdir 0.3
+# highdir 0.3.0
 
 - Replace the Highdir logo to reflect its historical origin.
 - Add option to hide x‑ and y‑axis labels (#13).
