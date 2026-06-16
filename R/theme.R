@@ -34,7 +34,8 @@
 #' hd_set_theme(hc_theme = "economist", gg_theme = "classic",
 #'              colors   = c("#025169", "#7C145C", "#C68803"))
 #' # Reset
-#' hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL)
+#' hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = "hdir")
+#' hd_reset_theme()
 #'
 #' @seealso [hd_opts()] for per-figure overrides
 #' @export
@@ -65,6 +66,23 @@ hd_set_theme <- function(hc_theme   = NULL,
     options(highdir.js_plugins = js_plugins)
   }
   invisible(prev)
+}
+
+
+#' Reset Theme 
+#'
+#' Reset package-wide style defaults
+#'
+#' @seealso [hd_set_theme()] to set custom defaults
+#' @export
+hd_reset_theme <- function() {
+  options(
+    highdir.hc_theme   = "default",
+    highdir.gg_theme   = "minimal",
+    highdir.colors     = "hdir",
+    highdir.font       = NULL,
+    highdir.js_plugins = NULL
+  )
 }
 
 # -- Highcharter theme builder ------------------------------------------------
@@ -354,3 +372,5 @@ hd_add_js <- function(hc,
     events = stats::setNames(list(htmlwidgets::JS(code)), where)
   )
 }
+
+
