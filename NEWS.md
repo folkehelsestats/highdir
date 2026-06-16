@@ -1,3 +1,8 @@
+# highdir 0.6.0 (dev)
+
+- Add `hd_reset_theme()` function (#21)
+- Add venn diagram with `gg_venn` or `hc_venn` backends.
+
 # highdir 0.5.0
 
 - First CRAN release version.
