@@ -30,7 +30,7 @@ The input data frame must have these four columns:
 that overlap, such as \code{"A,B"} or \code{"A,B,C"}.  Spaces around commas are
 trimmed automatically.}
 \item{\code{name}}{Character. Human-readable label shown in the diagram.
-For intersections this is optional — supply \code{NA} or \code{""} to omit it.}
+For intersections this is optional - supply \code{NA} or \code{""} to omit it.}
 \item{\code{value}}{Numeric. Area or size of this region.}
 \item{\code{type}}{Character. Either \code{"set"} (a single circle) or
 \code{"intersect"} (an overlap region between two or more circles).}
@@ -41,8 +41,8 @@ For intersections this is optional — supply \code{NA} or \code{""} to omit it.
 
 Each row is converted by the corresponding constructor:
 \itemize{
-\item \code{type = "set"}      calls \link{hd_venn_set(id, name, value)}
-\item \code{type = "intersect"} calls \link{hd_venn_intersect(ids, value, name)}
+\item \code{type = "set"}      calls \code{\link[=hd_venn_set]{hd_venn_set()}}
+\item \code{type = "intersect"} calls \code{\link[=hd_venn_intersect]{hd_venn_intersect()}}
 where \code{ids} is the comma-split vector from \code{id}.
 }
 The result is identical to building the list by hand with those functions.

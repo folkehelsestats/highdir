@@ -9,6 +9,10 @@ hd_geom_venn(
   series_name = "Venn Diagram",
   label_font_size = "14px",
   value_suffix = "",
+  use_names = FALSE,
+  show_legend = FALSE,
+  legend_offset_y = 0.6,
+  legend_height = 0.85,
   ...
 )
 }
@@ -22,6 +26,22 @@ chart.  Default \code{"Venn Diagram"}.  Highcharter only.}
 \item{label_font_size}{Character. CSS font-size for set labels.
 Default \code{"14px"}.  Highcharter only.}
 
+\item{value_suffix}{Character. Appended to each region's value label.
+Default \code{""} (no suffix).  ggplot2 backend only.}
+
+\item{use_names}{Logical. If \code{TRUE}, display human-readable \code{name}
+values instead of set ids in labels and legend.  Default \code{FALSE}.
+ggplot2 backend only.}
+
+\item{show_legend}{Logical. If \code{TRUE}, render a legend beneath the
+diagram.  Default \code{FALSE}.  ggplot2 backend only.}
+
+\item{legend_offset_y}{Numeric (0–1). Vertical shift of the venn grob.
+Increase to move diagram upward and create more space for legend.}
+
+\item{legend_height}{Numeric (0–1). Relative height of the venn grob.
+Decrease to allocate more space for legend.}
+
 \item{...}{Additional arguments forwarded to \code{\link[=hd_make]{hd_make()}}.}
 }
 \value{
@@ -32,6 +52,17 @@ Creates a Venn or Euler diagram layer that is added to an \code{\link[=hd]{hd()}
 via \code{+}.  The diagram is described by a list of set entries supplied via
 the \code{sets} argument.
 }
+\section{Venn vs Euler}{
+
+Supply only the intersections that actually exist in
+your data. Highcharts will separate circles that share no intersection
+entry, producing an Euler diagram automatically. No separate geom is
+needed. Note: mathematically impossible layouts (e.g. three pairs all
+intersect but the triple intersection is zero) cannot be rendered and will
+error. If chart fails to display as intended, it might be due to the
+intersection is larger than the single sets that contain them.
+}
+
 \section{Data format}{
 
 \code{sets} is a list of named lists.  Each element describes either a single

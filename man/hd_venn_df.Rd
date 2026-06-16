@@ -9,7 +9,9 @@ hd_venn_df(
   output = c("spec", "geom"),
   series_name = "Venn Diagram",
   label_font_size = "14px",
-  value_suffix = ""
+  value_suffix = "",
+  use_names = FALSE,
+  show_legend = FALSE
 )
 }
 \arguments{
@@ -24,6 +26,15 @@ hd_venn_df(
 
 \item{label_font_size}{Character. Passed to \code{\link[=hd_geom_venn]{hd_geom_venn()}} when
 \code{output = "geom"}.  Default \code{"14px"}.}
+
+\item{value_suffix}{Character. Passed to \code{\link[=hd_geom_venn]{hd_geom_venn()}}. Suffix
+appended to value labels (e.g. \code{"\%"}).  Default \code{""}.}
+
+\item{use_names}{Logical. Passed to \code{\link[=hd_geom_venn]{hd_geom_venn()}}. Use
+human-readable names instead of ids in labels.  Default \code{FALSE}.}
+
+\item{show_legend}{Logical. Passed to \code{\link[=hd_geom_venn]{hd_geom_venn()}}. Show a
+legend beneath the diagram.  Default \code{FALSE}.}
 }
 \value{
 An \code{hd_spec_venn} object when \code{output = "spec"}, or an \code{hd_geom}

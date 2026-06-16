@@ -146,7 +146,11 @@ gg_venn <- function(spec, opts, geom_params, ...) {
       display_keys <- set_keys
     }
 
-    fit <- eulerr::euler(named_vals)
+    # Fix the problem when runing devtools::check() for function not in imports
+    # euler_fn <- get("euler", asNamespace("eulerr"))
+    euler_fn <- getExportedValue("eulerr", "euler")
+    fit       <- euler_fn(named_vals)
+    # fit <- eulerr::euler(named_vals)
 
     # -- Resolve colours via the shared priority chain -------------------------
     # FIX: previously passed NULL, ignoring opts$colors, hd_set_theme() colors,
@@ -282,7 +286,10 @@ gg_venn <- function(spec, opts, geom_params, ...) {
       }
     }
 
-    p <- ggVennDiagram::ggVennDiagram(set_members) +
+    # workaround for ggVennDiagram not listed in imports: use asNamespace() to
+    # access the function without an explicit import so not error with devtools::check()
+    ggVennDiagram_fn <- getExportedValue("ggVennDiagram", "ggVennDiagram")
+    p <- ggVennDiagram_fn(set_members) +
       ggplot2::labs(title = opts$title, subtitle = opts$subtitle)
 
     if (!show_legend)
@@ -548,6 +555,13 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   chart.  Default `"Venn Diagram"`.  Highcharter only.
 #' @param label_font_size Character. CSS font-size for set labels.
 #'   Default `"14px"`.  Highcharter only.
+#' @param value_suffix  Character. Appended to each region's value label.
+#'   Default `""` (no suffix).  ggplot2 backend only.
+#' @param use_names     Logical. If `TRUE`, display human-readable `name`
+#'   values instead of set ids in labels and legend.  Default `FALSE`.
+#'   ggplot2 backend only.
+#' @param show_legend   Logical. If `TRUE`, render a legend beneath the
+#'   diagram.  Default `FALSE`.  ggplot2 backend only.
 #' @param legend_offset_y Numeric (0–1). Vertical shift of the venn grob.
 #'   Increase to move diagram upward and create more space for legend.
 #' @param legend_height Numeric (0–1). Relative height of the venn grob.
@@ -711,8 +725,8 @@ hd_venn_intersect <- function(ids, value, name = NULL) {
 #' @section Relationship to hd_venn_set / hd_venn_intersect:
 #' Each row is converted by the corresponding constructor:
 #' \itemize{
-#'   \item `type = "set"`      calls [hd_venn_set(id, name, value)]
-#'   \item `type = "intersect"` calls [hd_venn_intersect(ids, value, name)]
+#'   \item `type = "set"`      calls [hd_venn_set()]
+#'   \item `type = "intersect"` calls [hd_venn_intersect()]
 #'     where `ids` is the comma-split vector from `id`.
 #' }
 #' The result is identical to building the list by hand with those functions.
@@ -868,6 +882,12 @@ venn_df_to_list <- function(df) {
 #'   `output = "geom"`.  Default `"Venn Diagram"`.
 #' @param label_font_size Character. Passed to [hd_geom_venn()] when
 #'   `output = "geom"`.  Default `"14px"`.
+#' @param value_suffix  Character. Passed to [hd_geom_venn()]. Suffix
+#'   appended to value labels (e.g. `"%"`).  Default `""`.
+#' @param use_names     Logical. Passed to [hd_geom_venn()]. Use
+#'   human-readable names instead of ids in labels.  Default `FALSE`.
+#' @param show_legend   Logical. Passed to [hd_geom_venn()]. Show a
+#'   legend beneath the diagram.  Default `FALSE`.
 #'
 #' @return An `hd_spec_venn` object when `output = "spec"`, or an `hd_geom`
 #'   object when `output = "geom"`.

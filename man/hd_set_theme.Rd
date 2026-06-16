@@ -50,7 +50,8 @@ precedence over these session defaults.
 hd_set_theme(hc_theme = "economist", gg_theme = "classic",
              colors   = c("#025169", "#7C145C", "#C68803"))
 # Reset
-hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = NULL)
+hd_set_theme(hc_theme = "default", gg_theme = "minimal", colors = "hdir")
+hd_reset_theme()
 
 }
 \seealso{

@@ -107,7 +107,7 @@
   ranked_bar = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
-    skip_base_fig   = TRUE,   # bypasses base_fig() — geom manages its own axes and labels
+    skip_base_fig   = TRUE,   # bypasses base_fig() - geom manages its own axes and labels
     optional_args   = list(
       ascending = list(
         default = TRUE,
@@ -175,17 +175,17 @@
   venn = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
-    skip_base_fig   = TRUE,   # bypasses base_fig() — no x/y axis canvas needed
+    skip_base_fig   = TRUE,   # bypasses base_fig() - no x/y axis canvas needed
     required_args   = list(),
     optional_args = list(
       sets = list(
         default = NULL,
         desc    = paste0(
           "List. Each element is a named list with slots:",
-          "  sets  — character vector of set names for this entry",
+          "  sets  - character vector of set names for this entry",
           "         (length 1 = single set, length > 1 = intersection)",
-          "  value — numeric size of this region",
-          "  name  — optional character label shown in the diagram",
+          "  value - numeric size of this region",
+          "  name  - optional character label shown in the diagram",
           "Example: list(",
           "  list(sets = list('A'), name = 'Animals', value = 5),",
           "  list(sets = list('B'), name = 'Four legs', value = 3),",
