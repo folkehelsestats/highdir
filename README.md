@@ -7,7 +7,9 @@
 [![Codecov test
 coverage](https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg)](https://app.codecov.io/gh/folkehelsestats/highdir)
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/highdir)](https://CRAN.R-project.org/package=highdir)
 
 **highdir** is an R package that provides a unified, backend-agnostic
 API for building figures with either
@@ -46,11 +48,11 @@ building and previewing figures is also included as part of the package.
 ## Installation
 
 ``` r
-# Install from GitHub
-if(!require(remotes)) install.packages("remotes")
-remotes::install_github("folkehelsestats/highdir")
+# Install from CRAN 
+install.packages("highdir")
 
-# Install from development version (dev branch)
+# Install development version from GitHub (dev branch) 
+if(!require(remotes)) install.packages("remotes")
 remotes::install_github("folkehelsestats/highdir@dev")
 ```
 

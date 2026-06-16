@@ -1,5 +1,5 @@
 # inst/app/modules/mod_opts.R
-# ── Opts module ───────────────────────────────────────────────────────────────
+# -- Opts module ---------------------------------------------------------------
 #
 # Responsibilities:
 #   • Labels  (title, subtitle, caption, xlab, ylab)
@@ -12,7 +12,7 @@
 #   • The namespace mismatch that made buttons grey/inactive
 #   • The reactiveVal bridge that was needed to pass figures back here
 
-# ── UI ────────────────────────────────────────────────────────────────────────
+# -- UI ------------------------------------------------------------------------
 
 #' @keywords internal
 mod_opts_ui <- function(id) {
@@ -104,7 +104,7 @@ mod_opts_ui <- function(id) {
   )
 }
 
-# ── Server ────────────────────────────────────────────────────────────────────
+# -- Server --------------------------------------------------------------------
 
 #' @keywords internal
 mod_opts_server <- function(id) {

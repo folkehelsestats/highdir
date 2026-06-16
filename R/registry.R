@@ -65,7 +65,7 @@ list_backends <- function() sort(ls(.backend_registry))
 #'   be supplied and have a sensible default when omitted.  These are purely
 #'   informational from the registry's perspective - the geom function applies
 #'   the defaults itself via `geom_params$key %||% default`.
-#' @param is_map_geom     Logical. Bypasses `base_fig()` in both engines.
+#' @param skip_base_fig     Logical. Bypasses `base_fig()` in both engines.
 #'
 #' @return `name`, invisibly.
 #' @export
@@ -74,7 +74,7 @@ register_geom <- function(name,
                           highcharter_fun = NULL,
                           required_args   = list(),
                           optional_args   = list(),
-                          is_map_geom     = FALSE) {
+                          skip_base_fig     = FALSE) {
 
   # optional_args must be a named list of list(default, desc) entries.
   # Validate structure so mis-registrations fail loudly at load time rather
@@ -99,7 +99,7 @@ register_geom <- function(name,
     highcharter_fun = highcharter_fun,
     required_args   = required_args,
     optional_args   = optional_args,    # user-discoverable optional args
-    is_map_geom     = is_map_geom
+    skip_base_fig   = skip_base_fig
   )
   invisible(name)
 }

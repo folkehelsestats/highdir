@@ -171,6 +171,16 @@ in a readable table.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   stack     required  NULL     Character. Column name that assigns rows to stack groups.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   stacking  optional  normal   Character. Highcharter stacking mode: 'normal' or 'percent'.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arguments for hd_make(..., type = "venn", ...):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   argument         kind      default       description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ---------------  --------  ------------  ------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sets             optional  NULL          List. Each element is a named list with slots:  sets  — character vector of set names for this entry         (length 1 = single set, length &gt; 1 = intersection)  value — numeric size of this region  name  — optional character label shown in the diagramExample: list(  list(sets = list('A'), name = 'Animals', value = 5),  list(sets = list('B'), name = 'Four legs', value = 3),  list(sets = list('A','B'), value = 2))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   series_name      optional  Venn Diagram  Character. Series name shown in the chart title area. Highcharter only.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   label_font_size  optional  14px          Character. CSS font-size for set labels. Highcharter only.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   value_suffix     optional                Character. Symbol appended to displayed values. E.g. '%' renders '42%' instead of '42'. Applied in tooltips (highcharter) and region labels (ggplot2). Both backends.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

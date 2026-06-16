@@ -70,7 +70,7 @@
 <a class="anchor" aria-label="anchor" href="#highdir-"></a>
 </h1>
 </div>
-<p><a href="https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/folkehelsestats/highdir" class="external-link"><img src="https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></p>
+<p><a href="https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/folkehelsestats/highdir/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/folkehelsestats/highdir" class="external-link"><img src="https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a> <a href="https://CRAN.R-project.org/package=highdir" class="external-link"><img src="https://www.r-pkg.org/badges/version/highdir" alt="CRAN status"></a></p>
 <p><strong>highdir</strong> is an R package that provides a unified, backend-agnostic API for building figures with either <a href="https://jkunst.com/highcharter/" class="external-link"><strong>highcharter</strong></a> (interactive) or <a href="https://ggplot2.tidyverse.org/" class="external-link"><strong>ggplot2</strong></a> (static).</p>
 <p>The package provides two complementary yet fully interoperable APIs for creating figures:</p>
 <ol style="list-style-type: decimal">
@@ -88,11 +88,11 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install from GitHub</span></span>
-<span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Install from CRAN </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"highdir"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Install from development version (dev branch)</span></span>
+<span><span class="co"># Install development version from GitHub (dev branch) </span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"folkehelsestats/highdir@dev"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
@@ -194,6 +194,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=highdir" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/folkehelsestats/highdir/">Browse source code</a></li>
 <li><a href="https://github.com/folkehelsestats/highdir/issues">Report a bug</a></li>
 <li><a href="https://www.hdir.no" class="external-link">Helsedirektoratet</a></li>

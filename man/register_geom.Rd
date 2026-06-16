@@ -10,7 +10,7 @@ register_geom(
   highcharter_fun = NULL,
   required_args = list(),
   optional_args = list(),
-  is_map_geom = FALSE
+  skip_base_fig = FALSE
 )
 }
 \arguments{
@@ -28,7 +28,7 @@ be supplied and have a sensible default when omitted.  These are purely
 informational from the registry's perspective - the geom function applies
 the defaults itself via \code{geom_params$key \%||\% default}.}
 
-\item{is_map_geom}{Logical. Bypasses \code{base_fig()} in both engines.}
+\item{skip_base_fig}{Logical. Bypasses \code{base_fig()} in both engines.}
 }
 \value{
 \code{name}, invisibly.
