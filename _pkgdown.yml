@@ -102,6 +102,7 @@ reference:
       Extra functions that support geom functions
     contents:
       - starts_with("hd_venn_")
+      - hd_spec_venn
       - venn_df_to_list
 
   - title: Helpers
