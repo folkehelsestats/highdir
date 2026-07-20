@@ -112,8 +112,10 @@ opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
 hd_make(spec, "column", opts_no)
 
 # -- Save outputs ----------------------------------------------------------
+\dontrun{
 hd_save(hd_make(spec, "column", opts), "column.html")
 hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "column.png")
+}
 }
 
 }

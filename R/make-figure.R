@@ -91,10 +91,12 @@
 #' hd_make(spec, "column", opts_no)
 #'
 #' # -- Save outputs ----------------------------------------------------------
+#' \dontrun{
 #' hd_save(hd_make(spec, "column", opts), "column.html")
 #' hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "column.png")
 #' }
-#'
+#' }
+#' 
 #' @export
 hd_make <- function(spec,
                     type        = "column",
