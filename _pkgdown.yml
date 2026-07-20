@@ -92,9 +92,17 @@ reference:
       - hd_theme
       - gg_theme
       - hd_set_theme
+      - hd_reset_theme
       - list_palettes
       - get_palette
       - register_palette
+
+  - title: Extra geom functions
+    desc: >-
+      Extra functions that support geom functions
+    contents:
+      - starts_with("hd_venn_")
+      - venn_df_to_list
 
   - title: Helpers
     desc: >-
