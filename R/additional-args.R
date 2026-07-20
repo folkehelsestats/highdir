@@ -93,7 +93,7 @@
   pie = list(
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
-    skip_base_fig   = FALSE, 
+    skip_base_fig   = TRUE,
     optional_args   = list(
       inner_size = list(
         default = "0%",

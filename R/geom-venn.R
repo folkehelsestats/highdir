@@ -295,7 +295,8 @@ gg_venn <- function(spec, opts, geom_params, ...) {
     if (!show_legend)
       p <- p + ggplot2::theme(legend.position = "none")
 
-    return(list("__ggplot__" = p))
+    # return(list("__ggplot__" = p))
+    return(p)
   }
 
   # -- neither package available -----------------------------------------------

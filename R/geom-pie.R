@@ -23,20 +23,96 @@
 # highcharter: a single "pie" type series where each slice name comes from x.
 
 #' @keywords internal
+# gg_pie <- function(spec, opts, geom_params, ...) {
+#   # ggplot2 pie = stacked bar in polar coordinates.
+#   # We re-map: fill = x (the label column), y = y (the value column).
+#   # The base canvas already has x/y mapped; we override with a coord_polar.
+#   list(
+#     ggplot2::aes(x = "", fill = .data[[spec$x]],
+#                  y = .data[[spec$y]]),
+#     ggplot2::geom_bar(stat = "identity", width = 1, colour = "white",
+#                       linewidth = 0.4),
+#     ggplot2::coord_polar(theta = "y"),
+#     ggplot2::labs(x = NULL, y = NULL),
+#     ggplot2::theme_void(),
+#     ggplot2::theme(legend.position = "right")
+#   )
+# }
+
+
 gg_pie <- function(spec, opts, geom_params, ...) {
-  # ggplot2 pie = stacked bar in polar coordinates.
-  # We re-map: fill = x (the label column), y = y (the value column).
-  # The base canvas already has x/y mapped; we override with a coord_polar.
-  list(
-    ggplot2::aes(x = "", fill = .data[[spec$x]],
-                 y = .data[[spec$y]]),
-    ggplot2::geom_bar(stat = "identity", width = 1, colour = "white",
-                      linewidth = 0.4),
-    ggplot2::coord_polar(theta = "y"),
-    ggplot2::labs(x = NULL, y = NULL),
-    ggplot2::theme_void(),
-    ggplot2::theme(legend.position = "right")
-  )
+
+  x_col <- spec$x
+  y_col <- spec$y
+
+  dt <- data.table::copy(spec$data)
+  data.table::setDT(dt)
+
+  # Kontroll
+  if (!is.numeric(dt[[y_col]]) &&
+      !is.integer(dt[[y_col]])) {
+    stop(
+      sprintf(
+        "Pie chart requires numeric values. '%s' is not numeric.",
+        y_col
+      ),
+      call. = FALSE
+    )
+  }
+
+  total <- sum(dt[[y_col]], na.rm = TRUE)
+
+  if (total <= 0) {
+    stop(
+      "Pie chart requires positive values.",
+      call. = FALSE
+    )
+  }
+
+  # Beregn label-posisjoner
+dt$pct <- dt[[y_col]] / sum(dt[[y_col]])
+
+dt$ypos <- cumsum(dt[[y_col]]) -
+  dt[[y_col]] / 2
+
+# Prosentetiketter
+dt$label <- scales::percent(
+  dt$pct,
+  accuracy = 0.1
+)
+  p <- ggplot2::ggplot(
+    dt,
+    ggplot2::aes(
+      x    = "",
+      y    = .data[[y_col]],
+      fill = .data[[x_col]]
+    )
+  ) +
+    ggplot2::geom_col(
+      width = 1,
+      colour = "white",
+      linewidth = 0.4
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(
+        y = ypos,
+        label = label
+      ),
+      colour = "white"
+    ) +
+    ggplot2::coord_polar(theta = "y") +
+    ggplot2::labs(
+      x = NULL,
+      y = NULL,
+      fill = x_col
+    ) +
+  # ggplot2::theme_void() + # Should be used after theme() to avoid overriding
+    ggplot2::theme(
+      legend.position = "right"
+    )
+
+ # list("__ggplot__" = p)
+  return(p)
 }
 
 ## # Pie is always single-series from ggplot2's perspective but uses ##
@@ -133,7 +209,7 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'         title = "Drinking frequency",
 #'         subtitle = "Source: Norwegian Directorate of Health"
 #'     )
-#' 
+#'
 #' @export
 hd_geom_pie <- function(inner_size = "0%", ...) {
  hd_geom("pie", inner_size = inner_size, ...)
