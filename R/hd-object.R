@@ -17,7 +17,8 @@
 #'
 #' @param data   A `data.frame` **or** an [hd_spec()] object.  When an
 #'   `hd_spec` is supplied every other mapping argument (`x`, `y`, …) is
-#'   ignored - the spec carries them already.
+#'   ignored - the spec carries them already. Default is `NULL`, which
+#'   creates an empty data.frame.
 #' @param x      Character. Column name for the x-axis variable.
 #'   Ignored when `data` is an `hd_spec`.
 #' @param y      Character. Column name for the y-axis variable.
@@ -71,7 +72,7 @@
 #'   hd_opts(title = "Static version")
 #'
 #' @export
-hd <- function(data,
+hd <- function(data    = NULL,
                x       = NULL,
                y       = NULL,
                group   = NULL,
@@ -79,6 +80,14 @@ hd <- function(data,
                colour  = NULL,
                backend = getOption("highdir.backend", "highcharter")) {
 
+  if (is.null(data)) {
+    data <- data.frame()
+  } else {
+    if (!is.data.frame(data) && !inherits(data, "hd_spec")) {
+      stop("`data` must be a data.frame or an hd_spec object.", call. = FALSE)
+    }
+  }
+  
   spec <- if (inherits(data, "hd_spec")) {
     data  # already a spec - use as-is
   } else {

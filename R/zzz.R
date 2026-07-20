@@ -59,7 +59,7 @@
       highcharter_fun = .fn(g, "hc"),
       required_args   = def$required_args %||% character(),
       optional_args   = def$optional_args %||% list(),
-      is_map_geom     = isTRUE(def$is_map_geom)
+      skip_base_fig     = isTRUE(def$skip_base_fig)
     )
   }
 

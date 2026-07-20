@@ -33,7 +33,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   # coord_flip().
   #
   # Geoms in this category:
-  #   is_map_geom  - registered flag in the registry (e.g. choropleth maps)
+  #   skip_base_fig  - registered flag in the registry (e.g. choropleth maps)
   #   ranked_bar   - uses .xname (sorted factor) not spec$x; manages its own
   #                  coord_flip(), scale_x_discrete(), scale_y_continuous()
   #                  and labs() internally via the layer list it returns.
@@ -41,7 +41,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   # These geoms receive single_colour via geom_params (same as standard path)
   # so colour resolution is consistent.  Theme, axis label hiding, and
   # accessibility alt text are still applied below after the early return.
-  .self_contained <- isTRUE(geom$is_map_geom) || geom$name == "ranked_bar"
+  .self_contained <- isTRUE(geom$skip_base_fig)
 
   if (.self_contained) {
     # Inject single_colour so the geom can use the resolved brand colour
@@ -50,6 +50,20 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     
     layers <- geom$ggplot_fun(spec, opts, geom_params)
 
+    # Special case: geom returned a complete ggplot object (e.g. ggVennDiagram).
+    # Detect via the sentinel key "__ggplot__" and return it directly after
+    # applying theme and accessibility.  No layer-by-layer assembly needed.
+    # if (!is.null(layers[["__ggplot__"]])) {
+    #    p <- layers[["__ggplot__"]] + gt$theme + ggplot2::theme_void()
+    # if (!is.null(opts$description))
+    #    p <- p + ggplot2::labs(alt = opts$description)
+    # return(p)
+    #  }
+
+    if (inherits(layers, "ggplot")) {
+      return(layers + gt$theme + ggplot2::theme_void())
+    }
+    
     p <- ggplot2::ggplot() +
       ggplot2::labs(
         title    = opts$title,

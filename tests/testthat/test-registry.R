@@ -115,7 +115,7 @@ test_that("register_geom / .get_geom: round-trip stores all fields", {
     highcharter_fun = .dummy_hc,
     required_args   = list(foo = .req("A required foo")),
     optional_args   = list(bar = .opt(42L, "Bar radius")),
-    is_map_geom     = FALSE
+    skip_base_fig   = FALSE
   )
 
   g <- highdir:::.get_geom("rt_geom")
@@ -123,7 +123,7 @@ test_that("register_geom / .get_geom: round-trip stores all fields", {
   expect_equal(g$name, "rt_geom")
   expect_true(is.function(g$ggplot_fun))
   expect_true(is.function(g$highcharter_fun))
-  expect_false(isTRUE(g$is_map_geom))
+  expect_false(isTRUE(g$skip_base_fig))
 
   # required_args: named list with default + desc
   expect_true("foo" %in% names(g$required_args))
@@ -145,11 +145,11 @@ test_that("register_geom: NULL functions are accepted", {
   expect_null(g$highcharter_fun)
 })
 
-test_that("register_geom: is_map_geom = TRUE stored correctly", {
+test_that("register_geom: skip_base_fig = TRUE stored correctly", {
   on.exit(rm("map_test_geom", envir = highdir:::.geom_registry), add = TRUE)
-  register_geom("map_test_geom", is_map_geom = TRUE)
+  register_geom("map_test_geom", skip_base_fig = TRUE)
 
-  expect_true(isTRUE(highdir:::.get_geom("map_test_geom")$is_map_geom))
+  expect_true(isTRUE(highdir:::.get_geom("map_test_geom")$skip_base_fig))
 })
 
 test_that("register_geom: returns name invisibly", {
@@ -267,8 +267,8 @@ test_that("arearange: required_args is named list with ymin and ymax", {
   expect_type(ra$ymax$desc, "character")
 })
 
-test_that("arearange: is_map_geom is FALSE", {
-  expect_false(isTRUE(highdir:::.get_geom("arearange")$is_map_geom))
+test_that("arearange: skip_base_fig is FALSE", {
+  expect_false(isTRUE(highdir:::.get_geom("arearange")$skip_base_fig))
 })
 
 test_that("column: has no required_args and no optional_args", {

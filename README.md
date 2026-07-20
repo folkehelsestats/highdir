@@ -51,9 +51,9 @@ building and previewing figures is also included as part of the package.
 # Install from CRAN 
 install.packages("highdir")
 
-# Install development version from GitHub (dev branch) 
+# Install development version from GitHub 
 if(!require(remotes)) install.packages("remotes")
-remotes::install_github("folkehelsestats/highdir@dev")
+remotes::install_github("folkehelsestats/highdir")
 ```
 
 ------------------------------------------------------------------------

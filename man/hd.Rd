@@ -5,7 +5,7 @@
 \title{Initialise a Composable highdir Figure}
 \usage{
 hd(
-  data,
+  data = NULL,
   x = NULL,
   y = NULL,
   group = NULL,
@@ -17,7 +17,8 @@ hd(
 \arguments{
 \item{data}{A \code{data.frame} \strong{or} an \code{\link[=hd_spec]{hd_spec()}} object.  When an
 \code{hd_spec} is supplied every other mapping argument (\code{x}, \code{y}, …) is
-ignored - the spec carries them already.}
+ignored - the spec carries them already. Default is \code{NULL}, which
+creates an empty data.frame.}
 
 \item{x}{Character. Column name for the x-axis variable.
 Ignored when \code{data} is an \code{hd_spec}.}
