@@ -140,6 +140,7 @@ get_src_data <- function(obj) {
 # hd_venn_sets_from_spec() is a convenience extractor that retrieves the
 # set list back from a spec created by hd_spec_venn().
 #
+
 #' Create a Venn / Euler Figure Specification
 #'
 #' Declarative-API equivalent of [hd_spec()] for venn and euler diagrams.
