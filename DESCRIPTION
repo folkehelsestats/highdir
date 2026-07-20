@@ -26,15 +26,16 @@ Depends:
     R (>= 4.1.0)
 Imports:
     highcharter (>= 0.9.4),
-    ggplot2     (>= 3.4.0),
+    ggplot2 (>= 3.4.0),
     htmlwidgets (>= 1.6.0),
-    jsonlite    (>= 1.8.0),
-    rlang       (>= 1.1.0),
-    viridis     (>= 0.6.0),
-    shiny       (>= 1.7.0),
+    jsonlite (>= 1.8.0),
+    rlang (>= 1.1.0),
+    viridis (>= 0.6.0),
+    shiny (>= 1.7.0),
     tools,
     utils,
-    stats
+    stats,
+    scales (>= 1.4.0)
 Suggests:
     sf          (>= 1.0.0),
     maps        (>= 3.4.0),

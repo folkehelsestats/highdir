@@ -42,6 +42,8 @@
 
 gg_pie <- function(spec, opts, geom_params, ...) {
 
+  label <- ypos <- pct <- NULL # appease R CMD check
+
   x_col <- spec$x
   y_col <- spec$y
 
