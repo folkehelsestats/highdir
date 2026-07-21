@@ -51,7 +51,7 @@ server <- function(input, output, session) {
     opts_r        = opts_m$opts_r,
     use_js_r      = opts_m$use_js_r,
     geom_r        = shiny::reactive(input$geom),
-    backend_r     = shiny::reactive(input$backend),
+    backend_r     = shiny::reactive(input$mode),
     geom_inputs_r = geom_inputs_r
   )
 

@@ -31,11 +31,11 @@ mod_figure_ui <- function(id) {
     shiny::tabPanel("Figure",
       shiny::br(),
       shiny::conditionalPanel(
-        condition = "input.backend == 'highcharter'",
+        condition = "input.mode == 'dynamic'",
         highcharter::highchartOutput(ns("hc_out"), height = "520px")
       ),
       shiny::conditionalPanel(
-        condition = "input.backend == 'ggplot2'",
+        condition = "input.mode == 'static'",
         shiny::plotOutput(ns("gg_out"), height = "520px")
       )
     ),
