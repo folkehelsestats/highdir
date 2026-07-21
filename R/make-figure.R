@@ -23,6 +23,9 @@
 #' @param opts      A [hd_opts] object or `NULL` (uses all defaults).
 #'   Controls title, subtitle, caption, ylim, yint, flip, per-figure
 #'   colours, and highcharter theme.
+#' @param mode      Character.  Rendering mode - `"dynamic"` (default,
+#'  interactive) or `"static"`.  `"dynamic"` uses the highcharter
+#'  backend, `"static"` uses the ggplot2 backend.  See [list_backends()].
 #' @param backend   Character.  Rendering engine - `"highcharter"` (default,
 #'   interactive) or `"ggplot2"` (static), or any engine added with
 #'   [register_backend()].
@@ -98,22 +101,71 @@
 #' }
 #' 
 #' @export
+
 hd_make <- function(spec,
-                    type        = "column",
-                    opts        = NULL,
-                    backend     = "highcharter",
-                    use_js      = TRUE,
-                    module      = FALSE,
+                    type = "column",
+                    opts = NULL,
+                    mode = NULL,
+                    backend = lifecycle::deprecated(),
+                    use_js = TRUE,
+                    module = FALSE,
                     ...) {
 
   opts <- opts %||% default_opts()
-  extra_args  <- list(...)
+  extra_args <- list(...)
 
-  validate_fig_inputs(spec, opts, type, backend, extra_args)
-  spec <- check_decimals(spec, opts, type, extra_args)
+  # Gammelt argument brukes
+  if (lifecycle::is_present(backend)) {
 
-  geom   <- .get_geom(type)
-  engine <- get_backend(backend)
+    lifecycle::deprecate_warn(
+      when = "0.7.0",
+      what = "hd_make(backend)",
+      with = "hd_make(mode)"
+    )
+
+    # Backend tar effekt dersom mode ikke er oppgitt
+    if (is.null(mode)) {
+
+      mode <- switch(
+        backend,
+        highcharter = "dynamic",
+        ggplot2     = "static",
+        backend
+      )
+
+    } else {
+
+      stop(
+        "Please supply either `mode` or `backend`, not both.",
+        call. = FALSE
+      )
+    }
+  }
+
+  mode <- normalize_mode(mode)
+
+  validate_fig_inputs(
+    spec,
+    opts,
+    type,
+    mode,
+    extra_args
+  )
+
+  spec <- check_decimals(
+    spec,
+    opts,
+    type,
+    extra_args
+  )
+
+  geom <- .get_geom(type)
+
+  engine <- switch(
+    mode,
+    dynamic = backend_highcharter,
+    static  = backend_ggplot2
+  )
 
   engine(
     spec        = spec,
@@ -124,3 +176,61 @@ hd_make <- function(spec,
     module      = module
   )
 }
+
+
+
+normalize_mode <- function(mode) {
+
+  if (is.null(mode)) {
+    mode <- "dynamic"
+  }
+
+  # Støtt gamle verdier en periode
+  if (identical(mode, "highcharter")) {
+
+    lifecycle::deprecate_warn(
+      when = "0.7.0",
+      what = 'mode = "highcharter"',
+      with = 'mode = "dynamic"'
+    )
+
+    mode <- "dynamic"
+  }
+
+  if (identical(mode, "ggplot2")) {
+
+    lifecycle::deprecate_warn(
+      when = "0.7.0",
+      what = 'mode = "ggplot2"',
+      with = 'mode = "static"'
+    )
+
+    mode <- "static"
+  }
+
+  rlang::arg_match(
+    mode,
+    values = c("dynamic", "static")
+  )
+}
+
+## When it's time to kill it
+## -----------------------------------------------------------------------------
+# if (lifecycle::is_present(backend)) {
+
+#   replacement <- switch(
+#     backend,
+#     highcharter = "dynamic",
+#     ggplot2 = "static",
+#     "<unknown>"
+#   )
+
+#   lifecycle::deprecate_stop(
+#     when = "0.9.0",
+#     what = "hd_make(backend)",
+#     details = sprintf(
+#       "Use `mode = \"%s\"` instead.",
+#       replacement
+#     )
+#   )
+# }
