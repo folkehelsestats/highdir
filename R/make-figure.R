@@ -111,13 +111,20 @@ hd_make <- function(spec,
                     use_js = TRUE,
                     module = FALSE,
                     ...) {
-
   opts <- opts %||% default_opts()
   extra_args <- list(...)
 
+  # ERROR først
+  if (lifecycle::is_present(backend) && !is.null(mode)) {
+    stop(
+      "Please supply either `mode` or `backend`, not both.",
+      call. = FALSE
+    )
+  }
+
+
   # Previous arg name `backend` can be used to set `mode` (deprecated)
   if (lifecycle::is_present(backend)) {
-
     lifecycle::deprecate_warn(
       when = "0.7.0",
       what = "hd_make(backend)",
@@ -126,19 +133,10 @@ hd_make <- function(spec,
 
     # Backend tar effekt dersom mode ikke er oppgitt
     if (is.null(mode)) {
-
-      mode <- switch(
-        backend,
+      mode <- switch(backend,
         highcharter = "dynamic",
         ggplot2     = "static",
         backend
-      )
-
-    } else {
-
-      stop(
-        "Please supply either `mode` or `backend`, not both.",
-        call. = FALSE
       )
     }
   }
@@ -172,9 +170,6 @@ hd_make <- function(spec,
     module      = module
   )
 }
-
-
-
 normalize_mode <- function(mode) {
   if (is.null(mode)) {
     mode <- "dynamic"

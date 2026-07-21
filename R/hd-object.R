@@ -89,6 +89,15 @@ hd <- function(data = NULL,
     }
   }
 
+  
+  # ERROR først
+  if (lifecycle::is_present(backend) && !is.null(mode)) {
+    stop(
+      "Please supply either `mode` or `backend`, not both.",
+      call. = FALSE
+    )
+  }
+
   # Previous arg name `backend` can be used to set `mode` (deprecated)
   if (lifecycle::is_present(backend)) {
     lifecycle::deprecate_warn(
@@ -104,13 +113,7 @@ hd <- function(data = NULL,
         ggplot2     = "static",
         backend
       )
-    } else {
-      stop(
-        "Please supply either `mode` or `backend`, not both.",
-        call. = FALSE
-      )
-    }
-  }
+    }}
 
   mode <- normalize_mode(mode)
 
