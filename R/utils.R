@@ -227,7 +227,7 @@ check_decimals <- function(spec, opts, type, extra_args){
 # that don't apply to them, so this validation is an additional user-friendly
 # check rather than a strict enforcement mechanism. The function assumes that
 # the geom registry entries have a structure where each argument's metadata
-# includes a `backend_only` field that specifies if the argument is exclusive to
+# includes a `mode_only` field that specifies if the argument is exclusive to
 # a particular backend. It also assumes that the `hd_geom` object has a `type`
 # field that identifies the geom type, and a `params` list that contains the
 # user-supplied values for the geom arguments.
@@ -250,7 +250,7 @@ check_decimals <- function(spec, opts, type, extra_args){
 
   for (arg_name in names(all_args)) {
     arg_meta     <- all_args[[arg_name]]
-    backend_only <- arg_meta$backend_only     # NULL if not set
+    mode_only <- arg_meta$mode_only     # NULL if not set
     user_value   <- params[[arg_name]]
     def          <- arg_meta$default
 
@@ -260,14 +260,14 @@ check_decimals <- function(spec, opts, type, extra_args){
     #   3. the user actually supplied a value for this arg
     #   4. the supplied value differs from the default (so default pass-through
     #      from the constructor does not trigger a spurious warning)
-    if (!is.null(backend_only) &&
-        be != backend_only &&
+    if (!is.null(mode_only) &&
+        be != mode_only &&
         !is.null(user_value) &&
         !identical(user_value, def)) {
 
       warning(
         "`", arg_name, " = \"", user_value, "\"` is only supported by the ",
-        backend_only, " backend and will be ignored.\n",
+        mode_only, " backend and will be ignored.\n",
         "Current backend is '", be, "'.",
         call. = FALSE
       )

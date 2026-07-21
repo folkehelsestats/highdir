@@ -45,7 +45,7 @@
   # Geometry + Backend
   shiny::div(class = "hd-label", "Figure"),
   shiny::selectInput("geom",    NULL, choices = list_geoms(),    selected = "column"),
-  shiny::selectInput("backend", NULL, choices = list_backends(), selected = "highcharter"),
+  shiny::selectInput("backend", NULL, choices = list_backends(), selected = "dynamic"),
 
   # Spec collapsible — file upload + column mapping
   mod_data_ui("data"),

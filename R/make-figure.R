@@ -11,7 +11,7 @@
 #' opts <- hd_opts(title = "Health survey", ylim = c(0, 80))
 #'
 #' hd_make(spec, "column", opts)                       # highcharter (default)
-#' hd_make(spec, "column", opts, backend = "ggplot2")  # static ggplot2
+#' hd_make(spec, "column", opts, backend = "static")  # static ggplot2
 #' hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
 #' hd_make(spec, "pie",    opts)                       # pie / donut
 #' ```
@@ -26,9 +26,10 @@
 #' @param mode      Character.  Rendering mode - `"dynamic"` (default,
 #'  interactive) or `"static"`.  `"dynamic"` uses the highcharter
 #'  backend, `"static"` uses the ggplot2 backend.  See [list_backends()].
-#' @param backend   Character.  Rendering engine - `"highcharter"` (default,
-#'   interactive) or `"ggplot2"` (static), or any engine added with
-#'   [register_backend()].
+#' @param backend Character. Rendering engine - `"dynamic"` (default,
+#'   interactive) or `"static"`, or any engine added with
+#'   [register_backend()].  Falls back to `getOption("highdir.backend",
+#'   "dynamic")`. This will de precated in favor of `mode` in a future release.
 #' @param use_js    Logical.  When `TRUE` (default) injects a hover-band
 #'   `htmlwidgets::JS()` callback via `point.events.mouseOver/Out`.
 #'   Tooltips, accessibility module, and all other Highcharts declarative
@@ -84,10 +85,10 @@
 #' hd_make(spec, "column", opts, use_js = FALSE)
 #'
 #' # -- Static ggplot2 versions -----------------------------------------------
-#' hd_make(spec, "column",  opts, backend = "ggplot2")
-#' hd_make(spec, "line",    opts, backend = "ggplot2")
-#' hd_make(spec, "scatter", opts, backend = "ggplot2")
-#' hd_make(pie_spec, "pie", pie_opts, backend = "ggplot2")
+#' hd_make(spec, "column",  opts, backend = "static")
+#' hd_make(spec, "line",    opts, backend = "static")
+#' hd_make(spec, "scatter", opts, backend = "static")
+#' hd_make(pie_spec, "pie", pie_opts, backend = "static")
 #'
 #' # -- Reuse spec with different presentation --------------------------------
 #' opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
@@ -96,7 +97,7 @@
 #' # -- Save outputs ----------------------------------------------------------
 #' \dontrun{
 #' hd_save(hd_make(spec, "column", opts), "column.html")
-#' hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "column.png")
+#' hd_save(hd_make(spec, "column", opts, backend="static"), "column.png")
 #' }
 #' }
 #' 
@@ -114,7 +115,7 @@ hd_make <- function(spec,
   opts <- opts %||% default_opts()
   extra_args <- list(...)
 
-  # Gammelt argument brukes
+  # Previous arg name `backend` can be used to set `mode` (deprecated)
   if (lifecycle::is_present(backend)) {
 
     lifecycle::deprecate_warn(
@@ -160,12 +161,7 @@ hd_make <- function(spec,
   )
 
   geom <- .get_geom(type)
-
-  engine <- switch(
-    mode,
-    dynamic = backend_highcharter,
-    static  = backend_ggplot2
-  )
+  engine <- get_backend(mode)
 
   engine(
     spec        = spec,
@@ -180,40 +176,37 @@ hd_make <- function(spec,
 
 
 normalize_mode <- function(mode) {
-
   if (is.null(mode)) {
     mode <- "dynamic"
   }
 
   # Støtt gamle verdier en periode
   if (identical(mode, "highcharter")) {
-
-    lifecycle::deprecate_warn(
-      when = "0.7.0",
-      what = 'mode = "highcharter"',
-      with = 'mode = "dynamic"'
+    warning(
+      '"highcharter" is deprecated. ',
+      'Please use `mode = "dynamic"` instead.',
+      call. = FALSE
     )
 
     mode <- "dynamic"
   }
 
   if (identical(mode, "ggplot2")) {
-
-    lifecycle::deprecate_warn(
-      when = "0.7.0",
-      what = 'mode = "ggplot2"',
-      with = 'mode = "static"'
+    warning(
+      '"ggplot2" is deprecated. ',
+      'Please use `mode = "static"` instead.',
+      call. = FALSE
     )
 
     mode <- "static"
   }
+
 
   rlang::arg_match(
     mode,
     values = c("dynamic", "static")
   )
 }
-
 ## When it's time to kill it
 ## -----------------------------------------------------------------------------
 # if (lifecycle::is_present(backend)) {

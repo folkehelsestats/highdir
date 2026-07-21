@@ -41,7 +41,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
     return(chart)
   }
 
-  chart <- base_fig(spec, opts, "highcharter")
+  chart <- base_fig(spec, opts, "dynamic")
 
   # -- Tooltip -----------------------------------------------------------------
   ysuffix <- opts$ysuffix %||% ""

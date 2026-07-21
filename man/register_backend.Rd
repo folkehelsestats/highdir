@@ -7,7 +7,7 @@
 register_backend(name, engine)
 }
 \arguments{
-\item{name}{Character. Unique backend identifier (e.g. \code{"ggplot2"}).}
+\item{name}{Character. Unique backend identifier (e.g. \code{"static"}).}
 
 \item{engine}{Function.}
 }

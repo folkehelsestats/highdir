@@ -73,7 +73,7 @@ alcohol2 <- highdir::alco2  # same columns + kjonn
 
 ## Highcharter: how description is delivered
 
-When `description` is set and the backend is `"highcharter"`, highdir calls:
+When `description` is set and the backend is `"dynamic"`, highdir calls:
 
 ```{r}
 highdir:::.hd_accessibility(chart, description = opts$description)
@@ -271,7 +271,7 @@ opts_gg <- hd_opts(
   )
 )
 
-gg_fig <- hd_make(spec_line, "line", opts_gg, backend = "ggplot2")
+gg_fig <- hd_make(spec_line, "line", opts_gg, backend = "static")
 
 # SVG preserves the description as a <desc> element — recommended
 hd_save(gg_fig, "alcohol_line.svg")
@@ -288,7 +288,7 @@ in the rendered HTML output:
 
 ````markdown
 ```{r alcohol-line, fig.alt = "Line chart showing alcohol consumption declining from 7.3 to 5.3 litres per capita between 2014 and 2023."}
-hd_make(spec_line, "line", opts_gg, backend = "ggplot2")
+hd_make(spec_line, "line", opts_gg, backend = "static")
 ```
 ````
 
@@ -351,7 +351,7 @@ opts_good <- hd_opts(
 )
 
 hd_make(spec_line, "line", opts_good)
-hd_make(spec_line, "line", opts_good, backend = "ggplot2")
+hd_make(spec_line, "line", opts_good, backend = "static")
 ```
 
 For grouped charts, name the groups and describe the relationship between
@@ -370,5 +370,5 @@ opts_grouped <- hd_opts(
 )
 
 hd_make(spec_line2, "line", opts_grouped)
-hd_make(spec_line2, "line", opts_grouped, backend = "ggplot2")
+hd_make(spec_line2, "line", opts_grouped, backend = "static")
 ```

@@ -34,9 +34,9 @@
 #'
 #' # -- 4. Render — swap backend without touching spec or opts ----------------
 #' hd_make(spec, "column", opts)                        # interactive HC
-#' hd_make(spec, "column", opts, backend = "ggplot2")   # static ggplot2
+#' hd_make(spec, "column", opts, backend = "static")   # static ggplot2
 #' hd_make(spec, "line",   opts, smooth = TRUE)         # HC spline
-#' hd_make(spec, "line",   opts, backend = "ggplot2")   # gg line
+#' hd_make(spec, "line",   opts, backend = "static")   # gg line
 #' hd_make(spec, "scatter")                             # HC scatter
 #'
 #' # Donut chart
@@ -49,7 +49,7 @@
 #'
 #' # -- 6. Save to disk -------------------------------------------------------
 #' hd_save(hd_make(spec, "column", opts),               "chart.html")
-#' hd_save(hd_make(spec, "column", opts, backend="ggplot2"), "chart.png")
+#' hd_save(hd_make(spec, "column", opts, backend="static"), "chart.png")
 #'
 #' # -- 7. Session-wide styling -----------------------------------------------
 #' hd_set_theme(hc_theme = "economist",

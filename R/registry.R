@@ -7,7 +7,7 @@
 .backend_registry <- new.env(parent = emptyenv())
 
 #' Register a Rendering Backend and used when loding in zzz.R file
-#' @param name   Character. Unique backend identifier (e.g. `"ggplot2"`).
+#' @param name   Character. Unique backend identifier (e.g. `"static"`).
 #' @param engine Function.
 #' @return `name`, invisibly.
 #' @export

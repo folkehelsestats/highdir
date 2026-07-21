@@ -38,8 +38,8 @@
 # =============================================================================
 
 test_that("built-in backends are registered at package load", {
-  expect_true("ggplot2"     %in% list_backends())
-  expect_true("highcharter" %in% list_backends())
+  expect_true("static"     %in% list_backends())
+  expect_true("dynamic" %in% list_backends())
 })
 
 test_that("list_backends returns a sorted character vector", {
@@ -488,7 +488,7 @@ test_that("built-in geoms registered at load", {
 
 test_that("built-in backends registered at load", {
   b <- list_backends()
-  expect_true(all(c("ggplot2", "highcharter") %in% b))
+  expect_true(all(c("static", "dynamic") %in% b))
 })
 
 test_that("register_backend / get_backend round-trip", {

@@ -28,8 +28,8 @@
   register_palette("hdir2", c("#315975", "#8A294D"))
 
   # Backends ----------------------------------------------------------- -------
-  register_backend("ggplot2",     ggplot_engine)
-  register_backend("highcharter", highcharter_engine)
+  register_backend("static",  ggplot_engine)
+  register_backend("dynamic", highcharter_engine)
 
   # -- Geometries -------------------------------------------------------------
   # Geom optional args need to be defined here. They will be used in two different

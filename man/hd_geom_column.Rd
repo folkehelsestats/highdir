@@ -44,7 +44,7 @@ opts_col <- hd_opts(
 hd_make(spec_col, "column", opts_col)
 
 # Static ggplot2
-hd_make(spec_col, "column", opts_col, backend = "ggplot2")
+hd_make(spec_col, "column", opts_col, backend = "static")
 
 # Composable style
 p <- hd(survey, x = "age_group", y = "pct", group = "kjonn")
@@ -56,7 +56,7 @@ p2 + hd_opts(title = "Health survey", ylim = c(0, 100))
 # Pass an existing hd_spec
 spec <- hd_spec(survey, x = "age_group", y = "pct", group = "kjonn", n = "n")
 
-hd(spec, backend = "ggplot2") +
+hd(spec, backend = "static") +
  hd_geom_column() +
  hd_opts(title = "Health survey", ylim = c(0, 80))
 

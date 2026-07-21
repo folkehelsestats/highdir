@@ -85,7 +85,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   }
 
   # -- Standard path: base_fig() builds canvas, engine adds layers ------------
-  p <- base_fig(spec, opts, "ggplot2")
+  p <- base_fig(spec, opts, "static")
 
   # -- Colour + layers ---------------------------------------------------------
   grp_col <- spec$colour %||% spec$group

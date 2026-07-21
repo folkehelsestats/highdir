@@ -79,7 +79,7 @@ hd_make(spec_v, "venn", hd_opts(title = "City overlap"))
 \section{Composable API (output = "geom")}{
 
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{hd(backend = "highcharter") +
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{hd(backend = "dynamic") +
   hd_venn_df(df, output = "geom") +
   hd_opts(title = "City overlap")
 }\if{html}{\out{</div>}}
@@ -99,12 +99,12 @@ spec_v <- hd_venn_df(df)
 hd_make(spec_v, "venn", hd_opts(title = "City overlap"))
 
 # Composable API
-hd(backend = "highcharter") +
+hd(backend = "dynamic") +
   hd_venn_df(df, output = "geom") +
   hd_opts(title = "City overlap")
 
 # ggplot2 backend
-hd(backend = "ggplot2") +
+hd(backend = "static") +
   hd_venn_df(df, output = "geom") +
   hd_opts(title = "City overlap")
 }

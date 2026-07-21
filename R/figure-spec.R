@@ -161,7 +161,7 @@ get_src_data <- function(obj) {
 #'
 #' # Declarative API - identical pattern to every other geom
 #' hd_make(spec_v, "venn", opts_v)                       # highcharter
-#' hd_make(spec_v, "venn", opts_v, backend = "ggplot2")  # ggplot2
+#' hd_make(spec_v, "venn", opts_v, backend = "static")  # ggplot2
 #' ```
 #'
 #' @section Compared to the composable API:
@@ -171,7 +171,7 @@ get_src_data <- function(obj) {
 #' hd_make(hd_spec_venn(sets), "venn", hd_opts(title = "City overlap"))
 #'
 #' # Composable (hd / + / hd_geom_venn)
-#' hd(backend = "highcharter") +
+#' hd(backend = "dynamic") +
 #'   hd_geom_venn(sets = sets) +
 #'   hd_opts(title = "City overlap")
 #' ```
@@ -196,7 +196,7 @@ get_src_data <- function(obj) {
 #' opts_v <- hd_opts(title = "City overlap")
 #'
 #' hd_make(spec_v, "venn", opts_v)
-#' hd_make(spec_v, "venn", opts_v, backend = "ggplot2")
+#' hd_make(spec_v, "venn", opts_v, backend = "static")
 #' hd_make(hd_spec_venn(sets), "venn", hd_opts(title = "City overlap"))
 #' }
 #'
