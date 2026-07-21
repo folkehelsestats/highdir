@@ -179,7 +179,7 @@ hd_make(spec_col, "column", opts_col)
 #| eval: TRUE
 
 # Static ggplot2
-hd_make(spec_col, "column", opts_col, backend = "static")
+hd_make(spec_col, "column", opts_col, mode = "static")
 ```
 
 ### Column with groups
@@ -201,7 +201,7 @@ hd_make(spec_col, "column", opts_flip)
 ```{r gg-column}
 #| eval: TRUE
 
-hd_make(spec_col, "column", opts_flip, backend = "static")
+hd_make(spec_col, "column", opts_flip, mode = "static")
 ```
 
 ## Line chart
@@ -237,7 +237,7 @@ opts_line <- hd_opts(
 
 # Straight segments
 hd_make(spec_line1, "line", opts_line, smooth = FALSE)
-hd_make(spec_line1, "line", opts_line, smooth = FALSE, backend = "static")
+hd_make(spec_line1, "line", opts_line, smooth = FALSE, mode = "static")
 ```
 
 ### Interactive figure
@@ -255,7 +255,7 @@ hd_make(spec_line1, "line", opts_line)
 #| eval: TRUE
 
 # Spline (smooth) — default
-hd_make(spec_line1, "line", opts_line, backend = "static")
+hd_make(spec_line1, "line", opts_line, mode = "static")
 ```
 
 ```{r line-grouped}
@@ -268,7 +268,7 @@ spec_line2 <- hd_spec(alco2,
 # Larger markers, straight lines
 hd_make(spec_line2, "line", opts_line, smooth = FALSE, dot_size = 6)
 hd_make(spec_line2, "line", opts_line, smooth = FALSE, dot_size = 6,
-        backend = "static")
+        mode = "static")
 
 # Highcharter only: custom per-group marker shapes
 hd_make(spec_line2, "line", opts_line,
@@ -318,7 +318,7 @@ opts_rb <- hd_opts(
 )
 
 # Static ggplot2 — value labels placed inside or outside bars automatically
-hd_make(spec_rb, "ranked_bar", opts_rb, backend = "static")
+hd_make(spec_rb, "ranked_bar", opts_rb, mode = "static")
 ```
 
 ```{r ranked-basic-hc}
@@ -331,7 +331,7 @@ category appears at the top:
 
 ```{r ranked-descending}
 hd_make(spec_rb, "ranked_bar", opts_rb, ascending = FALSE)
-hd_make(spec_rb, "ranked_bar", opts_rb, ascending = FALSE, backend = "static")
+hd_make(spec_rb, "ranked_bar", opts_rb, ascending = FALSE, mode = "static")
 ```
 
 Use `aim` to draw a dashed reference line at a target value.
@@ -340,7 +340,7 @@ against the bars:
 
 ```{r gg-ranked-aim}
 # Draw a dashed target line at rate = 60
-hd_make(spec_rb, "ranked_bar", opts_rb, aim = 60, backend = "static")
+hd_make(spec_rb, "ranked_bar", opts_rb, aim = 60, mode = "static")
 ```
 
 ```{r hc-ranked-aim}
@@ -358,7 +358,7 @@ The argument accepts a partial string match against the `x` column, so
 ```{r ranked-vs}
 # Highlight Oslo as the comparison reference
 hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo")
-hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo", backend = "static")
+hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo", mode = "static")
 
 # Combine: descending order + target line + comparison highlight
 hd_make(spec_rb, "ranked_bar", opts_rb,
@@ -388,7 +388,7 @@ spec_rb_no_n <- hd_spec(regions,
                         y    = "rate")
 
 # No N= labels in ggplot2; no N line in HC tooltip
-hd_make(spec_rb_no_n, "ranked_bar", opts_rb, backend = "static")
+hd_make(spec_rb_no_n, "ranked_bar", opts_rb, mode = "static")
 hd_make(spec_rb_no_n, "ranked_bar", opts_rb)
 ```
 
@@ -433,7 +433,7 @@ hd_make(spec_ar1, "arearange", opts_ar,
 #| eval: TRUE
 
 hd_make(spec_ar1, "arearange", opts_ar,
-        ymin = "lower_enhet", ymax = "upper_enhet", backend = "static")
+        ymin = "lower_enhet", ymax = "upper_enhet", mode = "static")
 
 ```
 
@@ -454,7 +454,7 @@ hd_make(spec_ar2, "arearange", opts_ar,
 ```{r gg-area2}
 
 hd_make(spec_ar2, "arearange", opts_ar,
-        ymin = "lower_95CI", ymax = "upper_95CI", backend = "static")
+        ymin = "lower_95CI", ymax = "upper_95CI", mode = "static")
 ```
 
 ## Pie chart
@@ -496,7 +496,7 @@ hd_make(spec_pie, "pie", opts_pie, inner_size = "50%")
 
 ```{r gg-pie}
 # Donut static
-hd_make(spec_pie, "pie", opts_pie, inner_size = "50%", backend = "static")
+hd_make(spec_pie, "pie", opts_pie, inner_size = "50%", mode = "static")
 ```
 
 ### Solid pie
@@ -504,7 +504,7 @@ hd_make(spec_pie, "pie", opts_pie, inner_size = "50%", backend = "static")
 ```{r pie-solid}
 # Solid pie
 hd_make(spec_pie, "pie", opts_pie)
-hd_make(spec_pie, "pie", opts_pie, backend = "static")
+hd_make(spec_pie, "pie", opts_pie, mode = "static")
 ```
 
 
@@ -565,7 +565,7 @@ hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
 # Static ggplot2 — continents become facet panels
 hd_make(spec_st, "stacked_column", opts_st,
         stack   = "Continent",
-        backend = "static")
+        mode = "static")
 ```
 
 The `stacking` argument controls how values accumulate.
@@ -605,7 +605,7 @@ opts_no <- hd_opts(
 hd_make(spec_st, "stacked_column", opts_no, stack = "Continent")
 hd_make(spec_st, "stacked_column", opts_no,
         stack   = "Continent",
-        backend = "static")
+        mode = "static")
 ```
 
 ## Reusing a spec across geoms
@@ -679,12 +679,12 @@ hd_set_theme(
 )
 
 hd_make(spec_ts, "line", opts_en)
-hd_make(spec_ts, "line", opts_en, backend = "static")
+hd_make(spec_ts, "line", opts_en, mode = "static")
 
 # Per-figure override — does not change the session default
 hd_make(spec_ts, "line",
         hd_opts(title = "Dark theme", hc_theme = "darkunica"),
-        backend = "dynamic")
+        mode = "dynamic")
 
 # Reset to package defaults
 hd_set_theme(hc_theme = "default", gg_theme = "classic", colors = NULL)
@@ -699,7 +699,7 @@ The format is inferred from the file extension.
 
 ```{r save, eval = FALSE}
 hc_fig <- hd_make(spec_ts, "line", opts_en)
-gg_fig <- hd_make(spec_ts, "line", opts_en, backend = "static")
+gg_fig <- hd_make(spec_ts, "line", opts_en, mode = "static")
 
 hd_save(hc_fig, "alcohol_line.html")
 hd_save(hc_fig, "alcohol_line.json")
