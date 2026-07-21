@@ -8,7 +8,8 @@ hd_make(
   spec,
   type = "column",
   opts = NULL,
-  backend = "dynamic",
+  mode = NULL,
+  backend = lifecycle::deprecated(),
   use_js = TRUE,
   module = FALSE,
   ...
@@ -25,9 +26,13 @@ custom geometry added with \code{\link[=register_geom]{register_geom()}}.}
 Controls title, subtitle, caption, ylim, yint, flip, per-figure
 colours, and highcharter theme.}
 
-\item{backend}{Character.  Rendering engine - \code{"dynamic"} (default,
-interactive) or \code{"static"} (static), or any engine added with
-\code{\link[=register_backend]{register_backend()}}.}
+\item{mode}{Character.  Rendering mode - \code{"dynamic"} (default,
+interactive) or \code{"static"}.  \code{"dynamic"} uses the highcharter
+backend, \code{"static"} uses the ggplot2 backend.  See \code{\link[=list_backends]{list_backends()}}.}
+
+\item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
+interactive) or \code{"static"}, or any engine added with
+\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will de precated in favor of \code{mode} in a future release.}
 
 \item{use_js}{Logical.  When \code{TRUE} (default) injects a hover-band
 \code{htmlwidgets::JS()} callback via \code{point.events.mouseOver/Out}.

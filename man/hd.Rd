@@ -11,7 +11,8 @@ hd(
   group = NULL,
   n = NULL,
   colour = NULL,
-  backend = getOption("highdir.backend", "dynamic")
+  mode = NULL,
+  backend = lifecycle::deprecated()
 )
 }
 \arguments{
@@ -38,8 +39,8 @@ Defaults to \code{group} when \code{NULL} and \code{group} is set.
 Ignored when \code{data} is an \code{hd_spec}.}
 
 \item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
-interactive) or \code{"static"} (static), or any engine added with
-\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}.}
+interactive) or \code{"static"}, or any engine added with
+\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will de precated in favor of \code{mode} in a future release.}
 }
 \value{
 An S3 object of class \code{"hd"} with slots:
