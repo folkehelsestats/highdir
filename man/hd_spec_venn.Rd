@@ -34,7 +34,7 @@ opts_v <- hd_opts(title = "City overlap")
 
 # Declarative API - identical pattern to every other geom
 hd_make(spec_v, "venn", opts_v)                       # highcharter
-hd_make(spec_v, "venn", opts_v, backend = "ggplot2")  # ggplot2
+hd_make(spec_v, "venn", opts_v, backend = "static")  # ggplot2
 }\if{html}{\out{</div>}}
 }
 
@@ -46,7 +46,7 @@ Both approaches produce identical output.  Use whichever fits your workflow:
 hd_make(hd_spec_venn(sets), "venn", hd_opts(title = "City overlap"))
 
 # Composable (hd / + / hd_geom_venn)
-hd(backend = "highcharter") +
+hd(backend = "dynamic") +
   hd_geom_venn(sets = sets) +
   hd_opts(title = "City overlap")
 }\if{html}{\out{</div>}}
@@ -63,7 +63,7 @@ spec_v <- hd_spec_venn(sets)
 opts_v <- hd_opts(title = "City overlap")
 
 hd_make(spec_v, "venn", opts_v)
-hd_make(spec_v, "venn", opts_v, backend = "ggplot2")
+hd_make(spec_v, "venn", opts_v, backend = "static")
 hd_make(hd_spec_venn(sets), "venn", hd_opts(title = "City overlap"))
 }
 

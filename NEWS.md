@@ -2,6 +2,25 @@
 
 - Add `hd_reset_theme()` function (#21)
 - Add venn diagram with `gg_venn` or `hc_venn` backends.
+- New feature added to support for 
+```r
+hd(mode = "dynamic")
+hd(mode = "static")
+```
+
+`dynamic` replaces the previous `highcharter` backend and `static` replaces the previous `ggplot2` backend.
+
+
+## Breaking changes
+- Introduced a new mode argument with values "dynamic" and "static" to replace backend-specific values.
+- The backend argument indna  `hd()` and related functions is now deprecated and will be removed in a future release.
+- Existing code using: 
+```r
+hd(backend = "highcharter")
+hd(backend = "ggplot2")
+```
+continues to work but produces a deprecation warning.
+
 
 # highdir 0.5.0
 

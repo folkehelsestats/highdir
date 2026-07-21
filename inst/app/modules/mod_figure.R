@@ -31,11 +31,11 @@ mod_figure_ui <- function(id) {
     shiny::tabPanel("Figure",
       shiny::br(),
       shiny::conditionalPanel(
-        condition = "input.backend == 'highcharter'",
+        condition = "input.mode == 'dynamic'",
         highcharter::highchartOutput(ns("hc_out"), height = "520px")
       ),
       shiny::conditionalPanel(
-        condition = "input.backend == 'ggplot2'",
+        condition = "input.mode == 'static'",
         shiny::plotOutput(ns("gg_out"), height = "520px")
       )
     ),
@@ -56,7 +56,7 @@ mod_figure_ui <- function(id) {
 #' @param opts_r        Reactive list of hd_opts() arguments (no use_js).
 #' @param use_js_r      Reactive logical - JS hover band (hd_make arg).
 #' @param geom_r        Reactive string - selected geometry name.
-#' @param backend_r     Reactive string - "highcharter" or "ggplot2".
+#' @param backend_r     Reactive string - "dynamic" or "static".
 #' @param geom_inputs_r Reactive named list - ALL optional + required args for
 #'                      the current geometry, keyed by arg name as they appear
 #'                      in optional_args / required_args in the registry.
@@ -120,12 +120,12 @@ mod_figure_server <- function(id,
     #   hd_make(spec, type, opts, backend, use_js, smooth=TRUE, dot_size=4,
     #           ymin="lo_col", ymax="hi_col")
     hc_fig <- shiny::eventReactive(run_r(), {
-      shiny::req(backend_r() == "highcharter", the_spec())
+      shiny::req(backend_r() == "dynamic", the_spec())
       do.call(hd_make, c(
         list(spec    = the_spec(),
              type    = geom_r(),
              opts    = the_opts(),
-             backend = "highcharter",
+             backend = "dynamic",
              use_js  = use_js_r()),
         .build_extra()   # <- optional + required geom args -> hd_make(...)
       ))
@@ -134,12 +134,12 @@ mod_figure_server <- function(id,
     # -- ggplot2 figure --------------------------------------------------------
     # Same flow: .build_extra() -> hd_make(...)
     gg_fig <- shiny::eventReactive(run_r(), {
-      shiny::req(backend_r() == "ggplot2", the_spec())
+      shiny::req(backend_r() == "static", the_spec())
       do.call(hd_make, c(
         list(spec    = the_spec(),
              type    = geom_r(),
              opts    = the_opts(),
-             backend = "ggplot2"),
+             backend = "static"),
         .build_extra()   # <- optional + required geom args -> hd_make(...)
       ))
     })
@@ -201,7 +201,7 @@ mod_figure_server <- function(id,
         "  opts    = opts,\n",
         L("type",    geom_r()),
         L("backend", backend_r()),
-        if (backend_r() == "highcharter")
+        if (backend_r() == "dynamic")
           paste0("  use_js  = ", isTRUE(use_js_r()), ",\n") else "",
         extra_lines,
         ")"

@@ -42,13 +42,13 @@
                style = "margin-left:6px;", id = "app_logo")
   ),
 
-  # Geometry + Backend
-  shiny::div(class = "hd-label", "Figure"),
-  shiny::selectInput("geom",    NULL, choices = list_geoms(),    selected = "column"),
-  shiny::selectInput("backend", NULL, choices = list_backends(), selected = "highcharter"),
-
   # Spec collapsible — file upload + column mapping
   mod_data_ui("data"),
+
+  # Geometry + Backend
+  shiny::div(class = "hd-label", "Figure"),
+  shiny::selectInput("geom",    NULL, choices = list_geoms(), selected = "column"),
+  shiny::selectInput("mode", NULL, choices = list_backends(), selected = "dynamic"),
 
   # Opts collapsible — labels, style
   mod_opts_ui("opts"),
@@ -84,13 +84,13 @@
     class = "hd-dl-row",
     # HC buttons — shown when backend == highcharter
     shiny::conditionalPanel(
-      condition = "input.backend == 'highcharter'",
+      condition = "input.mode == 'dynamic'",
       shiny::downloadButton("dl_json", "JSON"),
       shiny::downloadButton("dl_html", "HTML")
     ),
     # ggplot2 buttons — shown when backend == ggplot2
     shiny::conditionalPanel(
-      condition = "input.backend == 'ggplot2'",
+      condition = "input.mode == 'dynamic'",
       shiny::downloadButton("dl_gg_png", "PNG"),
       shiny::downloadButton("dl_gg_svg", "SVG")
     )

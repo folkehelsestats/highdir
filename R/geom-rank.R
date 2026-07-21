@@ -420,7 +420,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #' hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo", aim = 63)
 #'
 #' # Layered API ----
-#' hd(regions, x = "region", y = "rate", n = "n", backend = "ggplot2") +
+#' hd(regions, x = "region", y = "rate", n = "n", backend = "static") +
 #'  hd_geom_ranked_bar(
 #'   ascending  = TRUE,
 #'   vs         = "Oslo",

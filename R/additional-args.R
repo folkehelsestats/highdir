@@ -40,19 +40,19 @@
       smooth = list(
         default = TRUE,
         desc    = "Logical. TRUE = spline curves, FALSE = straight segments. Both backends.",
-        backend_only = NULL # both backends support this argument
+        mode_only = NULL # both modes support this argument
       ),
       dot_size = list(
         default = 4L,
         desc    = "Numeric. Marker radius in pixels. Both backends.",
-        backend_only = NULL # both backends support this argument
+        mode_only = NULL # both modes support this argument
       ),
       # line_symbols is highcharter-only; gg_line silently ignores it.
       line_symbols = list(
         default = NULL,
         desc    = paste0("Character vector. Highcharter only. Per-group marker shapes: ",
                          "'circle','square','diamond','triangle','triangle-down'."),
-        backend_only = "highcharter"
+        mode_only = "dynamic"
       )
     )
   ),
@@ -66,7 +66,7 @@
       dot_size = list(
         default = 4L,
         desc    = "Numeric. Point size (ggplot2) or marker radius in px (highcharter).",
-        backend_only = NULL # both backends support this argument
+        mode_only = NULL # both modes support this argument
       )
     )
   ),
@@ -98,7 +98,7 @@
       inner_size = list(
         default = "0%",
         desc    = "Character. Inner radius as CSS %, e.g. '50%' for a donut",
-        backend_only = "highcharter"
+        mode_only = "dynamic"
       )
     )
   ),
@@ -126,14 +126,14 @@
         desc    = paste0("Numeric. Scaling factor converting label character-count into ",
                          "axis-range units. Increase (e.g. 0.06) for larger text, ",
                          "decrease (e.g. 0.03) for smaller text. Default 0.045."),
-        backend_only = "ggplot2"
+        mode_only = "static"
       ),
       min_frac = list(
         default = 0.08,
         desc    = paste0("Numeric. Minimum fraction of the axis range a bar must span ",
                          "before its label fits inside. Safety floor for short labels. ",
                          "Default 0.08 (8%)."),
-        backend_only = "ggplot2"
+        mode_only = "static"
       )
     )
   ),
@@ -146,14 +146,14 @@
       stack = list(
         default = NULL,
         desc    = "Character. Column name that assigns rows to stack groups.",
-        backend_only = NULL # both backends require this argument
+        mode_only = NULL # both modes require this argument
       )
     ),
     optional_args   = list(
       stacking = list(
         default = "normal",
         desc    = "Character. Highcharter stacking mode: 'normal' or 'percent'.",
-        backend_only = "highcharter"
+        mode_only = "dynamic"
       )
     )
   ),
@@ -192,17 +192,17 @@
           "  list(sets = list('A','B'), value = 2)",
           ")"
         ),
-        backend_only = NULL
+        mode_only = NULL
       ),
       series_name = list(
         default      = "Venn Diagram",
         desc         = "Character. Series name shown in the chart title area. Highcharter only.",
-        backend_only = "highcharter"
+        mode_only = "dynamic"
       ),
       label_font_size = list(
         default      = "14px",
         desc         = "Character. CSS font-size for set labels. Highcharter only.",
-        backend_only = "highcharter"
+        mode_only = "dynamic"
       ),
       value_suffix = list(
         default      = "",
@@ -212,7 +212,7 @@
           "Applied in tooltips (highcharter) and region labels (ggplot2). ",
           "Both backends."
         ),
-        backend_only = NULL
+        mode_only = NULL
       ),
       use_names = list(
         default      = FALSE,
@@ -221,7 +221,7 @@
           "entry is used as the circle label instead of the short id. ",
           "E.g. 'esig' instead of 'A'. ggplot2 only."
         ),
-        backend_only = "ggplot2"
+        mode_only = "static"
       ),
       show_legend = list(
         default      = FALSE,
@@ -229,7 +229,7 @@
           "Logical. When TRUE, adds a legend mapping circle colours to set ",
           "labels. ggplot2 only (eulerr and ggVennDiagram paths)."
         ),
-        backend_only = "ggplot2"
+        mode_only = "static"
       )
     )
   )

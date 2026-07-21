@@ -92,7 +92,7 @@ programmatically with \code{c()} or \code{append()}:
   hd_venn_set("B", "Four legs", 4)
 )
 extended <- c(base, list(hd_venn_intersect(c("A","B"), 3)))
-hd(backend = "highcharter") +
+hd(backend = "dynamic") +
   hd_geom_venn(sets = extended)
 }\if{html}{\out{</div>}}
 }
@@ -119,12 +119,12 @@ my_sets <- list(
 )
 
 # Highcharter (interactive)
-hd(backend = "highcharter") +
+hd(backend = "dynamic") +
   hd_geom_venn(sets = my_sets) +
   hd_opts(title = "Animals and Minerals")
 
 # ggplot2 (static) - requires eulerr or ggVennDiagram
-hd(backend = "ggplot2") +
+hd(backend = "static") +
   hd_geom_venn(sets = my_sets) +
   hd_opts(title = "Animals and Minerals")
 
@@ -136,7 +136,7 @@ base_sets <- list(
 extended <- c(base_sets, list(
   hd_venn_intersect(c("A", "B"), "Both", value = 40)
 ))
-hd(backend = "highcharter") +
+hd(backend = "dynamic") +
   hd_geom_venn(sets = extended) +
   hd_opts(title = "City overlap")
 

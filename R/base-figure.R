@@ -10,7 +10,7 @@
 .base_constructors <- list(
 
   # -- ggplot2 -----------------------------------------------------------------
-  ggplot2 = function(spec, opts) {
+  static = function(spec, opts) {
 
     # -- Coerce group column to factor so ggplot2 treats it as discrete --------
     # If the group column is numeric (1, 2, 3...) ggplot2 maps it as a
@@ -64,7 +64,7 @@
   },
 
   # -- highcharter -------------------------------------------------------------
-  highcharter = function(spec, opts) {
+  dynamic = function(spec, opts) {
     
     # --- percent % symbol ---
     pros_fmt <- if (is.null(opts$ysuffix)){

@@ -58,7 +58,7 @@ opts_st <- hd_opts(
 hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
 
 # Static ggplot2 - stacks are separated by continent
-hd(spec_st, backend = "ggplot2") +
+hd(spec_st, backend = "static") +
   hd_geom_stacked_column(stack = "Continent") +
   hd_opts(title = "Olympic Games all-time medal table, grouped by continent", ylab = "Count medals")
 

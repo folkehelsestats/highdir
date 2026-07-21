@@ -31,10 +31,10 @@
 #' @param colour Character or `NULL`. ggplot2 colour aesthetic column.
 #'   Defaults to `group` when `NULL` and `group` is set.
 #'   Ignored when `data` is an `hd_spec`.
-#' @param backend Character. Rendering engine - `"highcharter"` (default,
-#'   interactive) or `"ggplot2"` (static), or any engine added with
+#' @param backend Character. Rendering engine - `"dynamic"` (default,
+#'   interactive) or `"static"`, or any engine added with
 #'   [register_backend()].  Falls back to `getOption("highdir.backend",
-#'   "highcharter")`.
+#'   "dynamic")`. This will de precated in favor of `mode` in a future release.
 #'
 #' @return An S3 object of class `"hd"` with slots:
 #'   \describe{
@@ -67,18 +67,19 @@
 #'   hd_opts(title = "Trend")
 #'
 #' # Switch backend per figure
-#' hd(df, x = "age", y = "pct", backend = "ggplot2") +
+#' hd(df, x = "age", y = "pct", backend = "static") +
 #'   hd_geom_column() +
 #'   hd_opts(title = "Static version")
 #'
 #' @export
-hd <- function(data    = NULL,
-               x       = NULL,
-               y       = NULL,
-               group   = NULL,
-               n       = NULL,
-               colour  = NULL,
-               backend = getOption("highdir.backend", "highcharter")) {
+hd <- function(data = NULL,
+               x = NULL,
+               y = NULL,
+               group = NULL,
+               n = NULL,
+               colour = NULL,
+               mode = NULL,
+               backend = lifecycle::deprecated()) {
 
   if (is.null(data)) {
     data <- data.frame()
@@ -87,29 +88,57 @@ hd <- function(data    = NULL,
       stop("`data` must be a data.frame or an hd_spec object.", call. = FALSE)
     }
   }
+
   
+  # ERROR først
+  if (lifecycle::is_present(backend) && !is.null(mode)) {
+    stop(
+      "Please supply either `mode` or `backend`, not both.",
+      call. = FALSE
+    )
+  }
+
+  # Previous arg name `backend` can be used to set `mode` (deprecated)
+  if (lifecycle::is_present(backend)) {
+    lifecycle::deprecate_warn(
+      when = "0.7.0",
+      what = "hd(backend)",
+      with = "hd(mode)"
+    )
+
+    # Backend tar effekt dersom mode ikke er oppgitt
+    if (is.null(mode)) {
+      mode <- switch(backend,
+        highcharter = "dynamic",
+        ggplot2     = "static",
+        backend
+      )
+    }}
+
+  mode <- normalize_mode(mode)
+
   spec <- if (inherits(data, "hd_spec")) {
-    data  # already a spec - use as-is
+    data # already a spec - use as-is
   } else {
     hd_spec(data,
-            x      = x,
-            y      = y,
-            group  = group,
-            n      = n,
-            colour = colour)
+      x      = x,
+      y      = y,
+      group  = group,
+      n      = n,
+      colour = colour
+    )
   }
 
   structure(
     list(
       spec    = spec,
-      geom    = NULL,           # set by + hd_geom_*()
+      geom    = NULL, # set by + hd_geom_*()
       opts    = default_opts(), # set by + hd_opts(); starts with all defaults
-      backend = backend
+      mode    = mode
     ),
     class = "hd"
   )
 }
-
 
 # ------------------------------------------------------------------------------
 # hd_geom()  -- internal geom-layer constructor
@@ -218,7 +247,7 @@ print.hd <- function(x, ...) {
         spec    = x$spec,
         type    = type,
         opts    = x$opts,
-        backend = x$backend
+        mode    = x$mode
       ),
       geom_params   # splices ymin/ymax/smooth/… back into hd_make()'s ...
     )

@@ -34,7 +34,7 @@
 #   extended <- c(base_sets, list(
 #     list(sets = list("A", "B"), value = 4)
 #   ))
-#   hd(backend = "highcharter") +
+#   hd(backend = "dynamic") +
 #     hd_geom_venn(sets = extended) +
 #     hd_opts(title = "Overlap")
 #
@@ -536,7 +536,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   hd_venn_set("B", "Four legs", 4)
 #' )
 #' extended <- c(base, list(hd_venn_intersect(c("A","B"), 3)))
-#' hd(backend = "highcharter") +
+#' hd(backend = "dynamic") +
 #'   hd_geom_venn(sets = extended)
 #' ```
 #'
@@ -583,12 +583,12 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' )
 #'
 #' # Highcharter (interactive)
-#' hd(backend = "highcharter") +
+#' hd(backend = "dynamic") +
 #'   hd_geom_venn(sets = my_sets) +
 #'   hd_opts(title = "Animals and Minerals")
 #'
 #' # ggplot2 (static) - requires eulerr or ggVennDiagram
-#' hd(backend = "ggplot2") +
+#' hd(backend = "static") +
 #'   hd_geom_venn(sets = my_sets) +
 #'   hd_opts(title = "Animals and Minerals")
 #'
@@ -600,7 +600,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' extended <- c(base_sets, list(
 #'   hd_venn_intersect(c("A", "B"), "Both", value = 40)
 #' ))
-#' hd(backend = "highcharter") +
+#' hd(backend = "dynamic") +
 #'   hd_geom_venn(sets = extended) +
 #'   hd_opts(title = "City overlap")
 #'
@@ -870,7 +870,7 @@ venn_df_to_list <- function(df) {
 #'
 #' @section Composable API (output = "geom"):
 #' ```r
-#' hd(backend = "highcharter") +
+#' hd(backend = "dynamic") +
 #'   hd_venn_df(df, output = "geom") +
 #'   hd_opts(title = "City overlap")
 #' ```
@@ -910,12 +910,12 @@ venn_df_to_list <- function(df) {
 #' hd_make(spec_v, "venn", hd_opts(title = "City overlap"))
 #'
 #' # Composable API
-#' hd(backend = "highcharter") +
+#' hd(backend = "dynamic") +
 #'   hd_venn_df(df, output = "geom") +
 #'   hd_opts(title = "City overlap")
 #'
 #' # ggplot2 backend
-#' hd(backend = "ggplot2") +
+#' hd(backend = "static") +
 #'   hd_venn_df(df, output = "geom") +
 #'   hd_opts(title = "City overlap")
 #' }

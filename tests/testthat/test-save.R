@@ -2,7 +2,7 @@
 
 spec   <- hd_spec(data.frame(x = c("A","B"), y = c(1,2)), "x", "y")
 fig_hc <- hd_make(spec, "column", hd_opts())
-fig_gg <- hd_make(spec, "column", hd_opts(), backend = "ggplot2")
+fig_gg <- hd_make(spec, "column", hd_opts(), mode = "static")
 
 # ── HC: allowed ───────────────────────────────────────────────────────────────
 test_that("hd_save: HC to HTML works", {

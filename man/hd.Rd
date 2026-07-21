@@ -11,7 +11,8 @@ hd(
   group = NULL,
   n = NULL,
   colour = NULL,
-  backend = getOption("highdir.backend", "highcharter")
+  mode = NULL,
+  backend = lifecycle::deprecated()
 )
 }
 \arguments{
@@ -37,9 +38,9 @@ Ignored when \code{data} is an \code{hd_spec}.}
 Defaults to \code{group} when \code{NULL} and \code{group} is set.
 Ignored when \code{data} is an \code{hd_spec}.}
 
-\item{backend}{Character. Rendering engine - \code{"highcharter"} (default,
-interactive) or \code{"ggplot2"} (static), or any engine added with
-\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "highcharter")}.}
+\item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
+interactive) or \code{"static"}, or any engine added with
+\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will de precated in favor of \code{mode} in a future release.}
 }
 \value{
 An S3 object of class \code{"hd"} with slots:
@@ -82,7 +83,7 @@ hd(spec) +
   hd_opts(title = "Trend")
 
 # Switch backend per figure
-hd(df, x = "age", y = "pct", backend = "ggplot2") +
+hd(df, x = "age", y = "pct", backend = "static") +
   hd_geom_column() +
   hd_opts(title = "Static version")
 

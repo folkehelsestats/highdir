@@ -22,7 +22,7 @@ geometry, e.g. \code{geom_args("scatter")} lists \code{dot_size}.
 }
 \examples{
 # Basic scatter plot - layered API
-hd(mtcars, x = "wt", y = "mpg", backend = "ggplot2") +
+hd(mtcars, x = "wt", y = "mpg", backend = "static") +
  hd_geom_scatter() +
  hd_opts(title = "Scatter Plot of mtcars")
 

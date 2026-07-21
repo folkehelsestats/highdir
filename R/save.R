@@ -12,7 +12,7 @@
 #' |             | `tiff`, `bmp`, `eps`                     |
 #'
 #' To export a highcharter figure as an image, either save as `html` and
-#' screenshot in a browser, or re-render with `backend = "ggplot2"` in
+#' screenshot in a browser, or re-render with `backend = "static"` in
 #' [hd_make()] and save as `png`.
 #'
 #' @param fig           A `highchart` or `ggplot` object (output of

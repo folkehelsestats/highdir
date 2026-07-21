@@ -53,6 +53,6 @@ is supplied explicitly.
 
 
 To export a highcharter figure as an image, either save as \code{html} and
-screenshot in a browser, or re-render with \code{backend = "ggplot2"} in
+screenshot in a browser, or re-render with \code{backend = "static"} in
 \code{\link[=hd_make]{hd_make()}} and save as \code{png}.
 }

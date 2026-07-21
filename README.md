@@ -76,7 +76,7 @@ The app is also available directly through ShinyApps.io at:
 
 ## Supported geometries
 
-| Name | highcharter type | ggplot2 equivalent | Extra args |
+| Name | dynamic mode | static equivalent | Extra args |
 |:---|:---|:---|:---|
 | `column` | column | `geom_col()` | — |
 | `ranked_bar` | column | `geom_col()` | `vs`, `aim`, `char_scale`, `min_frac` |
@@ -85,6 +85,7 @@ The app is also available directly through ShinyApps.io at:
 | `arearange` | arearange | `geom_ribbon()` | `ymin`, `ymax` |
 | `pie` | pie | `geom_bar()`, `coord_polar()` | `inner_size` |
 | `stacked_column` | column | `geom_bar()`, `facet_wrap()` | `stack`, `stacking` |
+| `venn` | venn | eulerr::euler() |  |
 
 ------------------------------------------------------------------------
 

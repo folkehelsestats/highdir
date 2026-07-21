@@ -12,5 +12,5 @@
   highdir.colors     = NULL,
   highdir.font       = NULL,
   highdir.js_plugins = character(0),
-  highdir.backend    = "highcharter"   # default engine for hd()
+  highdir.backend    = "dynamic"   # default engine for hd()
 )

@@ -228,7 +228,7 @@ test_that("hd_opts: class is preserved with gg_theme set", {
 
 test_that("ggplot_engine: theme_classic applied — panel grid is blank", {
   opts <- hd_opts(title = "t", gg_theme = "classic")
-  fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+  fig  <- hd_make(spec, "column", opts, mode = "static")
   t    <- ggplot2::ggplot_build(fig)$plot$theme
   expect_true(inherits(t$panel.grid,       "element_blank") ||
               inherits(t$panel.grid.major, "element_blank"),
@@ -237,7 +237,7 @@ test_that("ggplot_engine: theme_classic applied — panel grid is blank", {
 
 test_that("ggplot_engine: theme_bw applied — panel background is white", {
   opts <- hd_opts(title = "t", gg_theme = "bw")
-  fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+  fig  <- hd_make(spec, "column", opts, mode = "static")
   t    <- ggplot2::ggplot_build(fig)$plot$theme
   expect_equal(t$panel.background$fill, "white",
                label = "bw: white panel background")
@@ -246,7 +246,7 @@ test_that("ggplot_engine: theme_bw applied — panel background is white", {
 test_that("ggplot_engine: theme object in opts — base_size honoured", {
   obj  <- ggplot2::theme_bw(base_size = 18)
   opts <- hd_opts(title = "t", gg_theme = obj)
-  fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+  fig  <- hd_make(spec, "column", opts, mode = "static")
   t    <- ggplot2::ggplot_build(fig)$plot$theme
   # base_size is stored in the top-level text element as absolute value
   expect_equal(t$text$size, 18)
@@ -255,7 +255,7 @@ test_that("ggplot_engine: theme object in opts — base_size honoured", {
 test_that("ggplot_engine: session default used when opts$gg_theme is NULL", {
   withr::with_options(list(highdir.gg_theme = NULL), {
     opts <- hd_opts(title = "t")   # NULL -> classic fallback
-    fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+    fig  <- hd_make(spec, "column", opts, mode = "static")
     t    <- ggplot2::ggplot_build(fig)$plot$theme
     expect_true(inherits(t$panel.grid,       "element_blank") ||
                 inherits(t$panel.grid.major, "element_blank"),
@@ -266,7 +266,7 @@ test_that("ggplot_engine: session default used when opts$gg_theme is NULL", {
 test_that("ggplot_engine: opts gg_theme overrides session default", {
   withr::with_options(list(highdir.gg_theme = "classic"), {
     opts <- hd_opts(title = "t", gg_theme = "bw")
-    fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+    fig  <- hd_make(spec, "column", opts, mode = "static")
     t    <- ggplot2::ggplot_build(fig)$plot$theme
     expect_equal(t$panel.background$fill, "white",
                  label = "per-figure bw overrides session classic")
@@ -276,7 +276,7 @@ test_that("ggplot_engine: opts gg_theme overrides session default", {
 test_that("ggplot_engine: colors in opts applied to figure", {
   pal  <- c("#025169", "#7C145C")
   opts <- hd_opts(title = "t", colors = pal)
-  fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+  fig  <- hd_make(spec, "column", opts, mode = "static")
   built <- ggplot2::ggplot_build(fig)
   # Colours appear in the data layer fills; check at least one matches palette
   fills <- unique(unlist(lapply(built$data, function(d) d$fill)))
@@ -287,7 +287,7 @@ test_that("ggplot_engine: colors in opts applied to figure", {
 test_that("ggplot_engine: font in opts applied to figure", {
   withr::with_options(list(highdir.font = "mono"), {
     opts <- hd_opts(title = "t", gg_theme = "classic")
-    fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+    fig  <- hd_make(spec, "column", opts, mode = "static")
     t    <- ggplot2::ggplot_build(fig)$plot$theme
     expect_equal(t$text$family, "mono")
   })
@@ -300,14 +300,14 @@ test_that("ggplot_engine: font in opts applied to figure", {
 
 test_that("hd_make: gg_theme in opts does not break highcharter output", {
   opts <- hd_opts(title = "t", gg_theme = "classic")
-  fig  <- hd_make(spec, "column", opts, backend = "highcharter")
+  fig  <- hd_make(spec, "column", opts, mode = "dynamic")
   expect_true(is_highchart(fig))
 })
 
 test_that("hd_make: gg_theme object in opts does not break highcharter", {
   obj  <- ggplot2::theme_bw()
   opts <- hd_opts(title = "t", gg_theme = obj)
-  fig  <- hd_make(spec, "column", opts, backend = "highcharter")
+  fig  <- hd_make(spec, "column", opts, mode = "dynamic")
   expect_true(is_highchart(fig))
 })
 
@@ -320,7 +320,7 @@ test_that("font option is preserved regardless of gg_theme", {
   withr::with_options(list(highdir.font = "mono"), {
     for (nm in c("minimal", "classic", "bw")) {
       opts <- hd_opts(title = "t", gg_theme = nm)
-      fig  <- hd_make(spec, "column", opts, backend = "ggplot2")
+      fig  <- hd_make(spec, "column", opts, mode = "static")
       t    <- ggplot2::ggplot_build(fig)$plot$theme
       expect_equal(t$text$family, "mono",
                    label = paste("font preserved with gg_theme =", nm))

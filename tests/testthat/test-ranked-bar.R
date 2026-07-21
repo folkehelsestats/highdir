@@ -39,22 +39,22 @@ opts    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 test_that("gg ranked_bar returns ggplot", {
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   expect_true(ggplot2::is_ggplot(fig))
 })
 
 test_that("hc ranked_bar returns highchart", {
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   expect_true(highcharter::is.highchart(fig))
 })
 
 test_that("gg ranked_bar works without spec$n", {
-  fig <- hd_make(spec_no_n, "ranked_bar", opts, backend = "ggplot2")
+  fig <- hd_make(spec_no_n, "ranked_bar", opts, mode = "static")
   expect_true(ggplot2::is_ggplot(fig))
 })
 
 test_that("hc ranked_bar works without spec$n", {
-  fig <- hd_make(spec_no_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_no_n, "ranked_bar", opts, mode = "dynamic")
   expect_true(highcharter::is.highchart(fig))
 })
 
@@ -75,7 +75,7 @@ test_that("hc ranked_bar works without spec$n", {
 
 test_that("gg: ascending = TRUE puts lowest rate first in factor levels", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "ggplot2", ascending = TRUE)
+                    mode = "static", ascending = TRUE)
   lvls   <- .gg_xlevels(fig)
   # In ggplot2 with coord_flip the first factor level = bottom bar = lowest value
   # Porsgrunn has the lowest rate (61.9)
@@ -86,21 +86,21 @@ test_that("gg: ascending = TRUE puts lowest rate first in factor levels", {
 
 test_that("gg: ascending = FALSE puts highest rate first in factor levels", {
   fig  <- hd_make(spec_n, "ranked_bar", opts,
-                  backend = "ggplot2", ascending = FALSE)
+                  mode = "static", ascending = FALSE)
   lvls <- .gg_xlevels(fig)
   expect_equal(lvls[1], "Oslo (N=693494)")
   expect_equal(lvls[length(lvls)], "Porsgrunn (N=35087)")
 })
 
 test_that("gg: default ascending is TRUE", {
-  fig_default <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig_default <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   fig_asc     <- hd_make(spec_n, "ranked_bar", opts,
-                          backend = "ggplot2", ascending = TRUE)
+                          mode = "static", ascending = TRUE)
   expect_equal(.gg_xlevels(fig_default), .gg_xlevels(fig_asc))
 })
 
 test_that("gg: all 20 municipalities present in factor levels", {
-  fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   lvls <- .gg_xlevels(fig)
   expect_length(lvls, 20L)
 })
@@ -111,14 +111,14 @@ test_that("gg: all 20 municipalities present in factor levels", {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 test_that("gg: spec$n appends (N=...) to x labels", {
-  fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   lvls <- .gg_xlevels(fig)
   # Every level should contain "(N="
   expect_true(all(grepl("(N=", lvls, fixed = TRUE)))
 })
 
 test_that("gg: without spec$n, x labels are plain municipality names", {
-  fig  <- hd_make(spec_no_n, "ranked_bar", opts, backend = "ggplot2")
+  fig  <- hd_make(spec_no_n, "ranked_bar", opts, mode = "static")
   lvls <- .gg_xlevels(fig)
   expect_false(any(grepl("(N=", lvls, fixed = TRUE)))
   expect_true("Oslo" %in% lvls)
@@ -134,7 +134,7 @@ test_that("gg: without spec$n, x labels are plain municipality names", {
 
 test_that("gg: vs adds .is_vs column to bar layer data", {
   fig     <- hd_make(spec_n, "ranked_bar", opts,
-                     backend = "ggplot2", vs = "Oslo")
+                     mode = "static", vs = "Oslo")
   bar_idx <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
   bar_data <- fig$layers[[bar_idx]]$data
@@ -144,7 +144,7 @@ test_that("gg: vs adds .is_vs column to bar layer data", {
 })
 
 test_that("gg: vs = NULL produces no .is_vs column", {
-  fig     <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig     <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   bar_idx <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
   bar_data <- fig$layers[[bar_idx]]$data
@@ -155,7 +155,7 @@ test_that("gg: vs produces two distinct fill colours in built plot", {
   # Test via ggplot_build() — avoids ggplot2 internal class names entirely.
   # Two fill colours means the highlight scale was applied correctly.
   fig     <- hd_make(spec_n, "ranked_bar", opts,
-                     backend = "ggplot2", vs = "Oslo")
+                     mode = "static", vs = "Oslo")
   built   <- ggplot2::ggplot_build(fig)
   bar_idx <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
@@ -164,7 +164,7 @@ test_that("gg: vs produces two distinct fill colours in built plot", {
 })
 
 test_that("gg: vs = NULL produces a single fill colour in built plot", {
-  fig     <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig     <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   built   <- ggplot2::ggplot_build(fig)
   bar_idx <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
@@ -175,7 +175,7 @@ test_that("gg: vs = NULL produces a single fill colour in built plot", {
 test_that("gg: partial vs match works (grepl, fixed = TRUE)", {
   # "Oslo" matches "Oslo" exactly — but also test a substring match
   fig      <- hd_make(spec_n, "ranked_bar", opts,
-                      backend = "ggplot2", vs = "Ber")   # matches Bergen
+                      mode = "static", vs = "Ber")   # matches Bergen
   bar_idx  <- which(vapply(fig$layers, function(l)
     inherits(l$geom, "GeomBar"), logical(1)))
   bar_data <- fig$layers[[bar_idx]]$data
@@ -191,7 +191,7 @@ test_that("gg: partial vs match works (grepl, fixed = TRUE)", {
 
 ## test_that("gg: aim adds a GeomHline layer", {                     ##
 ##   fig <- hd_make(spec_n, "ranked_bar", opts,                      ##
-##                  backend = "ggplot2", aim = 80)                   ##
+##                  mode = "static", aim = 80)                   ##
 ##   hline_layers <- Filter(function(l)                              ##
 ##     inherits(l$geom, "GeomHline"), fig$layers)                    ##
 ##   expect_length(hline_layers, 1L)                                 ##
@@ -200,7 +200,7 @@ test_that("gg: partial vs match works (grepl, fixed = TRUE)", {
 ## test_that("gg: aim line sits at the correct yintercept", {        ##
 ##   aim_val   <- 80                                                 ##
 ##   fig       <- hd_make(spec_n, "ranked_bar", opts,                ##
-##                        backend = "ggplot2", aim = aim_val)        ##
+##                        mode = "static", aim = aim_val)        ##
 ##   built     <- ggplot2::ggplot_build(fig)                         ##
 ##   hline_idx <- which(vapply(fig$layers, function(l)               ##
 ##     inherits(l$geom, "GeomHline"), logical(1)))                   ##
@@ -209,7 +209,7 @@ test_that("gg: partial vs match works (grepl, fixed = TRUE)", {
 ## })                                                                ##
 ##                                                                   ##
 ## test_that("gg: aim = NULL adds no GeomHline layer", {             ##
-##   fig <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2") ##
+##   fig <- hd_make(spec_n, "ranked_bar", opts, mode = "static") ##
 ##   hline_layers <- Filter(function(l)                              ##
 ##     inherits(l$geom, "GeomHline"), fig$layers)                    ##
 ##   expect_length(hline_layers, 0L)                                 ##
@@ -224,14 +224,14 @@ test_that("gg: partial vs match works (grepl, fixed = TRUE)", {
 
 test_that("gg: flip = TRUE (default) adds CoordFlip", {
   optsFlip    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000", flip = TRUE)
-  fig <- hd_make(spec_n, "ranked_bar", optsFlip, backend = "ggplot2")
+  fig <- hd_make(spec_n, "ranked_bar", optsFlip, mode = "static")
   expect_true(inherits(fig$coordinates, "CoordFlip"))
 })
 
 test_that("gg: flip = FALSE does not add CoordFlip", {
   optsFlip    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000", flip = FALSE)
   fig <- hd_make(spec_n, "ranked_bar", optsFlip,
-                 backend = "ggplot2")
+                 mode = "static")
   expect_false(inherits(fig$coordinates, "CoordFlip"))
 })
 
@@ -243,14 +243,14 @@ test_that("gg: flip = FALSE does not add CoordFlip", {
 
 test_that("gg: spec$data columns are unchanged after hd_make", {
   cols_before <- names(spec_n$data)
-  hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2",
+  hd_make(spec_n, "ranked_bar", opts, mode = "static",
           vs = "Oslo", aim = 80)
   expect_equal(names(spec_n$data), cols_before)
 })
 
 test_that("hc: spec$data columns are unchanged after hd_make", {
   cols_before <- names(spec_n$data)
-  hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   expect_equal(names(spec_n$data), cols_before)
 })
 
@@ -262,29 +262,29 @@ test_that("hc: spec$data columns are unchanged after hd_make", {
 .hc_series <- function(fig) fig$x$hc_opts$series
 
 test_that("hc: produces exactly one series", {
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   expect_length(.hc_series(fig), 1L)
 })
 
 test_that("hc: series type is bar", {
   opts    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000", flip = FALSE)
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   expect_equal(.hc_series(fig)[[1]]$type, "column")
 })
 
 test_that("hc: series type is bar", {
   opts    <- hd_opts(title = "Rate by municipality", ylab = "Rate per 100 000", flip = TRUE)
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   expect_equal(.hc_series(fig)[[1]]$type, "column")
 })
 
 test_that("hc: series has one data point per row", {
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   expect_length(.hc_series(fig)[[1]]$data, nrow(muni_df))
 })
 
 test_that("hc: each point has name, y, and color fields", {
-  fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   points <- .hc_series(fig)[[1]]$data
   has_all <- vapply(points, function(p)
     all(c("name", "y", "color") %in% names(p)), logical(1))
@@ -292,7 +292,7 @@ test_that("hc: each point has name, y, and color fields", {
 })
 
 test_that("hc: point y values match original rate column (all present)", {
-  fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   points <- .hc_series(fig)[[1]]$data
   y_vals <- vapply(points, `[[`, numeric(1), "y")
   expect_setequal(y_vals, muni_df$rate)
@@ -305,7 +305,7 @@ test_that("hc: point y values match original rate column (all present)", {
 
 test_that("hc: ascending = TRUE sorts lowest rate first", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", ascending = TRUE)
+                    mode = "dynamic", ascending = TRUE)
   points <- .hc_series(fig)[[1]]$data
   y_vals <- vapply(points, `[[`, numeric(1), "y")
   expect_equal(y_vals, sort(muni_df$rate, decreasing = TRUE))
@@ -313,7 +313,7 @@ test_that("hc: ascending = TRUE sorts lowest rate first", {
 
 test_that("hc: ascending = FALSE sorts highest rate first", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", ascending = FALSE)
+                    mode = "dynamic", ascending = FALSE)
   points <- .hc_series(fig)[[1]]$data
   y_vals <- vapply(points, `[[`, numeric(1), "y")
   expect_equal(y_vals, sort(muni_df$rate, decreasing = FALSE))
@@ -326,21 +326,21 @@ test_that("hc: ascending = FALSE sorts highest rate first", {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 test_that("hc: with spec$n, each point has n_obs field", {
-  fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   points <- .hc_series(fig)[[1]]$data
   has_n  <- vapply(points, function(p) "n_obs" %in% names(p), logical(1))
   expect_true(all(has_n))
 })
 
 test_that("hc: with spec$n, n_obs values match pop_count column", {
-  fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   points <- .hc_series(fig)[[1]]$data
   n_vals <- vapply(points, `[[`, numeric(1), "n_obs")
   expect_setequal(n_vals, muni_df$pop_count)
 })
 
 test_that("hc: without spec$n, points have no n_obs field", {
-  fig    <- hd_make(spec_no_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_no_n, "ranked_bar", opts, mode = "dynamic")
   points <- .hc_series(fig)[[1]]$data
   has_n  <- vapply(points, function(p) "n_obs" %in% names(p), logical(1))
   expect_false(any(has_n))
@@ -348,7 +348,7 @@ test_that("hc: without spec$n, points have no n_obs field", {
 
 test_that("hc: with spec$n, point names do NOT contain '(N='", {
   # After the label-cleanup change, N is in n_obs only — not in the name field
-  fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   points <- .hc_series(fig)[[1]]$data
   names  <- vapply(points, `[[`, character(1), "name")
   expect_false(any(grepl("(N=", names, fixed = TRUE)))
@@ -361,7 +361,7 @@ test_that("hc: with spec$n, point names do NOT contain '(N='", {
 
 test_that("hc: vs highlights exactly one bar with a different colour", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", vs = "Oslo")
+                    mode = "dynamic", vs = "Oslo")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   # Exactly one point should have the highlight (col2) colour
@@ -373,7 +373,7 @@ test_that("hc: vs highlights exactly one bar with a different colour", {
 })
 
 test_that("hc: vs = NULL uses a single colour for all bars", {
-  fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   expect_length(unique(colors), 1L)
@@ -381,7 +381,7 @@ test_that("hc: vs = NULL uses a single colour for all bars", {
 
 test_that("hc: highlighted point name matches vs string", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", vs = "Bergen")
+                    mode = "dynamic", vs = "Bergen")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   names  <- vapply(points, `[[`, character(1), "name")
@@ -399,7 +399,7 @@ test_that("hc: highlighted point name matches vs string", {
 
 test_that("hc: aim adds a plotLines entry to yAxis", {
   fig   <- hd_make(spec_n, "ranked_bar", opts,
-                   backend = "highcharter", aim = 80)
+                   mode = "dynamic", aim = 80)
   yaxis <- .hc_yaxis(fig)
   plot_lines <- yaxis$plotLines %||% yaxis[[1]]$plotLines
   expect_true(!is.null(plot_lines) && length(plot_lines) > 0)
@@ -408,7 +408,7 @@ test_that("hc: aim adds a plotLines entry to yAxis", {
 test_that("hc: aim plotLine value matches the aim argument", {
   aim_val   <- 80
   fig       <- hd_make(spec_n, "ranked_bar", opts,
-                       backend = "highcharter", aim = aim_val)
+                       mode = "dynamic", aim = aim_val)
   yaxis     <- .hc_yaxis(fig)
   plot_lines <- yaxis$plotLines %||% yaxis[[1]]$plotLines
   line_values <- vapply(plot_lines, `[[`, numeric(1), "value")
@@ -416,7 +416,7 @@ test_that("hc: aim plotLine value matches the aim argument", {
 })
 
 test_that("hc: aim = NULL adds no plotLines", {
-  fig   <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig   <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   yaxis <- .hc_yaxis(fig)
   plot_lines <- yaxis$plotLines %||% yaxis[[1]]$plotLines
   expect_true(is.null(plot_lines) || length(plot_lines) == 0)
@@ -431,25 +431,25 @@ test_that("hc: aim = NULL adds no plotLines", {
 .hc_tooltip <- function(fig) fig$x$hc_opts$tooltip
 
 test_that("hc: with spec$n, tooltip pointFormat contains {point.n_obs}", {
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   tt  <- .hc_tooltip(fig)
   expect_true(grepl("point.n_obs", tt$pointFormat, fixed = TRUE))
 })
 
 test_that("hc: without spec$n, tooltip pointFormat has no {point.n_obs}", {
-  fig <- hd_make(spec_no_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_no_n, "ranked_bar", opts, mode = "dynamic")
   tt  <- .hc_tooltip(fig)
   expect_false(grepl("point.n_obs", tt$pointFormat, fixed = TRUE))
 })
 
 test_that("hc: tooltip pointFormat contains {point.y}", {
-  fig <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   tt  <- .hc_tooltip(fig)
   expect_true(grepl("point.y", tt$pointFormat, fixed = TRUE))
 })
 
 test_that("hc: dataLabels are disabled on the series", {
-  fig    <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig    <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   series <- .hc_series(fig)[[1]]
   dl_enabled <- series$dataLabels$enabled %||% TRUE   # default in HC is TRUE
   expect_false(isTRUE(dl_enabled))
@@ -462,31 +462,31 @@ test_that("hc: dataLabels are disabled on the series", {
 
 test_that("hc: vs = NULL does not error (grepl NULL guard)", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "highcharter", vs = NULL)
+    hd_make(spec_n, "ranked_bar", opts, mode = "dynamic", vs = NULL)
   )
 })
 
 test_that("gg: vs = NULL does not error (grepl NULL guard)", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2", vs = NULL)
+    hd_make(spec_n, "ranked_bar", opts, mode = "static", vs = NULL)
   )
 })
 
 test_that("hc: vs = '' (empty string) does not error", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "highcharter", vs = "")
+    hd_make(spec_n, "ranked_bar", opts, mode = "dynamic", vs = "")
   )
 })
 
 test_that("gg: vs = '' (empty string) does not error", {
   expect_no_error(
-    hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2", vs = "")
+    hd_make(spec_n, "ranked_bar", opts, mode = "static", vs = "")
   )
 })
 
 test_that("hc: vs that matches nothing is silently ignored", {
   fig    <- hd_make(spec_n, "ranked_bar", opts,
-                    backend = "highcharter", vs = "XXXXXX")
+                    mode = "dynamic", vs = "XXXXXX")
   points <- .hc_series(fig)[[1]]$data
   colors <- vapply(points, `[[`, character(1), "color")
   # No highlight → single colour
@@ -501,14 +501,14 @@ test_that("hc: vs that matches nothing is silently ignored", {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 test_that("gg: at least one GeomText layer is present", {
-  fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   text_layers <- Filter(function(l)
     inherits(l$geom, "GeomText"), fig$layers)
   expect_gte(length(text_layers), 1L)
 })
 
 test_that("gg: inside label layer uses white text colour", {
-  fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2")
+  fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "static")
   text_layers <- Filter(function(l)
     inherits(l$geom, "GeomText"), fig$layers)
   # At least one layer should use white (#FFFFFF) — the inside label layer
@@ -518,7 +518,7 @@ test_that("gg: inside label layer uses white text colour", {
 })
 
 ## test_that("gg: outside label layer uses dark text colour", {       ##
-##   fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "ggplot2") ##
+##   fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "static") ##
 ##   text_layers <- Filter(function(l)                                ##
 ##     inherits(l$geom, "GeomText"), fig$layers)                      ##
 ##   colours <- vapply(text_layers, function(l)                       ##
@@ -532,20 +532,20 @@ test_that("gg: inside label layer uses white text colour", {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 test_that("hc: xAxis categories length matches number of rows", {
-  fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   cats <- fig$x$hc_opts$xAxis$categories
   expect_length(cats, nrow(muni_df))
 })
 
 test_that("hc: xAxis categories are plain names (no N= suffix)", {
-  fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   cats <- fig$x$hc_opts$xAxis$categories
   # After the label-cleanup: N is in n_obs only — axis labels must be plain
   expect_false(any(grepl("(N=", cats, fixed = TRUE)))
 })
 
 test_that("hc: xAxis categories contain all municipality names", {
-  fig  <- hd_make(spec_n, "ranked_bar", opts, backend = "highcharter")
+  fig  <- hd_make(spec_n, "ranked_bar", opts, mode = "dynamic")
   cats <- fig$x$hc_opts$xAxis$categories
   expect_setequal(cats, muni_df$municipality)
 })

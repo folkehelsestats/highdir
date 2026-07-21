@@ -66,7 +66,7 @@ hc_scatter <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'
 #' @examples
 #' # Basic scatter plot - layered API
-#' hd(mtcars, x = "wt", y = "mpg", backend = "ggplot2") +
+#' hd(mtcars, x = "wt", y = "mpg", backend = "static") +
 #'  hd_geom_scatter() +
 #'  hd_opts(title = "Scatter Plot of mtcars")
 #'

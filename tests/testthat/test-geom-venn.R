@@ -620,7 +620,7 @@ test_that("hd_make declarative works with explicit sets in ...", {
 test_that("hd_make declarative ggplot2 backend returns ggplot when eulerr present", {
   skip_if_not_installed("eulerr")
   sv     <- hd_spec_venn(three_entries)
-  result <- hd_make(sv, "venn", opts_v, backend = "ggplot2")
+  result <- hd_make(sv, "venn", opts_v, mode = "static")
   expect_s3_class(result, "ggplot")
 })
 
@@ -635,7 +635,7 @@ test_that("hd_make declarative with opts NULL uses defaults without error", {
 # =============================================================================
 
 test_that("composable API returns highchart (highcharter backend)", {
-  result <- hd(data.frame(), backend = "highcharter") +
+  result <- hd(data.frame(), mode = "dynamic") +
     hd_geom_venn(sets = three_entries) +
     hd_opts(title = "Composable venn")
 
@@ -644,7 +644,7 @@ test_that("composable API returns highchart (highcharter backend)", {
 })
 
 test_that("composable API sets chart type to venn", {
-  result <- hd(data.frame(), backend = "highcharter") +
+  result <- hd(data.frame(), mode = "dynamic") +
     hd_geom_venn(sets = three_entries) +
     hd_opts(title = "Test")
 
@@ -653,7 +653,7 @@ test_that("composable API sets chart type to venn", {
 })
 
 test_that("composable API applies title from hd_opts", {
-  result <- hd(data.frame(), backend = "highcharter") +
+  result <- hd(data.frame(), mode = "dynamic") +
     hd_geom_venn(sets = two_sets) +
     hd_opts(title = "Composable title")
 
@@ -664,7 +664,7 @@ test_that("composable API applies title from hd_opts", {
 test_that("composable API ggplot2 backend returns ggplot when eulerr present", {
   skip_if_not_installed("eulerr")
 
-  result <- hd(data.frame(), backend = "ggplot2") +
+  result <- hd(data.frame(), mode = "static") +
     hd_geom_venn(sets = three_entries) +
     hd_opts(title = "gg venn")
 
@@ -673,7 +673,7 @@ test_that("composable API ggplot2 backend returns ggplot when eulerr present", {
 })
 
 # test_that("composable API with custom series_name passes through", {
-#   result <- hd(data.frame(), backend = "highcharter") +
+#   result <- hd(data.frame(), mode = "dynamic") +
 #     hd_geom_venn(sets = two_sets, series_name = "Custom Name") +
 #     hd_opts(title = "Test")
 
@@ -685,7 +685,7 @@ test_that("composable API with extended set list renders correctly", {
     two_sets,
     list(hd_venn_intersect(c("A", "B"), value = 40))
   )
-  result <- hd(data.frame(), backend = "highcharter") +
+  result <- hd(data.frame(), mode = "dynamic") +
     hd_geom_venn(sets = extended) +
     hd_opts(title = "Extended")
 
@@ -700,7 +700,7 @@ test_that("composable API with extended set list renders correctly", {
 
 test_that("declarative and composable produce same chart type", {
   dec <- hd_make(hd_spec_venn(three_entries), "venn", opts_v)
-  com <- hd(data.frame(), backend = "highcharter") +
+  com <- hd(data.frame(), mode = "dynamic") +
     hd_geom_venn(sets = three_entries) +
     opts_v
 
@@ -712,7 +712,7 @@ test_that("declarative and composable produce same chart type", {
 
 # test_that("declarative and composable produce same number of series data points", {
 #   dec <- hd_make(hd_spec_venn(three_entries), "venn", opts_v)
-#   com <- hd(data.frame(), backend = "highcharter") +
+#   com <- hd(data.frame(), mode = "dynamic") +
 #     hd_geom_venn(sets = three_entries) +
 #     opts_v
 
@@ -726,8 +726,8 @@ test_that("declarative and composable produce same chart type", {
 #   skip_if_not_installed("eulerr")
 
 #   dec <- hd_make(hd_spec_venn(three_entries), "venn", opts_v,
-#                  backend = "ggplot2")
-#   com <- hd(data.frame(), backend = "ggplot2") +
+#                  mode = "static")
+#   com <- hd(data.frame(), mode = "static") +
 #     hd_geom_venn(sets = three_entries) +
 #     opts_v
 

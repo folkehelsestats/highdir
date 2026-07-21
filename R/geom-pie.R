@@ -205,7 +205,7 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' hd_make(spec_pie, "pie", opts_pie, inner_size = "50%")
 #'
 #' # Composable API style (ggplot2 ignores inner_size)
-#' hd(drinking_freq, x = "category", y = "pct", backend = "ggplot2") +
+#' hd(drinking_freq, x = "category", y = "pct", backend = "static") +
 #'     hd_geom_pie() +
 #'     hd_opts(
 #'         title = "Drinking frequency",

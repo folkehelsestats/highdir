@@ -44,8 +44,8 @@ opts <- hd_opts(title = "Tall om Report",
                 caption  = "Tall om helse",
                 ylim = c(0, 80))
 
-hd_make(spec, "column", opts)                       # highcharter (default)
-hd_make(spec, "column", opts, backend = "ggplot2")  # static ggplot2
+hd_make(spec, "column", opts)                       # dynamic (default)
+hd_make(spec, "column", opts, mode = "static")      
 hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
 hd_make(spec, "pie",    opts)                       # pie / donut
 
@@ -56,7 +56,7 @@ hd_make(spec, "column", opts, use_js = FALSE)
 hd01 <- hd_make(spec, "column")
 hd_save(fig = hd01, file = "chart.html")
 
-gg01 <- hd_make(spec, "column", backend = "ggplot2")
+gg01 <- hd_make(spec, "column", mode = "static")
 hd_save(fig = gg01, file = "chart.png")
 ```
 
@@ -73,7 +73,7 @@ hd(df, x = "age", y = "pct", group = "sex", n = "n") +
           ylim = c(0, 80))
 
 # Static ggplot2
-hd(df, x = "age", y = "pct", group = "sex", n = "n", backend = "ggplot2") +
+hd(df, x = "age", y = "pct", group = "sex", n = "n", mode = "static") +
   hd_geom_column() +
   hd_opts(title = "Tall om Report",
           subtitle = "Source: Example data",

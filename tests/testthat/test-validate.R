@@ -3,24 +3,24 @@ opts <- hd_opts()
 
 test_that("validate_fig_inputs: passes for all valid inputs", {
   expect_invisible(
-    validate_fig_inputs(spec, opts, "column", "highcharter", list()))
+    validate_fig_inputs(spec, opts, "column", "dynamic", list()))
 })
 
 test_that("validate_fig_inputs: rejects non-hd_spec", {
   expect_error(
-    validate_fig_inputs(list(), opts, "column", "highcharter", list()),
+    validate_fig_inputs(list(), opts, "column", "dynamic", list()),
     "hd_spec")
 })
 
 test_that("validate_fig_inputs: rejects non-hd_opts", {
   expect_error(
-    validate_fig_inputs(spec, list(), "column", "highcharter", list()),
+    validate_fig_inputs(spec, list(), "column", "dynamic", list()),
     "hd_opts")
 })
 
 test_that("validate_fig_inputs: rejects unknown geometry", {
   expect_error(
-    validate_fig_inputs(spec, opts, "violin", "highcharter", list()),
+    validate_fig_inputs(spec, opts, "violin", "dynamic", list()),
     "Unknown geometry")
 })
 
@@ -32,14 +32,14 @@ test_that("validate_fig_inputs: rejects unknown backend", {
 
 test_that("validate_fig_inputs: enforces required geometry args", {
   expect_error(
-    validate_fig_inputs(spec, opts, "arearange", "highcharter", list()),
+    validate_fig_inputs(spec, opts, "arearange", "dynamic", list()),
     "Missing required")
   expect_invisible(
-    validate_fig_inputs(spec, opts, "arearange", "highcharter",
+    validate_fig_inputs(spec, opts, "arearange", "dynamic",
                         list(ymin = "lo", ymax = "hi")))
 })
 
 test_that("validate_fig_inputs: pie has no required args", {
   expect_invisible(
-    validate_fig_inputs(spec, opts, "pie", "highcharter", list()))
+    validate_fig_inputs(spec, opts, "pie", "dynamic", list()))
 })
