@@ -23,7 +23,9 @@ There are two ways to use `highdir`:
 
 > &#x1F4DD; **Note** 
 >
-> New code should use `mode` argument, while users of **highdir 0.5.0** should continue to use `backend`. The argument will be replaced in a future release.
+> The `backend` argument in `hd_make()` and `hd()` functions will be replaced by
+> `mode` in a future release. Users of **highdir ver 0.5.0** should continue to use
+> `backend`. The examples below use the forthcoming `mode` argument.
 >
 > See the [changelog](https://folkehelsestats.github.io/highdir/news/index.html#highdir-060-dev) for more information.
 
