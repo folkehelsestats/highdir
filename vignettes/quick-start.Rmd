@@ -21,6 +21,10 @@ There are two ways to use `highdir`:
 1. Declarative API approach 
 2. Layered API approach
 
+> [!NOTE]
+> Use argument `backend` instead of `mode` if you are using version 0.5.0
+> Read [Changelog](https://folkehelsestats.github.io/highdir/news/index.html "changelog") for more information
+
 ## Declarative API 
 
 ```{r setup, eval = FALSE}
