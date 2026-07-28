@@ -97,13 +97,13 @@ hd(backend = "dynamic") +
 }\if{html}{\out{</div>}}
 }
 
-\section{Backend differences}{
+\section{Mode differences}{
 
 \describe{
-\item{highcharter}{Uses Highcharts' native \code{"venn"} series type.
+\item{dynamic}{Uses Highcharts' native \code{"venn"} series type.
 All features (labels, tooltips, interactivity) work out of the box.
 \code{series_name} and \code{label_font_size} are highcharter-only options.}
-\item{ggplot2}{Requires the \pkg{eulerr} package (preferred) or
+\item{static}{Requires the \pkg{eulerr} package (preferred) or
 \pkg{ggVennDiagram} in \code{Suggests}.  Install with
 \code{install.packages("eulerr")}.}
 }
@@ -118,13 +118,13 @@ my_sets <- list(
   hd_venn_intersect(c("A", "B"), value = 3)
 )
 
-# Highcharter (interactive)
-hd(backend = "dynamic") +
+# Dynamic (interactive)
+hd(mode = "dynamic") +
   hd_geom_venn(sets = my_sets) +
   hd_opts(title = "Animals and Minerals")
 
-# ggplot2 (static) - requires eulerr or ggVennDiagram
-hd(backend = "static") +
+# Static - requires eulerr or ggVennDiagram
+hd(mode = "static") +
   hd_geom_venn(sets = my_sets) +
   hd_opts(title = "Animals and Minerals")
 
@@ -133,12 +133,26 @@ base_sets <- list(
   hd_venn_set("A", "Oslo",   value = 120),
   hd_venn_set("B", "Bergen", value = 95)
 )
+
 extended <- c(base_sets, list(
   hd_venn_intersect(c("A", "B"), "Both", value = 40)
 ))
+
 hd(backend = "dynamic") +
   hd_geom_venn(sets = extended) +
   hd_opts(title = "City overlap")
+
+# Convert a data.frame to a venn set list with hd_venn_df() function 
+id = c("A", "B", "A,B")
+name = c("Oslo", "Bergen", "Both")
+value = c(80, 30, 10)
+n = c(120, 95, 40)
+type = c(rep("set", 2), "intersect")
+
+df <- data.frame(type, id, name, value, n)
+
+df2 <- hd_venn_df(df, output = "spec")
+hd_make(df2, "venn", hd_opts(title = "City overlap"), mode = "dynamic")
 
 }
 \seealso{
