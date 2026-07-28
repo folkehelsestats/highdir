@@ -101,7 +101,7 @@
         mode_only = "dynamic"
       ),
       value_suffix = list(
-        default      = NULL,
+        default      = "%",
         desc         = paste0(
           "Character. Symbol appended to displayed values. ",
           "E.g. '%' renders '42%' instead of '42'. ",
