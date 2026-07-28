@@ -31,10 +31,7 @@
 #' @param colour Character or `NULL`. ggplot2 colour aesthetic column.
 #'   Defaults to `group` when `NULL` and `group` is set.
 #'   Ignored when `data` is an `hd_spec`.
-#' @param backend Character. Rendering engine - `"dynamic"` (default,
-#'   interactive) or `"static"`, or any engine added with
-#'   [register_backend()].  Falls back to `getOption("highdir.backend",
-#'   "dynamic")`. This will de precated in favor of `mode` in a future release.
+#' @inheritParams hd_make
 #'
 #' @return An S3 object of class `"hd"` with slots:
 #'   \describe{

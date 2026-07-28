@@ -4,18 +4,24 @@
 - Add venn diagram with `gg_venn` or `hc_venn` backends.
 - New feature added to support for 
 ```r
+hd_make(mode = "dynamic")
+hd_make(mode = "static")
+# or equivalent functions
 hd(mode = "dynamic")
 hd(mode = "static")
 ```
 
 `dynamic` replaces the previous `highcharter` backend and `static` replaces the previous `ggplot2` backend.
 
-
 ## Breaking changes
 - Introduced a new mode argument with values "dynamic" and "static" to replace backend-specific values.
-- The backend argument indna  `hd()` and related functions is now deprecated and will be removed in a future release.
+- The `backend` argument in `hd_make()` and `hd()` functions is now deprecated
+  and will be removed in a future release.
 - Existing code using: 
 ```r
+hd_make(backend = "highcharter")
+hd_make(backend = "ggplot2")
+# or equivalent functions
 hd(backend = "highcharter")
 hd(backend = "ggplot2")
 ```

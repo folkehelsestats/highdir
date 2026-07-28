@@ -38,6 +38,10 @@ Ignored when \code{data} is an \code{hd_spec}.}
 Defaults to \code{group} when \code{NULL} and \code{group} is set.
 Ignored when \code{data} is an \code{hd_spec}.}
 
+\item{mode}{Character.  Rendering mode - \code{"dynamic"} (default,
+interactive) or \code{"static"}.  \code{"dynamic"} uses the highcharter
+backend, \code{"static"} uses the ggplot2 backend.  See \code{\link[=list_backends]{list_backends()}}.}
+
 \item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
 interactive) or \code{"static"}, or any engine added with
 \code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will de precated in favor of \code{mode} in a future release.}
