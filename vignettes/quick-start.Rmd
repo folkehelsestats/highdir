@@ -21,12 +21,12 @@ There are two ways to use `highdir`:
 1. Declarative API approach 
 2. Layered API approach
 
-> :memo: **Note** 
+> 📝 **Note** 
 >
-> `backend` will be replaced by `mode` in a future release.
-> New code should prefer `mode`, while users of **highdir 0.5.0** should continue to use `backend`.
+> `backend` argument will be replaced by `mode` in a future release.
+> New code should use `mode`, while users of **highdir 0.5.0** should continue to use `backend`.
 >
-> See the [changelog](https://folkehelsestats.github.io/highdir/news/index.html) for more information.
+> See the [changelog](https://folkehelsestats.github.io/highdir/news/index.html#highdir-060-dev) for more information.
 
 ## Declarative API 
 
