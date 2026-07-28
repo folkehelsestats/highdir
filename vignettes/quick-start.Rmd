@@ -21,7 +21,7 @@ There are two ways to use `highdir`:
 1. Declarative API approach 
 2. Layered API approach
 
-> 📝 **Note** 
+> &#x1F4DD; **Note** 
 >
 > `backend` argument will be replaced by `mode` in a future release.
 > New code should use `mode`, while users of **highdir 0.5.0** should continue to use `backend`.
