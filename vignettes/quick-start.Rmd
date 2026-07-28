@@ -21,7 +21,7 @@ There are two ways to use `highdir`:
 1. Declarative API approach 
 2. Layered API approach
 
-> [!NOTE]
+> :memo: **Note** 
 >
 > `backend` will be replaced by `mode` in a future release.
 > New code should prefer `mode`, while users of **highdir 0.5.0** should continue to use `backend`.
