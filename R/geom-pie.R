@@ -207,8 +207,8 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   with a hole in the middle.  The default "0%" creates a standard pie chart.
 #'   This argument is only applicable to the Highcharts backend; it is ignored
 #'   by ggplot2 since it does not support donut charts.
+#' @param value_suffix A string to append to the labels on the pie slices. Default is "%".
 #' @param ... Geometry-specific arguments forwarded to [hd_make()].
-#' @inheritParams hd_geom_venn
 #' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
 #'
 #' @examples
@@ -241,6 +241,6 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'     )
 #'
 #' @export
-hd_geom_pie <- function(inner_size = "0%", value_suffix = NULL, ...) {
- hd_geom("pie", inner_size = inner_size, ...)
+hd_geom_pie <- function(inner_size = NULL, value_suffix = NULL, ...) {
+ hd_geom("pie", inner_size = inner_size, value_suffix = value_suffix, ...)
 }
