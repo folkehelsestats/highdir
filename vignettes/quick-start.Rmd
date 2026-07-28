@@ -23,8 +23,7 @@ There are two ways to use `highdir`:
 
 > &#x1F4DD; **Note** 
 >
-> `backend` argument will be replaced by `mode` in a future release.
-> New code should use `mode`, while users of **highdir 0.5.0** should continue to use `backend`.
+> New code should use `mode` argument, while users of **highdir 0.5.0** should continue to use `backend`. The argument will be replaced in a future release.
 >
 > See the [changelog](https://folkehelsestats.github.io/highdir/news/index.html#highdir-060-dev) for more information.
 
@@ -52,7 +51,7 @@ opts <- hd_opts(title = "Tall om Report",
                 ylim = c(0, 80))
 
 hd_make(spec, "column", opts)                       # dynamic (default)
-hd_make(spec, "column", opts, mode = "static")      
+hd_make(spec, "column", opts, mode = "static")      # use backend for ver 0.5.0 
 hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
 hd_make(spec, "pie",    opts)                       # pie / donut
 

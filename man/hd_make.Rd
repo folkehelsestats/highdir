@@ -28,7 +28,7 @@ colours, and highcharter theme.}
 
 \item{mode}{Character.  Rendering mode - \code{"dynamic"} (default,
 interactive) or \code{"static"}.  \code{"dynamic"} uses the highcharter
-backend, \code{"static"} uses the ggplot2 backend.  See \code{\link[=list_backends]{list_backends()}}.}
+backend, \code{"static"} uses the ggplot2 backend and others.  See \code{\link[=list_backends]{list_backends()}}.}
 
 \item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
 interactive) or \code{"static"}, or any engine added with
