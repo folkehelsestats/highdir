@@ -22,8 +22,11 @@ There are two ways to use `highdir`:
 2. Layered API approach
 
 > [!NOTE]
-> Use argument `backend` instead of `mode` if you are using version 0.5.0
-> Read [Changelog](https://folkehelsestats.github.io/highdir/news/index.html "changelog") for more information
+>
+> `backend` will be replaced by `mode` in a future release.
+> New code should prefer `mode`, while users of **highdir 0.5.0** should continue to use `backend`.
+>
+> See the [changelog](https://folkehelsestats.github.io/highdir/news/index.html) for more information.
 
 ## Declarative API 
 
