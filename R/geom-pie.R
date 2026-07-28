@@ -39,10 +39,10 @@
 #   )
 # }
 
-
 gg_pie <- function(spec, opts, geom_params, ...) {
 
-  label <- ypos <- pct <- NULL # appease R CMD check
+  # Appease R CMD check
+  pct <- label <- NULL
 
   x_col <- spec$x
   y_col <- spec$y
@@ -50,40 +50,51 @@ gg_pie <- function(spec, opts, geom_params, ...) {
   dt <- data.table::copy(spec$data)
   data.table::setDT(dt)
 
-  # Kontroll
-  if (!is.numeric(dt[[y_col]]) &&
-      !is.integer(dt[[y_col]])) {
-    stop(
-      sprintf(
-        "Pie chart requires numeric values. '%s' is not numeric.",
-        y_col
-      ),
-      call. = FALSE
-    )
-  }
+  # -- Validate ----------------------------------------------------------------
+  if (!is.numeric(dt[[y_col]]) && !is.integer(dt[[y_col]]))
+    stop(sprintf("Pie chart requires numeric values. '%s' is not numeric.", y_col),
+         call. = FALSE)
 
   total <- sum(dt[[y_col]], na.rm = TRUE)
+  if (total <= 0)
+    stop("Pie chart requires positive values.", call. = FALSE)
 
-  if (total <= 0) {
-    stop(
-      "Pie chart requires positive values.",
-      call. = FALSE
-    )
-  }
+  # -- Resolve highdir palette -------------------------------------------------
+  # A pie has one colour per slice. resolve_colors() follows the same priority
+  # chain as all other geoms: opts$colors -> session option -> built-in hdir.
+  n_slices <- nrow(dt)
+  pal      <- resolve_colors(n_slices, opts$colors)
 
-  # Beregn label-posisjoner
-dt$pct <- dt[[y_col]] / sum(dt[[y_col]])
+  # -- Percentage labels -------------------------------------------------------
+  # Only pct is computed here. We do NOT compute ypos manually.
+  #
+  # Why: manually computing ypos = cumsum(y) - y/2 and passing it to
+  # geom_text(aes(y = ypos)) fails in polar coordinates because ggplot2
+  # applies the y aesthetic AFTER the position adjustment but BEFORE the
+  # coordinate transformation. Providing a raw cumulative y value bypasses
+  # the stacking logic ggplot2 uses internally, so labels drift.
+  #
+  # The correct approach is position_stack(vjust = 0.5): ggplot2 computes
+  # the stacked midpoint itself in data space and THEN applies coord_polar,
+  # guaranteeing labels land in the centre of each slice regardless of slice
+  # order or size. No manual ypos calculation is needed at all.
+  dt$pct   <- dt[[y_col]] / total
+  dt$label <- paste0(
+    dt[[x_col]], "\n",
+    scales::percent(dt$pct, accuracy = 0.1)
+  )
 
-dt$ypos <- cumsum(dt[[y_col]]) -
-  dt[[y_col]] / 2
-
-# Prosentetiketter
-dt$label <- scales::percent(
-  dt$pct,
-  accuracy = 0.1
-)
+  # -- Build ggplot ------------------------------------------------------------
+  # theme_void() is applied inside gg_pie (not left to the engine) because:
+  #   1. The engine's gt$theme is a standard axis/grid theme - applying it
+  #      to a polar chart would restore axis lines through the pie.
+  #   2. theme_void() here clears everything first; the engine's
+  #      inherits(layers, "ggplot") path then adds gt$theme on top, but
+  #      theme_void() already removed the axis elements so they stay gone.
+  #   3. plot.title / plot.subtitle styling is set explicitly below so the
+  #      engine's title branding still works correctly.
   p <- ggplot2::ggplot(
-    dt,
+    as.data.frame(dt),
     ggplot2::aes(
       x    = "",
       y    = .data[[y_col]],
@@ -91,34 +102,46 @@ dt$label <- scales::percent(
     )
   ) +
     ggplot2::geom_col(
-      width = 1,
-      colour = "white",
-      linewidth = 0.4
+      width     = 1,
+      colour    = "white",
+      linewidth = 0.5
     ) +
+    # KEY FIX: position_stack(vjust = 0.5) places labels at the midpoint of
+    # each stacked segment in data space. ggplot2 then applies coord_polar
+    # to both the bar AND the label together, so labels always land at the
+    # visual centre ie. 50% of each slice - no manual ypos computation needed.
     ggplot2::geom_text(
-      ggplot2::aes(
-        y = ypos,
-        label = label
-      ),
-      colour = "white"
+      ggplot2::aes(label = label),
+      position = ggplot2::position_stack(vjust = 0.5),
+      colour   = "white",
+      size     = 3.5,
+      fontface = "bold"
     ) +
-    ggplot2::coord_polar(theta = "y") +
+    ggplot2::coord_polar(theta = "y", start = 0) +
+    # Apply the resolved highdir palette so hd_set_theme() colours are used
+    ggplot2::scale_fill_manual(values = pal) +
     ggplot2::labs(
-      x = NULL,
-      y = NULL,
-      fill = x_col
+      title    = opts$title    %||% "",
+      subtitle = opts$subtitle %||% "",
+      caption  = opts$caption  %||% "",
+      x = NULL, y = NULL, fill = NULL
     ) +
-  # ggplot2::theme_void() + # Should be used after theme() to avoid overriding
+    ggplot2::theme_void() +
     ggplot2::theme(
-      legend.position = "right"
+      legend.position = "none",   # labels on slices make a legend redundant
+      plot.title      = ggplot2::element_text(hjust = 0.5, face = "bold"),
+      plot.subtitle   = ggplot2::element_text(hjust = 0.5)
     )
 
- # list("__ggplot__" = p)
+  # Return the complete ggplot directly.
+  # The engine detects this via inherits(layers, "ggplot") and applies
+  # gt$theme on top for font / branding without iterating as a layer list.
   return(p)
 }
 
+
 ## # Pie is always single-series from ggplot2's perspective but uses ##
-## # fill to distinguish slices — single_colour is ignored here.     ##
+## # fill to distinguish slices - single_colour is ignored here.     ##
 ## gg_pie <- function(spec, opts, geom_params) {                     ##
 ##   list(                                                           ##
 ##     ggplot2::geom_bar(                                            ##
