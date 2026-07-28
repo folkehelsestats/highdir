@@ -34,7 +34,7 @@
 #   extended <- c(base_sets, list(
 #     list(sets = list("A", "B"), value = 4)
 #   ))
-#   hd(backend = "dynamic") +
+#   hd(mode = "dynamic") +
 #     hd_geom_venn(sets = extended) +
 #     hd_opts(title = "Overlap")
 #
@@ -301,7 +301,7 @@ gg_venn <- function(spec, opts, geom_params, ...) {
 
   # -- neither package available -----------------------------------------------
   message(
-    "hd_geom_venn(): ggplot2 backend requires 'eulerr' (preferred) or ",
+    "hd_geom_venn(): static mode requires 'eulerr' (preferred) or ",
     "'ggVennDiagram'.\n",
     "Install one: install.packages('eulerr')"
   )
@@ -536,7 +536,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   hd_venn_set("B", "Four legs", 4)
 #' )
 #' extended <- c(base, list(hd_venn_intersect(c("A","B"), 3)))
-#' hd(backend = "dynamic") +
+#' hd(mode = "dynamic") +
 #'   hd_geom_venn(sets = extended)
 #' ```
 #'
@@ -557,12 +557,12 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' @param label_font_size Character. CSS font-size for set labels.
 #'   Default `"14px"`.  Highcharter only.
 #' @param value_suffix  Character. Appended to each region's value label.
-#'   Default `""` (no suffix).  ggplot2 backend only.
+#'   Default `""` (no suffix).  static mode only.
 #' @param use_names     Logical. If `TRUE`, display human-readable `name`
 #'   values instead of set ids in labels and legend.  Default `FALSE`.
-#'   ggplot2 backend only.
+#'   static mode only.
 #' @param show_legend   Logical. If `TRUE`, render a legend beneath the
-#'   diagram.  Default `FALSE`.  ggplot2 backend only.
+#'   diagram.  Default `FALSE`. static mode only.
 #' @param legend_offset_y Numeric (0–1). Vertical shift of the venn grob.
 #'   Increase to move diagram upward and create more space for legend.
 #' @param legend_height Numeric (0–1). Relative height of the venn grob.
@@ -602,7 +602,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   hd_venn_intersect(c("A", "B"), "Both", value = 40)
 #' ))
 #' 
-#' hd(backend = "dynamic") +
+#' hd(mode = "dynamic") +
 #'   hd_geom_venn(sets = extended) +
 #'   hd_opts(title = "City overlap")
 #'
@@ -884,7 +884,7 @@ venn_df_to_list <- function(df) {
 #'
 #' @section Composable API (output = "geom"):
 #' ```r
-#' hd(backend = "dynamic") +
+#' hd(mode = "dynamic") +
 #'   hd_venn_df(df, output = "geom") +
 #'   hd_opts(title = "City overlap")
 #' ```
@@ -924,12 +924,12 @@ venn_df_to_list <- function(df) {
 #' hd_make(spec_v, "venn", hd_opts(title = "City overlap"))
 #'
 #' # Composable API
-#' hd(backend = "dynamic") +
+#' hd(mode = "dynamic") +
 #'   hd_venn_df(df, output = "geom") +
 #'   hd_opts(title = "City overlap")
 #'
-#' # ggplot2 backend
-#' hd(backend = "static") +
+#' # static mode
+#' hd(mode = "static") +
 #'   hd_venn_df(df, output = "geom") +
 #'   hd_opts(title = "City overlap")
 #' }

@@ -27,14 +27,14 @@ chart.  Default \code{"Venn Diagram"}.  Highcharter only.}
 Default \code{"14px"}.  Highcharter only.}
 
 \item{value_suffix}{Character. Appended to each region's value label.
-Default \code{""} (no suffix).  ggplot2 backend only.}
+Default \code{""} (no suffix).  static mode only.}
 
 \item{use_names}{Logical. If \code{TRUE}, display human-readable \code{name}
 values instead of set ids in labels and legend.  Default \code{FALSE}.
-ggplot2 backend only.}
+static mode only.}
 
 \item{show_legend}{Logical. If \code{TRUE}, render a legend beneath the
-diagram.  Default \code{FALSE}.  ggplot2 backend only.}
+diagram.  Default \code{FALSE}. static mode only.}
 
 \item{legend_offset_y}{Numeric (0–1). Vertical shift of the venn grob.
 Increase to move diagram upward and create more space for legend.}
@@ -92,7 +92,7 @@ programmatically with \code{c()} or \code{append()}:
   hd_venn_set("B", "Four legs", 4)
 )
 extended <- c(base, list(hd_venn_intersect(c("A","B"), 3)))
-hd(backend = "dynamic") +
+hd(mode = "dynamic") +
   hd_geom_venn(sets = extended)
 }\if{html}{\out{</div>}}
 }
@@ -138,7 +138,7 @@ extended <- c(base_sets, list(
   hd_venn_intersect(c("A", "B"), "Both", value = 40)
 ))
 
-hd(backend = "dynamic") +
+hd(mode = "dynamic") +
   hd_geom_venn(sets = extended) +
   hd_opts(title = "City overlap")
 
