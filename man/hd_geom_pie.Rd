@@ -4,7 +4,7 @@
 \alias{hd_geom_pie}
 \title{Pie Geometry Layer for hd Objects}
 \usage{
-hd_geom_pie(inner_size = "0\%", ...)
+hd_geom_pie(inner_size = "0\%", value_suffix = NULL, ...)
 }
 \arguments{
 \item{inner_size}{A string specifying the inner radius of the pie as a percentage
@@ -12,6 +12,9 @@ of the total radius.  For example, "50\%" creates a donut chart
 with a hole in the middle.  The default "0\%" creates a standard pie chart.
 This argument is only applicable to the Highcharts backend; it is ignored
 by ggplot2 since it does not support donut charts.}
+
+\item{value_suffix}{Character. Appended to each region's value label.
+Default \code{""} (no suffix).  static mode only.}
 
 \item{...}{Geometry-specific arguments forwarded to \code{\link[=hd_make]{hd_make()}}.}
 }

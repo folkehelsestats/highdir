@@ -99,6 +99,16 @@
         default = "0%",
         desc    = "Character. Inner radius as CSS %, e.g. '50%' for a donut",
         mode_only = "dynamic"
+      ),
+      value_suffix = list(
+        default      = NULL,
+        desc         = paste0(
+          "Character. Symbol appended to displayed values. ",
+          "E.g. '%' renders '42%' instead of '42'. ",
+          "Applied in tooltips (dynamic) and region labels (static). ",
+          "Both backends."
+        ),
+        mode_only = NULL
       )
     )
   ),
@@ -209,7 +219,7 @@
         desc         = paste0(
           "Character. Symbol appended to displayed values. ",
           "E.g. '%' renders '42%' instead of '42'. ",
-          "Applied in tooltips (highcharter) and region labels (ggplot2). ",
+          "Applied in tooltips (dynamic) and region labels (static). ",
           "Both backends."
         ),
         mode_only = NULL

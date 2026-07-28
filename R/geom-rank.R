@@ -18,10 +18,10 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
 
   # -- Extract params ----------------------------------------------------------
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  vs         <- geom_params$vs        %||% NULL   # character or NULL: vsarison group name
-  aim        <- geom_params$aim         %||% NULL   # numeric or NULL: target line
-  char_scale <- geom_params$char_scale  %||% 0.045
-  min_frac   <- geom_params$min_frac    %||% 0.08
+  vs         <- geom_params$vs               %||% NULL   # character or NULL: vsarison group name
+  aim        <- geom_params$aim              %||% NULL   # numeric or NULL: target line
+  char_scale <- geom_params$char_scale       %||% 0.045
+  min_frac   <- geom_params$min_frac         %||% 0.08
   sc         <- geom_params$single_colour  # verdien settes i engine
   
   # -- Resolve colours ---------------------------------------------------------

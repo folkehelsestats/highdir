@@ -78,10 +78,13 @@ gg_pie <- function(spec, opts, geom_params, ...) {
   # the stacked midpoint itself in data space and THEN applies coord_polar,
   # guaranteeing labels land in the centre of each slice regardless of slice
   # order or size. No manual ypos calculation is needed at all.
+
+  suffix <- geom_params$value_suffix %||% "%"
+  
   dt$pct   <- dt[[y_col]] / total
   dt$label <- paste0(
     dt[[x_col]], "\n",
-    scales::percent(dt$pct, accuracy = 0.1)
+    scales::percent(dt$pct, accuracy = 0.1, suffix = suffix)
   )
 
   # -- Build ggplot ------------------------------------------------------------
@@ -165,6 +168,7 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
     labels <- df[[spec$x]]
     values <- df[[spec$y]]
     palette <- resolve_colors(length(labels), opts$colors)
+    suffix <- geom_params$value_suffix %||% "%"
 
     # Build the data list Highcharts expects for a pie series
     pie_data <- lapply(seq_len(nrow(df)), function(i) {
@@ -183,7 +187,7 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
             innerSize = inner_size,
             dataLabels = list(
                 enabled = TRUE,
-                format  = "<b>{point.name}</b>: {point.percentage:.1f}%"
+                format  = paste0("<b>{point.name}</b>: {point.percentage:.1f}", suffix)
             )
         )
 }
@@ -204,6 +208,7 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'   This argument is only applicable to the Highcharts backend; it is ignored
 #'   by ggplot2 since it does not support donut charts.
 #' @param ... Geometry-specific arguments forwarded to [hd_make()].
+#' @inheritParams hd_geom_venn
 #' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
 #'
 #' @examples
@@ -236,6 +241,6 @@ hc_pie <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'     )
 #'
 #' @export
-hd_geom_pie <- function(inner_size = "0%", ...) {
+hd_geom_pie <- function(inner_size = "0%", value_suffix = NULL, ...) {
  hd_geom("pie", inner_size = inner_size, ...)
 }
