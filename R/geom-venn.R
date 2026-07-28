@@ -571,7 +571,7 @@ hc_venn <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'
 #' @return An S3 object of class `"hd_geom"` for use with `+.hd`.
 #'
-#' @seealso [hd_venn_set()], [hd_venn_intersect()]
+#' @seealso [hd_venn_df()], [hd_venn_set()], [hd_venn_intersect()], [venn_df_to_list()]
 #'
 #' @examples
 #' # Build the set list with helper constructors

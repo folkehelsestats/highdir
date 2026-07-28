@@ -156,5 +156,5 @@ hd_make(df2, "venn", hd_opts(title = "City overlap"), mode = "dynamic")
 
 }
 \seealso{
-\code{\link[=hd_venn_set]{hd_venn_set()}}, \code{\link[=hd_venn_intersect]{hd_venn_intersect()}}
+\code{\link[=hd_venn_df]{hd_venn_df()}}, \code{\link[=hd_venn_set]{hd_venn_set()}}, \code{\link[=hd_venn_intersect]{hd_venn_intersect()}}, \code{\link[=venn_df_to_list]{venn_df_to_list()}}
 }
