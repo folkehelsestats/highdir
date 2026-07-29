@@ -82,7 +82,7 @@ mod_opts_ui <- function(id) {
 
       # ggplot2 themes
       shiny::conditionalPanel(
-        condition = "input.backend == 'ggplot2'",
+        condition = "input.mode == 'static'",
         shiny::selectInput(ns("gg_theme"), NULL,
                            choices  = c("classic", "minimal", "bw",
                                         "light", "dark", "void",
@@ -92,7 +92,7 @@ mod_opts_ui <- function(id) {
 
     # HC-only options — client-side conditionalPanel, no server cost
       shiny::conditionalPanel(
-        condition = "input.backend == 'highcharter'",
+        condition = "input.mode == 'dynamic'",
         shiny::selectInput(ns("hc_theme"), NULL,
                            choices  = c("default", "smpl", "economist",
                                         "darkunica", "gridlight", "bloom",

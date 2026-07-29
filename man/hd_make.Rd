@@ -28,7 +28,7 @@ colours, and highcharter theme.}
 
 \item{mode}{Character.  Rendering mode - \code{"dynamic"} (default,
 interactive) or \code{"static"}.  \code{"dynamic"} uses the highcharter
-backend, \code{"static"} uses the ggplot2 backend and others.  See \code{\link[=list_backends]{list_backends()}}.}
+backend, \code{"static"} uses the ggplot2 backend and others.  See \code{\link[=list_modes]{list_modes()}}.}
 
 \item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
 interactive) or \code{"static"}, or any engine added with
@@ -126,5 +126,5 @@ hd_save(hd_make(spec, "column", opts, mode ="static"), "column.png")
 }
 \seealso{
 \code{\link[=hd_spec]{hd_spec()}}, \code{\link[=hd_opts]{hd_opts()}}, \code{\link[=hd_save]{hd_save()}}, \code{\link[=hd_set_theme]{hd_set_theme()}},
-\code{\link[=list_geoms]{list_geoms()}}, \code{\link[=list_backends]{list_backends()}}, \code{\link[=hd_app]{hd_app()}}
+\code{\link[=list_geoms]{list_geoms()}}, \code{\link[=list_modes]{list_modes()}}, \code{\link[=hd_app]{hd_app()}}
 }

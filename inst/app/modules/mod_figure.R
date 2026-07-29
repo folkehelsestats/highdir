@@ -125,7 +125,7 @@ mod_figure_server <- function(id,
         list(spec    = the_spec(),
              type    = geom_r(),
              opts    = the_opts(),
-             backend = "dynamic",
+             mode    = "dynamic",
              use_js  = use_js_r()),
         .build_extra()   # <- optional + required geom args -> hd_make(...)
       ))
@@ -139,7 +139,7 @@ mod_figure_server <- function(id,
         list(spec    = the_spec(),
              type    = geom_r(),
              opts    = the_opts(),
-             backend = "static"),
+             mode    = "static"),
         .build_extra()   # <- optional + required geom args -> hd_make(...)
       ))
     })
@@ -200,7 +200,7 @@ mod_figure_server <- function(id,
         "  spec    = spec,\n",
         "  opts    = opts,\n",
         L("type",    geom_r()),
-        L("backend", backend_r()),
+        L("mode", backend_r()),
         if (backend_r() == "dynamic")
           paste0("  use_js  = ", isTRUE(use_js_r()), ",\n") else "",
         extra_lines,

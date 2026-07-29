@@ -25,7 +25,7 @@
 #'   colours, and highcharter theme.
 #' @param mode      Character.  Rendering mode - `"dynamic"` (default,
 #'  interactive) or `"static"`.  `"dynamic"` uses the highcharter
-#'  backend, `"static"` uses the ggplot2 backend and others.  See [list_backends()].
+#'  backend, `"static"` uses the ggplot2 backend and others.  See [list_modes()].
 #' @param backend Character. Rendering engine - `"dynamic"` (default,
 #'   interactive) or `"static"`, or any engine added with
 #'   [register_backend()].  Falls back to `getOption("highdir.backend",
@@ -45,7 +45,7 @@
 #'   automatically.
 #'
 #' @seealso [hd_spec()], [hd_opts()], [hd_save()], [hd_set_theme()],
-#'   [list_geoms()], [list_backends()], [hd_app()]
+#'   [list_geoms()], [list_modes()], [hd_app()]
 #'
 #' @examples
 #' df <- data.frame(

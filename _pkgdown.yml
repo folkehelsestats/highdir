@@ -82,7 +82,7 @@ reference:
     desc: >-
       Backend engines used to build figures.
     contents:
-      - list_backends
+      - list_modes
       - register_backend
 
   - title: Themes

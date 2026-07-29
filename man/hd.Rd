@@ -40,7 +40,7 @@ Ignored when \code{data} is an \code{hd_spec}.}
 
 \item{mode}{Character.  Rendering mode - \code{"dynamic"} (default,
 interactive) or \code{"static"}.  \code{"dynamic"} uses the highcharter
-backend, \code{"static"} uses the ggplot2 backend and others.  See \code{\link[=list_backends]{list_backends()}}.}
+backend, \code{"static"} uses the ggplot2 backend and others.  See \code{\link[=list_modes]{list_modes()}}.}
 
 \item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
 interactive) or \code{"static"}, or any engine added with
