@@ -35,7 +35,7 @@ validate_fig_inputs <- function(spec, opts, type, backend, extra_args) {
   engine <- get_backend(backend)
   if (is.null(engine))
     stop("Unknown backend '", backend, "'. Available: ",
-         paste(sort(list_backends()), collapse = ", "), call. = FALSE)
+         paste(sort(list_modes()), collapse = ", "), call. = FALSE)
 
   validate_geom_args(geom, extra_args)
 

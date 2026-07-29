@@ -48,7 +48,7 @@
   # Geometry + Backend
   shiny::div(class = "hd-label", "Figure"),
   shiny::selectInput("geom",    NULL, choices = list_geoms(), selected = "column"),
-  shiny::selectInput("mode", NULL, choices = list_backends(), selected = "dynamic"),
+  shiny::selectInput("mode", NULL, choices = list_modes(), selected = "dynamic"),
 
   # Opts collapsible — labels, style
   mod_opts_ui("opts"),
@@ -90,7 +90,7 @@
     ),
     # ggplot2 buttons — shown when backend == ggplot2
     shiny::conditionalPanel(
-      condition = "input.mode == 'dynamic'",
+      condition = "input.mode == 'static'",
       shiny::downloadButton("dl_gg_png", "PNG"),
       shiny::downloadButton("dl_gg_svg", "SVG")
     )

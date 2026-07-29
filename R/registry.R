@@ -29,7 +29,7 @@ get_backend <- function(name) .backend_registry[[name]]
 #' List Registered Backends
 #' @return Character vector of registered backend names.
 #' @export
-list_backends <- function() sort(ls(.backend_registry))
+list_modes <- function() sort(ls(.backend_registry))
 
 # -- Geometry registry ---------------------------------------------------------
 

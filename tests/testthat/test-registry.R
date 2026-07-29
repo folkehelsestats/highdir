@@ -38,12 +38,12 @@
 # =============================================================================
 
 test_that("built-in backends are registered at package load", {
-  expect_true("static"     %in% list_backends())
-  expect_true("dynamic" %in% list_backends())
+  expect_true("static"     %in% list_modes())
+  expect_true("dynamic" %in% list_modes())
 })
 
-test_that("list_backends returns a sorted character vector", {
-  b <- list_backends()
+test_that("list_modes returns a sorted character vector", {
+  b <- list_modes()
   expect_type(b, "character")
   expect_equal(b, sort(b))
 })
@@ -53,7 +53,7 @@ test_that("register_backend: round-trip with get_backend", {
   on.exit(rm("test_engine", envir = highdir:::.backend_registry), add = TRUE)
   register_backend("test_engine", eng)
 
-  expect_true("test_engine" %in% list_backends())
+  expect_true("test_engine" %in% list_modes())
   expect_identical(get_backend("test_engine"), eng)
 })
 
@@ -487,14 +487,14 @@ test_that("built-in geoms registered at load", {
 })
 
 test_that("built-in backends registered at load", {
-  b <- list_backends()
+  b <- list_modes()
   expect_true(all(c("static", "dynamic") %in% b))
 })
 
 test_that("register_backend / get_backend round-trip", {
   eng <- function(spec, geom, opts, geom_params, use_js, filename, ...) NULL
   register_backend("test_backend", eng)
-  expect_true("test_backend" %in% list_backends())
+  expect_true("test_backend" %in% list_modes())
   expect_identical(get_backend("test_backend"), eng)
 })
 

@@ -74,7 +74,7 @@ hd_app()
    \code{\link[=register_backend]{register_backend()}} \tab Add a custom rendering backend \cr
    \code{\link[=register_palette]{register_palette()}} \tab Add a named colour palette \cr
    \code{\link[=list_geoms]{list_geoms()}} \tab Show available geometries \cr
-   \code{\link[=list_backends]{list_backends()}} \tab Show available backends \cr
+   \code{\link[=list_modes]{list_modes()}} \tab Show available backends \cr
    \code{\link[=list_palettes]{list_palettes()}} \tab Show available palettes \cr
    \code{\link[=hd_app]{hd_app()}} \tab Launch the Shiny GUI \cr
 }

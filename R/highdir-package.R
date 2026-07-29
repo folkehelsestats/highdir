@@ -74,7 +74,7 @@
 #' | [register_backend()] | Add a custom rendering backend |
 #' | [register_palette()] | Add a named colour palette |
 #' | [list_geoms()] | Show available geometries |
-#' | [list_backends()] | Show available backends |
+#' | [list_modes()] | Show available backends |
 #' | [list_palettes()] | Show available palettes |
 #' | [hd_app()] | Launch the Shiny GUI |
 #'
