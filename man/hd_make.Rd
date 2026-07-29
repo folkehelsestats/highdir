@@ -32,7 +32,7 @@ backend, \code{"static"} uses the ggplot2 backend and others.  See \code{\link[=
 
 \item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
 interactive) or \code{"static"}, or any engine added with
-\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will de precated in favor of \code{mode} in a future release.}
+\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will deprecated in favor of \code{mode} in a future release.}
 
 \item{use_js}{Logical.  When \code{TRUE} (default) injects a hover-band
 \code{htmlwidgets::JS()} callback via \code{point.events.mouseOver/Out}.
@@ -52,7 +52,7 @@ A \code{highchart} widget (highcharter backend) or \code{ggplot} object
 automatically.
 }
 \description{
-Renders a \link{hd_spec} and \link{hd_opts} pair using the selected backend and
+Renders a \link{hd_spec} and \link{hd_opts} pair using the selected mode and
 geometry.  This is the central function of the package - everything else
 feeds into or flows out of \code{hd_make()}.
 }
@@ -63,7 +63,7 @@ feeds into or flows out of \code{hd_make()}.
 opts <- hd_opts(title = "Health survey", ylim = c(0, 80))
 
 hd_make(spec, "column", opts)                       # highcharter (default)
-hd_make(spec, "column", opts, backend = "static")  # static ggplot2
+hd_make(spec, "column", opts, mode = "static")      # static ggplot2
 hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
 hd_make(spec, "pie",    opts)                       # pie / donut
 }\if{html}{\out{</div>}}
@@ -107,10 +107,10 @@ hd_make(spec2, "arearange", opts, ymin = "lo", ymax = "hi")
 hd_make(spec, "column", opts, use_js = FALSE)
 
 # -- Static ggplot2 versions -----------------------------------------------
-hd_make(spec, "column",  opts, backend = "static")
-hd_make(spec, "line",    opts, backend = "static")
-hd_make(spec, "scatter", opts, backend = "static")
-hd_make(pie_spec, "pie", pie_opts, backend = "static")
+hd_make(spec, "column",  opts, mode = "static")
+hd_make(spec, "line",    opts, mode = "static")
+hd_make(spec, "scatter", opts, mode = "static")
+hd_make(pie_spec, "pie", pie_opts, mode = "static")
 
 # -- Reuse spec with different presentation --------------------------------
 opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
@@ -119,7 +119,7 @@ hd_make(spec, "column", opts_no)
 # -- Save outputs ----------------------------------------------------------
 \dontrun{
 hd_save(hd_make(spec, "column", opts), "column.html")
-hd_save(hd_make(spec, "column", opts, backend="static"), "column.png")
+hd_save(hd_make(spec, "column", opts, mode ="static"), "column.png")
 }
 }
 

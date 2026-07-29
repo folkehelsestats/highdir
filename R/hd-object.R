@@ -38,7 +38,7 @@
 #'     \item{`$spec`}{An [hd_spec()] object.}
 #'     \item{`$geom`}{`NULL` until a `+ hd_geom_*()` layer is added.}
 #'     \item{`$opts`}{An [hd_opts()] object (defaults until overridden).}
-#'     \item{`$backend`}{Character. The resolved engine name.}
+#'     \item{`$mode`}{Character. The resolved engine name.}
 #'   }
 #'
 #' @seealso [hd_geom_column()], [hd_geom_line()], [hd_geom_arearange()],
@@ -64,7 +64,7 @@
 #'   hd_opts(title = "Trend")
 #'
 #' # Switch backend per figure
-#' hd(df, x = "age", y = "pct", backend = "static") +
+#' hd(df, x = "age", y = "pct", mode = "static") +
 #'   hd_geom_column() +
 #'   hd_opts(title = "Static version")
 #'

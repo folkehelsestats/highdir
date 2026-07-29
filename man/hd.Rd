@@ -44,7 +44,7 @@ backend, \code{"static"} uses the ggplot2 backend and others.  See \code{\link[=
 
 \item{backend}{Character. Rendering engine - \code{"dynamic"} (default,
 interactive) or \code{"static"}, or any engine added with
-\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will de precated in favor of \code{mode} in a future release.}
+\code{\link[=register_backend]{register_backend()}}.  Falls back to \code{getOption("highdir.backend", "dynamic")}. This will deprecated in favor of \code{mode} in a future release.}
 }
 \value{
 An S3 object of class \code{"hd"} with slots:
@@ -52,7 +52,7 @@ An S3 object of class \code{"hd"} with slots:
 \item{\verb{$spec}}{An \code{\link[=hd_spec]{hd_spec()}} object.}
 \item{\verb{$geom}}{\code{NULL} until a \verb{+ hd_geom_*()} layer is added.}
 \item{\verb{$opts}}{An \code{\link[=hd_opts]{hd_opts()}} object (defaults until overridden).}
-\item{\verb{$backend}}{Character. The resolved engine name.}
+\item{\verb{$mode}}{Character. The resolved engine name.}
 }
 }
 \description{
@@ -87,7 +87,7 @@ hd(spec) +
   hd_opts(title = "Trend")
 
 # Switch backend per figure
-hd(df, x = "age", y = "pct", backend = "static") +
+hd(df, x = "age", y = "pct", mode = "static") +
   hd_geom_column() +
   hd_opts(title = "Static version")
 

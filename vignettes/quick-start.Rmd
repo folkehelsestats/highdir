@@ -23,8 +23,8 @@ There are two ways to use `highdir`:
 
 > &#x1F4DD; **Note** 
 >
-> The `backend` argument in `hd_make()` and `hd()` functions will be replaced by
-> `mode` in a future release. Users of **highdir ver 0.5.0** should continue to use
+> The `backend = "highcharter"` or `backend = "ggplot2"` argument in `hd_make()` and `hd()` functions will be replaced by
+> `mode = "dynamic"` or `mode = "static"` repectively in a future release. Users of **highdir ver 0.5.0** should continue to use
 > `backend`. The examples below use the forthcoming `mode` argument.
 >
 > See the [changelog](https://folkehelsestats.github.io/highdir/news/index.html#highdir-060-dev) for more information.

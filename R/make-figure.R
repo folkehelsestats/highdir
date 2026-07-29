@@ -1,7 +1,7 @@
 
 #' Build a Figure from a Specification
 #'
-#' Renders a [hd_spec] and [hd_opts] pair using the selected backend and
+#' Renders a [hd_spec] and [hd_opts] pair using the selected mode and
 #' geometry.  This is the central function of the package - everything else
 #' feeds into or flows out of `hd_make()`.
 #'
@@ -11,7 +11,7 @@
 #' opts <- hd_opts(title = "Health survey", ylim = c(0, 80))
 #'
 #' hd_make(spec, "column", opts)                       # highcharter (default)
-#' hd_make(spec, "column", opts, backend = "static")  # static ggplot2
+#' hd_make(spec, "column", opts, mode = "static")      # static ggplot2
 #' hd_make(spec, "line",   opts, smooth = TRUE)        # smooth spline
 #' hd_make(spec, "pie",    opts)                       # pie / donut
 #' ```
@@ -29,7 +29,7 @@
 #' @param backend Character. Rendering engine - `"dynamic"` (default,
 #'   interactive) or `"static"`, or any engine added with
 #'   [register_backend()].  Falls back to `getOption("highdir.backend",
-#'   "dynamic")`. This will de precated in favor of `mode` in a future release.
+#'   "dynamic")`. This will deprecated in favor of `mode` in a future release.
 #' @param use_js    Logical.  When `TRUE` (default) injects a hover-band
 #'   `htmlwidgets::JS()` callback via `point.events.mouseOver/Out`.
 #'   Tooltips, accessibility module, and all other Highcharts declarative
@@ -85,10 +85,10 @@
 #' hd_make(spec, "column", opts, use_js = FALSE)
 #'
 #' # -- Static ggplot2 versions -----------------------------------------------
-#' hd_make(spec, "column",  opts, backend = "static")
-#' hd_make(spec, "line",    opts, backend = "static")
-#' hd_make(spec, "scatter", opts, backend = "static")
-#' hd_make(pie_spec, "pie", pie_opts, backend = "static")
+#' hd_make(spec, "column",  opts, mode = "static")
+#' hd_make(spec, "line",    opts, mode = "static")
+#' hd_make(spec, "scatter", opts, mode = "static")
+#' hd_make(pie_spec, "pie", pie_opts, mode = "static")
 #'
 #' # -- Reuse spec with different presentation --------------------------------
 #' opts_no <- hd_opts(title = "Helseundersøkelse", subtitle = "Alle aldre")
@@ -97,7 +97,7 @@
 #' # -- Save outputs ----------------------------------------------------------
 #' \dontrun{
 #' hd_save(hd_make(spec, "column", opts), "column.html")
-#' hd_save(hd_make(spec, "column", opts, backend="static"), "column.png")
+#' hd_save(hd_make(spec, "column", opts, mode ="static"), "column.png")
 #' }
 #' }
 #' 

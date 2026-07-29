@@ -11,10 +11,11 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 [![CRAN
 status](https://www.r-pkg.org/badges/version/highdir)](https://CRAN.R-project.org/package=highdir)
 
-**highdir** is an R package that provides a unified, backend-agnostic
-API for building figures with either
-[**highcharter**](https://jkunst.com/highcharter/) (interactive) or
-[**ggplot2**](https://ggplot2.tidyverse.org/) (static).
+**highdir** is an R package that provides a unified, mode-agnostic API
+for building dynamic or static figures with either
+[**highcharter**](https://jkunst.com/highcharter/),
+[**ggplot2**](https://ggplot2.tidyverse.org/) or other R solutions where
+relevant.
 
 The package provides two complementary yet fully interoperable APIs for
 creating figures:
@@ -25,17 +26,17 @@ creating figures:
     similar to the *grammar of graphics*.
 
 Both APIs produce equivalent visual output and can target any supported
-backend without changes to the calling code.
+mode without changes to the calling code.
 
-With the declarative API, a figure is specified once as an `hd_spec`
-object and can later be rendered to different backends. Backend-specific
+With the **declarative API**, a figure is specified once as an `hd_spec`
+object and can later be rendered to different modes. Mode-specific
 presentation options (such as interactivity or styling tweaks) can be
 supplied separately via an `hc_opts` object prior to rendering.
 
-The layered API supports an exploratory, iterative workflow. Figures are
-built step by step using `+` similar to **ggplot2** style, making this
-approach particularly well suited for interactive analysis and rapid
-prototyping, while remaining backend-independent.
+The **layered API** supports an exploratory, iterative workflow. Figures
+are built step by step using `+` similar to **ggplot2** style, making
+this approach particularly well suited for interactive analysis and
+rapid prototyping, while remaining mode-independent.
 
 By default, **highdir** ships with colour palette, theme, and visual
 identity of [The Norwegian Directorate of
@@ -76,7 +77,7 @@ The app is also available directly through ShinyApps.io at:
 
 ## Supported geometries
 
-| Name | dynamic mode | static equivalent | Extra args |
+| Name | dynamic mode | static mode | Extra args |
 |:---|:---|:---|:---|
 | `column` | column | `geom_col()` | — |
 | `ranked_bar` | column | `geom_col()` | `vs`, `aim`, `char_scale`, `min_frac` |
