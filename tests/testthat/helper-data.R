@@ -46,10 +46,17 @@ olympics <- data.frame(
                 "North America", "North America", "North America"),
   Medal     = rep(c("Gold", "Silver", "Bronze"), times = 4),
   Count     = c(148, 133, 124,
-                102,  98,  65,
-                113, 122,  95,
-                 77,  72,  80)
+                102, 98, 65,
+                113, 122, 95,
+                77, 72, 80),
+  pros      = c(
+    36.5, 32.8, 30.6,
+    38.5, 37.0, 24.5,
+    34.2, 37.0, 28.8,
+    33.6, 31.4, 34.9
+  )
 )
+
 
 twostack_df <- data.frame(
   x = c("2024", "2024", "2024", "2025", "2025", "2025"),
@@ -59,37 +66,3 @@ twostack_df <- data.frame(
   stringsAsFactors = FALSE
 )
 
-make_olympics_pros <- function() {
-
-  library(data.table)
-  library(scales)
-  
-  dt <- data.table::copy(olympics)
-  setDT(dt)
-  
-  dt[
-    ,
-    pros := as.numeric(
-      scales::percent(
-        Count / sum(Count),
-        accuracy = 0.1,
-        suffix = ""
-      )
-    ),
-    by = Country
-  ]
-
-  dt[
-    ,
-    pros2 := as.numeric(
-      scales::percent(
-        Count / sum(Count),
-        accuracy = 0.1,
-        suffix = ""
-      )
-    ),
-    by = Continent
-  ]
-
-  dt
-}
