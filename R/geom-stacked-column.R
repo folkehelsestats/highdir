@@ -150,7 +150,6 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 #' @param facet Character. Column name for the facet variable. Each unique value
 #'   in this column creates a separate facet (stack) containing all series with
 #'   that faceted value.
-#' @param stack Deprecated argument replaced by `facet`.
 #' @param stacking Character. Stacking mode for the column geometry. One of
 #'   `"normal"` (default) or `"percent"`. For ggplot2, is equivalent to
 #'   `position = "fill"`, else see Highcharts documentation for details:
@@ -192,24 +191,12 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 #'   hd_opts(title = "Olympic Games all-time medal table, grouped by continent", ylab = "Count medals")
 #'
 #' @export
-hd_geom_stacked_column <- function(facet = NULL, stack = lifecycle::deprecated(), stacking = c("normal", "percent"), ...) {
+hd_geom_stacked_column <- function(facet = NULL, stacking = c("normal", "percent"), ...) {
   # for now, we ignore the `stacking` argument in ggplot2 since it requires more
   # complex data manipulation to implement percent stacking. The Highcharts
   # version supports both modes. So stacking below is mainly for future-proofing
   # and consistency with the Highcharts API and avoid erroring if users specify
   # it in ggplot2 backend.
-
-  if (!lifecycle::is_present(stack)) {
-    lifecycle::deprecate_warn(
-      when = "0.6.0",
-      what = "hd_geom_stacked_column(stack)",
-      with = "hd_geom_stacked_column(facet)"
-    )
-
-    facet <- stack
-  }
-
   stacking <- match.arg(stacking)
-
   hd_geom("stacked_column", facet = facet, stacking = stacking, ...)
 }
