@@ -42,7 +42,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
   }
 
   chart <- base_fig(spec, opts, "dynamic")
-
+  
   # -- Tooltip -----------------------------------------------------------------
   ysuffix <- opts$ysuffix %||% ""
   has_suffix <- nzchar(ysuffix)
@@ -51,7 +51,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
     '<span style="color:{series.color}">\u25CF</span> ',
     '<span style="color:black">{series.name}</span>: '
   )
-
+  
   y_fmt <- if (has_suffix) paste0('{point.y}', ysuffix) else '{point.y}'
 
   ysuffix_fmt <- paste0(series_header, '<b>', y_fmt, '</b><br/>')
@@ -61,7 +61,7 @@ highcharter_engine <- function(spec, geom, opts, geom_params,
   } else {
     paste0('<b>{point.', spec$n, '} (', y_fmt, ')</b><br/>')
   }
-
+  
   point_fmt <- if (is.null(spec$n) || !nzchar(spec$n)) ysuffix_fmt else paste0(series_header, tools_fmt)
 
   # -- Chart -------------------------------------------------------------------
