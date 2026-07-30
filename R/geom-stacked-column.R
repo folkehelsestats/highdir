@@ -62,17 +62,7 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
     chart <- chart |>
         highcharter::hc_plotOptions(column = list(stacking = stacking))
 
-    #   chart <- chart |>
-    #   highcharter::hc_tooltip(
-    #     useHTML = TRUE,
-    #     format  = paste0(
-    #       "<b>{key}</b><br/>",
-    #       "{series.name}: {y}<br/>",
-    #       "Total: {point.stackTotal}"
-    #     )
-    #   )
-
-    # -- Key insight: iterate every unique (series, stack) combination --- 
+    # -- Key insight: iterate every unique (series, stack) combination ---
     # The same series name can appear in multiple stacks.
     # Each unique pair produces one hc_add_series() call with its own stack id.
     # Highcharts separates the stacks visually; the legend shows unique names.
@@ -85,7 +75,7 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 
     for (i in seq_len(nrow(combos))) {
         series_name <- combos[[grp_col]][i]
-        stack_id <- combos[[stack_col]][i]
+        stack_id    <- combos[[stack_col]][i]
 
         # Rows belonging to this (series, stack) pair, in x-axis order
         mask <- d[[grp_col]] == series_name & d[[stack_col]] == stack_id
@@ -94,17 +84,38 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
         # Align to x-axis categories (base_fig sets categories = unique(x))
         # Missing categories get NA so the series stays aligned
         x_cats <- unique(d[[x_col]])
-        values <- rows[[y_col]][match(x_cats, rows[[x_col]])]
+        idx    <- match(x_cats, rows[[x_col]])
+
+        # -- Build point objects -------------------------------------------------
+        # When spec$n is set, the tooltip format in backend-highcharter.R
+        # references {point.<n_col>}.  For this to work each Highcharts data
+        # point must be a named list with both `y` and the n column value.
+        # Passing bare numerics (as.list(values)) gives points with only `y`,
+        # so {point.Count} is always undefined in the tooltip.
+        #
+        # Fix: build a list of named lists — one per x category — so Highcharts
+        # receives { y: 36.5, Count: 148 } instead of just 36.5.
+        n_col <- spec$n
+
+        point_data <- lapply(seq_along(x_cats), function(j) {
+            pt <- list(y = if (is.na(idx[j])) NA_real_ else rows[[y_col]][idx[j]])
+
+            # Attach the n column value so the tooltip formatter can read it
+            # via {point.<n_col>}.  Only attach when spec$n is set and the
+            # row actually exists (idx[j] is not NA).
+            if (!is.null(n_col) && nzchar(n_col) && !is.na(idx[j]))
+                pt[[n_col]] <- rows[[n_col]][idx[j]]
+
+            pt
+        })
 
         chart <- chart |>
             highcharter::hc_add_series(
-                name = series_name,
-                type = "column",
-                data = as.list(values),
-                stack = stack_id,
-                color = color_by_name[[series_name]],
-                # Suppress duplicate legend entries for series that appear in
-                # multiple stacks - Highcharts shows the name once per unique name
+                name         = series_name,
+                type         = "column",
+                data         = point_data,
+                stack        = stack_id,
+                color        = color_by_name[[series_name]],
                 showInLegend = !duplicated(combos[[grp_col]])[i]
             )
     }
