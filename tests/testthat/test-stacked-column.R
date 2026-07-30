@@ -29,7 +29,6 @@ opts_ol <- hd_opts(
   ylab     = "Count medals"
 )
 
-
 # ══════════════════════════════════════════════════════════════════════════════
 # 1.  Return types
 # ══════════════════════════════════════════════════════════════════════════════
@@ -120,7 +119,7 @@ test_that("HC: Norway series has correct data values", {
   series <- fig$x$hc_opts$series
   norway <- Filter(function(s) s$name == "Norway", series)[[1]]
   # Gold=148, Silver=133, Bronze=124 — order follows unique(Medal) in data
-  expect_equal(unlist(norway$data), c(148, 133, 124))
+  expect_equal(unlist(norway$data), setNames(c(148, 133, 124), rep("y",3)))
 })
 
 test_that("HC: each series has a color field", {

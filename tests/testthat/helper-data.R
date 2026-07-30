@@ -58,3 +58,38 @@ twostack_df <- data.frame(
   stack = c("A", "A", "A", "B", "B", "B"),
   stringsAsFactors = FALSE
 )
+
+make_olympics_pros <- function() {
+
+  library(data.table)
+  library(scales)
+  
+  dt <- data.table::copy(olympics)
+  setDT(dt)
+  
+  dt[
+    ,
+    pros := as.numeric(
+      scales::percent(
+        Count / sum(Count),
+        accuracy = 0.1,
+        suffix = ""
+      )
+    ),
+    by = Country
+  ]
+
+  dt[
+    ,
+    pros2 := as.numeric(
+      scales::percent(
+        Count / sum(Count),
+        accuracy = 0.1,
+        suffix = ""
+      )
+    ),
+    by = Continent
+  ]
+
+  dt
+}
