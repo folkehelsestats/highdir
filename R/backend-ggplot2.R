@@ -126,15 +126,35 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
   #   coord_cartesian(ylim = ...) ZOOMS the viewport AFTER the geom has
   #   drawn.  Bars are drawn from their true origin and then clipped at
   #   the viewport edge - this is always what users expect from ylim.
+#   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]])) {
+#     p <- p + ggplot2::scale_y_continuous(
+#       expand = ggplot2::expansion(mult = c(0, .1))
+#     )
+#     if (!is.null(opts$ylim)) {
+#       p <- p + ggplot2::coord_cartesian(ylim = opts$ylim)
+#     }
+#   }
+
   if (is.numeric(spec$data[[spec$y]]) || is.integer(spec$data[[spec$y]])) {
     p <- p + ggplot2::scale_y_continuous(
       expand = ggplot2::expansion(mult = c(0, .1))
     )
-    if (!is.null(opts$ylim))
-      p <- p + ggplot2::coord_cartesian(ylim = opts$ylim)
   }
-  
-  
+
+  if (isTRUE(opts$flip)) {
+    if (!is.null(opts$ylim)) {
+      p <- p + ggplot2::coord_flip(
+        ylim = opts$ylim
+      )
+    } else {
+      p <- p + ggplot2::coord_flip()
+    }
+  } else if (!is.null(opts$ylim)) {
+    p <- p + ggplot2::coord_cartesian(
+      ylim = opts$ylim
+    )
+  }
+
   # -- Theme (per-figure opts$gg_theme > session default) --------------------
   # Applied last so it sits on top of every layer -- same position as
   # hd_theme() in highcharter_engine().  Font is already merged into gt$theme

@@ -57,9 +57,9 @@
     #     linetype   = "dashed",
     #     colour     = "#AAAAAA")
 
-    if (isTRUE(opts$flip))
-      p <- p + ggplot2::coord_flip()
-
+#     if (isTRUE(opts$flip))
+#       p <- p + ggplot2::coord_flip()
+    
     p
   },
 
