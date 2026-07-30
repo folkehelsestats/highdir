@@ -170,6 +170,7 @@ hd_make <- function(spec,
     module      = module
   )
 }
+
 normalize_mode <- function(mode) {
   if (is.null(mode)) {
     mode <- "dynamic"
@@ -202,6 +203,7 @@ normalize_mode <- function(mode) {
     values = c("dynamic", "static")
   )
 }
+
 ## When it's time to kill it
 ## -----------------------------------------------------------------------------
 # if (lifecycle::is_present(backend)) {

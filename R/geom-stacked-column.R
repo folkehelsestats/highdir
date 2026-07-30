@@ -1,10 +1,9 @@
 #' @keywords internal
 gg_stacked_column <- function(spec, opts, geom_params) {
   # optional args ----------------------------------------------------------------
-  facet_col <- geom_params$stack
-  grp_col <- spec$group
-  stacking <- geom_params$stacking %||% "normal"
-#   reverse <- opts$flip
+  facet_col <- geom_params$facet
+  grp_col   <- spec$group
+  stacking  <- geom_params$stacking %||% "normal"
 
   #   stacking <- geom_params$stacking
   #   if (stacking == "percent") {
@@ -18,17 +17,11 @@ gg_stacked_column <- function(spec, opts, geom_params) {
     stop("stacked_column requires a group column in hd_spec().", call. = FALSE)
   }
 
-#   position <- switch(stacking,
-#     "normal" = ggplot2::position_stack(reverse = reverse),
-#     "percent" = ggplot2::position_fill(reverse = reverse),
-#     stop("stacking must be 'normal' or 'percent'")
-#   )
-
-    position <- switch(stacking,
-      "normal"  = "stack",
-      "percent" = "fill",
-      stop("stacking must be 'normal' or 'percent'")
-    )
+  position <- switch(stacking,
+    "normal"  = "stack",
+    "percent" = "fill",
+    stop("stacking must be 'normal' or 'percent'")
+  )
 
   list(
     ggplot2::geom_col(
@@ -51,36 +44,38 @@ gg_stacked_column <- function(spec, opts, geom_params) {
     }
   )
 }
+
 #' @keywords internal
 hc_stacked_column <- function(chart, spec, opts, geom_params,
                               use_js = TRUE, ...) {
+  
   # Optional args ----------------------------------------------------------------
-  stack_col <- geom_params$stack
-  stacking <- geom_params$stacking %||% "normal"
+  facet_col <- geom_params$facet
+  stacking  <- geom_params$stacking %||% "normal"
 
-  d <- spec$data
-  x_col <- spec$x
-  y_col <- spec$y
+  d       <- spec$data
+  x_col   <- spec$x
+  y_col   <- spec$y
   grp_col <- spec$group
 
   if (is.null(grp_col)) {
     stop("stacked_column requires a group column in hd_spec().", call. = FALSE)
   }
 
-  if (is.null(stack_col)) {
+  if (is.null(facet_col)) {
     d[[".stack"]] <- "default"
-    stack_col <- ".stack"
+    facet_col <- ".stack"
   }
-
+  
   # Enable stacking for all column series
   chart <- chart |>
     highcharter::hc_plotOptions(column = list(stacking = stacking))
-
+  
   # -- Key insight: iterate every unique (series, stack) combination ---
   # The same series name can appear in multiple stacks.
   # Each unique pair produces one hc_add_series() call with its own stack id.
   # Highcharts separates the stacks visually; the legend shows unique names.
-  combos <- unique(d[, c(grp_col, stack_col), drop = FALSE])
+  combos <- unique(d[, c(grp_col, facet_col), drop = FALSE])
   pal <- resolve_colors(length(unique(d[[grp_col]])), opts$colors)
   # Named palette so same series name always gets the same colour across stacks
   series_names <- unique(d[[grp_col]])
@@ -88,10 +83,10 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 
   for (i in seq_len(nrow(combos))) {
     series_name <- combos[[grp_col]][i]
-    stack_id <- combos[[stack_col]][i]
+    stack_id <- combos[[facet_col]][i]
 
     # Rows belonging to this (series, stack) pair, in x-axis order
-    mask <- d[[grp_col]] == series_name & d[[stack_col]] == stack_id
+    mask <- d[[grp_col]] == series_name & d[[facet_col]] == stack_id
     rows <- d[mask, , drop = FALSE]
 
     # Align to x-axis categories (base_fig sets categories = unique(x))
@@ -152,9 +147,9 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 #' on top of each other, while `"percent"` stacks values as percentages of the total
 #' stack height.
 #'
-#' @param stack Character. Column name for the stack variable. Each unique value
-#'   in this column creates a separate stack (facet) containing all series with
-#'   that stack value.
+#' @param facet Character. Column name for the facet variable. Each unique value
+#'   in this column creates a separate facet (stack) containing all series with
+#'   that faceted value.
 #' @param stacking Character. Stacking mode for the column geometry. One of
 #'   `"normal"` (default) or `"percent"`. For ggplot2, is equivalent to
 #'   `position = "fill"`, else see Highcharts documentation for details:
@@ -188,20 +183,20 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 #' hd_make(spec_st, "stacked_column", opts_st)
 #'
 #' # Interactive - stacks are separated by continent
-#' hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
+#' hd_make(spec_st, "stacked_column", opts_st, facet = "Continent")
 #'
 #' # Static ggplot2 - stacks are separated by continent
 #' hd(spec_st, mode = "static") +
-#'   hd_geom_stacked_column(stack = "Continent") +
+#'   hd_geom_stacked_column(facet = "Continent") +
 #'   hd_opts(title = "Olympic Games all-time medal table, grouped by continent", ylab = "Count medals")
 #'
 #' @export
-hd_geom_stacked_column <- function(stack = NULL, stacking = c("normal", "percent"), ...) {
+hd_geom_stacked_column <- function(facet = NULL, stacking = c("normal", "percent"), ...) {
   # for now, we ignore the `stacking` argument in ggplot2 since it requires more
   # complex data manipulation to implement percent stacking. The Highcharts
   # version supports both modes. So stacking below is mainly for future-proofing
   # and consistency with the Highcharts API and avoid erroring if users specify
   # it in ggplot2 backend.
   stacking <- match.arg(stacking)
-  hd_geom("stacked_column", stack = stack, stacking = stacking, ...)
+  hd_geom("stacked_column", facet = facet, stacking = stacking, ...)
 }

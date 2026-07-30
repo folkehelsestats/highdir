@@ -154,9 +154,9 @@
     skip_base_fig   = FALSE, 
     required_args   = list(),
     optional_args   = list(
-      stack = list(
+      facet = list(
         default = NULL,
-        desc    = "Character. Column name that assigns rows to stack groups.",
+        desc    = "Character. Column name that assigns rows to facet groups.",
         mode_only = NULL # both modes require this argument
       ),
       stacking = list(

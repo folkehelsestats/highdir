@@ -34,7 +34,7 @@ opts_ol <- hd_opts(
 # ══════════════════════════════════════════════════════════════════════════════
 
 test_that("HC stacked_column returns highchart", {
-  fig <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   expect_true(is_highchart(fig))
 })
 
@@ -53,7 +53,7 @@ test_that("GG stacked_column returns ggplot", {
 test_that("HC errors when group column absent from hd_spec", {
   spec_no_grp <- hd_spec(olympics, x = "Medal", y = "Count")
   expect_error(
-    hd_make(spec_no_grp, "stacked_column", opts_ol, stack = "Continent"),
+    hd_make(spec_no_grp, "stacked_column", opts_ol, facet = "Continent"),
     "group column"
   )
 })
@@ -62,7 +62,7 @@ test_that("GG errors when group column absent from hd_spec", {
   spec_no_grp <- hd_spec(olympics, x = "Medal", y = "Count")
   expect_error(
     hd_make(spec_no_grp, "stacked_column", opts_ol,
-            stack = "Continent", mode = "static"),
+            facet = "Continent", mode = "static"),
     "group column"
   )
 })
@@ -73,35 +73,35 @@ test_that("GG errors when group column absent from hd_spec", {
 # ══════════════════════════════════════════════════════════════════════════════
 
 test_that("HC: number of series equals unique (Country x Continent) combos", {
-  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   series <- fig$x$hc_opts$series
   # 4 countries x 1 continent each = 4 series
   expect_equal(length(series), 4L)
 })
 
 test_that("HC: every series has a non-empty name", {
-  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   series <- fig$x$hc_opts$series
   names  <- vapply(series, `[[`, character(1), "name")
   expect_true(all(nzchar(names)))
 })
 
 test_that("HC: series names match Country values", {
-  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   series <- fig$x$hc_opts$series
   s_names <- vapply(series, `[[`, character(1), "name")
   expect_true(all(s_names %in% unique(olympics$Country)))
 })
 
 test_that("HC: stack field matches Continent values", {
-  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   series <- fig$x$hc_opts$series
   stacks <- vapply(series, `[[`, character(1), "stack")
   expect_true(all(stacks %in% unique(olympics$Continent)))
 })
 
 test_that("HC: Norway series has correct data values", {
-  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   series <- fig$x$hc_opts$series
   norway <- Filter(function(s) s$name == "Norway", series)[[1]]
   # Gold=148, Silver=133, Bronze=124 — order follows unique(Medal) in data
@@ -109,14 +109,14 @@ test_that("HC: Norway series has correct data values", {
 })
 
 test_that("HC: each series has a color field", {
-  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   series <- fig$x$hc_opts$series
   colors <- vapply(series, function(s) !is.null(s$color), logical(1))
   expect_true(all(colors))
 })
 
 test_that("HC: stacking mode defaults to 'normal'", {
-  fig <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   stacking <- fig$x$hc_opts$plotOptions$column$stacking
   expect_equal(stacking, "normal")
 })
@@ -134,7 +134,7 @@ test_that("HC: legend deduplication — duplicate names have showInLegend FALSE"
   # but if they did, duplicates should be hidden.
   # Here we test the general contract: first occurrence is TRUE.
   spec_ts <- hd_spec(twostack_df, x = "x", y = "y", group = "grp")
-  fig     <- hd_make(spec_ts, "stacked_column", opts_ol, stack = "stack")
+  fig     <- hd_make(spec_ts, "stacked_column", opts_ol, facet = "stack")
   series  <- fig$x$hc_opts$series
 
   show_flags <- vapply(series, function(s) isTRUE(s$showInLegend), logical(1))
@@ -153,11 +153,11 @@ test_that("HC: same series name gets same colour in different stacks", {
     x     = rep(c("A", "B"), times = 4),
     y     = c(10, 20, 30, 40, 15, 25, 35, 45),
     grp   = rep(c("Shared", "Only1", "Shared", "Only2"), each = 2),
-    stack = rep(c("S1", "S1", "S2", "S2"), each = 2),
+    facet = rep(c("S1", "S1", "S2", "S2"), each = 2),
     stringsAsFactors = FALSE
   )
   spec_sh <- hd_spec(shared_df, x = "x", y = "y", group = "grp")
-  fig     <- hd_make(spec_sh, "stacked_column", opts_ol, stack = "stack")
+  fig     <- hd_make(spec_sh, "stacked_column", opts_ol, facet = "facet")
   series  <- fig$x$hc_opts$series
 
   shared_series <- Filter(function(s) s$name == "Shared", series)
@@ -172,7 +172,7 @@ test_that("HC: same series name gets same colour in different stacks", {
 # ══════════════════════════════════════════════════════════════════════════════
 
 test_that("HC: series data length equals number of x categories", {
-  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_ol, facet = "Continent")
   series <- fig$x$hc_opts$series
   n_cats <- length(unique(olympics$Medal))   # 3
   lengths <- vapply(series, function(s) length(s$data), integer(1))
@@ -184,7 +184,7 @@ test_that("HC: missing x category is filled with NA in series data", {
   partial_df <- olympics[olympics$Country != "Norway" |
                               olympics$Medal   != "Bronze", ]
   spec_p  <- hd_spec(partial_df, x = "Medal", y = "Count", group = "Country")
-  fig     <- hd_make(spec_p, "stacked_column", opts_ol, stack = "Continent")
+  fig     <- hd_make(spec_p, "stacked_column", opts_ol, facet = "Continent")
   series  <- fig$x$hc_opts$series
 
   norway <- Filter(function(s) s$name == "Norway", series)[[1]]
@@ -200,7 +200,7 @@ test_that("HC: missing x category is filled with NA in series data", {
 
 test_that("GG: figure has at least one geom_bar layer", {
   fig    <- hd_make(spec_ol, "stacked_column", opts_ol,
-                   stack = "Continent", mode = "static")
+                   facet = "Continent", mode = "static")
   layer_classes <- vapply(fig$layers,
                           function(l) class(l$geom)[1],
                           character(1))
@@ -209,13 +209,13 @@ test_that("GG: figure has at least one geom_bar layer", {
 
 test_that("GG: figure uses facet_wrap (one panel per stack)", {
   fig <- hd_make(spec_ol, "stacked_column", opts_ol,
-                 stack = "Continent", mode = "static")
+                 facet = "Continent", mode = "static")
   expect_true(inherits(fig$facet, "FacetWrap"))
 })
 
 test_that("GG: facet variable is the stack column", {
   fig  <- hd_make(spec_ol, "stacked_column", opts_ol,
-                  stack = "Continent", mode = "static")
+                  facet = "Continent", mode = "static")
   # FacetWrap stores facet vars in $params$facets
   facet_vars <- names(fig$facet$params$facets)
   expect_true("Continent" %in% facet_vars)
@@ -223,7 +223,7 @@ test_that("GG: facet variable is the stack column", {
 
 test_that("GG: rendered data contains all four countries", {
   fig   <- hd_make(spec_ol, "stacked_column", opts_ol,
-                   stack = "Continent", mode = "static")
+                   facet = "Continent", mode = "static")
   built <- ggplot2::ggplot_build(fig)
   # Group levels are encoded as integers; check via the fill aesthetic
   # or via the raw data passed to the layer
@@ -247,14 +247,14 @@ test_that("GG: stacking = 'percent' does not error", {
 
 test_that("HC: title from opts is set on chart", {
   opts_t <- hd_opts(title = "My stacked chart", ylab = "Count")
-  fig    <- hd_make(spec_ol, "stacked_column", opts_t, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_t, facet = "Continent")
   expect_equal(fig$x$hc_opts$title$text, "My stacked chart")
 })
 
 test_that("HC: custom colors are applied to series", {
   pal  <- c("#FF0000", "#00FF00", "#0000FF", "#FFFF00")
   opts_c <- hd_opts(title = "t", colors = pal)
-  fig    <- hd_make(spec_ol, "stacked_column", opts_c, stack = "Continent")
+  fig    <- hd_make(spec_ol, "stacked_column", opts_c, facet = "Continent")
   series <- fig$x$hc_opts$series
   s_colors <- vapply(series, `[[`, character(1), "color")
   expect_true(any(s_colors %in% pal))
