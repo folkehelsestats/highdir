@@ -152,7 +152,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
     p <- p + ggplot2::theme(axis.title.y = ggplot2::element_blank())
   if (is.null(opts$xlab))
     p <- p + ggplot2::theme(axis.title.x = ggplot2::element_blank())
-
+  
   # Accessibility alt text - set via labs(alt = ...) (ggplot2 >= 3.3.0).
   # Rendered as an HTML alt attribute when the plot is included in
   # R Markdown / Quarto documents.  NULL leaves alt text unset.

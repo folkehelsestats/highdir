@@ -2,8 +2,9 @@
 gg_stacked_column <- function(spec, opts, geom_params) {
   # optional args ----------------------------------------------------------------
   facet_col <- geom_params$stack
-  grp_col   <- spec$group
-  stacking  <- geom_params$stacking %||% "normal"
+  grp_col <- spec$group
+  stacking <- geom_params$stacking %||% "normal"
+#   reverse <- opts$flip
 
   #   stacking <- geom_params$stacking
   #   if (stacking == "percent") {
@@ -17,11 +18,17 @@ gg_stacked_column <- function(spec, opts, geom_params) {
     stop("stacked_column requires a group column in hd_spec().", call. = FALSE)
   }
 
-  position <- switch(stacking,
-    "normal"  = "stack",
-    "percent" = "fill",
-    stop("stacking must be 'normal' or 'percent'")
-  )
+#   position <- switch(stacking,
+#     "normal" = ggplot2::position_stack(reverse = reverse),
+#     "percent" = ggplot2::position_fill(reverse = reverse),
+#     stop("stacking must be 'normal' or 'percent'")
+#   )
+
+    position <- switch(stacking,
+      "normal"  = "stack",
+      "percent" = "fill",
+      stop("stacking must be 'normal' or 'percent'")
+    )
 
   list(
     ggplot2::geom_col(
@@ -44,7 +51,6 @@ gg_stacked_column <- function(spec, opts, geom_params) {
     }
   )
 }
-
 #' @keywords internal
 hc_stacked_column <- function(chart, spec, opts, geom_params,
                               use_js = TRUE, ...) {
