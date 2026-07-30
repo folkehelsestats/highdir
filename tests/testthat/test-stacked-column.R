@@ -50,20 +50,6 @@ test_that("GG stacked_column returns ggplot", {
 # 2.  Required-arg validation
 # ══════════════════════════════════════════════════════════════════════════════
 
-test_that("HC errors when stack arg is missing", {
-  expect_error(
-    hd_make(spec_ol, "stacked_column", opts_ol),
-    "Missing required"
-  )
-})
-
-test_that("GG errors when stack arg is missing", {
-  expect_error(
-    hd_make(spec_ol, "stacked_column", opts_ol, mode = "static"),
-    "Missing required"
-  )
-})
-
 test_that("HC errors when group column absent from hd_spec", {
   spec_no_grp <- hd_spec(olympics, x = "Medal", y = "Count")
   expect_error(
@@ -218,7 +204,7 @@ test_that("GG: figure has at least one geom_bar layer", {
   layer_classes <- vapply(fig$layers,
                           function(l) class(l$geom)[1],
                           character(1))
-  expect_true(any(layer_classes == "GeomBar"))
+  expect_true(any(layer_classes == "GeomCol"))
 })
 
 test_that("GG: figure uses facet_wrap (one panel per stack)", {

@@ -4,16 +4,17 @@
 \alias{hd_geom_stacked_column}
 \title{Stacked Column Geometry Layer}
 \usage{
-hd_geom_stacked_column(stack, stacking = c("normal", "percent"), ...)
+hd_geom_stacked_column(stack = NULL, stacking = c("normal", "percent"), ...)
 }
 \arguments{
-\item{stack}{Character. Column name for the stack variable.  Each unique value
-in this column creates a separate stack (facet) containing all series with that
-stack value.  Required.}
+\item{stack}{Character. Column name for the stack variable. Each unique value
+in this column creates a separate stack (facet) containing all series with
+that stack value.}
 
-\item{stacking}{Character. Stacking mode for the column geometry.  One of
-\code{"normal"} (default) or \code{"percent"}.  See Highcharts documentation for
-details: https://api.highcharts.com/highcharts/plotOptions.column.stacking}
+\item{stacking}{Character. Stacking mode for the column geometry. One of
+\code{"normal"} (default) or \code{"percent"}. For ggplot2, is equivalent to
+\code{position = "fill"}, else see Highcharts documentation for details:
+https://api.highcharts.com/highcharts/plotOptions.column.stacking}
 
 \item{...}{Additional optional arguments forwarded to the geom function
 (e.g. \code{show_line = FALSE}, \code{single_colour = "#025169"}).
@@ -25,7 +26,7 @@ An S3 object of class \code{"hd_geom"} for use with \code{+.hd}.
 \description{
 Create a stacked column geometry layer for \code{hd} objects.  Each stack is a facet
 (sub-panel) containing one or more series.  The \code{stack} argument specifies
-the column in the data that defines the stacks.  The \code{group} aesthetic in
+the column in the data that defines the stacks if exists.  The \code{group} aesthetic in
 \code{hd_spec()} defines the series within each stack.  The \code{stacking}
 argument controls how the stacks are rendered: \code{"normal"} (default) stacks values
 on top of each other, while \code{"percent"} stacks values as percentages of the total
@@ -54,11 +55,13 @@ opts_st <- hd_opts(
     ylab     = "Count medals"
 )
 
+hd_make(spec_st, "stacked_column", opts_st)
+
 # Interactive - stacks are separated by continent
 hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
 
 # Static ggplot2 - stacks are separated by continent
-hd(spec_st, backend = "static") +
+hd(spec_st, mode = "static") +
   hd_geom_stacked_column(stack = "Continent") +
   hd_opts(title = "Olympic Games all-time medal table, grouped by continent", ylab = "Count medals")
 

@@ -152,14 +152,13 @@
     ggplot_fun      = NULL,
     highcharter_fun = NULL,
     skip_base_fig   = FALSE, 
-    required_args   = list(
+    required_args   = list(),
+    optional_args   = list(
       stack = list(
         default = NULL,
         desc    = "Character. Column name that assigns rows to stack groups.",
         mode_only = NULL # both modes require this argument
-      )
-    ),
-    optional_args   = list(
+      ),
       stacking = list(
         default = "normal",
         desc    = "Character. Highcharter stacking mode: 'normal' or 'percent'.",

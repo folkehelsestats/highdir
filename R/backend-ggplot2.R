@@ -134,7 +134,7 @@ ggplot_engine <- function(spec, geom, opts, geom_params,
       p <- p + ggplot2::coord_cartesian(ylim = opts$ylim)
   }
   
-
+  
   # -- Theme (per-figure opts$gg_theme > session default) --------------------
   # Applied last so it sits on top of every layer -- same position as
   # hd_theme() in highcharter_engine().  Font is already merged into gt$theme
