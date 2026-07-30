@@ -209,33 +209,36 @@ check_decimals <- function(spec, opts, type, extra_args){
 
 
 # Validate that the geometry-specific arguments in hd_geom are compatible with
-# the current backend. If any arguments are marked as backend-specific and the
-# current backend doesn't match, issue a warning. This function is called
-# immediately after adding a geom layer to an hd object, so that users get early
-# feedback if they accidentally use a ggplot2-only argument while the backend is
-# set to highcharter (or vice versa). The function looks up the geom type in the
-# registry to find all its arguments, checks if any are marked as
-# backend-specific, and if so, compares the current backend with the required
-# one. If there's a mismatch and the user supplied a non-default value for that
-# argument, it issues a warning that the argument will be ignored. This
-# validation helps prevent silent failures where a user might set an argument
-# that only applies to ggplot2 while using the highcharter backend, and then
-# wonder why it has no effect. By warning them immediately, they can correct
-# their code before proceeding further. The function does not stop execution; it
-# only issues warnings for incompatible arguments. The actual rendering
-# functions for each backend should also be designed to ignore any arguments
-# that don't apply to them, so this validation is an additional user-friendly
-# check rather than a strict enforcement mechanism. The function assumes that
-# the geom registry entries have a structure where each argument's metadata
-# includes a `mode_only` field that specifies if the argument is exclusive to
-# a particular backend. It also assumes that the `hd_geom` object has a `type`
-# field that identifies the geom type, and a `params` list that contains the
-# user-supplied values for the geom arguments.
+# the current mode. If any arguments are marked as mode-specific and the current
+# mode doesn't match, issue a warning. This function is called immediately after
+# adding a geom layer to an hd object, so that users get early feedback if they
+# accidentally use a static-only argument while the mode is set to dynamic (or
+# vice versa). The function looks up the geom type in the registry to find all
+# its arguments, checks if any are marked as mode-specific, and if so, compares
+# the current mode with the required one. If there's a mismatch and the user
+# supplied a non-default value for that argument, it issues a warning that the
+# argument will be ignored. This validation helps prevent silent failures where
+# a user might set an argument that only applies to static mode while using the
+# dynamic mode, and then wonder why it has no effect. By warning them
+# immediately, they can correct their code before proceeding further. The
+# function does not stop execution; it only issues warnings for incompatible
+# arguments. The actual rendering functions for each mode should also be
+# designed to ignore any arguments that don't apply to them, so this validation
+# is an additional user-friendly check rather than a strict enforcement
+# mechanism. The function assumes that the geom registry entries have a
+# structure where each argument's metadata includes a `mode_only` field that
+# specifies if the argument is exclusive to a particular mode. It also assumes
+# that the `hd_geom` object has a `type` field that identifies the geom type,
+# and a `params` list that contains the user-supplied values for the geom
+# arguments. This is based on data in additional-args.R, which defines the
+# argument metadata for each geom type. The function uses the `%||%` operator to
+# handle cases where required or optional arguments might be NULL, ensuring that
+# it always has a complete list of arguments to check.
 # 
 #' @keywords internal
 .validate_geom_backend <- function(hd_obj) {
   geom   <- hd_obj$geom
-  be     <- hd_obj$backend
+  be     <- hd_obj$mode
   params <- geom$params
   type   <- geom$type
 
@@ -247,10 +250,10 @@ check_decimals <- function(spec, opts, type, extra_args){
     reg$required_args %||% list(),
     reg$optional_args %||% list()
   )
-
+  
   for (arg_name in names(all_args)) {
     arg_meta     <- all_args[[arg_name]]
-    mode_only <- arg_meta$mode_only     # NULL if not set
+    mode_only    <- arg_meta$mode_only     # NULL if not set
     user_value   <- params[[arg_name]]
     def          <- arg_meta$default
 
@@ -267,8 +270,8 @@ check_decimals <- function(spec, opts, type, extra_args){
 
       warning(
         "`", arg_name, " = \"", user_value, "\"` is only supported by the ",
-        mode_only, " backend and will be ignored.\n",
-        "Current backend is '", be, "'.",
+        mode_only, " mode and will be ignored.\n",
+        "Current mode is '", be, "'.",
         call. = FALSE
       )
     }
