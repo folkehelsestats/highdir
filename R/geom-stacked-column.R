@@ -150,6 +150,7 @@ hc_stacked_column <- function(chart, spec, opts, geom_params,
 #' @param facet Character. Column name for the facet variable. Each unique value
 #'   in this column creates a separate facet (stack) containing all series with
 #'   that faceted value.
+#' @param stack Deprecated argument replaced by `facet`.
 #' @param stacking Character. Stacking mode for the column geometry. One of
 #'   `"normal"` (default) or `"percent"`. For ggplot2, is equivalent to
 #'   `position = "fill"`, else see Highcharts documentation for details:
