@@ -163,7 +163,7 @@
       stacking = list(
         default = "normal",
         desc    = "Character. Highcharter stacking mode: 'normal' or 'percent'.",
-        mode_only = "dynamic"
+        mode_only = NULL 
       )
     )
   ),

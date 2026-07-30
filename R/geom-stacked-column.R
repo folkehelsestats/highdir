@@ -1,11 +1,11 @@
 #' @keywords internal
 gg_stacked_column <- function(spec, opts, geom_params) {
-
   # required args --------------------------------------------------------------
   stack_col <- geom_params$stack
 
   # optional args ----------------------------------------------------------------
-  grp_col   <- spec$group
+  grp_col <- spec$group
+  stacking <- geom_params$stacking %||% "normal"
 
   #   stacking <- geom_params$stacking
   #   if (stacking == "percent") {
@@ -15,13 +15,20 @@ gg_stacked_column <- function(spec, opts, geom_params) {
   #     stacking <- "normal"
   #   }
 
-  if (is.null(grp_col))
+  if (is.null(grp_col)) {
     stop("stacked_column requires a group column in hd_spec().", call. = FALSE)
+  }
+
+  position <- switch(stacking,
+    "normal"  = "stack",
+    "percent" = "fill",
+    stop("stacking must be 'normal' or 'percent'")
+  )
 
   list(
     ggplot2::geom_bar(
       stat     = "identity",
-      position = "stack",
+      position = position,
       width    = 0.7
     ),
     ggplot2::facet_wrap(
@@ -34,7 +41,6 @@ gg_stacked_column <- function(spec, opts, geom_params) {
     ggplot2::theme(axis.text.x = ggplot2::element_blank())
   )
 }
-
 #' @keywords internal
 hc_stacked_column <- function(chart, spec, opts, geom_params,
                               use_js = TRUE, ...) {
