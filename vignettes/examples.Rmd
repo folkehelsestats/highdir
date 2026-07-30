@@ -515,15 +515,13 @@ Stacked column charts display multiple series grouped into named stacks.
 Each stack is a separate pile of bars; series that share the same stack
 accumulate on top of each other.
 
-The data must be in **long format** with one row per `(x, group, stack)`
+The data must be in **long format** with one row per `(x, group, facet)`
 combination:
 
 - `x` — the category axis (e.g. medal type)
 - `y` — the numeric value
 - `group` — the series label shown in the legend (e.g. country)
-- `stack` — the column that assigns rows to a stack group (e.g. continent)
-
-`stack` is a **required argument** passed via `...` in `hd_make()`.
+- `facet` — the column that assigns rows to a stack group (e.g. continent)
 
 ```{r stacked-data}
 #| eval: TRUE
@@ -556,15 +554,23 @@ opts_st <- hd_opts(
   ylab     = "Count medals"
 )
 
-# Interactive — stacks are separated by continent
-hd_make(spec_st, "stacked_column", opts_st, stack = "Continent")
+# Interactive — stacked column
+hd_make(spec_st, "stacked_column", opts_st)
 
 ```
+
+```{r facet-stack}
+
+# Interactive — stacks are separated by continent
+hd_make(spec_st, "stacked_column", opts_st, facet = "Continent")
+
+```
+
 
 ```{r stacked-basic}
 # Static ggplot2 — continents become facet panels
 hd_make(spec_st, "stacked_column", opts_st,
-        stack   = "Continent",
+        facet   = "Continent",
         mode = "static")
 ```
 
@@ -577,14 +583,14 @@ stack to 100 % so you can compare compositions across stacks:
 
 # 100% stacked — shows share within each continent, not absolute counts
 hd_make(spec_st, "stacked_column", opts_st,
-        stack    = "Continent",
+        facet    = "Continent",
         stacking = "percent")
 ```
 
 ```{r stacked-percent-gg}
 ## Static
 hd_make(spec_st, "stacked_column", opts_st,
-        stack    = "Continent",
+        facet    = "Continent",
         stacking = "percent",
         backend  = "static")
 ```
@@ -602,9 +608,9 @@ opts_no <- hd_opts(
   colors   = c("#025169", "#7C145C", "#C68803", "#047FA4")
 )
 
-hd_make(spec_st, "stacked_column", opts_no, stack = "Continent")
+hd_make(spec_st, "stacked_column", opts_no, facet = "Continent")
 hd_make(spec_st, "stacked_column", opts_no,
-        stack   = "Continent",
+        facet   = "Continent",
         mode = "static")
 ```
 
