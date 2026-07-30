@@ -13,6 +13,9 @@ hd(mode = "static")
 
 `dynamic` replaces the previous `highcharter` backend and `static` replaces the previous `ggplot2` backend.
 
+- Renamed the `stack` argument to `facet` in `hd_geom_stacked_column()` to avoid ambiguity with R's partial matching behavior (#27).
+
+
 ## Breaking changes
 - Introduced a new mode argument with values "dynamic" and "static" to replace backend-specific values.
 - The `backend` argument in `hd_make()` and `hd()` functions is now deprecated
@@ -26,6 +29,8 @@ hd(backend = "highcharter")
 hd(backend = "ggplot2")
 ```
 continues to work but produces a deprecation warning.
+
+- The `stack` argument in `hd_geom_stacked_column()` has been renamed to `facet`. Update existing code to use `facet` instead of `stack`.
 
 
 # highdir 0.5.0
