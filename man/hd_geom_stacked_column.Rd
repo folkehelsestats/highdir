@@ -4,12 +4,19 @@
 \alias{hd_geom_stacked_column}
 \title{Stacked Column Geometry Layer}
 \usage{
-hd_geom_stacked_column(facet = NULL, stacking = c("normal", "percent"), ...)
+hd_geom_stacked_column(
+  facet = NULL,
+  stack = lifecycle::deprecated(),
+  stacking = c("normal", "percent"),
+  ...
+)
 }
 \arguments{
 \item{facet}{Character. Column name for the facet variable. Each unique value
 in this column creates a separate facet (stack) containing all series with
 that faceted value.}
+
+\item{stack}{Deprecated argument replaced by \code{facet}.}
 
 \item{stacking}{Character. Stacking mode for the column geometry. One of
 \code{"normal"} (default) or \code{"percent"}. For ggplot2, is equivalent to
