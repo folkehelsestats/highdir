@@ -107,24 +107,22 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   # Bars
   if (use_vs) {
     layers <- c(layers, list(
-      ggplot2::geom_bar(
+      ggplot2::geom_col(
         data     = d,
         mapping  = ggplot2::aes(x = .data[[".xname"]],
                                 y = .data[[y_col]],
                                 fill = .data[[".is_vs"]]),
         width    = wdth,
-        stat     = "identity",
         position = pos
       )
     ))
   } else {
     layers <- c(layers, list(
-      ggplot2::geom_bar(
+      ggplot2::geom_col(
         data    = d,
         mapping = ggplot2::aes(x = .data[[".xname"]],
                                y = .data[[y_col]]),
         width   = wdth,
-        stat    = "identity",
         fill    = col1,
         position = pos
       )
@@ -420,7 +418,7 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
 #' hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo", aim = 63)
 #'
 #' # Layered API ----
-#' hd(regions, x = "region", y = "rate", n = "n", backend = "static") +
+#' hd(regions, x = "region", y = "rate", n = "n", mode = "static") +
 #'  hd_geom_ranked_bar(
 #'   ascending  = TRUE,
 #'   vs         = "Oslo",

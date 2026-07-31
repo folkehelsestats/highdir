@@ -71,7 +71,7 @@ opts_rb <- hd_opts(
 hd_make(spec_rb, "ranked_bar", opts_rb, vs = "Oslo", aim = 63)
 
 # Layered API ----
-hd(regions, x = "region", y = "rate", n = "n", backend = "static") +
+hd(regions, x = "region", y = "rate", n = "n", mode = "static") +
  hd_geom_ranked_bar(
   ascending  = TRUE,
   vs         = "Oslo",

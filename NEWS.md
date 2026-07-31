@@ -14,7 +14,10 @@ hd(mode = "static")
 `dynamic` replaces the previous `highcharter` backend and `static` replaces the previous `ggplot2` backend.
 
 - Renamed the `stack` argument to `facet` in `hd_geom_stacked_column()` to avoid ambiguity with R's partial matching behavior (#27).
-
+- Improved the static implementation of `hd_geom_ranked_bar()` by switching from
+  `ggplot2::geom_bar(stat = "identity")` to `ggplot2::geom_col()`. This does not
+  change the visual output but clarifies that ranked bars are drawn from
+  pre-computed values.
 
 ## Breaking changes
 - Introduced a new mode argument with values "dynamic" and "static" to replace backend-specific values.
