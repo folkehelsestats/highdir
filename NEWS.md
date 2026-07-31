@@ -50,7 +50,7 @@ continues to work but produces a deprecation warning.
 - Implement flip support for bar and ranked‑bar charts in the Shiny app (#12).
 - Include standard ggplot2 themes.
 - Implement bar figure with no space below the bars but 10% above them in ggplot2 engine.
-- Deploy to shinyapps.io <https://bit.ly/highdir> 
+- Deploy to shinyapps.io <https://ybkamaleri.shinyapps.io/highdir/> 
 - `DESCRIPTION` version bumped to 0.3.1.
 - Added option to deactivate CDN-loaded modules available from <https://api.highcharts.com/highcharts/>. (#2)
 - Fixed Shiny app GUI issues related to downloading and axis labels.
