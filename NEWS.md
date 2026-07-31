@@ -1,4 +1,7 @@
-# highdir 0.6.0 (dev)
+# highdir 0.6.1
+- The version in Github.
+
+# highdir 0.6.0
 
 - Add `hd_reset_theme()` function (#21)
 - Add venn diagram with `gg_venn` or `hc_venn` backends.
