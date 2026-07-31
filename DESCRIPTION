@@ -1,6 +1,6 @@
 Package: highdir
-Title: Backend-Agnostic Figure Builder for 'highcharter' and 'ggplot2'
-Version: 0.6.0
+Title: Unified Data Visualization Framework for Dynamic and Static Graphics
+Version: 0.6.1
 Authors@R:
   person(
     given = "Yusman",
@@ -9,13 +9,15 @@ Authors@R:
     role = c("aut", "cre"),
     comment = c(ORCID = "0000-0001-5014-3665")
   )
-Description: Provides a backend-agnostic 'API' for creating data visualizations
-    using 'highcharter' (interactive) or 'ggplot2' (static). Figures are
-    defined once via a specification object and can be rendered to either
-    backend without modifying the calling code. Supports both declarative
-    and layered workflows, flexible theming and colour palettes, optional
-    'JavaScript' enhancements, and tools for exporting figures and interactive
-    exploration via a 'shiny' app.
+Description:
+  Provides a unified API for creating data visualizations across
+  dynamic and static rendering backends. Visualizations are defined
+  once using a specification object and can be rendered with
+  highcharter, ggplot2, or other supported backends without modifying
+  user code. The package supports declarative and layered workflows,
+  reusable themes and colour palettes, optional JavaScript
+  enhancements, export tools, and interactive exploration through
+  Shiny applications.
 URL: https://folkehelsestats.github.io/highdir/, https://github.com/folkehelsestats/highdir
 BugReports: https://github.com/folkehelsestats/highdir/issues
 License: MIT + file LICENSE
