@@ -71,7 +71,7 @@ hd_app()
 ```
 
 The app is also available directly through ShinyApps.io at:
-<https://bit.ly/highdir>
+<https://ybkamaleri.shinyapps.io/highdir/>
 
 ------------------------------------------------------------------------
 
