@@ -1,6 +1,6 @@
 Package: highdir
 Title: Unified Data Visualization Framework for Dynamic and Static Graphics
-Version: 0.6.1
+Version: 0.6.0
 Authors@R:
   person(
     given = "Yusman",
@@ -11,13 +11,13 @@ Authors@R:
   )
 Description:
   Provides a unified API for creating data visualizations across
-  dynamic and static rendering backends. Visualizations are defined
+  dynamic and static rendering modes. Visualizations are defined
   once using a specification object and can be rendered with
-  highcharter, ggplot2, or other supported backends without modifying
+  'highcharter', 'ggplot2', or other supported packages without modifying
   user code. The package supports declarative and layered workflows,
-  reusable themes and colour palettes, optional JavaScript
+  reusable themes and colour palettes, optional 'JavaScript'
   enhancements, export tools, and interactive exploration through
-  Shiny applications.
+  'shiny' applications.
 URL: https://folkehelsestats.github.io/highdir/, https://github.com/folkehelsestats/highdir
 BugReports: https://github.com/folkehelsestats/highdir/issues
 License: MIT + file LICENSE
