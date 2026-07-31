@@ -44,7 +44,7 @@ hd_make(spec_ar1, "arearange", opts_ar,
 
 # Static ggplot2 version
 hd_make(spec_ar1, "arearange", opts_ar,
-       ymin = "lower_enhet", ymax = "upper_enhet", backend = "static")
+       ymin = "lower_enhet", ymax = "upper_enhet", mode = "static")
 
 #' # Multi-series with group column
 # Grouped by kjonn
