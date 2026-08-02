@@ -18,12 +18,26 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
 
   # -- Extract params ----------------------------------------------------------
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  vs         <- geom_params$vs               %||% NULL   # character or NULL: vsarison group name
-  aim        <- geom_params$aim              %||% NULL   # numeric or NULL: target line
+  vs         <- geom_params$vs               %||% NULL   # character or NULL: comparison group name
   char_scale <- geom_params$char_scale       %||% 0.045
   min_frac   <- geom_params$min_frac         %||% 0.08
-  sc         <- geom_params$single_colour  # verdien settes i engine
-  
+  sc         <- geom_params$single_colour  # set by engine
+
+  # aim: numeric or NULL — target/reference line drawn across all bars.
+  # Shiny textInput() always returns a character string, so coerce explicitly.
+  # suppressWarnings: if the user typed a non-numeric string we want NULL, not NA.
+  aim <- geom_params$aim %||% NULL
+  if (!is.null(aim)) {
+    aim <- suppressWarnings(as.numeric(aim))
+    if (is.na(aim)) aim <- NULL   # invalid input → silently ignore
+  }
+
+  # Same coercion for char_scale and min_frac — both must be numeric.
+  char_scale <- suppressWarnings(as.numeric(char_scale)) %||% 0.045
+  if (is.na(char_scale) || is.null(char_scale)) char_scale <- 0.045
+  min_frac   <- suppressWarnings(as.numeric(min_frac))   %||% 0.08
+  if (is.na(min_frac)   || is.null(min_frac))   min_frac   <- 0.08
+
   # -- Resolve colours ---------------------------------------------------------
   # col1: default bar colour (single series or non-highlighted bars)
   # col2: highlighted comparison bar colour
@@ -81,7 +95,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
     bar_fill_aes <- NULL
     fill_scale   <- NULL
   }
-  
+
   # -- Split data for inside / outside labels ----------------------------------
   inside  <- d[d$ypos == 1L, , drop = FALSE]
   outside <- d[d$ypos == 0L, , drop = FALSE]
@@ -187,7 +201,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
       expand = ggplot2::expansion(mult = c(0, 0.12))
     )
   ))
- 
+
   # Coord - ONE object handles both flip and ylim zoom.
   #
   # ggplot2 allows only one coord per plot.  Adding coord_cartesian() and
@@ -204,7 +218,7 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   #   flip=FALSE + no ylim   -> NULL (ggplot2 uses default CartesianCoord)
   do_flip  <- isTRUE(opts$flip %||% TRUE)
   has_ylim <- !is.null(opts$ylim)
- 
+
   coord_layer <- if (do_flip) {
     ggplot2::coord_flip(ylim = opts$ylim)      # ylim=NULL is safe here
   } else if (has_ylim) {
@@ -212,10 +226,10 @@ gg_ranked_bar <- function(spec, opts, geom_params) {
   } else {
     NULL
   }
- 
+
   if (!is.null(coord_layer))
     layers <- c(layers, list(coord_layer))
- 
+
   # Axis labels - opts$xlab / opts$ylab used directly (NULL -> element_blank
   # applied by the engine after theme is set).
   layers <- c(layers, list(
@@ -236,8 +250,14 @@ hc_ranked_bar <- function(chart, spec, opts, geom_params,
                           use_js = TRUE, ...) {
 
   ascending  <- isTRUE(geom_params$ascending %||% TRUE)
-  vs         <- geom_params$vs               %||% NULL   # character or NULL: vsarison group name
-  aim        <- geom_params$aim              %||% NULL   # numeric or NULL: target line
+  vs         <- geom_params$vs               %||% NULL   # character or NULL: comparison group name
+
+  # aim: coerce to numeric — Shiny textInput returns character strings.
+  aim <- geom_params$aim %||% NULL
+  if (!is.null(aim)) {
+    aim <- suppressWarnings(as.numeric(aim))
+    if (is.na(aim)) aim <- NULL
+  }
 
   d     <- spec$data
   x_col <- spec$x
