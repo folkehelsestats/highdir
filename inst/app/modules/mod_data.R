@@ -25,20 +25,39 @@
 
 # -- UI ------------------------------------------------------------------------
 
+#' Upload section only (hd-label "Data" + fileInput)
+#'
+#' Deliberately excludes the Spec toggle and panel so ui.R can insert the
+#' "Figure" label between the file upload and the variable-mapping collapsible.
+#' Pair with [mod_data_spec_ui()] which renders the toggle + panel.
+#'
 #' @keywords internal
 mod_data_ui <- function(id) {
   ns <- shiny::NS(id)
 
   shiny::tagList(
-
     shiny::div(class = "hd-label", "Data"),
     shiny::fileInput(
       ns("file"), NULL,
       accept      = c(".csv", ".xlsx", ".xls", ".rds", ".sav", ".dta", ".json"),
       placeholder = "CSV / XLSX / RDS \u2026",
       buttonLabel = shiny::icon("folder-open")
-    ),
+    )
+  )
+}
 
+#' Spec toggle + variable-mapping panel
+#'
+#' The collapsible "Spec — variable mapping" section, separated from the file
+#' upload so ui.R can insert the "Figure" label between them.
+#' Must use the SAME module `id` as [mod_data_ui()] so both share the same
+#' namespace and the same server-side `input$` bindings.
+#'
+#' @keywords internal
+mod_data_spec_ui <- function(id) {
+  ns <- shiny::NS(id)
+
+  shiny::tagList(
     shiny::tags$button(
       class         = "hd-toggle",
       `data-target` = paste0("#", ns("panel-spec")),
