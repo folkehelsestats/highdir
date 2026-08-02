@@ -56,8 +56,10 @@ body {
   color: #025169;
   border-bottom: 1px solid #e6ebf0;
   padding-bottom: 3px;
-  margin: 12px 0 7px;
+  margin: 4px 0 7px;
+/*   margin-top: 0;     /\* remove any top gap from previous element *\/ */
 }
+
 .hd-label:first-of-type { margin-top: 0; }
 
 /* ── Collapsible toggle buttons ─────────────────────────────────────────── */
@@ -145,6 +147,21 @@ select.form-control     { height: 28px !important; }
   letter-spacing: 0 !important;
 }
 .btn-file span { font-size: 11px !important; }
+
+/* /\* ── fileInput gap fix ──────────────────────────────────────────────────── *\/ */
+
+/* /\* Shiny renders a hidden progress bar below every fileInput. */
+/*    It has height + margin even when invisible, creating an unwanted gap */
+/*    between the file upload and the next section label.             *\/ */
+/* .shiny-file-input-progress { */
+/*   display: none !important; */
+/* } */
+
+/* /\* Also remove the bottom margin from the form-group that wraps fileInput */
+/*    so the "Figure" label sits flush below it.                      *\/ */
+/* .shiny-input-container:has(input[type="file"]) { */
+/*   margin-bottom: 0 !important; */
+/* } */
 
 /* ── Draw button ────────────────────────────────────────────────────────── */
 #run {
