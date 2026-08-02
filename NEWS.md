@@ -1,5 +1,7 @@
 # highdir 0.6.1
 - The version in Github.
+- Fixed #28: `hd_geom_ranked_bar()` now ensures that `aim` is treated as
+  numeric, avoiding plotting failures caused by character or factor inputs.
 
 # highdir 0.6.0
 

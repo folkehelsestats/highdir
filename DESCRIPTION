@@ -1,6 +1,6 @@
 Package: highdir
 Title: Unified Data Visualization Framework for Dynamic and Static Graphics
-Version: 0.6.0
+Version: 0.6.1
 Authors@R:
   person(
     given = "Yusman",
