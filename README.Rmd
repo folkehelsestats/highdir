@@ -49,7 +49,7 @@ particularly well suited for interactive analysis and rapid prototyping, while
 remaining mode-independent.
 
 By default, **highdir** ships with colour palette, theme, and visual identity of [The Norwegian Directorate of Health](https://www.helsedirektoratet.no) (*Helsedirektoratet*).
-To further enhance usability, a Shiny graphical user interfacef for building and previewing figures is also included as part of the package.
+To further enhance usability, a Shiny graphical user interface for building and previewing figures is also included as part of the package.
 
 ---
 
@@ -84,14 +84,14 @@ The app is also available directly through ShinyApps.io at: [https://ybkamaleri.
 
 | Name             | dynamic mode     | static mode                   | Extra args                            |
 |:-----------------|:-----------------|:------------------------------|:--------------------------------------|
-| `column`         | column           | `geom_col()`                  | —                                     |
+| `column`         | column           | `geom_col()`                  | --                                    |
 | `ranked_bar`     | column           | `geom_col()`                  | `vs`, `aim`, `char_scale`, `min_frac` |
 | `line`           | line / spline    | `geom_line()`                 | `smooth`, `dot_size`, `line_symbols`  |
 | `scatter`        | scatter          | `geom_point()`                | `dot_size`                            |
 | `arearange`      | arearange        | `geom_ribbon()`               | `ymin`, `ymax`                        |
 | `pie`            | pie              | `geom_bar()`, `coord_polar()` | `inner_size`                          |
 | `stacked_column` | column           | `geom_bar()`, `facet_wrap()`  | `stack`, `stacking`                   |
-| `venn`           | venn             |  eulerr::euler()              |                                       | 
+| `venn`           | venn             |  `eulerr::euler()`            |                                       | 
 
 
 ---
