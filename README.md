@@ -10,6 +10,7 @@ coverage](https://codecov.io/gh/folkehelsestats/highdir/graph/badge.svg)](https:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/highdir)](https://CRAN.R-project.org/package=highdir)
+[![Download](https://cranlogs.r-pkg.org/badges/grand-total/highdir)](https://cranlogs.r-pkg.org/badges/grand-total/highdir)
 
 **highdir** is an R package that provides a unified, mode-agnostic API
 for building dynamic or static figures with either
