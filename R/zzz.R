@@ -37,6 +37,16 @@
   # 1 - geom_args()
   # 2 - app output$ui_geom_opts() or geom_intpu_r object in Shiny server
   # --------------------------------------------------------------------------
+
+  # .load_geom_registry() (defined in R/additional-args.R) reads
+  # inst/geom-registry.yaml and returns the same nested list that the old
+  # hardcoded .geom_registry_defs list used to provide.  It is called here
+  # (inside .onLoad) rather than at file-parse time because:
+  #   - system.file() requires the package namespace to be registered first
+  #   - helper functions defined in additional-args.R must exist before use
+  # --------------------------------------------------------------------------
+   .geom_registry_defs <- .load_geom_registry()
+  
   # .geom_registry_defs is defined in R/additional_args.R.
   # The gg_* and hc_* function objects are looked up here by name so that
   # the plain list in additional_args.R does not need to reference them

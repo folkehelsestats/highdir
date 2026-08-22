@@ -1,277 +1,152 @@
+# R/additional-args.R
 #
-# Defines the full contract for every registered geometry:
-#   required_args - columns the user MUST supply (e.g. ymin/ymax for arearange)
-#   optional_args - arguments with sensible defaults (e.g. smooth, dot_size)
+# Reads geom-registry.yaml (inst/geom-registry.yaml) and builds the
+# .geom_registry_defs list that zzz.R uses to register every geometry.
 #
-# HOW THIS FILE IS USED
-#   .onLoad() in zzz.R iterates .geom_registry_defs and calls register_geom()
-#   for each entry.  Because all R/*.R files are loaded into the package
-#   namespace together, .onLoad() can reference .geom_registry_defs directly -
-#   no source(), no file path, no environment tricks needed.
+# WHY YAML INSTEAD OF HARDCODED R?
+# ---------------------------------
+# 1. Single source of truth — adding a new geom or argument means editing
+#    one human-readable YAML file, not R syntax.
+# 2. Language-agnostic — the same YAML can drive documentation generators,
+#    Shiny UI builders, and test fixtures without touching R code.
+# 3. Easier diffing — YAML diffs are cleaner than R list diffs in code review.
+# 4. The object produced is identical to the old hardcoded list, so zzz.R
+#    and register_geom() need no changes at all.
+#
+# HOW IT WORKS
+# ------------
+# .geom_registry_defs() is called once in zzz.R, right before the
+# registration loop.  It reads the YAML, applies post-processing to coerce
+# types that YAML cannot express natively (e.g. integer defaults, NULL
+# empty-list args), and returns the same nested list structure that zzz.R
+# has always expected.
+#
+# YAML file location: inst/geom-registry.yaml
+# Accessed at runtime via system.file() so it works whether the package is
+# installed, loaded with devtools::load_all(), or run from source.
 #
 # ADDING A NEW GEOM
-#   1. Add a new entry to .geom_registry_defs below.
+#   1. Add a new top-level key in inst/geom-registry.yaml.
 #   2. Write gg_<name> and hc_<name> functions in their own R file.
-#   3. That is all - zzz.R needs no changes.
+#   3. That is all — this file and zzz.R need no changes.
+
+# Provides .load_geom_registry() — called once from .onLoad() in zzz.R to
+# read inst/geom-registry.yaml and return the .geom_registry_defs list.
 #
-# RULE OF THUMB: required vs optional
-#   required  - geom cannot render at all without it  (e.g. ymin/ymax)
-#   optional  - geom works fine with a built-in default (e.g. smooth = TRUE)
+# WHY NOT ASSIGN AT PARSE TIME?
+# ------------------------------
+# Assigning .geom_registry_defs directly (with local() or plain <-) during
+# file parsing fails for two reasons:
+#   1. Helper functions defined later in the file do not exist yet.
+#   2. system.file() cannot locate inst/ until the package namespace is
+#      registered — which only happens during .onLoad().
+#
+# The fix: define everything as named functions, call .load_geom_registry()
+# from .onLoad(), and assign the result to .geom_registry_defs there.
+# zzz.R gains one line; everything else stays the same.
 
+
+# =============================================================================
+# Public loader — called by .onLoad() in zzz.R
+# =============================================================================
+
+#' Load and return the geom registry from inst/geom-registry.yaml
+#'
+#' Returns the same nested list structure that zzz.R's registration loop
+#' expects, identical to the old hardcoded `.geom_registry_defs` list.
+#' Called once from `.onLoad()` after the package namespace is ready.
+#'
 #' @keywords internal
-.geom_registry_defs <- list(
+.load_geom_registry <- function() {
 
-  # column ---------------------------------------------------------------------
-  column = list(
-    ggplot_fun      = NULL,   # filled in .onLoad() after namespace is ready
-    highcharter_fun = NULL,
-    skip_base_fig   = FALSE, 
-    required_args   = character(),
-    optional_args   = list()
-    # No optional_args: column has no extra knobs beyond spec / opts
-  ),
-
-  # line -----------------------------------------------------------------------
-  line = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    skip_base_fig   = FALSE, 
-    optional_args   = list(
-      smooth = list(
-        default = TRUE,
-        desc    = "Logical. TRUE = spline curves, FALSE = straight segments. Both backends.",
-        mode_only = NULL # both modes support this argument
-      ),
-      dot_size = list(
-        default = 4L,
-        desc    = "Numeric. Marker radius in pixels. Both backends.",
-        mode_only = NULL # both modes support this argument
-      ),
-      # line_symbols is highcharter-only; gg_line silently ignores it.
-      line_symbols = list(
-        default = NULL,
-        desc    = paste0("Character vector. Highcharter only. Per-group marker shapes: ",
-                         "'circle','square','diamond','triangle','triangle-down'."),
-        mode_only = "dynamic"
-      )
-    )
-  ),
-
-  # scatter --------------------------------------------------------------------
-  scatter = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    skip_base_fig   = FALSE, 
-    optional_args   = list(
-      dot_size = list(
-        default = 4L,
-        desc    = "Numeric. Point size (ggplot2) or marker radius in px (highcharter).",
-        mode_only = NULL # both modes support this argument
-      )
-    )
-  ),
-
-  # arearange ------------------------------------------------------------------
-  arearange = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    skip_base_fig   = FALSE, 
-    required_args   = list(
-      ymin = list(
-        default = NULL,
-        desc    = "Character. Column name for the lower bound of the range."
-      ),
-      ymax = list(
-        default = NULL,
-        desc    = "Character. Column name for the upper bound of the range."
-      )
-    ),
-    optional_args   = list()
-  ),
-
-  # pie ------------------------------------------------------------------------
-  pie = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    skip_base_fig   = TRUE,
-    optional_args   = list(
-      inner_size = list(
-        default = "0%",
-        desc    = "Character. Inner radius as CSS %, e.g. '50%' for a donut",
-        mode_only = "dynamic"
-      ),
-      value_suffix = list(
-        default      = "%",
-        desc         = paste0(
-          "Character. Symbol appended to displayed values. ",
-          "E.g. '%' renders '42%' instead of '42'. ",
-          "Applied in tooltips (dynamic) and region labels (static). ",
-          "Both backends."
-        ),
-        mode_only = NULL
-      )
-    )
-  ),
-
-  # ranked_bar -----------------------------------------------------------------
-  ranked_bar = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    skip_base_fig   = TRUE,   # bypasses base_fig() - geom manages its own axes and labels
-    optional_args   = list(
-      ascending = list(
-        default = TRUE,
-        desc    = "Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends."
-      ),
-      vs = list(
-        default = NULL,
-        desc    = "Character. Category name to highlight with a second colour. Both backends."
-      ),
-      aim = list(
-        default = NULL,
-        desc    = "Numeric. Value for a dashed target/aim line. Both backends."
-      ),
-      char_scale = list(
-        default = 0.045,
-        desc    = paste0("Numeric. Scaling factor converting label character-count into ",
-                         "axis-range units. Increase (e.g. 0.06) for larger text, ",
-                         "decrease (e.g. 0.03) for smaller text. Default 0.045."),
-        mode_only = "static"
-      ),
-      min_frac = list(
-        default = 0.08,
-        desc    = paste0("Numeric. Minimum fraction of the axis range a bar must span ",
-                         "before its label fits inside. Safety floor for short labels. ",
-                         "Default 0.08 (8%)."),
-        mode_only = "static"
-      )
-    )
-  ),
-
-  stacked_column = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    skip_base_fig   = FALSE, 
-    required_args   = list(),
-    optional_args   = list(
-      facet = list(
-        default = NULL,
-        desc    = "Character. Column name that assigns rows to facet groups.",
-        mode_only = NULL # both modes require this argument
-      ),
-      stacking = list(
-        default = "normal",
-        desc    = "Character. Highcharter stacking mode: 'normal' or 'percent'.",
-        mode_only = NULL 
-      )
-    )
-  ),
-
-  # venn -----------------------------------------------------------------------
-  # Venn / Euler diagrams require a different data contract from all other geoms.
-  # Instead of spec$x / spec$y columns, the user supplies a pre-built list of
-  # set entries via the `sets` argument in hd_geom_venn().  spec$data is not
-  # used by hc_venn / gg_venn; it may be NULL or an empty data frame.
-  #
-  # Each entry in `sets` is a named list:
-  #   list(sets = list("A"),        name = "Animals", value = 5)
-  #   list(sets = list("A", "B"),                     value = 2)  # intersection
-  #
-  # ggplot2 backend: rendered via the ggVennDiagram or eulerr package
-  #   (must be in Suggests).  Falls back to a text message if neither is
-  #   installed, so the package does not gain a hard dependency.
-  # highcharter backend: native hc_chart(type = "venn") series.
-  venn = list(
-    ggplot_fun      = NULL,
-    highcharter_fun = NULL,
-    skip_base_fig   = TRUE,   # bypasses base_fig() - no x/y axis canvas needed
-    required_args   = list(),
-    optional_args = list(
-      sets = list(
-        default = NULL,
-        desc    = paste0(
-          "List. Each element is a named list with slots:",
-          "  sets  - character vector of set names for this entry",
-          "         (length 1 = single set, length > 1 = intersection)",
-          "  value - numeric size of this region",
-          "  name  - optional character label shown in the diagram",
-          "Example: list(",
-          "  list(sets = list('A'), name = 'Animals', value = 5),",
-          "  list(sets = list('B'), name = 'Four legs', value = 3),",
-          "  list(sets = list('A','B'), value = 2)",
-          ")"
-        ),
-        mode_only = NULL
-      ),
-      series_name = list(
-        default      = "Venn Diagram",
-        desc         = "Character. Series name shown in the chart title area. Highcharter only.",
-        mode_only = "dynamic"
-      ),
-      label_font_size = list(
-        default      = "14px",
-        desc         = "Character. CSS font-size for set labels. Highcharter only.",
-        mode_only = "dynamic"
-      ),
-      value_suffix = list(
-        default      = "",
-        desc         = paste0(
-          "Character. Symbol appended to displayed values. ",
-          "E.g. '%' renders '42%' instead of '42'. ",
-          "Applied in tooltips (dynamic) and region labels (static). ",
-          "Both backends."
-        ),
-        mode_only = NULL
-      ),
-      use_names = list(
-        default      = FALSE,
-        desc         = paste0(
-          "Logical. When TRUE, the human-readable 'name' field from each set ",
-          "entry is used as the circle label instead of the short id. ",
-          "E.g. 'esig' instead of 'A'. ggplot2 only."
-        ),
-        mode_only = "static"
-      ),
-      show_legend = list(
-        default      = FALSE,
-        desc         = paste0(
-          "Logical. When TRUE, adds a legend mapping circle colours to set ",
-          "labels. ggplot2 only (eulerr and ggVennDiagram paths)."
-        ),
-        mode_only = "static"
-      )
-    )
+  # -- Locate YAML -------------------------------------------------------------
+  # system.file() works for installed packages, devtools::load_all(), and
+  # devtools::check().  It requires the namespace to be registered, which is
+  # guaranteed when called from .onLoad().
+  yaml_path <- system.file(
+    "geom-registry.yaml",
+    package = "highdir"
   )
 
+  if (!nzchar(yaml_path))
+    stop(
+      "highdir: cannot find inst/geom-registry.yaml.\n",
+      "Ensure the file exists in inst/ and reinstall or run load_all().",
+      call. = FALSE
+    )
+
+  # -- Parse -------------------------------------------------------------------
+  raw <- yaml::read_yaml(yaml_path)
+
+  # -- Post-process and return -------------------------------------------------
+  lapply(raw, .normalise_geom_def)
+}
 
 
-  # map ------------------------------------------------------------------------
-  # map = list(                                                                       #
-  #   ggplot_fun      = NULL,                                                         #
-  #   highcharter_fun = NULL,                                                         #
-  #   is_map_geom     = TRUE,                                                         #
-  #   optional_args   = list(                                                         #
-  #     level = list(                                                                 #
-  #       default = "county",                                                         #
-  #       desc    = "Character. Map granularity: 'county' or 'municipality'."         #
-  #     ),                                                                            #
-  #     value_lab = list(                                                             #
-  #       default = NULL,                                                             #
-  #       desc    = "Character. Colour scale legend label. Defaults to spec$ylab."    #
-  #     ),                                                                            #
-  #     low_col = list(                                                               #
-  #       default = "#C6DBEF",                                                        #
-  #       desc    = "Character. Hex colour for the low end of the choropleth scale."  #
-  #     ),                                                                            #
-  #     high_col = list(                                                              #
-  #       default = "#025169",                                                        #
-  #       desc    = "Character. Hex colour for the high end of the choropleth scale." #
-  #     ),                                                                            #
-  #     na_fill = list(                                                               #
-  #       default = "#D3D3D3",                                                        #
-  #       desc    = "Character. Hex fill colour for regions with no data."            #
-  #     )                                                                             #
-  #   )                                                                               #
-  # )                                                                                 #
+# =============================================================================
+# Post-processing helpers
+# =============================================================================
 
-)
+#' Normalise one geom definition read from YAML
+#'
+#' Restores fields that YAML cannot represent natively:
+#' - ggplot_fun / highcharter_fun set to NULL (filled later by .onLoad)
+#' - skip_base_fig coerced to logical
+#' - required_args / optional_args normalised via .normalise_args()
+#'
+#' @keywords internal
+.normalise_geom_def <- function(def) {
+
+  # Function pointers are always NULL here.
+  # zzz.R fills them in via .fn() after the namespace is fully loaded.
+  def$ggplot_fun      <- NULL
+  def$highcharter_fun <- NULL
+
+  # YAML booleans parse as logical already; isTRUE() guards against NULL
+  def$skip_base_fig <- isTRUE(def$skip_base_fig)
+
+  # Ensure required_args and optional_args are always named lists
+  def$required_args <- .normalise_args(def$required_args)
+  def$optional_args <- .normalise_args(def$optional_args)
+
+  def
+}
+
+
+#' Normalise a required_args or optional_args block from YAML
+#'
+#' YAML type coercions applied per argument:
+#' - `null`          -> R `NULL`
+#' - whole number    -> `integer` (e.g. `4` -> `4L` for dot_size)
+#' - decimal number  -> `double`
+#' - `true`/`false`  -> `TRUE`/`FALSE`  (yaml package handles this)
+#' - `>` block scalar -> collapsed to a single character string
+#' - absent block    -> `list()`  (never NULL or character(0))
+#'
+#' @keywords internal
+.normalise_args <- function(args_block) {
+
+  # NULL or empty mapping {} -> return an empty named list
+  if (is.null(args_block) || length(args_block) == 0L)
+    return(list())
+
+  lapply(args_block, function(arg) {
+
+    # default: keep NULL as NULL; coerce whole-number doubles to integer
+    if (!is.null(arg$default) && is.numeric(arg$default)) {
+      if (arg$default == as.integer(arg$default))
+        arg$default <- as.integer(arg$default)
+    }
+
+    # mode_only: absent key -> NULL (yaml omits it; add it explicitly)
+    if (is.null(arg$mode_only))
+      arg$mode_only <- NULL
+
+    # desc: YAML '>' scalars sometimes parse as multi-element character
+    # vectors in older yaml versions — collapse to a single string
+    if (!is.null(arg$desc) && length(arg$desc) > 1L)
+      arg$desc <- paste(arg$desc, collapse = " ")
+
+    arg
+  })
+}

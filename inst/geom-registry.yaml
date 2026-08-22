@@ -1,0 +1,226 @@
+# inst/geom-registry.yaml
+#
+# Defines the full contract for every registered geometry.
+# Read by .geom_registry_defs() in R/additional-args.R at package load time.
+#
+# FIELD REFERENCE
+# ---------------
+# skip_base_fig  logical  When TRUE the backend engine bypasses base_fig()
+#                         and lets the geom build its own canvas from scratch.
+#                         Use for geoms with no x/y axis (pie, venn, ranked_bar).
+#
+# required_args  mapping  Arguments the user MUST supply - the geom cannot
+#                         render without them (e.g. ymin/ymax for arearange).
+#                         Each entry has: default (null), desc (string).
+#
+# optional_args  mapping  Arguments with sensible built-in defaults.
+#                         Each entry has: default, desc, and optionally
+#                         mode_only ("dynamic" | "static" | null).
+#
+#   mode_only    "dynamic"  argument only applies when backend = highcharter
+#                "static"   argument only applies when backend = ggplot2
+#                null       argument applies to both backends
+#
+# ADDING A NEW GEOM
+#   1. Add a new top-level key below.
+#   2. Write gg_<name> and hc_<name> functions in their own R file.
+#   3. zzz.R reads this file at load time - no other R files need changing.
+#
+# RULE OF THUMB: required vs optional
+#   required  - geom cannot render at all without it  (e.g. ymin/ymax)
+#   optional  - geom works fine with a built-in default (e.g. smooth: true)
+
+# -- column --------------------------------------------------------------------
+column:
+  skip_base_fig: false
+  required_args: {}
+  optional_args: {}
+  # No optional_args: column has no extra knobs beyond spec / opts
+
+# -- line ----------------------------------------------------------------------
+line:
+  skip_base_fig: false
+  required_args: {}
+  optional_args:
+    smooth:
+      default: true
+      desc: "Logical. TRUE = spline curves, FALSE = straight segments. Both backends."
+      mode_only: null
+    dot_size:
+      default: 4
+      desc: "Numeric. Marker radius in pixels. Both backends."
+      mode_only: null
+    line_symbols:
+      # line_symbols is highcharter-only; gg_line silently ignores it.
+      default: null
+      desc: >
+        Character vector. Highcharter only. Per-group marker shapes:
+        'circle', 'square', 'diamond', 'triangle', 'triangle-down'.
+      mode_only: dynamic
+
+# -- scatter -------------------------------------------------------------------
+scatter:
+  skip_base_fig: false
+  required_args: {}
+  optional_args:
+    dot_size:
+      default: 4
+      desc: "Numeric. Point size (ggplot2) or marker radius in px (highcharter)."
+      mode_only: null
+
+# -- arearange -----------------------------------------------------------------
+arearange:
+  skip_base_fig: false
+  required_args:
+    ymin:
+      default: null
+      desc: "Character. Column name for the lower bound of the range."
+    ymax:
+      default: null
+      desc: "Character. Column name for the upper bound of the range."
+  optional_args: {}
+
+# -- pie -----------------------------------------------------------------------
+pie:
+  skip_base_fig: true
+  required_args: {}
+  optional_args:
+    inner_size:
+      default: "0%"
+      desc: "Character. Inner radius as CSS %, e.g. '50%' for a donut."
+      mode_only: dynamic
+    value_suffix:
+      default: "%"
+      desc: >
+        Character. Symbol appended to displayed values.
+        E.g. '%' renders '42%' instead of '42'.
+        Applied in tooltips (dynamic) and region labels (static).
+        Both backends.
+      mode_only: null
+
+# -- ranked_bar ----------------------------------------------------------------
+ranked_bar:
+  skip_base_fig: true   # geom manages its own axes, labels, and coord_flip
+  required_args: {}
+  optional_args:
+    ascending:
+      default: true
+      desc: "Logical. TRUE = lowest bar at bottom, FALSE = highest at bottom. Both backends."
+      mode_only: null
+    vs:
+      default: null
+      desc: "Character. Category name to highlight with a second colour. Both backends."
+      mode_only: null
+    aim:
+      default: null
+      desc: "Numeric. Value for a dashed target/aim line. Both backends."
+      mode_only: null
+    char_scale:
+      default: 0.045
+      desc: >
+        Numeric. Scaling factor converting label character-count into
+        axis-range units. Increase (e.g. 0.06) for larger text,
+        decrease (e.g. 0.03) for smaller text. Default 0.045.
+      mode_only: static
+    min_frac:
+      default: 0.08
+      desc: >
+        Numeric. Minimum fraction of the axis range a bar must span
+        before its label fits inside. Safety floor for short labels.
+        Default 0.08 (8%).
+      mode_only: static
+
+# -- stacked_column ------------------------------------------------------------
+stacked_column:
+  skip_base_fig: false
+  required_args: {}
+  optional_args:
+    facet:
+      default: null
+      desc: "Character. Column name that assigns rows to facet groups."
+      mode_only: null
+    stacking:
+      default: normal
+      desc: "Character. Highcharter stacking mode: 'normal' or 'percent'."
+      mode_only: null
+
+# -- venn ----------------------------------------------------------------------
+# Venn / Euler diagrams use a different data contract from all other geoms.
+# Instead of spec$x / spec$y columns, the user supplies a pre-built list of
+# set entries via the `sets` argument in hd_geom_venn().  spec$data is not
+# used by hc_venn / gg_venn; it may be NULL or an empty data frame.
+#
+# Each entry in `sets` is a named list:
+#   list(sets = list("A"),        name = "Animals", value = 5)
+#   list(sets = list("A", "B"),                     value = 2)  # intersection
+#
+# ggplot2 backend: rendered via eulerr (preferred) or ggVennDiagram (Suggests).
+# highcharter backend: native hc_chart(type = "venn") series.
+venn:
+  skip_base_fig: true   # no x/y axis canvas needed
+  required_args: {}
+  optional_args:
+    sets:
+      default: null
+      desc: >
+        List. Each element is a named list with slots:
+        sets  - character vector of set names for this entry
+                (length 1 = single set, length > 1 = intersection),
+        value - numeric size of this region,
+        name  - optional character label shown in the diagram.
+        Example: list(
+          list(sets = list('A'), name = 'Animals', value = 5),
+          list(sets = list('B'), name = 'Four legs', value = 3),
+          list(sets = list('A','B'), value = 2)
+        )
+      mode_only: null
+    series_name:
+      default: "Venn Diagram"
+      desc: "Character. Series name shown in the chart title area. Highcharter only."
+      mode_only: dynamic
+    label_font_size:
+      default: "14px"
+      desc: "Character. CSS font-size for set labels. Highcharter only."
+      mode_only: dynamic
+    value_suffix:
+      default: ""
+      desc: >
+        Character. Symbol appended to displayed values.
+        E.g. '%' renders '42%' instead of '42'.
+        Applied in tooltips (dynamic) and region labels (static).
+        Both backends.
+      mode_only: null
+    use_names:
+      default: false
+      desc: >
+        Logical. When TRUE, the human-readable 'name' field from each set
+        entry is used as the circle label instead of the short id.
+        E.g. 'esig' instead of 'A'. ggplot2 only.
+      mode_only: static
+    show_legend:
+      default: false
+      desc: >
+        Logical. When TRUE, adds a legend mapping circle colours to set
+        labels. ggplot2 only (eulerr and ggVennDiagram paths).
+      mode_only: static
+
+# -- map (commented out - not yet implemented) ---------------------------------
+# map:
+#   skip_base_fig: true
+#   required_args: {}
+#   optional_args:
+#     level:
+#       default: county
+#       desc: "Character. Map granularity: 'county' or 'municipality'."
+#     value_lab:
+#       default: null
+#       desc: "Character. Colour scale legend label. Defaults to spec$ylab."
+#     low_col:
+#       default: "#C6DBEF"
+#       desc: "Character. Hex colour for the low end of the choropleth scale."
+#     high_col:
+#       default: "#025169"
+#       desc: "Character. Hex colour for the high end of the choropleth scale."
+#     na_fill:
+#       default: "#D3D3D3"
+#       desc: "Character. Hex fill colour for regions with no data."
