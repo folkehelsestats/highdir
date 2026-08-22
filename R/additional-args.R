@@ -5,11 +5,11 @@
 #
 # WHY YAML INSTEAD OF HARDCODED R?
 # ---------------------------------
-# 1. Single source of truth — adding a new geom or argument means editing
+# 1. Single source of truth - adding a new geom or argument means editing
 #    one human-readable YAML file, not R syntax.
-# 2. Language-agnostic — the same YAML can drive documentation generators,
+# 2. Language-agnostic - the same YAML can drive documentation generators,
 #    Shiny UI builders, and test fixtures without touching R code.
-# 3. Easier diffing — YAML diffs are cleaner than R list diffs in code review.
+# 3. Easier diffing - YAML diffs are cleaner than R list diffs in code review.
 # 4. The object produced is identical to the old hardcoded list, so zzz.R
 #    and register_geom() need no changes at all.
 #
@@ -28,9 +28,9 @@
 # ADDING A NEW GEOM
 #   1. Add a new top-level key in inst/geom-registry.yaml.
 #   2. Write gg_<name> and hc_<name> functions in their own R file.
-#   3. That is all — this file and zzz.R need no changes.
+#   3. That is all - this file and zzz.R need no changes.
 
-# Provides .load_geom_registry() — called once from .onLoad() in zzz.R to
+# Provides .load_geom_registry() - called once from .onLoad() in zzz.R to
 # read inst/geom-registry.yaml and return the .geom_registry_defs list.
 #
 # WHY NOT ASSIGN AT PARSE TIME?
@@ -39,7 +39,7 @@
 # file parsing fails for two reasons:
 #   1. Helper functions defined later in the file do not exist yet.
 #   2. system.file() cannot locate inst/ until the package namespace is
-#      registered — which only happens during .onLoad().
+#      registered - which only happens during .onLoad().
 #
 # The fix: define everything as named functions, call .load_geom_registry()
 # from .onLoad(), and assign the result to .geom_registry_defs there.
@@ -47,7 +47,7 @@
 
 
 # =============================================================================
-# Public loader — called by .onLoad() in zzz.R
+# Public loader - called by .onLoad() in zzz.R
 # =============================================================================
 
 #' Load and return the geom registry from inst/geom-registry.yaml
@@ -143,7 +143,7 @@
       arg$mode_only <- NULL
 
     # desc: YAML '>' scalars sometimes parse as multi-element character
-    # vectors in older yaml versions — collapse to a single string
+    # vectors in older yaml versions - collapse to a single string
     if (!is.null(arg$desc) && length(arg$desc) > 1L)
       arg$desc <- paste(arg$desc, collapse = " ")
 
