@@ -205,6 +205,67 @@ venn:
       mode_only: static
 
 # -- map (commented out - not yet implemented) ---------------------------------
+# Choropleth map.  Data contract:
+#   spec$x = join-key column (e.g. "hc-key"), spec$y = value column.
+# GeoJSON is fetched inside hc_map / gg_map from the `map_url` required arg.
+# skip_base_fig: true — no x/y axes.
+# Colour: sequential two-color gradient (low -> high), not categorical.
+#   Resolution: low_col/high_col args > opts$colors[1:2] > brand defaults.
+map:
+  skip_base_fig: true
+  required_args:
+    map_url:
+      default: null
+      desc: >
+        Character. URL of a GeoJSON file.
+        Use hd_map_no() for Norwegian municipality or county maps.
+        Example: hd_map_no('municipality').
+  optional_args:
+    join_by:
+      default: "hc-key"
+      desc: >
+        Character. Property name in the GeoJSON features used to join to
+        spec$x. Default 'hc-key' (standard for Highcharts map collections).
+      mode_only: null
+    series_name:
+      default: null
+      desc: >
+        Character. Series label in the Highcharts legend and tooltip.
+        Defaults to opts$ylab or spec$y when NULL.
+      mode_only: dynamic
+    value_suffix:
+      default: ""
+      desc: >
+        Character. Symbol appended to values in tooltips and legend labels.
+        E.g. '%' renders '42%'. Both backends.
+      mode_only: null
+    low_col:
+      default: "#C6DBEF"
+      desc: >
+        Character. Hex colour for the low end of the choropleth gradient.
+        Default is a light teal (#C6DBEF). Both backends.
+      mode_only: null
+    high_col:
+      default: "#025169"
+      desc: >
+        Character. Hex colour for the high end of the choropleth gradient.
+        Default is the highdir brand dark teal (#025169). Both backends.
+      mode_only: null
+    tooltip_fmt:
+      default: null
+      desc: >
+        Character. Highcharts tooltip pointFormat string.
+        Default: '{point.name}: {point.value}'.
+        Example with suffix: '{point.name}: {point.value} %'.
+      mode_only: dynamic
+    nav_enabled:
+      default: true
+      desc: >
+        Logical. Enable map pan and zoom navigation controls.
+        Default TRUE. Highcharter only.
+      mode_only: dynamic
+
+
 # map:
 #   skip_base_fig: true
 #   required_args: {}
