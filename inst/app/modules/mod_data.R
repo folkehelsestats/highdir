@@ -101,7 +101,16 @@ mod_data_spec_ui <- function(id) {
         shiny::selectInput(ns("ymax"),
                            label   = "Column: ymax",
                            choices = character(0))
-      )
+      ),
+      
+      # -- Required-arg inputs - static, shown/hidden by conditionalPanel ----
+      # map: map_src
+      shiny::conditionalPanel(
+        condition = "input.geom == 'map'",
+        shiny::textInput(ns("map_src"),
+                           label   = "Map Source: url or file")
+
+        )
     )
   )
 }
@@ -155,6 +164,9 @@ mod_data_server <- function(id, geom_r) {
       shiny::updateSelectInput(session, "ymax",
         choices  = ch,
         selected = ch[min(4, length(ch))])
+
+      # map: map_src
+      shiny::updateTextInput(session, "map_src")
     }, ignoreNULL = TRUE)
 
     # -- Data preview ----------------------------------------------------------
