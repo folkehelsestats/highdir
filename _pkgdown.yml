@@ -104,6 +104,7 @@ reference:
       - starts_with("hd_venn_")
       - hd_spec_venn
       - venn_df_to_list
+      - hd_map_no
 
   - title: Helpers
     desc: >-
