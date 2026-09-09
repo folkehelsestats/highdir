@@ -19,7 +19,7 @@ A character string (URL).
 \description{
 Returns the URL of a GeoJSON file from the Highcharts map collection for
 Norway at municipality or county level.  Pass the result directly to
-\code{map_url} in \code{\link[=hd_geom_map]{hd_geom_map()}}.
+\code{map_src} in \code{\link[=hd_geom_map]{hd_geom_map()}}.
 }
 \examples{
 hd_map_no()                  # municipality URL

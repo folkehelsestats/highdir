@@ -207,17 +207,17 @@ venn:
 # -- map (commented out - not yet implemented) ---------------------------------
 # Choropleth map.  Data contract:
 #   spec$x = join-key column (e.g. "hc-key"), spec$y = value column.
-# GeoJSON is fetched inside hc_map / gg_map from the `map_url` required arg.
+# GeoJSON is fetched inside hc_map / gg_map from the `map_src` required arg.
 # skip_base_fig: true — no x/y axes.
 # Colour: sequential two-color gradient (low -> high), not categorical.
 #   Resolution: low_col/high_col args > opts$colors[1:2] > brand defaults.
 map:
   skip_base_fig: true
   required_args:
-    map_url:
+    map_src:
       default: null
       desc: >
-        Character. URL of a GeoJSON file.
+        Character. URL of a GeoJSON file or source file.
         Use hd_map_no() for Norwegian municipality or county maps.
         Example: hd_map_no('municipality').
   optional_args:

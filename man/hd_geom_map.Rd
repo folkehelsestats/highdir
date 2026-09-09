@@ -5,7 +5,7 @@
 \title{Map (Choropleth) Layer for hd Objects}
 \usage{
 hd_geom_map(
-  map_url,
+  map_src,
   join_by = "hc-key",
   series_name = NULL,
   value_suffix = "",
@@ -17,16 +17,16 @@ hd_geom_map(
 )
 }
 \arguments{
-\item{map_url}{\strong{Required.} GeoJSON source in any of three forms:
+\item{map_src}{\strong{Required.} GeoJSON source in any of three forms:
 \describe{
-\item{URL}{\code{"https://..."} — fetched with \code{jsonlite::fromJSON()}.
+\item{URL}{\code{"https://..."} - fetched with \code{jsonlite::fromJSON()}.
 Results are cached for the R session.  See \code{\link[=hd_map_no]{hd_map_no()}} for
 Norway maps.}
-\item{Local file path}{\code{"/path/to/file.geojson"} — read from disk
+\item{Local file path}{\code{"/path/to/file.geojson"} - read from disk
 with \code{jsonlite::fromJSON()}.}
 \item{Pre-parsed list}{A GeoJSON list already in memory, e.g. the
 result of \code{jsonlite::fromJSON(url, simplifyVector = FALSE)}.
-No download or disk read occurs — polygon filtering is applied
+No download or disk read occurs - polygon filtering is applied
 and the list is used directly.}
 }}
 
@@ -59,7 +59,7 @@ An S3 object of class \code{"hd_geom"} for use with \code{+.hd}.
 }
 \description{
 Creates a choropleth map layer for use with \code{\link[=hd]{hd()}} and \code{+}.
-Fetches GeoJSON from \code{map_url} and joins it to \code{spec$data} using the
+Fetches GeoJSON from \code{map_src} and joins it to \code{spec$data} using the
 column specified in \code{spec$x} (the join-key column) and colours regions
 by \code{spec$y} (the value column).
 }
@@ -103,17 +103,17 @@ df <- data.frame(
 
 # Dynamic mode
 hd(df, x = "hc-key", y = "value", mode = "dynamic") +
-  hd_geom_map(map_url = url) +
+  hd_geom_map(map_src = url) +
   hd_opts(title = "Norway", subtitle = "Random metric")
 
 # Custom colours
 hd(df, x = "hc-key", y = "value", mode = "dynamic") +
-  hd_geom_map(map_url = url, low_col = "#FFEDA0", high_col = "#E31A1C") +
+  hd_geom_map(map_src = url, low_col = "#FFEDA0", high_col = "#E31A1C") +
   hd_opts(title = "Custom palette")
 
 # Static mode (requires sf)
 hd(df, x = "hc-key", y = "value", mode = "static") +
-  hd_geom_map(map_url = url) +
+  hd_geom_map(map_src = url) +
   hd_opts(title = "Static map")
 }
 

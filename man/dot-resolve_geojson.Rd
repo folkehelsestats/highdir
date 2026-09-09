@@ -14,14 +14,14 @@ A list (parsed GeoJSON) containing only polygon features.
 }
 \description{
 Accepts three forms of input and returns a consistently filtered GeoJSON
-list — regardless of which form the user supplied:
+list - regardless of which form the user supplied:
 }
 \details{
 \describe{
-\item{Character string (URL)}{\code{"https://..."} — fetched with
+\item{Character string (URL)}{\code{"https://..."} - fetched with
 \code{jsonlite::fromJSON()}.  Results are memoised for the R session so
 repeated calls to the same URL do not re-download.}
-\item{Character string (file path)}{\code{"/path/to/file.geojson"} —
+\item{Character string (file path)}{\code{"/path/to/file.geojson"} -
 read from disk with \code{jsonlite::fromJSON()}.  Same function, same
 memoisation.}
 \item{Pre-parsed list}{A GeoJSON list already in memory (e.g. the

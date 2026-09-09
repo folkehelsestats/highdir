@@ -9,7 +9,7 @@
 #   y  -- column whose numeric values drive the choropleth fill colour.
 #
 # Required geom arg:
-#   map_url  -- URL string pointing to a GeoJSON file.
+#   map_src  -- URL string pointing to a GeoJSON file.
 #               Highcharts map collection base URL:
 #               https://raw.githubusercontent.com/highcharts/map-collection-dist/
 #               refs/heads/master/countries/no/no-all-all.geo.json
@@ -77,7 +77,7 @@
 
 #' Filter a parsed GeoJSON to polygon features only
 #'
-#' Keeps only Polygon and MultiPolygon features — strips Point, LineString
+#' Keeps only Polygon and MultiPolygon features - strips Point, LineString
 #' etc. that Highcharts Maps and sf cannot render as choropleth areas.
 #'
 #' @keywords internal
@@ -110,13 +110,13 @@
 #' Resolve a GeoJSON source to a filtered list ready for rendering
 #'
 #' Accepts three forms of input and returns a consistently filtered GeoJSON
-#' list — regardless of which form the user supplied:
+#' list - regardless of which form the user supplied:
 #'
 #' \describe{
-#'   \item{Character string (URL)}{`"https://..."` — fetched with
+#'   \item{Character string (URL)}{`"https://..."` - fetched with
 #'     `jsonlite::fromJSON()`.  Results are memoised for the R session so
 #'     repeated calls to the same URL do not re-download.}
-#'   \item{Character string (file path)}{`"/path/to/file.geojson"` —
+#'   \item{Character string (file path)}{`"/path/to/file.geojson"` -
 #'     read from disk with `jsonlite::fromJSON()`.  Same function, same
 #'     memoisation.}
 #'   \item{Pre-parsed list}{A GeoJSON list already in memory (e.g. the
@@ -135,12 +135,12 @@
 
     # -- Pre-parsed list -------------------------------------------------------
     # User already called fromJSON() or loaded the GeoJSON themselves.
-    # No download needed — just filter the polygon features and return.
+    # No download needed - just filter the polygon features and return.
     if (is.list(map_src)) {
 
       if (is.null(map_src$features))
         stop(
-          "hd_geom_map(): the GeoJSON list passed to `map_url` has no ",
+          "hd_geom_map(): the GeoJSON list passed to `map_src` has no ",
           "'features' element.  Ensure it is a valid GeoJSON ",
           "FeatureCollection.",
           call. = FALSE
@@ -186,7 +186,7 @@
 #' Highcharter Map Geom Function
 #'
 #' Adds a choropleth map series to a blank `highchart()` object using
-#' Highcharts Maps.  Not called directly — use [hd_geom_map()] or
+#' Highcharts Maps.  Not called directly - use [hd_geom_map()] or
 #' `hd_make(..., type = "map", ...)`.
 #'
 #' @section Tooltip format:
@@ -198,7 +198,7 @@
 #' @param spec        An [hd_spec()] object.  `$x` = join-key column,
 #'   `$y` = value column.
 #' @param opts        An [hd_opts()] object.
-#' @param geom_params Named list.  Required: `map_url`.  Optional: `join_by`,
+#' @param geom_params Named list.  Required: `map_src`.  Optional: `join_by`,
 #'   `series_name`, `value_suffix`, `low_col`, `high_col`, `tooltip_fmt`,
 #'   `nav_enabled`.
 #' @param use_js      Logical. Unused; present for engine-contract consistency.
@@ -209,13 +209,13 @@
 hc_map <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
   
   # -- Required args -----------------------------------------------------------
-  map_src <- geom_params$map_url
+  map_src <- geom_params$map_src
 
-  # map_url accepts a URL string, a local file path, or a pre-parsed GeoJSON
+  # map_src accepts a URL string, a local file path, or a pre-parsed GeoJSON
   # list.  .is_valid_map_src() checks for any of these three forms.
   if (!.is_valid_map_src(map_src))
     stop(
-      "hd_geom_map() requires `map_url` as:\n",
+      "hd_geom_map() requires `map_src` as:\n",
       "  - a URL string:       hd_map_no() or 'https://...'\n",
       "  - a local file path:  '/path/to/map.geojson'\n",
       "  - a pre-parsed list:  jsonlite::fromJSON(..., simplifyVector = FALSE)",
@@ -298,7 +298,7 @@ hc_map <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #'
 #' @param spec       An [hd_spec()] object.
 #' @param opts       An [hd_opts()] object.
-#' @param geom_params Named list.  Required: `map_url`.  Optional: `join_by`,
+#' @param geom_params Named list.  Required: `map_src`.  Optional: `join_by`,
 #'   `low_col`, `high_col`, `value_suffix`.
 #' @param ...        Unused.
 #'
@@ -317,11 +317,11 @@ gg_map <- function(spec, opts, geom_params, ...) {
   }
 
   # -- Args --------------------------------------------------------------------
-  map_src <- geom_params$map_url
+  map_src <- geom_params$map_src
 
   if (!.is_valid_map_src(map_src))
     stop(
-      "hd_geom_map() requires `map_url` as a URL, file path, or parsed list.",
+      "hd_geom_map() requires `map_src` as a URL, file path, or parsed list.",
       call. = FALSE
     )
 
@@ -335,7 +335,7 @@ gg_map <- function(spec, opts, geom_params, ...) {
   # -- Read spatial data -------------------------------------------------------
   # sf::read_sf() accepts URLs and local file paths natively.
   # When map_src is a pre-parsed GeoJSON list, convert it back to a JSON
-  # string first — sf cannot consume an R list directly, but it can parse
+  # string first - sf cannot consume an R list directly, but it can parse
   # a GeoJSON string in memory without writing to disk.
   sf_src <- if (is.list(map_src)) {
     if (!requireNamespace("jsonlite", quietly = TRUE))
@@ -350,7 +350,7 @@ gg_map <- function(spec, opts, geom_params, ...) {
     filtered <- .filter_geojson_polygons(map_src)
     jsonlite::toJSON(filtered, auto_unbox = TRUE)
   } else {
-    map_src   # URL or file path — sf handles it directly
+    map_src   # URL or file path - sf handles it directly
   }
 
   sf_data <- tryCatch(
@@ -430,7 +430,7 @@ gg_map <- function(spec, opts, geom_params, ...) {
 #' Map (Choropleth) Layer for hd Objects
 #'
 #' Creates a choropleth map layer for use with [hd()] and `+`.
-#' Fetches GeoJSON from `map_url` and joins it to `spec$data` using the
+#' Fetches GeoJSON from `map_src` and joins it to `spec$data` using the
 #' column specified in `spec$x` (the join-key column) and colours regions
 #' by `spec$y` (the value column).
 #'
@@ -448,16 +448,16 @@ gg_map <- function(spec, opts, geom_params, ...) {
 #' or county maps from the Highcharts map collection without memorising
 #' the raw GitHub URL.
 #'
-#' @param map_url      **Required.** GeoJSON source in any of three forms:
+#' @param map_src      **Required.** GeoJSON source in any of three forms:
 #'   \describe{
-#'     \item{URL}{`"https://..."` — fetched with `jsonlite::fromJSON()`.
+#'     \item{URL}{`"https://..."` - fetched with `jsonlite::fromJSON()`.
 #'       Results are cached for the R session.  See [hd_map_no()] for
 #'       Norway maps.}
-#'     \item{Local file path}{`"/path/to/file.geojson"` — read from disk
+#'     \item{Local file path}{`"/path/to/file.geojson"` - read from disk
 #'       with `jsonlite::fromJSON()`.}
 #'     \item{Pre-parsed list}{A GeoJSON list already in memory, e.g. the
 #'       result of `jsonlite::fromJSON(url, simplifyVector = FALSE)`.
-#'       No download or disk read occurs — polygon filtering is applied
+#'       No download or disk read occurs - polygon filtering is applied
 #'       and the list is used directly.}
 #'   }
 #' @param join_by      Character. Property name in the GeoJSON features used
@@ -503,22 +503,22 @@ gg_map <- function(spec, opts, geom_params, ...) {
 #'
 #' # Dynamic mode
 #' hd(df, x = "hc-key", y = "value", mode = "dynamic") +
-#'   hd_geom_map(map_url = url) +
+#'   hd_geom_map(map_src = url) +
 #'   hd_opts(title = "Norway", subtitle = "Random metric")
 #'
 #' # Custom colours
 #' hd(df, x = "hc-key", y = "value", mode = "dynamic") +
-#'   hd_geom_map(map_url = url, low_col = "#FFEDA0", high_col = "#E31A1C") +
+#'   hd_geom_map(map_src = url, low_col = "#FFEDA0", high_col = "#E31A1C") +
 #'   hd_opts(title = "Custom palette")
 #'
 #' # Static mode (requires sf)
 #' hd(df, x = "hc-key", y = "value", mode = "static") +
-#'   hd_geom_map(map_url = url) +
+#'   hd_geom_map(map_src = url) +
 #'   hd_opts(title = "Static map")
 #' }
 #'
 #' @export
-hd_geom_map <- function(map_url,
+hd_geom_map <- function(map_src,
                         join_by      = "hc-key",
                         series_name  = NULL,
                         value_suffix = "",
@@ -528,9 +528,9 @@ hd_geom_map <- function(map_url,
                         nav_enabled  = TRUE,
                         ...) {
 
-  if (missing(map_url) || !.is_valid_map_src(map_url))
+  if (missing(map_src) || !.is_valid_map_src(map_src))
     stop(
-      "hd_geom_map() requires `map_url` as:\n",
+      "hd_geom_map() requires `map_src` as:\n",
       "  - a URL string:       hd_map_no() or 'https://...'\n",
       "  - a local file path:  '/path/to/map.geojson'\n",
       "  - a pre-parsed list:  jsonlite::fromJSON(..., simplifyVector = FALSE)",
@@ -539,7 +539,7 @@ hd_geom_map <- function(map_url,
 
   hd_geom(
     "map",
-    map_url      = map_url,
+    map_src      = map_src,
     join_by      = join_by,
     series_name  = series_name,
     value_suffix = value_suffix,
@@ -560,7 +560,7 @@ hd_geom_map <- function(map_url,
 #'
 #' Returns the URL of a GeoJSON file from the Highcharts map collection for
 #' Norway at municipality or county level.  Pass the result directly to
-#' `map_url` in [hd_geom_map()].
+#' `map_src` in [hd_geom_map()].
 #'
 #' @param level Character. One of:
 #'   \describe{

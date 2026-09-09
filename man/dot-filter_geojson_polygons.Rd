@@ -7,7 +7,7 @@
 .filter_geojson_polygons(geojson)
 }
 \description{
-Keeps only Polygon and MultiPolygon features — strips Point, LineString
+Keeps only Polygon and MultiPolygon features - strips Point, LineString
 etc. that Highcharts Maps and sf cannot render as choropleth areas.
 }
 \keyword{internal}

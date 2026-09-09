@@ -11,7 +11,7 @@ gg_map(spec, opts, geom_params, ...)
 
 \item{opts}{An \code{\link[=hd_opts]{hd_opts()}} object.}
 
-\item{geom_params}{Named list.  Required: \code{map_url}.  Optional: \code{join_by},
+\item{geom_params}{Named list.  Required: \code{map_src}.  Optional: \code{join_by},
 \code{low_col}, \code{high_col}, \code{value_suffix}.}
 
 \item{...}{Unused.}

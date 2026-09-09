@@ -14,7 +14,7 @@ hc_map(chart, spec, opts, geom_params, use_js = TRUE, ...)
 
 \item{opts}{An \code{\link[=hd_opts]{hd_opts()}} object.}
 
-\item{geom_params}{Named list.  Required: \code{map_url}.  Optional: \code{join_by},
+\item{geom_params}{Named list.  Required: \code{map_src}.  Optional: \code{join_by},
 \code{series_name}, \code{value_suffix}, \code{low_col}, \code{high_col}, \code{tooltip_fmt},
 \code{nav_enabled}.}
 
@@ -27,7 +27,7 @@ The updated \code{highchart} object.
 }
 \description{
 Adds a choropleth map series to a blank \code{highchart()} object using
-Highcharts Maps.  Not called directly — use \code{\link[=hd_geom_map]{hd_geom_map()}} or
+Highcharts Maps.  Not called directly - use \code{\link[=hd_geom_map]{hd_geom_map()}} or
 \code{hd_make(..., type = "map", ...)}.
 }
 \section{Tooltip format}{
