@@ -82,7 +82,7 @@ the raw GitHub URL.
 }
 
 \examples{
-\donttest{
+\dontrun{
 library(data.table)
 
 # Norwegian municipality data

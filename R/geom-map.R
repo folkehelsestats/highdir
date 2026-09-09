@@ -482,7 +482,7 @@ hc_map <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
 #' @seealso [hd_map_no()], [hd()], [hd_spec()], [hd_opts()]
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library(data.table)
 #'
 #' # Norwegian municipality data
