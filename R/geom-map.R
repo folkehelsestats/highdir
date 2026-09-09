@@ -178,116 +178,8 @@
   }
 })
 
-
 # =============================================================================
-# hc_map  --  highcharter backend
-# =============================================================================
-
-#' Highcharter Map Geom Function
-#'
-#' Adds a choropleth map series to a blank `highchart()` object using
-#' Highcharts Maps.  Not called directly - use [hd_geom_map()] or
-#' `hd_make(..., type = "map", ...)`.
-#'
-#' @section Tooltip format:
-#' The default tooltip shows `{point.name}: {point.value}`.
-#' Override with `geom_params$tooltip_fmt`, e.g.
-#' `"{point.name}: {point.value} %"`.
-#'
-#' @param chart       A blank `highchart()` object (from engine bypass path).
-#' @param spec        An [hd_spec()] object.  `$x` = join-key column,
-#'   `$y` = value column.
-#' @param opts        An [hd_opts()] object.
-#' @param geom_params Named list.  Required: `map_src`.  Optional: `join_by`,
-#'   `series_name`, `value_suffix`, `low_col`, `high_col`, `tooltip_fmt`,
-#'   `nav_enabled`.
-#' @param use_js      Logical. Unused; present for engine-contract consistency.
-#' @param ...         Unused.
-#'
-#' @return The updated `highchart` object.
-#' @keywords internal
-hc_map <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
-  
-  # -- Required args -----------------------------------------------------------
-  map_src <- geom_params$map_src
-
-  # map_src accepts a URL string, a local file path, or a pre-parsed GeoJSON
-  # list.  .is_valid_map_src() checks for any of these three forms.
-  if (!.is_valid_map_src(map_src))
-    stop(
-      "hd_geom_map() requires `map_src` as:\n",
-      "  - a URL string:       hd_map_no() or 'https://...'\n",
-      "  - a local file path:  '/path/to/map.geojson'\n",
-      "  - a pre-parsed list:  jsonlite::fromJSON(..., simplifyVector = FALSE)",
-      call. = FALSE
-    )
-
-  # -- Optional args -----------------------------------------------------------
-  join_by      <- geom_params$join_by      %||% "hc-key"
-  series_name  <- geom_params$series_name  %||% opts$ylab %||% spec$y
-  value_suffix <- geom_params$value_suffix %||% ""
-  nav_enabled  <- isTRUE(geom_params$nav_enabled %||% TRUE)
-  tooltip_fmt  <- geom_params$tooltip_fmt  %||%
-    paste0("{point.name}: {point.value}", value_suffix)
-  low_col      <- geom_params$low_col  %||% NULL
-  high_col     <- geom_params$high_col %||% NULL
-
-  # -- Resolve colours ---------------------------------------------------------
-  cols <- .resolve_map_colors(low_col, high_col, opts)
-
-  # -- Resolve GeoJSON ---------------------------------------------------------
-  # Handles URL, local file path, or pre-parsed list transparently.
-  geojson <- .resolve_geojson(map_src)
-
-  # -- Data --------------------------------------------------------------------
-  d      <- spec$data
-  x_col  <- spec$x    # join-key column in the data frame
-  y_col  <- spec$y    # value column
-
-#   # Highcharts expects a list of named lists, one per row.
-#   # The join key must be a top-level property matching `join_by`.
-#   hc_data <- lapply(seq_len(nrow(d)), function(i) {
-#     pt        <- as.list(d[i, , drop = FALSE])
-#     # Ensure the join column is at the expected key name even if the
-#     # data frame column has a different name (rare but defensive)
-#     if (x_col != join_by)
-#       pt[[join_by]] <- pt[[x_col]]
-#     pt[["value"]] <- pt[[y_col]]
-#     pt
-#   })
-
-  if (x_col != join_by)
-    d[[join_by]] <- d[[x_col]]
-  
-  # -- Build chart -------------------------------------------------------------
-  chart |>
-    highcharter::highchart(type = "map") |>
-    highcharter::hc_add_series(
-      type     = "map",
-      mapData  = geojson,
-      data     = d,
-      joinBy   = join_by,
-      value    = "value",
-      name     = series_name
-    ) |>
-    highcharter::hc_colorAxis(
-      minColor = cols[["low"]],
-      maxColor = cols[["high"]]
-    ) |>
-    highcharter::hc_tooltip(
-      pointFormat = tooltip_fmt
-    ) |>
-    highcharter::hc_mapNavigation(
-      enabled         = nav_enabled,
-      enableMouseWheelZoom = nav_enabled
-    ) |>
-    highcharter::hc_title(text    = opts$title    %||% "") |>
-    highcharter::hc_subtitle(text = opts$subtitle %||% "")
-}
-
-
-# =============================================================================
-# gg_map  --  ggplot2 backend
+# gg_map  --  ggplot2 mode 
 # =============================================================================
 
 #' ggplot2 Map Geom Function
@@ -421,6 +313,114 @@ gg_map <- function(spec, opts, geom_params, ...) {
   # (inherits(layers, "ggplot") -> return directly with gt$theme applied)
   p
 }
+
+
+# =============================================================================
+# hc_map  --  highcharter mode 
+# =============================================================================
+
+#' Highcharter Map Geom Function
+#'
+#' Adds a choropleth map series to a blank `highchart()` object using
+#' Highcharts Maps.  Not called directly - use [hd_geom_map()] or
+#' `hd_make(..., type = "map", ...)`.
+#'
+#' @section Tooltip format:
+#' The default tooltip shows `{point.name}: {point.value}`.
+#' Override with `geom_params$tooltip_fmt`, e.g.
+#' `"{point.name}: {point.value} %"`.
+#'
+#' @param chart       A blank `highchart()` object (from engine bypass path).
+#' @param spec        An [hd_spec()] object.  `$x` = join-key column,
+#'   `$y` = value column.
+#' @param opts        An [hd_opts()] object.
+#' @param geom_params Named list.  Required: `map_src`.  Optional: `join_by`,
+#'   `series_name`, `value_suffix`, `low_col`, `high_col`, `tooltip_fmt`,
+#'   `nav_enabled`.
+#' @param use_js      Logical. Unused; present for engine-contract consistency.
+#' @param ...         Unused.
+#'
+#' @return The updated `highchart` object.
+#' @keywords internal
+hc_map <- function(chart, spec, opts, geom_params, use_js = TRUE, ...) {
+  
+  # -- Required args -----------------------------------------------------------
+  map_src <- geom_params$map_src
+
+  # map_src accepts a URL string, a local file path, or a pre-parsed GeoJSON
+  # list.  .is_valid_map_src() checks for any of these three forms.
+  if (!.is_valid_map_src(map_src))
+    stop(
+      "hd_geom_map() requires `map_src` as:\n",
+      "  - a URL string:       hd_map_no() or 'https://...'\n",
+      "  - a local file path:  '/path/to/map.geojson'\n",
+      "  - a pre-parsed list:  jsonlite::fromJSON(..., simplifyVector = FALSE)",
+      call. = FALSE
+    )
+
+  # -- Optional args -----------------------------------------------------------
+  join_by      <- geom_params$join_by      %||% "hc-key"
+  series_name  <- geom_params$series_name  %||% opts$ylab %||% spec$y
+  value_suffix <- geom_params$value_suffix %||% ""
+  nav_enabled  <- isTRUE(geom_params$nav_enabled %||% TRUE)
+  tooltip_fmt  <- geom_params$tooltip_fmt  %||%
+    paste0("{point.name}: {point.value}", value_suffix)
+  low_col      <- geom_params$low_col  %||% NULL
+  high_col     <- geom_params$high_col %||% NULL
+
+  # -- Resolve colours ---------------------------------------------------------
+  cols <- .resolve_map_colors(low_col, high_col, opts)
+
+  # -- Resolve GeoJSON ---------------------------------------------------------
+  # Handles URL, local file path, or pre-parsed list transparently.
+  geojson <- .resolve_geojson(map_src)
+
+  # -- Data --------------------------------------------------------------------
+  d      <- spec$data
+  x_col  <- spec$x    # join-key column in the data frame
+  y_col  <- spec$y    # value column
+
+#   # Highcharts expects a list of named lists, one per row.
+#   # The join key must be a top-level property matching `join_by`.
+#   hc_data <- lapply(seq_len(nrow(d)), function(i) {
+#     pt        <- as.list(d[i, , drop = FALSE])
+#     # Ensure the join column is at the expected key name even if the
+#     # data frame column has a different name (rare but defensive)
+#     if (x_col != join_by)
+#       pt[[join_by]] <- pt[[x_col]]
+#     pt[["value"]] <- pt[[y_col]]
+#     pt
+#   })
+
+  if (x_col != join_by)
+    d[[join_by]] <- d[[x_col]]
+  
+  # -- Build chart -------------------------------------------------------------
+  chart |>
+    highcharter::highchart(type = "map") |>
+    highcharter::hc_add_series(
+      type     = "map",
+      mapData  = geojson,
+      data     = d,
+      joinBy   = join_by,
+      value    = "value",
+      name     = series_name
+    ) |>
+    highcharter::hc_colorAxis(
+      minColor = cols[["low"]],
+      maxColor = cols[["high"]]
+    ) |>
+    highcharter::hc_tooltip(
+      pointFormat = tooltip_fmt
+    ) |>
+    highcharter::hc_mapNavigation(
+      enabled         = nav_enabled,
+      enableMouseWheelZoom = nav_enabled
+    ) |>
+    highcharter::hc_title(text    = opts$title    %||% "") |>
+    highcharter::hc_subtitle(text = opts$subtitle %||% "")
+}
+
 
 
 # =============================================================================
