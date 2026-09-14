@@ -268,6 +268,28 @@ gg_map <- function(spec, opts, geom_params, ...) {
   if (sf_key_clean %in% names(sf_data))
     sf_key <- sf_key_clean
 
+  # GDAL's GeoJSON reader can silently re-type a purely-numeric-looking string
+  # property (e.g. "0301") as Integer, dropping leading zeros. Re-attach the
+  # join key from the list we already parsed with jsonlite, which never
+  # second-guesses a quoted JSON string's type.
+  if (is.list(map_src)) {
+    orig_keys <- vapply(
+      filtered$features,
+      function(f) {
+        v <- f$properties[[join_by]]
+        if (is.null(v)) NA_character_ else as.character(v)
+      },
+      character(1)
+    )
+    if (length(orig_keys) == nrow(sf_data))
+      sf_data[[sf_key]] <- orig_keys
+  }
+
+  # belt-and-suspenders: guarantee both join columns are the same type
+  sf_data[[sf_key]] <- as.character(sf_data[[sf_key]])
+  d[[x_col]]         <- as.character(d[[x_col]])
+
+  
   merged <- merge(
     sf_data,
     d,
@@ -584,8 +606,23 @@ hd_map_no <- function(level = c("municipality", "county")) {
     "map-collection-dist/refs/heads/master/countries/no/"
   )
 
-  switch(level,
-    municipality = paste0(base, "no-all-all.geo.json"),
-    county       = paste0(base, "no-all.geo.json")
-  )
+  jsonfile <- switch(level,
+                     municipality = paste0(base, "no-all-all.geo.json"),
+                     county       = paste0(base, "no-all.geo.json")
+                     )
+
+  geojson <- jsonlite::fromJSON(jsonfile, simplifyVector = FALSE)
+
+  # Strip the "no-" prefix from hc-key so it joins against plain
+  # kommunenummer/fylkesnummer codes. Mutating the parsed list directly
+  # (not via sf::st_write()/st_read()) keeps this an R character string
+  # end-to-end - no GDAL round trip, no risk of "0301" becoming 301.
+  geojson$features <- lapply(geojson$features, function(f) {
+    key <- f$properties[["hc-key"]]
+    if (!is.null(key))
+      f$properties[["hc-key"]] <- gsub("[^0-9]", "", key)
+    f
+  })
+
+  geojson
 }
